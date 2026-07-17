@@ -22,11 +22,11 @@ void main() {
     final testBed = NgTestBed<AppComponent>(ng.createAppComponentFactory(),
         rootInjector: injectorFactory);
     final testFixture = await testBed.create();
-    expect(testFixture.assertOnlyInstance.anchor.getAttribute('href'), '#/foo');
+    expect(testFixture.assertOnlyInstance.anchor?.getAttribute('href'), '#/foo');
     await testFixture.update((c) {
-      c.anchor.click();
+      c.anchor?.click();
     });
-    verify(platformLocation.pushState(any, any, '#/foo')).called(1);
+    verify(platformLocation.pushState('', '', '#/foo')).called(1);
   });
 }
 
@@ -56,7 +56,7 @@ class AppComponent {
   static final routes = [fooRoute];
 
   @ViewChild('routerLink')
-  late HtmlElement anchor;
+  HtmlElement? anchor;
 }
 
 @Component(selector: 'foo', template: '')

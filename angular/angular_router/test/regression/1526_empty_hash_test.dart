@@ -18,13 +18,13 @@ void main() {
     });
 
     test('on push', () {
-      locationStrategy.pushState(null, null, '', '');
-      verify(platformLocation.pushState(null, null, '/foo?bar=baz'));
+      locationStrategy.pushState('', '', '', '');
+      verify(platformLocation.pushState('', '', '/foo?bar=baz'));
     });
 
     test('on replace', () {
-      locationStrategy.replaceState(null, null, '', '');
-      verify(platformLocation.replaceState(null, null, '/foo?bar=baz'));
+      locationStrategy.replaceState('', '', '', '');
+      verify(platformLocation.replaceState('', '', '/foo?bar=baz'));
     });
   });
 }

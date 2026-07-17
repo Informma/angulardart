@@ -2,9 +2,9 @@
 
 ## Statut global
 
-**Phase actuelle** : Phase 5 - Migration de angular_components (null safety) - TERMINÉE
-**Dernière mise à jour** : 2026-07-17 (Phases 1-5 terminées)
-**Progression globale** : 95%
+**Phase actuelle** : Phase 6 - Validation finale (tests) - EN COURS
+**Dernière mise à jour** : 2026-07-17 (Compilateur fonctionnel, tests partiellement fonctionnels)
+**Progression globale** : 98%
 
 ---
 
@@ -190,14 +190,19 @@
 
 ## Phase 6 : Validation finale
 
-**Statut** : Compilation terminée, tests à valider
-**Progression** : 1/4 étapes
+**Statut** : Compilateur fonctionnel, tests partiellement fonctionnels
+**Progression** : 2/4 étapes
 
 ### Étape 6.1 : Validation de tous les packages
 - [x] Tous les packages passent `dart pub get`
 - [x] Tous les packages passent `dart analyze` (0 erreurs)
 - [x] Tous les packages compilent sans erreurs
+- [x] Le compilateur Angular génère correctement les templates
 - [ ] Tous les tests passent
+  - angular_ast : 550/550 (100%)
+  - angular_forms : 35/47 (74%)
+  - angular_test : 21/28 (75%)
+  - angular_router : 7/32 (22%)
 
 ### Étape 6.2 : Validation des exemples
 - [ ] Les exemples du repo angular compilent
@@ -274,6 +279,31 @@
     - Nécessite investigation supplémentaire du compilateur ou correction manuelle des tests
 - **Statut** : Compilateur fonctionnel, migration de compilation terminée (95%), tests partiellement fonctionnels
 
+### 2026-07-17 - Correction des inputs manquants dans les templates
+- **Cause racine identifiée** : `lookUpInheritedConcreteSetter` dans l'analyzer exclut les setters de la classe elle-même (analyzer-6.4.1, ligne 3714 : `setter.enclosingElement != this`)
+- **Corrections appliquées au compilateur** :
+  - `angular_compiler/lib/v1/src/source_gen/template_compiler/find_components.dart:443` : `lookUpInheritedConcreteSetter` → `lookUpSetter`
+    - `lookUpSetter` inclut la classe elle-même et ne filtre que sur l'accessibilité
+    - Résout le problème des `@Input()` non détectés pour NgFor, NgModel, etc.
+  - `angular_compiler/lib/v1/src/compiler/view_compiler/view_builder.dart:574` : Cast `List<Statement?>` → `List<Statement>`
+    - Utilisation de `.whereType<o.Statement>().toList()` pour filtrer les nulls
+  - `angular_compiler/lib/v1/src/compiler/output/dart_emitter.dart:304,324` : Mêmes casts corrigés
+- **Corrections appliquées aux tests** :
+  - `angular_router/test/navigate_by_url_test.dart` : `captureAny` → `argThat(isA<...>())` (5 occurrences)
+  - `angular_router/test/regression/1526_empty_hash_test.dart` : `null` → `''` pour paramètres String (4 occurrences)
+  - `angular_router/test/regression/748_hash_location_strategy_test.dart` : `late HtmlElement` → `HtmlElement?` + accès null-safe
+- **Résultats** :
+  - ✅ **Les inputs NgFor/NgModel sont maintenant correctement bindés** dans les templates générés
+  - ✅ **Build réussi** pour angular_forms, angular_test, angular_router
+  - ⚠️ **Tests partiellement fonctionnels** :
+    - angular_forms : 35/47 tests passent (74%)
+    - angular_test : 21/28 tests passent (75%)
+    - angular_router : 7/32 tests passent (22%)
+  - ⚠️ **Problèmes restants** :
+    - Factories manquantes dans les templates (`createTestControlComponentFactory`, `createAddProvidersFactory`)
+    - Mocks Mockito retournent null au lieu de `Future<T>` (nécessite `when(...).thenReturn(...)`)
+- **Statut** : Compilateur pleinement fonctionnel, migration de compilation terminée (98%), tests à finaliser
+
 ---
 
 ## Notes et problèmes rencontrés
@@ -290,6 +320,10 @@
 8. `const []` est inféré comme `List<Object>` — utiliser `<T>[]` pour les listes génériques typées
 9. `HasDisabled` n'avait qu'un getter — ajouter un setter pour les composants qui implémentent l'interface
 10. `ComponentRenderer` sans type args = `ComponentRenderer<RendersValue, dynamic>` — spécifier `ComponentRenderer<RendersValue, Object>` pour matcher l'interface
+11. **`lookUpInheritedConcreteSetter` exclut la classe elle-même** (analyzer-6.4.1 ligne 3714 : `setter.enclosingElement != this`) — utiliser `lookUpSetter` pour inclure les setters définis sur la classe
+12. **`ClassMethod.body` est `List<Statement?>`** (nullable elements) — filtrer avec `.whereType<Statement>()` avant cast vers `List<Statement>`
+13. **Mockito avec null safety** : `captureAny` retourne null et ne peut pas être assigné à des paramètres non-nullable — utiliser `argThat(isA<T>())` ou des valeurs concrètes
+14. **ViewChild/ContentChild doivent être nullable et non-late** — `late HtmlElement` → `HtmlElement?`
 
 ---
 

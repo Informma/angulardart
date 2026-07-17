@@ -440,7 +440,7 @@ class _ComponentVisitor
   PropertyAccessorElement? _setterFor(Element element) {
     // Resolves specified generic type parameters.
     final setter = _directiveClassElement!
-        .lookUpInheritedConcreteSetter(
+        .lookUpSetter(
             element.displayName, _directiveClassElement!.library);
     if (setter == null) {
       return null;

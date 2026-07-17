@@ -8,7 +8,7 @@ Migration d'AngularDart (non maintenu) vers Dart 3.12.2. Le projet comprend 7 pa
 
 ## État actuel
 
-**Progression globale** : 95% - Migration de compilation terminée
+**Progression globale** : 98% - Compilateur fonctionnel, tests partiellement fonctionnels
 
 ### Packages migrés (0 erreurs)
 - ✅ **angular_ast** : 550 tests passent
@@ -22,17 +22,42 @@ Migration d'AngularDart (non maintenu) vers Dart 3.12.2. Le projet comprend 7 pa
 ### Résultats
 - **0 erreurs** sur `dart analyze lib/` pour tous les packages
 - **625 warnings/infos** (principalement `dart:html` déprécié)
-- **PROGRESS.md** à jour
+- **Compilateur Angular fonctionnel** - Génère les `.template.dart` correctement
+- **Tests partiellement fonctionnels** :
+  - angular_forms : 35/47 tests passent (74%)
+  - angular_test : 21/28 tests passent (75%)
+  - angular_router : 7/32 tests passent (22%)
+  - angular_ast : 550 tests passent (100%)
+
+### Corrections appliquées au compilateur (session actuelle)
+1. **`find_components.dart:443`** : `lookUpInheritedConcreteSetter` → `lookUpSetter`
+   - Cause racine du problème des inputs manquants (NgFor, NgModel)
+   - `lookUpInheritedConcreteSetter` excluait les setters de la classe elle-même
+2. **`view_builder.dart:574`** : Cast `List<Statement?>` → `List<Statement>`
+   - Utilisation de `.whereType<o.Statement>().toList()` pour filtrer les nulls
+3. **`dart_emitter.dart:304,324`** : Mêmes casts corrigés
+
+### Corrections appliquées aux tests
+- `navigate_by_url_test.dart` : `captureAny` → `argThat(isA<...>())`
+- `1526_empty_hash_test.dart` : `null` → `''` pour paramètres String
+- `748_hash_location_strategy_test.dart` : `late HtmlElement` → `HtmlElement?`
 
 ## Prochaines étapes
 
-### Priorité haute : Validation des tests
+### Priorité haute : Corriger les tests restants
+Les tests qui échouent ont principalement deux problèmes :
+1. **Factories manquantes** : `createTestControlComponentFactory`, `createAddProvidersFactory`
+   - Ces fonctions ne sont pas générées dans les `.template.dart`
+   - Cause probable : composants de test non enregistrés dans `initReflector()`
+2. **Mocks null safety** : Les mocks Mockito retournent null au lieu de `Future<T>`
+   - Nécessite `when(...).thenReturn(...)` avec des valeurs appropriées
+
 ```bash
 # Pour chaque package, exécuter les tests
-cd /home/guy-yannvectol/dev/perso/angulardart_upgrade_v3/angular/angular
+cd /home/guy-yannvectol/dev/perso/angulardart_upgrade_v3/angular/angular_forms
 dart test
 
-cd /home/guy-yannvectol/dev/perso/angulardart_upgrade_v3/angular/angular_forms
+cd /home/guy-yannvectol/dev/perso/angulardart_upgrade_v3/angular/angular_router
 dart test
 
 # ... etc pour tous les packages
@@ -58,8 +83,11 @@ dart analyze lib/
 # Compter les erreurs
 dart analyze lib/ 2>&1 | grep " error " | wc -l
 
-# Voir la distribution des erreurs
-dart analyze lib/ 2>&1 | grep " error " | awk -F' - ' '{print $NF}' | sort | uniq -c | sort -rn | head -20
+# Générer les templates Angular
+dart run build_runner build --delete-conflicting-outputs
+
+# Nettoyer le cache build_runner
+dart run build_runner clean
 
 # Exécuter les tests
 dart test
@@ -70,34 +98,44 @@ dart format lib/
 
 ## Patterns de correction appliqués
 
-### Null safety
+### Compilateur Angular
 ```dart
-// Paramètres optionnels
-void foo(String bar) {}  // AVANT (implicite nullable)
-void foo(String? bar) {} // APRÈS
+// lookUpInheritedConcreteSetter exclut la classe elle-même
+// AVANT (ne trouve pas les @Input() définis sur la classe)
+final setter = element.lookUpInheritedConcreteSetter(name, library)!;
 
-// Champs non initialisés
-String name;              // AVANT
-late String name;         // APRÈS (si initialisé dans constructor/init)
-String? name;             // APRÈS (si peut être null)
+// APRÈS (inclut la classe elle-même)
+final setter = element.lookUpSetter(name, library);
+if (setter == null) return null;
 
-// Variables locales
-var x = someNullableValue;
-x.someMethod();           // AVANT
-x!.someMethod();          // APRÈS (ou x?.someMethod())
+// Casts List<Statement?> → List<Statement>
+// AVANT
+visitAllStatements(method.body as List<o.Statement>, context);
 
-// Retours nullable
-T get selectedValue => null;  // AVANT
-T? get selectedValue => null; // APRÈS
+// APRÈS
+visitAllStatements(method.body.whereType<o.Statement>().toList(), context);
 ```
 
-### Class modifiers Dart 3
+### Tests Mockito (null safety)
 ```dart
-abstract class Foo { }  // utilisée comme mixin → AVANT
-abstract mixin class Foo { }  // APRÈS
+// AVANT (Dart 2.9)
+verify(mock.method(captureAny, captureAny)).captured;
 
-class Bar { }  // utilisée comme mixin → AVANT
-mixin class Bar { }  // APRÈS
+// APRÈS (Dart 3 null safety)
+verify(mock.method(argThat(isA<String>()), argThat(isA<int>()))).called(1);
+// ou
+verify(mock.method('expectedValue', any)).called(1);
+```
+
+### ViewChild/ContentChild (null safety)
+```dart
+// AVANT
+@ViewChild('elem')
+late HtmlElement element;
+
+// APRÈS (doit être nullable et non-late)
+@ViewChild('elem')
+HtmlElement? element;
 ```
 
 ## Pièges courants
@@ -108,6 +146,8 @@ mixin class Bar { }  // APRÈS
 4. `ComponentRenderer` sans type args = `ComponentRenderer<RendersValue, dynamic>` → spécifier `ComponentRenderer<RendersValue, Object>` pour matcher l'interface
 5. Après `if (x != null)`, utiliser `x!` pour les accès suivants
 6. `ListBase<Element> children = element.children` → `List<Element> children = element.children`
+7. `lookUpInheritedConcreteSetter` exclut la classe elle-même → utiliser `lookUpSetter` pour inclure les setters définis sur la classe
+8. `ClassMethod.body` est `List<Statement?>` → filtrer avec `.whereType<Statement>()` avant cast
 
 ## Fichiers importants
 

@@ -1,0 +1,24 @@
+# See https://github.com/google/mono_repo.dart for details
+dart:
+  - 2.14.2
+  - dev
+
+stages:
+  - analyze_and_format_core:
+    - group:
+        - format
+        - analyze: .
+      dart:
+        - dev
+    - group:
+        - analyze: .
+      dart:
+        - 2.14.2
+  - unit_test:
+    - group:
+      - command: ./tool/travis/install_protoc.sh
+      - test: --run-skipped
+
+cache:
+  directories:
+  - .dart_tool

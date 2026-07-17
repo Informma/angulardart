@@ -1,7 +1,6 @@
 
 import 'dart:html';
 
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
@@ -9,11 +8,11 @@ import 'package:angular_test/angular_test.dart';
 
 import '748_hash_location_strategy_test.template.dart' as ng;
 
-final platformLocation = MockPlatformLocation();
+final platformLocation = FakePlatformLocation();
 
 void main() {
   setUp(() {
-    reset(platformLocation);
+    platformLocation.reset();
   });
 
   tearDown(disposeAnyRunningTest);
@@ -26,13 +25,68 @@ void main() {
     await testFixture.update((c) {
       c.anchor?.click();
     });
-    verify(platformLocation.pushState('', '', '#/foo')).called(1);
+    expect(platformLocation.pushStateCalls, hasLength(1));
+    expect(platformLocation.pushStateCalls.first.url, '#/foo');
   });
 }
 
 PlatformLocation platformLocationFactory() => platformLocation;
 
-class MockPlatformLocation extends Mock implements BrowserPlatformLocation {}
+class FakePlatformLocation implements BrowserPlatformLocation {
+  String pathname = '';
+  String search = '';
+  String hash = '';
+  final List<_StateCall> pushStateCalls = [];
+  final List<_StateCall> replaceStateCalls = [];
+
+  void reset() {
+    pathname = '';
+    search = '';
+    hash = '';
+    pushStateCalls.clear();
+    replaceStateCalls.clear();
+  }
+
+  @override
+  void pushState(Object? state, String title, String? url) {
+    pushStateCalls.add(_StateCall(state, title, url));
+  }
+
+  @override
+  void replaceState(Object? state, String title, String? url) {
+    replaceStateCalls.add(_StateCall(state, title, url));
+  }
+
+  @override
+  void onPopState(EventListener fn) {}
+
+  @override
+  void onHashChange(EventListener fn) {}
+
+  @override
+  void forward() {}
+
+  @override
+  void back() {}
+
+  @override
+  String? getBaseHrefFromDOM() => null;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    if (invocation.memberName == #pathname) return pathname;
+    if (invocation.memberName == #search) return search;
+    if (invocation.memberName == #hash) return hash;
+    throw UnimplementedError('${invocation.memberName} not implemented');
+  }
+}
+
+class _StateCall {
+  final Object? state;
+  final String title;
+  final String? url;
+  _StateCall(this.state, this.title, this.url);
+}
 
 @GenerateInjector([
   routerProvidersHash,

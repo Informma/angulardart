@@ -68,9 +68,7 @@ class NgTestFixture<T> {
   Future<void> update([void Function(T instance)? run]) {
     return _testStabilizer.stabilize(runAndTrackSideEffects: () {
       if (run != null) {
-        Future<void>.sync(() {
-          _rootComponentRef.update(run);
-        });
+        _rootComponentRef.update(run);
       }
     });
   }

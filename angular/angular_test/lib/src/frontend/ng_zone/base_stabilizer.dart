@@ -67,6 +67,8 @@ abstract class BaseNgZoneStabilizer<T extends Timer> extends NgTestStabilizer {
 
     // End the microtask loop to give a chance to catch other errors.
     await Future(() {});
+    await Future(() {});
+    await Future(() {});
     unawaited(onErrorSub.cancel());
 
     // Return the caught error or just a blank future to continue.

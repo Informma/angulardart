@@ -1,6 +1,5 @@
 
 import 'package:collection/collection.dart';
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_router/src/router/router_impl.dart';
@@ -11,57 +10,71 @@ void main() {
   tearDown(disposeAnyRunningTest);
 
   group('navigateByUrl', () {
-    late Router mockRouter;
+    late _FakeRouter fakeRouter;
     late Router router;
 
     setUp(() {
-      mockRouter = MockRouter();
-      router = DelegatingRouter(mockRouter);
+      fakeRouter = _FakeRouter();
+      router = DelegatingRouter(fakeRouter);
     });
 
     test('invokes navigate', () {
       router.navigateByUrl('/to/path');
-      verify(mockRouter.navigate(
-        '/to/path',
-        argThat(isA<NavigationParams>()),
-      )).called(1);
+      expect(fakeRouter.navigateCalls, hasLength(1));
+      expect(fakeRouter.navigateCalls.first.path, '/to/path');
+      expect(fakeRouter.navigateCalls.first.params, isA<NavigationParams>());
     });
 
     test('invokes navigate with query parameters', () {
       router.navigateByUrl('/to/path?q=hello%20world');
-      verify(mockRouter.navigate(
-        '/to/path',
-        argThat(isA<NavigationParams>()),
-      )).called(1);
+      expect(fakeRouter.navigateCalls, hasLength(1));
+      expect(fakeRouter.navigateCalls.first.path, '/to/path');
+      expect(fakeRouter.navigateCalls.first.params, isA<NavigationParams>());
     });
 
     test('invokes navigate with fragment identifier', () {
       router.navigateByUrl('/to/path#with-fragment');
-      verify(mockRouter.navigate(
-        '/to/path',
-        argThat(isA<NavigationParams>()),
-      )).called(1);
+      expect(fakeRouter.navigateCalls, hasLength(1));
+      expect(fakeRouter.navigateCalls.first.path, '/to/path');
+      expect(fakeRouter.navigateCalls.first.params, isA<NavigationParams>());
     });
 
     test('invokes navigate with reload', () {
       router.navigateByUrl('/to/path', reload: true);
-      verify(mockRouter.navigate(
-        '/to/path',
-        argThat(isA<NavigationParams>()),
-      )).called(1);
+      expect(fakeRouter.navigateCalls, hasLength(1));
+      expect(fakeRouter.navigateCalls.first.path, '/to/path');
+      expect(fakeRouter.navigateCalls.first.params, isA<NavigationParams>());
     });
 
     test('invokes navigate with replace', () {
       router.navigateByUrl('/to/path', replace: true);
-      verify(mockRouter.navigate(
-        '/to/path',
-        argThat(isA<NavigationParams>()),
-      )).called(1);
+      expect(fakeRouter.navigateCalls, hasLength(1));
+      expect(fakeRouter.navigateCalls.first.path, '/to/path');
+      expect(fakeRouter.navigateCalls.first.params, isA<NavigationParams>());
     });
   });
 }
 
-class MockRouter extends Mock implements Router {}
+class _FakeRouter implements Router {
+  final List<_NavigateCall> navigateCalls = [];
+
+  @override
+  Future<NavigationResult> navigate(String path, [NavigationParams? navigationParams]) {
+    navigateCalls.add(_NavigateCall(path, navigationParams));
+    return Future.value(NavigationResult.SUCCESS);
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError('${invocation.memberName} not implemented');
+  }
+}
+
+class _NavigateCall {
+  final String path;
+  final NavigationParams? params;
+  _NavigateCall(this.path, this.params);
+}
 
 class DelegatingRouter extends RouterImpl {
   final Router _delegate;

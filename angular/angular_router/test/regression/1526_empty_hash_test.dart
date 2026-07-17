@@ -1,30 +1,59 @@
 
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:angular_router/angular_router.dart';
 
-class MockPlatformLocation extends Mock implements PlatformLocation {}
-
 void main() {
   late LocationStrategy locationStrategy;
-  late MockPlatformLocation platformLocation;
+  late _FakePlatformLocation platformLocation;
 
   group("empty URL doesn't overwrite query parameters", () {
     setUp(() {
-      platformLocation = MockPlatformLocation();
+      platformLocation = _FakePlatformLocation()
+        ..pathname = '/foo'
+        ..search = '?bar=baz';
       locationStrategy = HashLocationStrategy(platformLocation, null);
-      when(platformLocation.pathname).thenReturn('/foo');
-      when(platformLocation.search).thenReturn('?bar=baz');
     });
 
     test('on push', () {
       locationStrategy.pushState('', '', '', '');
-      verify(platformLocation.pushState('', '', '/foo?bar=baz'));
+      expect(platformLocation.pushStateCalls, hasLength(1));
+      expect(platformLocation.pushStateCalls.first.url, '/foo?bar=baz');
     });
 
     test('on replace', () {
       locationStrategy.replaceState('', '', '', '');
-      verify(platformLocation.replaceState('', '', '/foo?bar=baz'));
+      expect(platformLocation.replaceStateCalls, hasLength(1));
+      expect(platformLocation.replaceStateCalls.first.url, '/foo?bar=baz');
     });
   });
+}
+
+class _FakePlatformLocation implements PlatformLocation {
+  String pathname = '';
+  String search = '';
+  String hash = '';
+  final List<_StateCall> pushStateCalls = [];
+  final List<_StateCall> replaceStateCalls = [];
+
+  @override
+  void pushState(Object? state, String title, String? url) {
+    pushStateCalls.add(_StateCall(state, title, url));
+  }
+
+  @override
+  void replaceState(Object? state, String title, String? url) {
+    replaceStateCalls.add(_StateCall(state, title, url));
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError('${invocation.memberName} not implemented');
+  }
+}
+
+class _StateCall {
+  final Object? state;
+  final String title;
+  final String? url;
+  _StateCall(this.state, this.title, this.url);
 }

@@ -122,7 +122,7 @@ class CatchConstructorAsyncErrors {
 
 @Component(
   selector: 'test',
-  template: '<button (click)="throwError">Throw</button>',
+  template: '<button (click)="throwError()">Throw</button>',
 )
 class CatchNativeEventSynchronousErrors {
   static Future<void> _runTest() async {
@@ -144,12 +144,12 @@ class CatchNativeEventSynchronousErrors {
 
 @Component(
   selector: 'test',
-  template: '<button (click)="throwError">Throw</button>',
+  template: '<button (click)="throwError()">Throw</button>',
 )
 class CatchNativeEventAsynchronousErrors {
   static Future<void> _runTest() async {
     final fixture = await NgTestBed(
-      ng.createCatchNativeEventSynchronousErrorsFactory(),
+      ng.createCatchNativeEventAsynchronousErrorsFactory(),
     ).create();
     expect(
       fixture.update((_) {

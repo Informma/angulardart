@@ -29,9 +29,9 @@ const DEFAULT_VALUE_ACCESSOR = ExistingProvider.forToken(
 class DefaultValueAccessor extends Object
     with TouchHandler, ChangeHandler<String>
     implements ControlValueAccessor<dynamic> {
-  final HtmlElement _element;
+  final HtmlElement? _element;
 
-  DefaultValueAccessor(this._element);
+  DefaultValueAccessor(@Optional() this._element);
 
   @HostListener('input', ['\$event.target.value'])
   void handleChange(String value) {
@@ -41,11 +41,11 @@ class DefaultValueAccessor extends Object
   @override
   void writeValue(value) {
     var normalizedValue = value ?? '';
-    js_util.setProperty(_element, 'value', normalizedValue);
+    js_util.setProperty(_element!, 'value', normalizedValue);
   }
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    setElementDisabled(_element, isDisabled);
+    setElementDisabled(_element!, isDisabled);
   }
 }

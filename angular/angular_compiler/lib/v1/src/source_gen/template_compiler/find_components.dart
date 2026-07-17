@@ -441,7 +441,10 @@ class _ComponentVisitor
     // Resolves specified generic type parameters.
     final setter = _directiveClassElement!
         .lookUpInheritedConcreteSetter(
-            element.displayName, _directiveClassElement!.library)!;
+            element.displayName, _directiveClassElement!.library);
+    if (setter == null) {
+      return null;
+    }
     if (setter.parameters.isEmpty) {
       CompileContext.current.reportAndRecover(
         BuildError.forElement(

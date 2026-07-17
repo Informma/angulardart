@@ -257,6 +257,23 @@
 - **0 erreurs** sur `dart analyze lib/` pour angular_components
 - **0 erreurs** sur tous les autres packages (angular, angular_forms, angular_router, angular_test, angular_ast, angular_compiler)
 
+### 2026-07-17 - Validation des tests (Phase 6)
+- **Corrections appliquées au compilateur** :
+  - `angular/lib/src/build.dart:106` : Cast nullable `as List?` pour `options.config['exclude']`
+  - `angular_compiler/lib/v2/context.dart:74` : `complete()` → `completeError(e, s)` pour le Completer
+  - `angular_compiler/lib/v1/src/source_gen/template_compiler/find_components.dart:444` : Gestion du cas null pour `lookUpInheritedConcreteSetter()` (retourne `null` au lieu de crasher)
+- **Corrections appliquées aux packages** :
+  - `angular_forms` : Paramètres `HtmlElement?` rendus nullable avec `@Optional()` dans `DefaultValueAccessor`, `CheckboxControlValueAccessor`, `SelectControlValueAccessor`
+- **Résultats** :
+  - ✅ **Le compilateur Angular fonctionne maintenant** - Génère les fichiers `.template.dart` pour `lib/`
+  - ✅ **0 erreurs** sur `dart analyze lib/` pour tous les packages
+  - ✅ **Templates générés** pour `angular_forms/lib/` (20+ fichiers `.template.dart`)
+  - ⚠️ **Tests** : Erreurs de template dans les fichiers de test (bindings `ngForOf`, `ngModel` non reconnus)
+    - Problème : Les directives `NgFor`, `NgModel` ne sont pas reconnues dans les templates de test
+    - Cause probable : Métadonnées d'input manquantes dans les templates générés
+    - Nécessite investigation supplémentaire du compilateur ou correction manuelle des tests
+- **Statut** : Compilateur fonctionnel, migration de compilation terminée (95%), tests partiellement fonctionnels
+
 ---
 
 ## Notes et problèmes rencontrés

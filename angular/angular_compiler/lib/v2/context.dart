@@ -71,7 +71,7 @@ Future<T> runWithContext<T>(
         );
       }
       if (!buildCompletedOrFailed.isCompleted) {
-        buildCompletedOrFailed.complete();
+        buildCompletedOrFailed.completeError(e, s);
       }
     },
     zoneSpecification: ZoneSpecification(

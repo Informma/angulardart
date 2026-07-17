@@ -40,13 +40,13 @@ String _extractId(String valueString) => valueString.split(':')[0];
 class SelectControlValueAccessor extends Object
     with TouchHandler, ChangeHandler<dynamic>
     implements ControlValueAccessor<Object?> {
-  final SelectElement _element;
+  final SelectElement? _element;
   Object? value;
   final Map<String, Object?> _optionMap = <String, Object?>{};
   num _idCounter = 0;
 
-  SelectControlValueAccessor(HtmlElement element)
-      : _element = element as SelectElement;
+  SelectControlValueAccessor(@Optional() HtmlElement? element)
+      : _element = element as SelectElement?;
 
   @HostListener('change', ['\$event.target.value'])
   void handleChange(String value) {
@@ -57,12 +57,12 @@ class SelectControlValueAccessor extends Object
   void writeValue(Object? value) {
     this.value = value;
     var valueString = _buildValueString(_getOptionId(value), value);
-    _element.value = valueString;
+    _element!.value = valueString;
   }
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    _element.disabled = isDisabled;
+    _element!.disabled = isDisabled;
   }
 
   String _registerOption() => (_idCounter++).toString();

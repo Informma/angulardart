@@ -1,3 +1,13 @@
+## 3.0.0
+
+- **BREAKING CHANGE**: Require Dart ^3.0.0
+- Migrated to `analyzer` ^6.0.0 (from ^2.0.0)
+- Migrated to `charcode` ^1.3.0 (from ^1.1.0)
+- Migrated to `source_span` ^1.10.0 (from ^1.4.0)
+- Added `collection` ^1.18.0 and `string_scanner` ^1.3.0 as dependencies
+- **Class modifiers**: Converted 16 abstract classes to `abstract mixin class` for Dart 3 compatibility
+- All 550 tests pass on VM platform
+
 ## 2.0.1
 
 - Update `README.md`.

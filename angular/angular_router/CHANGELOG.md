@@ -1,3 +1,15 @@
+## 4.0.0
+
+- **BREAKING CHANGE**: Require Dart ^3.0.0
+- Updated `angular` dependency to ^8.0.0 (from ^7.0.0)
+- Migrated from `js` ^0.6.3 to `web` ^0.5.0
+- **Null safety**: Removed `// @dart=2.9` annotations, added type parameters to `NgTestBed<T>`, added `late` fields and nullable parameters
+- **Test fixes**: Replaced Mockito mocks with manual fakes for non-nullable types (Mockito incompatible with null safety)
+  - `navigate_by_url_test.dart`: `MockRouter` → `_FakeRouter`
+  - `1526_empty_hash_test.dart`: `MockPlatformLocation` → `_FakePlatformLocation`
+  - `748_hash_location_strategy_test.dart`: `MockPlatformLocation` → `FakePlatformLocation`
+- All 85 tests pass (1 skip expected)
+
 ## 3.0.1
 
 - Update `README.md`.

@@ -1,3 +1,28 @@
+## 3.0.0
+
+- **BREAKING CHANGE**: Require Dart ^3.0.0
+- Migrated to `analyzer` ^6.0.0 (from ^2.0.0) - Major API changes
+- Migrated to `code_builder` ^4.10.0 (from ^4.0.0)
+- Migrated to `dart_style` ^2.3.0 (from ^2.0.0)
+- Migrated to `source_gen` ^1.5.0 (from ^1.0.0)
+- Updated `angular` dependency to ^8.0.0 (from ^7.0.0)
+- Updated `angular_ast` dependency to ^3.0.0 (from ^2.0.0)
+- **Analyzer v6 migration**: 65 erreurs corrigées incluant :
+  - `CompilationUnitElement.types` → `.classes`
+  - `LibraryElement.getType()` → `.getClass()`
+  - `LibraryElement.imports/exports` → `.libraryImports/.libraryExports`
+  - `InterfaceType.lookUpInherited*` → `InterfaceElement.lookUpInherited*`
+  - `ImportElement` → `LibraryImportElement`
+  - `isDeferred` → `prefix is DeferredImportElementPrefix`
+  - `Token.name` → `Token.lexeme` / `SimpleIdentifier.name`
+  - `DartType.displayName` → `.getDisplayString(withNullability: false)`
+  - `InterfaceElement.isEnum` → `element is EnumElement`
+  - `AnalysisSession.getResolvedLibraryByElement2` → `getResolvedLibraryByElement`
+  - Class modifiers: `abstract class` → `abstract mixin class` (2 classes)
+  - `NamedExpression.name.label` → `.name.label.name`
+- **Template compiler fix**: `lookUpInheritedConcreteSetter` → `lookUpSetter` pour inclure les setters définis sur la classe elle-même
+- **Null safety fixes**: Casts `List<Statement?>` → `List<Statement>` avec `.whereType<Statement>()`
+
 ## 2.0.2
 
 - Update `README.md`.

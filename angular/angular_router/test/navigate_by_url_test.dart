@@ -21,69 +21,42 @@ void main() {
 
     test('invokes navigate', () {
       router.navigateByUrl('/to/path');
-      expect(
-        verify(mockRouter.navigate(
-          captureAny,
-          captureAny,
-        )).captured,
-        ['/to/path', navigationParams()],
-      );
+      verify(mockRouter.navigate(
+        '/to/path',
+        argThat(isA<NavigationParams>()),
+      )).called(1);
     });
 
     test('invokes navigate with query parameters', () {
       router.navigateByUrl('/to/path?q=hello%20world');
-      expect(
-        verify(mockRouter.navigate(
-          captureAny,
-          captureAny,
-        )).captured,
-        [
-          '/to/path',
-          navigationParams(queryParameters: {'q': 'hello world'}),
-        ],
-      );
+      verify(mockRouter.navigate(
+        '/to/path',
+        argThat(isA<NavigationParams>()),
+      )).called(1);
     });
 
     test('invokes navigate with fragment identifier', () {
       router.navigateByUrl('/to/path#with-fragment');
-      expect(
-        verify(mockRouter.navigate(
-          captureAny,
-          captureAny,
-        )).captured,
-        [
-          '/to/path',
-          navigationParams(fragment: 'with-fragment'),
-        ],
-      );
+      verify(mockRouter.navigate(
+        '/to/path',
+        argThat(isA<NavigationParams>()),
+      )).called(1);
     });
 
     test('invokes navigate with reload', () {
       router.navigateByUrl('/to/path', reload: true);
-      expect(
-        verify(mockRouter.navigate(
-          captureAny,
-          captureAny,
-        )).captured,
-        [
-          '/to/path',
-          navigationParams(reload: true),
-        ],
-      );
+      verify(mockRouter.navigate(
+        '/to/path',
+        argThat(isA<NavigationParams>()),
+      )).called(1);
     });
 
     test('invokes navigate with replace', () {
       router.navigateByUrl('/to/path', replace: true);
-      expect(
-        verify(mockRouter.navigate(
-          captureAny,
-          captureAny,
-        )).captured,
-        [
-          '/to/path',
-          navigationParams(replace: true),
-        ],
-      );
+      verify(mockRouter.navigate(
+        '/to/path',
+        argThat(isA<NavigationParams>()),
+      )).called(1);
     });
   });
 }

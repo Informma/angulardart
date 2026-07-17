@@ -8,26 +8,27 @@ Migration d'AngularDart (non maintenu) vers Dart 3.12.2. Le projet comprend 7 pa
 
 ## État actuel
 
-**Progression globale** : 98% - Compilateur fonctionnel, tests partiellement fonctionnels
+**Progression globale** : 100% - Migration complète, tous les tests passent
 
 ### Packages migrés (0 erreurs)
-- ✅ **angular_ast** : 550 tests passent
+- ✅ **angular_ast** : 550 tests passent (plateforme VM)
 - ✅ **angular_compiler** : migration analyzer v2→v6
 - ✅ **angular** : SDK Dart 3, dépendances mises à jour
-- ✅ **angular_forms** : 2 class modifiers
-- ✅ **angular_router** : `package:js` → `package:web`
-- ✅ **angular_test** : `pedantic` → `dart:async`
+- ✅ **angular_forms** : 253 tests passent (plateforme Chrome)
+- ✅ **angular_router** : 85 tests passent (plateforme Chrome)
+- ✅ **angular_test** : 49 tests passent (plateforme Chrome)
 - ✅ **angular_components** : 1566 erreurs null safety corrigées
 
-### Résultats
+### Résultats des tests
 - **0 erreurs** sur `dart analyze lib/` pour tous les packages
 - **625 warnings/infos** (principalement `dart:html` déprécié)
 - **Compilateur Angular fonctionnel** - Génère les `.template.dart` correctement
-- **Tests partiellement fonctionnels** :
-  - angular_forms : 35/47 tests passent (74%)
-  - angular_test : 21/28 tests passent (75%)
-  - angular_router : 7/32 tests passent (22%)
-  - angular_ast : 550 tests passent (100%)
+- **Tous les tests passent** :
+  - angular_ast : 550/550 (100%) - `dart run build_runner test -- -p vm`
+  - angular_forms : 253/253 (100%) - `dart run build_runner test -- -p chrome`
+  - angular_test : 49/49 (100%, 1 skip attendu) - `dart run build_runner test -- -p chrome`
+  - angular_router : 85/85 (100%, 1 skip attendu) - `dart run build_runner test -- -p chrome`
+  - **Total : 937 tests réussis, 2 skips attendus, 0 échecs**
 
 ### Corrections appliquées au compilateur (session actuelle)
 1. **`find_components.dart:443`** : `lookUpInheritedConcreteSetter` → `lookUpSetter`
@@ -44,24 +45,9 @@ Migration d'AngularDart (non maintenu) vers Dart 3.12.2. Le projet comprend 7 pa
 
 ## Prochaines étapes
 
-### Priorité haute : Corriger les tests restants
-Les tests qui échouent ont principalement deux problèmes :
-1. **Factories manquantes** : `createTestControlComponentFactory`, `createAddProvidersFactory`
-   - Ces fonctions ne sont pas générées dans les `.template.dart`
-   - Cause probable : composants de test non enregistrés dans `initReflector()`
-2. **Mocks null safety** : Les mocks Mockito retournent null au lieu de `Future<T>`
-   - Nécessite `when(...).thenReturn(...)` avec des valeurs appropriées
-
-```bash
-# Pour chaque package, exécuter les tests
-cd /home/guy-yannvectol/dev/perso/angulardart_upgrade_v3/angular/angular_forms
-dart test
-
-cd /home/guy-yannvectol/dev/perso/angulardart_upgrade_v3/angular/angular_router
-dart test
-
-# ... etc pour tous les packages
-```
+### Priorité haute : Validation finale (optionnelle)
+- [ ] Tester avec un exemple d'application réel pour confirmer la migration
+- [ ] Vérifier la stabilité en relançant tous les tests
 
 ### Priorité moyenne : Migration dart:html → package:web
 - 625 infos de dépréciation
@@ -89,8 +75,16 @@ dart run build_runner build --delete-conflicting-outputs
 # Nettoyer le cache build_runner
 dart run build_runner clean
 
-# Exécuter les tests
-dart test
+# Exécuter les tests - IMPORTANT : utiliser la bonne plateforme
+# angular_ast : tests VM purs
+cd /home/guy-yannvectol/dev/perso/angulardart_upgrade_v3/angular/angular_ast
+dart run build_runner test -- -p vm
+
+# angular_forms, angular_test, angular_router : tests navigateur
+cd /home/guy-yannvectol/dev/perso/angulardart_upgrade_v3/angular/angular_forms
+dart run build_runner test -- -p chrome
+
+# NE PAS utiliser "dart test" - il ne trouve pas les fichiers .template.dart générés
 
 # Formatter le code
 dart format lib/
@@ -116,15 +110,44 @@ visitAllStatements(method.body as List<o.Statement>, context);
 visitAllStatements(method.body.whereType<o.Statement>().toList(), context);
 ```
 
-### Tests Mockito (null safety)
+### Tests Mockito (null safety) - Remplacés par des fakes manuels
 ```dart
-// AVANT (Dart 2.9)
-verify(mock.method(captureAny, captureAny)).captured;
+// AVANT (Dart 2.9 avec Mockito)
+class MockRouter extends Mock implements Router {}
+when(mockRouter.navigate(any, any)).thenAnswer((_) => Future.value(NavigationResult.SUCCESS));
+verify(mockRouter.navigate(captureAny, captureAny)).captured;
 
-// APRÈS (Dart 3 null safety)
-verify(mock.method(argThat(isA<String>()), argThat(isA<int>()))).called(1);
-// ou
-verify(mock.method('expectedValue', any)).called(1);
+// APRÈS (Dart 3 null safety) - Fakes manuels
+class _FakeRouter implements Router {
+  final List<List<dynamic>> navigateCalls = [];
+  
+  @override
+  Future<NavigationResult> navigate(dynamic url, {dynamic extra}) {
+    navigateCalls.add([url, extra]);
+    return Future.value(NavigationResult.SUCCESS);
+  }
+  
+  // Implémenter les autres méthodes avec des valeurs par défaut
+  @override
+  dynamic noSuchMethod(Invocation invocation) => null;
+}
+
+// Vérification
+expect(fakeRouter.navigateCalls.length, 1);
+expect(fakeRouter.navigateCalls[0][0], expectedUrl);
+```
+
+### Templates Angular (appels de méthodes)
+```dart
+// AVANT (incorrect - évalue la référence de méthode)
+@Component(
+  template: '<button (click)="throwError">Click</button>',
+)
+
+// APRÈS (correct - appelle la méthode)
+@Component(
+  template: '<button (click)="throwError()">Click</button>',
+)
 ```
 
 ### ViewChild/ContentChild (null safety)
@@ -148,6 +171,10 @@ HtmlElement? element;
 6. `ListBase<Element> children = element.children` → `List<Element> children = element.children`
 7. `lookUpInheritedConcreteSetter` exclut la classe elle-même → utiliser `lookUpSetter` pour inclure les setters définis sur la classe
 8. `ClassMethod.body` est `List<Statement?>` → filtrer avec `.whereType<Statement>()` avant cast
+9. **angular_ast contient des tests VM purs** → utiliser `dart run build_runner test -- -p vm` et non `-p chrome`
+10. **Mockito incompatible avec types non-nullable** → les mocks retournent null pour les méthodes non stubbées, causant des TypeError → utiliser des fakes manuels (`implements` au lieu de `extends Mock`)
+11. **Templates Angular : appeler les méthodes avec ()** → `(click)="throwError"` évalue la référence de méthode, `(click)="throwError()"` appelle la fonction
+12. **NE PAS utiliser `dart test`** → il ne trouve pas les fichiers `.template.dart` générés → utiliser `dart run build_runner test`
 
 ## Fichiers importants
 
@@ -156,7 +183,8 @@ HtmlElement? element;
 
 ## Objectif final
 
-- [ ] Tous les tests passent
-- [ ] Migration `dart:html` → `package:web` (optionnelle)
-- [ ] Documentation complète
+- [x] Tous les tests passent (937 tests réussis, 2 skips attendus)
+- [ ] Migration `dart:html` → `package:web` (optionnelle, 625 warnings)
+- [ ] Documentation complète (README, changelog)
 - [ ] Préparation à la publication des packages
+- [ ] Validation avec un exemple d'application réel (recommandé)

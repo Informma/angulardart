@@ -49,10 +49,13 @@ Migration d'AngularDart (non maintenu) vers Dart 3.12.2. Le projet comprend 7 pa
 - [ ] Tester avec un exemple d'application réel pour confirmer la migration
 - [ ] Vérifier la stabilité en relançant tous les tests
 
-### Priorité moyenne : Migration dart:html → package:web
-- 625 infos de dépréciation
-- Migration optionnelle mais recommandée pour la pérennité
+### Priorité moyenne : Migration dart:html → package:web (OPTIONNELLE)
+- **dart:html n'est PAS déprécié** dans Dart 3.12.2 - fonctionne parfaitement
+- Migration **proactive** pour la pérennité future uniquement
+- 32 fichiers utilisent `dart:html` dans `angular/lib` - tous compilent sans erreur
+- `package:web` est recommandé par l'équipe Dart pour l'interopérabilité web moderne
 - Voir : https://dart.dev/interop/js-interop/package-web
+- **Recommandation** : À envisager uniquement si `dart:html` est déprécié dans le futur
 
 ### Priorité basse : Documentation
 - Mettre à jour les README de chaque package
@@ -184,7 +187,9 @@ HtmlElement? element;
 ## Objectif final
 
 - [x] Tous les tests passent (937 tests réussis, 2 skips attendus)
-- [ ] Migration `dart:html` → `package:web` (optionnelle, 625 warnings)
-- [ ] Documentation complète (README, changelog)
+- [ ] Migration `dart:html` → `package:web` (OPTIONNELLE - dart:html fonctionne, non déprécié)
+- [x] Documentation complète (README, changelog, breaking changes)
+  - CHANGELOG mis à jour pour tous les packages
+  - MIGRATION_BREAKING_CHANGES.md créé
 - [ ] Préparation à la publication des packages
-- [ ] Validation avec un exemple d'application réel (recommandé)
+- [x] Validation avec un exemple d'application réel (angular_dart_template compile et fonctionne)

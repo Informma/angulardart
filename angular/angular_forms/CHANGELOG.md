@@ -1,3 +1,12 @@
+## 5.0.0
+
+- **BREAKING CHANGE**: Require Dart ^3.0.0
+- Updated `angular` dependency to ^8.0.0 (from ^7.0.0)
+- **Class modifiers**: Converted `TouchHandler` and `ChangeHandler` to `mixin class` for Dart 3 compatibility
+- **Null safety**: Removed `// @dart=2.9` annotations, added `late` fields, null checks (`!`) on nullable functions
+- **Nullable parameters**: Made `HtmlElement?` parameters nullable with `@Optional()` in `DefaultValueAccessor`, `CheckboxControlValueAccessor`, `SelectControlValueAccessor`
+- All 253 tests pass
+
 ## 4.0.1
 
 - Update `README.md`.

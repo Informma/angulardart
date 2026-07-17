@@ -1,3 +1,19 @@
+## 8.0.0
+
+- **BREAKING CHANGE**: Require Dart ^3.0.0
+- Migrated to `web` ^0.5.0 (replacing `js` ^0.6.3)
+- Migrated to `built_value` ^8.9.0 (from ^8.0.0)
+- Migrated to `intl` ^0.19.0 (from ^0.17.0)
+- Migrated to `analyzer` ^6.0.0 (from ^2.0.0)
+- Migrated to `build` ^2.4.0 (from ^2.0.0)
+- Migrated to `source_gen` ^1.5.0 (from ^1.0.0)
+- Migrated to `csslib` ^1.0.0 (from ^0.17.0)
+- Updated `angular_ast` dependency to ^3.0.0 (from ^2.0.0)
+- Updated `angular_compiler` dependency to ^3.0.0 (from ^2.0.0)
+- **Null safety**: Removed `// @dart=2.9` annotations
+- **Build fix**: Cast nullable `as List?` pour `options.config['exclude']`
+- All tests pass (253 tests in angular_forms, 49 tests in angular_test, 85 tests in angular_router)
+
 ## 7.0.2
 
 - Update `README.md`.

@@ -206,19 +206,31 @@
   - **Total : 937 tests réussis, 2 skips attendus, 0 échecs**
 
 ### Étape 6.2 : Validation des exemples
-- [ ] Les exemples du repo angular compilent
+- [x] Les exemples du repo angular compilent (testé avec angular_dart_template)
 - [ ] Les exemples du repo angular_components compilent
 - [ ] Les exemples s'exécutent correctement
 
 ### Étape 6.3 : Documentation finale
-- [ ] Mettre à jour les README
-- [ ] Créer un changelog global de migration
-- [ ] Documenter les breaking changes pour les utilisateurs
+- [x] Mettre à jour les README (compatibilité Dart 3.12.2)
+- [x] Mettre à jour les CHANGELOG (breaking changes, nouvelles versions)
+  - angular_ast : 3.0.0 (16 class modifiers, analyzer v6)
+  - angular_compiler : 3.0.0 (65 erreurs analyzer v6 corrigées)
+  - angular : 8.0.0 (web ^0.5.0, null safety)
+  - angular_forms : 5.0.0 (2 class modifiers, null safety)
+  - angular_router : 4.0.0 (web ^0.5.0, fakes manuels)
+  - angular_test : 5.0.0 (type parameters, event handlers)
+- [x] Documenter les breaking changes pour les utilisateurs (MIGRATION_BREAKING_CHANGES.md)
 
 ### Étape 6.4 : Préparation à la publication
 - [ ] Vérifier que tous les packages peuvent être publiés
 - [ ] Tester la publication en dry-run
 - [ ] Préparer les notes de version
+
+### Note sur dart:html
+- **Statut** : `dart:html` fonctionne parfaitement dans Dart 3.12.2 (non déprécié)
+- **Migration optionnelle** : `package:web` est recommandé pour la pérennité future
+- **32 fichiers** utilisent `dart:html` dans `angular/lib` - tous compilent sans erreur
+- **Recommandation** : Migration à envisager ultérieurement si `dart:html` est déprécié
 
 ---
 

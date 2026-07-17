@@ -1,3 +1,14 @@
+## 5.0.0
+
+- **BREAKING CHANGE**: Require Dart ^3.0.0
+- Updated `angular` dependency to ^8.0.0 (from ^7.0.0)
+- Replaced `pedantic` with `dart:async` for `unawaited`
+- **Type parameters**: Added type parameters to `NgTestBed<T>` and `bootstrapForTest<T>` to resolve Dart 3 `Object` inference
+- **Test fixes**: 
+  - Fixed event handler templates: `(click)="throwError"` → `(click)="throwError()"` (must call method, not pass reference)
+  - Fixed `CatchNativeEventAsynchronousErrors._runTest()` to use `ng.createCatchNativeEventAsynchronousErrorsFactory()` instead of `createCatchNativeEventSynchronousErrorsFactory()`
+- All 49 tests pass (1 skip expected)
+
 ## 4.0.1
 
 - Update `README.md`

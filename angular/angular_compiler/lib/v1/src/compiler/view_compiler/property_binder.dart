@@ -102,7 +102,7 @@ void bindRenderInputs(
     compileElement.isHtmlElement,
     view.nameResolver,
     view.storage,
-    view.detectChangesRenderPropertiesMethod,
+    view.detectChangesElementPropertiesMethod,
   );
 }
 
@@ -428,7 +428,7 @@ void bindDirectiveHostProps(
       ],
     );
   }
-  compileElement.view!.detectChangesRenderPropertiesMethod.addStmt(
+  compileElement.view!.detectChangesElementPropertiesMethod.addStmt(
     detectHostChanges.toStmt(),
   );
 }

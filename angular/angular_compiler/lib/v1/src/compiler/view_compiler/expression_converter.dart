@@ -313,8 +313,13 @@ class _AstToExpressionVisitor
       ast.expression.visit(this, false /*visitingRoot */).notNull();
 
   @override
-  o.Expression visitPrefixNot(compiler_ast.PrefixNot ast, _) =>
-      o.not(ast.expression.visit(this, false /*visitingRoot */));
+  o.Expression visitPrefixNot(compiler_ast.PrefixNot ast, _) {
+    final innerExpr = ast.expression.visit(this, false);
+    if (canBeNull(ast.expression)) {
+      return o.not(innerExpr.ifNull(o.literal(false)));
+    }
+    return o.not(innerExpr);
+  }
 
   @override
   o.Expression visitPropertyRead(compiler_ast.PropertyRead ast, _) {

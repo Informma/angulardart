@@ -142,11 +142,21 @@ class _AstToExpressionVisitor
           'Unsupported operation "${ast.operator}"',
         );
     }
-    return o.BinaryOperatorExpr(
-      op,
-      ast.left.visit(this, false /* visitingRoot */),
-      ast.right.visit(this, false /* visitingRoot */),
-    );
+    
+    var left = ast.left.visit(this, false /* visitingRoot */);
+    var right = ast.right.visit(this, false /* visitingRoot */);
+    
+    // Pour && et ||, ajouter ?? false aux opérandes nullable
+    if (ast.operator == '&&' || ast.operator == '||') {
+      if (canBeNull(ast.left)) {
+        left = left.ifNull(o.literal(false));
+      }
+      if (canBeNull(ast.right)) {
+        right = right.ifNull(o.literal(false));
+      }
+    }
+    
+    return o.BinaryOperatorExpr(op, left, right);
   }
 
   @override

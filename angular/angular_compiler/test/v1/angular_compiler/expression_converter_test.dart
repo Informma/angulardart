@@ -44,6 +44,88 @@ void main() {
       expect(notExpr.condition, isNot(isA<o.IfNullExpr>()));
     });
   });
+  group('visitBinary', () {
+    test('should handle || with nullable operands', () {
+      // Créer des expressions nullable (PropertyRead)
+      final left = ast.PropertyRead(ast.ImplicitReceiver(), 'valid');
+      final right = ast.PropertyRead(ast.ImplicitReceiver(), 'pristine');
+      final binary = ast.Binary('||', left, right);
+      
+      final converter = _MockExpressionConverter();
+      final result = binary.visit<o.Expression, Object?, Object?>(converter, null);
+      
+      // Vérifier que le résultat est une expression binaire
+      expect(result, isA<o.BinaryOperatorExpr>());
+      final binaryExpr = result as o.BinaryOperatorExpr;
+      
+      // Vérifier que les deux opérandes sont enveloppées avec ?? false
+      expect(binaryExpr.lhs, isA<o.IfNullExpr>());
+      expect(binaryExpr.rhs, isA<o.IfNullExpr>());
+      
+      final leftIfNull = binaryExpr.lhs as o.IfNullExpr;
+      expect(leftIfNull.nullCase, isA<o.LiteralExpr>());
+      expect((leftIfNull.nullCase as o.LiteralExpr).value, equals(false));
+      
+      final rightIfNull = binaryExpr.rhs as o.IfNullExpr;
+      expect(rightIfNull.nullCase, isA<o.LiteralExpr>());
+      expect((rightIfNull.nullCase as o.LiteralExpr).value, equals(false));
+    });
+
+    test('should handle && with nullable operands', () {
+      // Créer des expressions nullable (PropertyRead)
+      final left = ast.PropertyRead(ast.ImplicitReceiver(), 'valid');
+      final right = ast.PropertyRead(ast.ImplicitReceiver(), 'pristine');
+      final binary = ast.Binary('&&', left, right);
+      
+      final converter = _MockExpressionConverter();
+      final result = binary.visit<o.Expression, Object?, Object?>(converter, null);
+      
+      // Vérifier que le résultat est une expression binaire
+      expect(result, isA<o.BinaryOperatorExpr>());
+      final binaryExpr = result as o.BinaryOperatorExpr;
+      
+      // Vérifier que les deux opérandes sont enveloppées avec ?? false
+      expect(binaryExpr.lhs, isA<o.IfNullExpr>());
+      expect(binaryExpr.rhs, isA<o.IfNullExpr>());
+    });
+
+    test('should handle mixed nullable and non-nullable operands', () {
+      // Créer une expression nullable et une non-nullable
+      final nullable = ast.PropertyRead(ast.ImplicitReceiver(), 'valid');
+      final nonNullable = ast.LiteralPrimitive(true);
+      final binary = ast.Binary('||', nullable, nonNullable);
+      
+      final converter = _MockExpressionConverter();
+      final result = binary.visit<o.Expression, Object?, Object?>(converter, null);
+      
+      // Vérifier que le résultat est une expression binaire
+      expect(result, isA<o.BinaryOperatorExpr>());
+      final binaryExpr = result as o.BinaryOperatorExpr;
+      
+      // Vérifier que seul l'opérande nullable est enveloppé avec ?? false
+      expect(binaryExpr.lhs, isA<o.IfNullExpr>());
+      expect(binaryExpr.rhs, isA<o.LiteralExpr>());
+      expect(binaryExpr.rhs, isNot(isA<o.IfNullExpr>()));
+    });
+
+    test('should not add ?? false for non-logical operators', () {
+      // Créer des expressions nullable avec un opérateur +
+      final left = ast.PropertyRead(ast.ImplicitReceiver(), 'a');
+      final right = ast.PropertyRead(ast.ImplicitReceiver(), 'b');
+      final binary = ast.Binary('+', left, right);
+      
+      final converter = _MockExpressionConverter();
+      final result = binary.visit<o.Expression, Object?, Object?>(converter, null);
+      
+      // Vérifier que le résultat est une expression binaire
+      expect(result, isA<o.BinaryOperatorExpr>());
+      final binaryExpr = result as o.BinaryOperatorExpr;
+      
+      // Vérifier que les opérandes ne sont PAS enveloppées avec ?? false
+      expect(binaryExpr.lhs, isNot(isA<o.IfNullExpr>()));
+      expect(binaryExpr.rhs, isNot(isA<o.IfNullExpr>()));
+    });
+  });
 }
 
 class _MockExpressionConverter implements ast.AstVisitor<o.Expression, Object?> {
@@ -54,6 +136,75 @@ class _MockExpressionConverter implements ast.AstVisitor<o.Expression, Object?> 
       return o.not(innerExpr.ifNull(o.literal(false)));
     }
     return o.not(innerExpr);
+  }
+
+  @override
+  o.Expression visitBinary(ast.Binary ast, [Object? context]) {
+    o.BinaryOperator op;
+    switch (ast.operator) {
+      case '+':
+        op = o.BinaryOperator.Plus;
+        break;
+      case '-':
+        op = o.BinaryOperator.Minus;
+        break;
+      case '*':
+        op = o.BinaryOperator.Multiply;
+        break;
+      case '/':
+        op = o.BinaryOperator.Divide;
+        break;
+      case '%':
+        op = o.BinaryOperator.Modulo;
+        break;
+      case '&&':
+        op = o.BinaryOperator.And;
+        break;
+      case '||':
+        op = o.BinaryOperator.Or;
+        break;
+      case '==':
+        op = o.BinaryOperator.Equals;
+        break;
+      case '!=':
+        op = o.BinaryOperator.NotEquals;
+        break;
+      case '===':
+        op = o.BinaryOperator.Identical;
+        break;
+      case '!==':
+        op = o.BinaryOperator.NotIdentical;
+        break;
+      case '<':
+        op = o.BinaryOperator.Lower;
+        break;
+      case '>':
+        op = o.BinaryOperator.Bigger;
+        break;
+      case '<=':
+        op = o.BinaryOperator.LowerEquals;
+        break;
+      case '>=':
+        op = o.BinaryOperator.BiggerEquals;
+        break;
+      default:
+        throw Exception('Unsupported operation "${ast.operator}"');
+    }
+    
+    var left = ast.left.visit(this, false);
+    var right = ast.right.visit(this, false);
+    
+    // Pour && et ||, ajouter ?? false aux opérandes nullable
+    if (ast.operator == '&&' || ast.operator == '||') {
+      if (canBeNull(ast.left)) {
+        left = left.ifNull(o.literal(false));
+      }
+      if (canBeNull(ast.right)) {
+        right = right.ifNull(o.literal(false));
+      }
+    }
+    
+    return o.BinaryOperatorExpr(op, left, right);
   }
 
   @override

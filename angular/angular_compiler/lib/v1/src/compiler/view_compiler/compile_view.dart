@@ -404,6 +404,7 @@ class CompileView {
   final _updateViewQueriesMethod = CompileMethod();
   final dirtyParentQueriesMethod = CompileMethod();
   final detectChangesInInputsMethod = CompileMethod();
+  final detectChangesElementPropertiesMethod = CompileMethod();
   final detectChangesRenderPropertiesMethod = CompileMethod();
   CompileMethod? detectHostChangesMethod;
   final afterContentLifecycleCallbacksMethod = CompileMethod();
@@ -1445,6 +1446,7 @@ class CompileView {
     if (detectChangesInInputsMethod.isEmpty &&
         _updateContentQueriesMethod.isEmpty &&
         afterContentLifecycleCallbacksMethod.isEmpty &&
+        detectChangesElementPropertiesMethod.isEmpty &&
         detectChangesRenderPropertiesMethod.isEmpty &&
         _updateViewQueriesMethod.isEmpty &&
         afterViewLifecycleCallbacksMethod.isEmpty &&
@@ -1463,6 +1465,11 @@ class CompileView {
     // Add @Input change detectors.
     statements.addAll(detectChangesInInputsMethod.finish());
 
+    // Add element property change detectors (class, property, style, attr bindings).
+    // These must run before detectChangesInNestedViews to ensure child views
+    // see the updated values (fixes "Expression has changed after it was checked").
+    statements.addAll(detectChangesElementPropertiesMethod.finish());
+
     // Add content child change detection calls.
     for (var contentChild in viewContainers) {
       statements.add(
@@ -1477,7 +1484,7 @@ class CompileView {
       statements.add(o.IfStmt(notThrowOnChanges, afterContentStmts));
     }
 
-    // Add render properties change detectors.
+    // Add render properties change detectors (text bindings).
     statements.addAll(detectChangesRenderPropertiesMethod.finish());
 
     // Add view child change detection calls.

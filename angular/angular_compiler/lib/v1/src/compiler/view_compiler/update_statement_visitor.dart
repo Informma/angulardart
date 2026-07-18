@@ -143,10 +143,15 @@ class _UpdateStatementsVisitor
       final renderMethod = isHtmlElement
           ? DomHelpers.updateClassBinding
           : DomHelpers.updateClassBindingNonHtml;
+      
+      final value = bindingSource.isNullable
+          ? renderValue!.ifNull(o.literal(false))
+          : renderValue!;
+      
       return o.importExpr(renderMethod).callFn([
         renderNode!.toReadExpr(),
         o.literal(classBinding.name),
-        renderValue!,
+        value,
       ]).toStmt();
     }
   }
@@ -245,11 +250,23 @@ class _UpdateStatementsVisitor
 
   @override
   o.Statement visitInputBinding(ir.InputBinding inputBinding,
-          [o.Expression? renderValue]) =>
-      appViewInstance!
-          .prop(inputBinding.propertyName)
-          .set(renderValue!)
-          .toStmt();
+      [o.Expression? renderValue]) {
+    var value = renderValue!;
+    if (bindingSource.isNullable && _isNonNullableBool(inputBinding.type)) {
+      value = value.ifNull(o.literal(false));
+    }
+    return appViewInstance!
+        .prop(inputBinding.propertyName)
+        .set(value)
+        .toStmt();
+  }
+
+  bool _isNonNullableBool(o.OutputType? type) {
+    if (type == null) return false;
+    if (type is! o.BuiltinType) return false;
+    return type.name == o.BuiltinTypeName.Bool &&
+        !type.hasModifier(o.TypeModifier.Nullable);
+  }
 
   @override
   o.Statement visitCustomEvent(ir.CustomEvent customEvent,

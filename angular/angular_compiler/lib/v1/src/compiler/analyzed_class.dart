@@ -232,6 +232,9 @@ bool canBeNull(ast.AST expression) {
     if (!canBeNull(expression.condition)) return false;
     return canBeNull(expression.nullExp);
   }
+  if (expression is ast.PostfixNotNull) {
+    return false;
+  }
   return true;
 }
 

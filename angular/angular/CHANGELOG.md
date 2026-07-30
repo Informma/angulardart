@@ -1,3 +1,7 @@
+## 8.0.6
+
+- Restored non-null assertions in `inspector.dart` for compatibility with dependency lower bounds
+
 ## 8.0.5
 
 - Added `topics` for better discoverability on pub.dev

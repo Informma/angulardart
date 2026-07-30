@@ -229,3 +229,36 @@ Les packages `angulardart` et `angulardart_components` utilisent encore `package
   - https://pub.dev/packages/angulardart_forms
   - https://pub.dev/packages/angulardart_router
   - https://pub.dev/packages/angulardart_components
+
+### 2026-07-30 - Creation de `angulardart_cli`
+
+- Package CLI cree dans `angulardart_upgrade_v3/angulardart_cli/`
+- Commandes supportees :
+  - `ngdart new <project>` - Cree un nouveau projet AngularDart
+  - `ngdart generate component <Name>` - Genere un composant (.dart + .html)
+  - `ngdart generate directive <Name>` - Genere une directive
+  - `ngdart generate pipe <Name>` - Genere un pipe
+  - `ngdart generate service <Name>` - Genere un service
+- Templates embarques en strings Dart (pas de dependance a des fichiers externes)
+- Compatible Dart 3 et packages `angulardart_*` depuis pub.dev
+
+### 2026-07-30 - Projet de test `ngtest`
+
+- Projet cree dans `/home/guyyannvectol/dev/perso/ngtest/` avec `ngdart new`
+- `dart pub get` : OK
+- `dart run build_runner build` : OK (avec `dependency_overrides` local)
+- Fichiers generes : `pubspec.yaml`, `build.yaml`, `analysis_options.yaml`, `web/index.html`, `web/main.dart`, `lib/app_component.dart`, `lib/app_component.html`
+
+### 2026-07-30 - Correction `angulardart` 8.0.2
+
+- Ajout de `model.g.dart` pre-genere (requis par `built_value` pour les builds DDC)
+- Ajout de `build_runner`, `built_value_generator`, `build_web_compilers` en dev_dependencies
+- Version 8.0.2 publiee sur pub.dev
+
+### 2026-07-30 - Publication de `angulardart_cli`
+
+- Version 1.0.0 publiee sur pub.dev
+- Version 1.0.1 publiee (correction warnings imports non utilises)
+- Documentation complete ajoutee (README.md avec exemples detailles)
+- Lien pub.dev : https://pub.dev/packages/angulardart_cli
+- Commande d'installation : `dart pub global activate angulardart_cli`

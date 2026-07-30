@@ -1,0 +1,19 @@
+name: angulardart_cli
+version: 1.0.1
+description: CLI scaffolding tool for AngularDart (Dart 3 compatible)
+repository: https://github.com/angulardart/cli
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+executables:
+  ngdart:
+
+dependencies:
+  args: ^2.5.0
+  mustache_template: ^2.0.0
+  path: ^1.9.0
+
+dev_dependencies:
+  lints: ^4.0.0
+  test: ^1.25.0

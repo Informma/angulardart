@@ -1,0 +1,9 @@
+include: package:lints/recommended.yaml
+
+analyzer:
+  errors:
+    todo: ignore
+
+linter:
+  rules:
+    - prefer_single_quotes

@@ -1,0 +1,5 @@
+analyzer:
+  exclude:
+    - example/**
+    - build/**
+    - .dart_tool/**

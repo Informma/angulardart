@@ -1,7 +1,7 @@
 name: angulardart_compiler
-repository: https://github.com/angulardart/angular
+repository: https://github.com/angulardart/angular/tree/master/angular_compiler
 description: Compiler for AngularDart.
-version: 3.0.0
+version: 3.0.1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

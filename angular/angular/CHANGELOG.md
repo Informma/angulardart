@@ -1,3 +1,14 @@
+## 8.0.4
+
+- Fixed repository URL to point to the correct subdirectory in the monorepo
+
+## 8.0.3
+
+- Fixed unnecessary non-null assertion warnings in `lib/src/devtools/inspector.dart`
+- Added `example/` directory with a minimal working example
+- Improved `README.md` with comprehensive documentation and quick start guide
+- Added `analysis_options.yaml` to exclude example from package analysis
+
 ## 8.0.2
 
 - Added pre-generated `model.g.dart` for `built_value` serializers (required for DDC builds)

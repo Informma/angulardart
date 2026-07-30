@@ -1,3 +1,13 @@
+## 8.0.2
+
+- Added pre-generated `model.g.dart` for `built_value` serializers (required for DDC builds)
+- Added `build_runner`, `built_value_generator`, and `build_web_compilers` as dev dependencies
+
+## 8.0.1
+
+- Re-added `lib/src/build.dart` (was excluded from 8.0.0)
+- Added `angulardart_ast` and `angulardart_compiler` as dependencies
+
 ## 8.0.0
 
 - **BREAKING CHANGE**: Require Dart ^3.0.0

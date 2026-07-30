@@ -1,10 +1,19 @@
 name: angulardart_router
 repository: https://github.com/angulardart/angular/tree/master/angular_router
+issue_tracker: https://github.com/angulardart/angular/issues
 description: Router for AngularDart.
-version: 4.0.1
+version: 4.0.2
+topics:
+  - angular
+  - router
+  - navigation
+  - web
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+
+platforms:
+  web:
 
 dependencies:
   angulardart: ^8.0.0

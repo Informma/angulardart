@@ -1,3 +1,9 @@
+## 1.0.2
+
+- Added `topics` for better discoverability on pub.dev
+- Added `issue_tracker` URL
+- Added explicit `platforms` declaration for Linux, macOS, and Windows
+
 ## 1.0.1
 
 - Removed unused imports (cleaner code)

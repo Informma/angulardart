@@ -1,10 +1,21 @@
 name: angulardart_cli
-version: 1.0.1
+version: 1.0.2
 description: CLI scaffolding tool for AngularDart (Dart 3 compatible)
 repository: https://github.com/angulardart/cli
+issue_tracker: https://github.com/angulardart/cli/issues
+topics:
+  - cli
+  - angular
+  - scaffolding
+  - code-generation
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+
+platforms:
+  linux:
+  macos:
+  windows:
 
 executables:
   ngdart:

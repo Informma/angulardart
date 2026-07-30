@@ -1,3 +1,9 @@
+## 2.0.1
+
+- Added `topics` for better discoverability on pub.dev
+- Added `issue_tracker` URL
+- Added explicit `platforms` declaration for web support
+
 ## 2.0.0
 
 - **BREAKING CHANGE**: Require Dart ^3.0.0

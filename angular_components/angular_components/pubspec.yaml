@@ -1,12 +1,22 @@
 name: angulardart_components
-version: 2.0.0
+version: 2.0.1
 description: >
   The official Material Design components for AngularDart. Used at Google in
   production apps.
 repository: https://github.com/angulardart/angular_components
+issue_tracker: https://github.com/angulardart/angular_components/issues
+topics:
+  - angular
+  - components
+  - material-design
+  - ui
+  - web
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+
+platforms:
+  web:
 
 dependencies:
   angulardart: ^8.0.0

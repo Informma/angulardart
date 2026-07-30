@@ -1,10 +1,20 @@
 name: angulardart_ast
 repository: https://github.com/angulardart/angular/tree/master/angular_ast
+issue_tracker: https://github.com/angulardart/angular/issues
 description: Parser and utilities for AngularDart templates
-version: 3.0.1
+version: 3.0.2
+topics:
+  - angular
+  - parser
+  - ast
+  - template
+  - web
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+
+platforms:
+  web:
 
 dependencies:
   analyzer: ^6.0.0

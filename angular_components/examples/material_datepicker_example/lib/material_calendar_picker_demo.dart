@@ -2,12 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/material_datepicker/calendar.dart';
-import 'package:angular_components/material_datepicker/material_calendar_picker.dart';
-import 'package:angular_components/material_datepicker/module.dart';
-import 'package:angular_components/model/date/date.dart';
-import 'package:angular_components/utils/browser/window/module.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/material_datepicker/calendar.dart';
+import 'package:angulardart_components/material_datepicker/material_calendar_picker.dart';
+import 'package:angulardart_components/material_datepicker/module.dart';
+import 'package:angulardart_components/model/date/date.dart';
+import 'package:angulardart_components/utils/browser/window/module.dart';
 
 @Component(
   selector: 'material-calendar-picker-demo',

@@ -2,17 +2,17 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/button_decorator/button_decorator.dart';
-import 'package:angular_components/material_button/material_button.dart';
-import 'package:angular_components/material_chips/material_chip.dart';
-import 'package:angular_components/material_chips/material_chips.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/material_select/display_name.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
-import 'package:angular_components/model/ui/display_name.dart';
-import 'package:angular_components/model/ui/has_renderer.dart';
-import 'package:angular_gallery_section/annotation/gallery_section_config.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/button_decorator/button_decorator.dart';
+import 'package:angulardart_components/material_button/material_button.dart';
+import 'package:angulardart_components/material_chips/material_chip.dart';
+import 'package:angulardart_components/material_chips/material_chips.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/material_select/display_name.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/ui/display_name.dart';
+import 'package:angulardart_components/model/ui/has_renderer.dart';
+import 'package:angulardart_gallery_section/annotation/gallery_section_config.dart';
 
 @GallerySectionConfig(
   displayName: 'Material Chips',

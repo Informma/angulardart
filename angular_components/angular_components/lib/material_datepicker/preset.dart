@@ -4,7 +4,7 @@
 
 import 'package:intl/intl.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/material_datepicker/range.dart';
+import 'package:angulardart_components/material_datepicker/range.dart';
 
 /// A [DatepickerPreset] represents an option for selecting a predefined date
 /// range in material-date-range-picker.

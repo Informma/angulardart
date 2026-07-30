@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:angular_forms/angular_forms.dart';
+import 'package:angulardart_forms/angulardart_forms.dart';
 
 import 'model_test.template.dart' as ng_generated;
 

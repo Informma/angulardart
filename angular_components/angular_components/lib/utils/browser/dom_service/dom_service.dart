@@ -6,12 +6,12 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math' show max, min;
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/utils/async/async.dart';
-import 'package:angular_components/utils/disposer/disposable_callback.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/utils/async/async.dart';
+import 'package:angulardart_components/utils/disposer/disposable_callback.dart';
 // TODO(google): Consolidate this with RenderSync /Angular.
 
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 import 'package:meta/meta.dart';
 
 /// A callback from [DomService.scheduleRead] or [DomService.scheduleWrite].

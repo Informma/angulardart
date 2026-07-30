@@ -4,10 +4,10 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/src/utils/angular/managed_zone/managed_zone.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/src/utils/angular/managed_zone/managed_zone.dart';
 
-export 'package:angular_components/src/utils/angular/managed_zone/managed_zone.dart';
+export 'package:angulardart_components/src/utils/angular/managed_zone/managed_zone.dart';
 
 /// An implementation of [ManagedZone] that uses Angular 2's [NgZone].
 @Deprecated('Use NgZone directly instead')

@@ -4,12 +4,12 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
-import 'package:angular_components/material_input/material_input.dart';
-import 'package:angular_components/material_input/material_input_error_keys.dart';
+import 'package:angulardart_components/material_input/material_input.dart';
+import 'package:angulardart_components/material_input/material_input_error_keys.dart';
 
-export 'package:angular_components/material_input/material_number_accessor.dart'
+export 'package:angulardart_components/material_input/material_number_accessor.dart'
     show materialNumberInputDirectives;
 
 /// Directive to control `material-input` to accept percentage values.

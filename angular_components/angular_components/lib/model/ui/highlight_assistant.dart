@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular_components/model/ui/has_renderer.dart';
-import 'package:angular_components/model/ui/highlighted_text_model.dart';
+import 'package:angulardart_components/model/ui/has_renderer.dart';
+import 'package:angulardart_components/model/ui/highlighted_text_model.dart';
 
 /// Maintains a reference to the highlighter and a cache of highlighted data.
 class HighlightAssistant {

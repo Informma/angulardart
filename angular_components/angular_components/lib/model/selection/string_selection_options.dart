@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:meta/meta.dart';
-import 'package:angular_components/model/selection/select.dart';
-import 'package:angular_components/model/selection/selection_options.dart';
-import 'package:angular_components/model/ui/has_renderer.dart';
-import 'package:angular_components/utils/async/async.dart';
+import 'package:angulardart_components/model/selection/select.dart';
+import 'package:angulardart_components/model/selection/selection_options.dart';
+import 'package:angulardart_components/model/ui/has_renderer.dart';
+import 'package:angulardart_components/utils/async/async.dart';
 
 /// Formats [value] as a lowercase string without spaces.
 String _stringFormatSuggestion(String value) =>

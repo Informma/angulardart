@@ -5,18 +5,18 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/material_datepicker/module.dart';
-import 'package:angular_components/material_input/material_input.dart';
-import 'package:angular_components/material_select/material_dropdown_select.dart';
-import 'package:angular_components/model/a11y/keyboard_handler_mixin.dart';
-import 'package:angular_components/model/selection/select.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
-import 'package:angular_components/model/selection/string_selection_options.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/material_datepicker/module.dart';
+import 'package:angulardart_components/material_input/material_input.dart';
+import 'package:angulardart_components/material_select/material_dropdown_select.dart';
+import 'package:angulardart_components/model/a11y/keyboard_handler_mixin.dart';
+import 'package:angulardart_components/model/selection/select.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/selection/string_selection_options.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// A material-design-styled time input component.
 @Component(

@@ -8,10 +8,10 @@ library events;
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as js_util;
-import 'package:angular_components/utils/browser/feature_detector/feature_detector.dart';
+import 'package:angulardart_components/utils/browser/feature_detector/feature_detector.dart';
 
 /// Determines if the space key was pressed in a [KeyboardEvent].
 ///

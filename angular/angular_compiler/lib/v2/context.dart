@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
-import 'package:angular/src/utilities.dart';
-import 'package:angular_compiler/v1/src/angular_compiler/cli/messages.dart';
-import 'package:angular_compiler/v2/asset.dart';
+import 'package:angulardart/src/utilities.dart';
+import 'package:angulardart_compiler/v1/src/angular_compiler/cli/messages.dart';
+import 'package:angulardart_compiler/v2/asset.dart';
 
 import 'src/context/build_error.dart';
 

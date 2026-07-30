@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/laminate/overlay/overlay.dart';
-import 'package:angular_components/laminate/portal/portal.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/laminate/overlay/overlay.dart';
+import 'package:angulardart_components/laminate/portal/portal.dart';
 
 /// An internal directive that is used by the modal component to hoist content.
 @Directive(

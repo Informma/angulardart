@@ -4,7 +4,7 @@
 
 import 'dart:async';
 
-import 'package:angular_components/utils/rate_limit_utils/rate_limit_utils.dart'
+import 'package:angulardart_components/utils/rate_limit_utils/rate_limit_utils.dart'
     show debounce;
 
 import 'rate_limit.dart';

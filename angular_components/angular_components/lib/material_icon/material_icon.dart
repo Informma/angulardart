@@ -4,8 +4,8 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/model/ui/icon.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/model/ui/icon.dart';
 
 /// Icons that should be horizontally flipped when the direction is RTL.
 ///

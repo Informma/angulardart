@@ -1,4 +1,4 @@
-import 'package:angular/src/di/injector.dart' show Injector;
+import 'package:angulardart/src/di/injector.dart' show Injector;
 
 import 'component_factory.dart' show ComponentFactory, ComponentRef;
 import 'component_loader.dart';

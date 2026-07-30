@@ -6,10 +6,10 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:quiver/core.dart';
-import 'package:angular_components/utils/angular/scroll_host/interface.dart';
-import 'package:angular_components/utils/browser/events/events.dart'
+import 'package:angulardart_components/utils/angular/scroll_host/interface.dart';
+import 'package:angulardart_components/utils/browser/events/events.dart'
     show compareDocumentPosition;
-import 'package:angular_components/utils/browser/feature_detector/feature_detector.dart'
+import 'package:angulardart_components/utils/browser/feature_detector/feature_detector.dart'
     as feature_detector;
 
 /// A [StickyController] implementation based on position: sticky.

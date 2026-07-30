@@ -2,14 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_forms/angular_forms.dart';
-import 'package:angular_components/annotations/rtl_annotation.dart';
-import 'package:angular_components/material_input/material_number_accessor.dart';
-import 'package:angular_gallery_section/annotation/gallery_section_config.dart';
-import 'package:angular_components/scorecard/scoreboard.dart';
-import 'package:angular_components/scorecard/scorecard.dart';
-import 'package:angular_components/utils/color/material.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_forms/angulardart_forms.dart';
+import 'package:angulardart_components/annotations/rtl_annotation.dart';
+import 'package:angulardart_components/material_input/material_number_accessor.dart';
+import 'package:angulardart_gallery_section/annotation/gallery_section_config.dart';
+import 'package:angulardart_components/scorecard/scoreboard.dart';
+import 'package:angulardart_components/scorecard/scorecard.dart';
+import 'package:angulardart_components/utils/color/material.dart';
 
 @GallerySectionConfig(
   displayName: 'Scorecard',

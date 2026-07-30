@@ -1,6 +1,6 @@
 import 'dart:html';
 
-import 'package:angular/src/core/zone/ng_zone.dart';
+import 'package:angulardart/src/core/zone/ng_zone.dart';
 
 /// Provides a runtime implementation for "native" DOM events on elements.
 class EventManager {

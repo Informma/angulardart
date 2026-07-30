@@ -2,9 +2,9 @@ import 'dart:html';
 import 'dart:js_util' as js_util;
 
 import 'package:test/test.dart';
-import 'package:angular/angular.dart';
-import 'package:angular_forms/angular_forms.dart';
-import 'package:angular_test/angular_test.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_forms/angulardart_forms.dart';
+import 'package:angulardart_test/angulardart_test.dart';
 
 import 'accessor_test.template.dart' as ng;
 

@@ -5,13 +5,13 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
-import 'package:angular_components/content/deferred_content_aware.dart';
-import 'package:angular_components/focus/keyboard_only_focus_indicator.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/theme/dark_theme.dart';
+import 'package:angulardart_components/content/deferred_content_aware.dart';
+import 'package:angulardart_components/focus/keyboard_only_focus_indicator.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/theme/dark_theme.dart';
 
 import 'paper_tooltip.dart';
 import 'tooltip_target.dart';

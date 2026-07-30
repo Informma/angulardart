@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:angular/src/meta.dart';
-import 'package:angular_compiler/v1/cli.dart';
-import 'package:angular_compiler/v2/context.dart';
+import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_compiler/v1/cli.dart';
+import 'package:angulardart_compiler/v2/context.dart';
 
 import 'analyzed_class.dart';
 import 'expression_parser/ast.dart' as ast;

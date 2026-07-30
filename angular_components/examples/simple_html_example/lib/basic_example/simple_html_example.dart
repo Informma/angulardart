@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart' show Component;
-import 'package:angular_components/simple_html/simple_html.dart'
+import 'package:angulardart/angulardart.dart' show Component;
+import 'package:angulardart_components/simple_html/simple_html.dart'
     show SimpleHtmlComponent, SimpleHtmlBlockComponent;
 
 import 'simple_html_example_messages.dart';

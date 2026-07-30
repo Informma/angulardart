@@ -1,8 +1,8 @@
 import 'package:test/test.dart';
-import 'package:angular/angular.dart';
-import 'package:angular_router/angular_router.dart';
-import 'package:angular_router/testing.dart';
-import 'package:angular_test/angular_test.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+import 'package:angulardart_router/testing.dart';
+import 'package:angulardart_test/angulardart_test.dart';
 
 // ignore: uri_has_not_been_generated
 import '1389_empty_path_test.template.dart' as ng;

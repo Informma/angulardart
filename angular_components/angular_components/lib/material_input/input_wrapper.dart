@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
 
 // TODO(google): This copies a lot of values from material-input, and yet
 // material-input doesn't use it. Consider refactoring so that these

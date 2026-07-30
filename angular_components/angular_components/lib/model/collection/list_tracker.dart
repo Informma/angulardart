@@ -5,7 +5,7 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 import 'package:observable/observable.dart';
 
 class LazyListTracker<S, T> extends Object

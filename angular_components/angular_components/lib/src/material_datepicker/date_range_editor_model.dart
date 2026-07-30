@@ -4,14 +4,14 @@
 
 import 'dart:async';
 
-import 'package:angular_components/material_datepicker/calendar.dart';
-import 'package:angular_components/material_datepicker/comparison.dart';
-import 'package:angular_components/material_datepicker/comparison_option.dart';
-import 'package:angular_components/material_datepicker/range.dart';
-import 'package:angular_components/src/material_datepicker/sequential.dart';
-import 'package:angular_components/model/date/date.dart';
-import 'package:angular_components/model/observable/observable.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/material_datepicker/calendar.dart';
+import 'package:angulardart_components/material_datepicker/comparison.dart';
+import 'package:angulardart_components/material_datepicker/comparison_option.dart';
+import 'package:angulardart_components/material_datepicker/range.dart';
+import 'package:angulardart_components/src/material_datepicker/sequential.dart';
+import 'package:angulardart_components/model/date/date.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// The cause of the most recent change to the date range.
 enum Action {

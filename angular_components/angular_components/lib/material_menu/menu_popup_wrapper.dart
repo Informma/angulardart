@@ -5,11 +5,11 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/model/menu/menu.dart';
-import 'package:angular_components/model/observable/observable.dart';
-import 'package:angular_components/model/ui/accepts_width.dart';
-import 'package:angular_components/utils/angular/properties/properties.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/model/menu/menu.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
+import 'package:angulardart_components/model/ui/accepts_width.dart';
+import 'package:angulardart_components/utils/angular/properties/properties.dart';
 
 /// Represents an intent to open the menu popup.
 ///

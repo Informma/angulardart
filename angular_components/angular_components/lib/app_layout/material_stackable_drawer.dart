@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/app_layout/material_temporary_drawer.dart';
-import 'package:angular_components/content/deferred_content_aware.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/app_layout/material_temporary_drawer.dart';
+import 'package:angulardart_components/content/deferred_content_aware.dart';
 
 /// A stackable temporary drawer that can be opened and closed.
 ///

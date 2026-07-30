@@ -4,19 +4,19 @@
 
 import 'dart:core';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
-import 'package:angular_components/material_datepicker/comparison_option.dart';
-import 'package:angular_components/material_datepicker/date_range_input.dart';
-import 'package:angular_components/material_datepicker/range.dart';
-import 'package:angular_components/src/material_datepicker/date_range_editor_model.dart';
-import 'package:angular_components/material_list/material_list.dart';
-import 'package:angular_components/material_list/material_list_item.dart';
-import 'package:angular_components/material_select/material_dropdown_select.dart';
-import 'package:angular_components/material_select/material_select_item.dart';
-import 'package:angular_components/material_toggle/material_toggle.dart';
-import 'package:angular_components/model/date/date.dart';
-import 'package:angular_components/utils/angular/scroll_host/angular_2.dart';
+import 'package:angulardart_components/material_datepicker/comparison_option.dart';
+import 'package:angulardart_components/material_datepicker/date_range_input.dart';
+import 'package:angulardart_components/material_datepicker/range.dart';
+import 'package:angulardart_components/src/material_datepicker/date_range_editor_model.dart';
+import 'package:angulardart_components/material_list/material_list.dart';
+import 'package:angulardart_components/material_list/material_list_item.dart';
+import 'package:angulardart_components/material_select/material_dropdown_select.dart';
+import 'package:angulardart_components/material_select/material_select_item.dart';
+import 'package:angulardart_components/material_toggle/material_toggle.dart';
+import 'package:angulardart_components/model/date/date.dart';
+import 'package:angulardart_components/utils/angular/scroll_host/angular_2.dart';
 
 /// Component used to edit the `comparison` field of a [DateRangeComparison].
 /// This is meant for use in the `material-date-range-picker`, and doesn't make

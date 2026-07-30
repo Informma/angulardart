@@ -4,8 +4,8 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/focus/focus.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/focus/focus.dart';
 
 /// Used in conjunction with other components to allow tagging view or content
 /// elements that should be focused either by index or [key].

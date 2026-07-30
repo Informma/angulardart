@@ -6,11 +6,11 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:quiver/iterables.dart' show range;
-import 'package:angular_components/reorder_list/reorder_events.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
-import 'package:angular_components/utils/keyboard/keyboard.dart';
+import 'package:angulardart_components/reorder_list/reorder_events.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/keyboard/keyboard.dart';
 
 export 'reorder_events.dart';
 

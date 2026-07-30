@@ -5,17 +5,17 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
-import 'package:angular_components/focus/focus.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/material_radio/material_radio_group.dart';
-import 'package:angular_components/material_ripple/material_ripple.dart';
-import 'package:angular_components/model/ui/icon.dart';
-import 'package:angular_components/utils/browser/events/events.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
-import 'package:angular_forms/angular_forms.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/meta.dart';
+import 'package:angulardart_components/focus/focus.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/material_radio/material_radio_group.dart';
+import 'package:angulardart_components/material_ripple/material_ripple.dart';
+import 'package:angulardart_components/model/ui/icon.dart';
+import 'package:angulardart_components/utils/browser/events/events.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
+import 'package:angulardart_forms/angulardart_forms.dart';
 import 'package:meta/meta.dart';
 
 const Icon uncheckedIcon = Icon('radio_button_unchecked');

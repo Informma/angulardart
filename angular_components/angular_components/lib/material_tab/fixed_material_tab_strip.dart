@@ -5,13 +5,13 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
-import 'package:angular_components/annotations/rtl_annotation.dart';
-import 'package:angular_components/focus/focus_item.dart';
-import 'package:angular_components/focus/focus_list.dart';
-import 'package:angular_components/material_tab/tab_button.dart';
-import 'package:angular_components/material_tab/tab_change_event.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/meta.dart';
+import 'package:angulardart_components/annotations/rtl_annotation.dart';
+import 'package:angulardart_components/focus/focus_item.dart';
+import 'package:angulardart_components/focus/focus_list.dart';
+import 'package:angulardart_components/material_tab/tab_button.dart';
+import 'package:angulardart_components/material_tab/tab_change_event.dart';
 
 /// A tab strip component with Tab-styled buttons and active tab indicator.
 ///

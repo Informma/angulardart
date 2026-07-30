@@ -4,10 +4,10 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
-import 'package:angular_forms/angular_forms.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_forms/angulardart_forms.dart';
 import 'package:meta/meta.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 import 'base_material_input.dart';
 

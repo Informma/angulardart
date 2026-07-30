@@ -4,10 +4,10 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
-import 'package:angular_forms/angular_forms.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_forms/angulardart_forms.dart';
 import 'package:meta/meta.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
 
 import 'material_dropdown_select.dart';
 

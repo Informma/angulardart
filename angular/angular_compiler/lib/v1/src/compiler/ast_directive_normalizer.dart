@@ -1,8 +1,8 @@
-import 'package:angular/src/meta.dart';
-import 'package:angular_ast/angular_ast.dart' as ast;
-import 'package:angular_compiler/v1/angular_compiler.dart';
-import 'package:angular_compiler/v1/cli.dart';
-import 'package:angular_compiler/v2/context.dart';
+import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_ast/angulardart_ast.dart' as ast;
+import 'package:angulardart_compiler/v1/angular_compiler.dart';
+import 'package:angulardart_compiler/v1/cli.dart';
+import 'package:angulardart_compiler/v2/context.dart';
 
 import 'compile_metadata.dart';
 import 'parse_util.dart';

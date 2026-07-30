@@ -6,20 +6,20 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math' show max;
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart' show Logger;
-import 'package:angular_components/src/utils/angular/scroll_host/gestures.dart';
-import 'package:angular_components/src/utils/angular/scroll_host/pan_controller_impl.dart';
-import 'package:angular_components/src/utils/angular/scroll_host/position_sticky_controller.dart';
-import 'package:angular_components/src/utils/angular/scroll_host/scroll_host_event_impl.dart';
-import 'package:angular_components/src/utils/angular/scroll_host/scroll_host_interface.dart';
-import 'package:angular_components/src/utils/angular/scroll_host/sticky_controller_impl.dart';
-import 'package:angular_components/utils/async/async.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
-import 'package:angular_components/utils/browser/feature_detector/feature_detector.dart'
+import 'package:angulardart_components/src/utils/angular/scroll_host/gestures.dart';
+import 'package:angulardart_components/src/utils/angular/scroll_host/pan_controller_impl.dart';
+import 'package:angulardart_components/src/utils/angular/scroll_host/position_sticky_controller.dart';
+import 'package:angulardart_components/src/utils/angular/scroll_host/scroll_host_event_impl.dart';
+import 'package:angulardart_components/src/utils/angular/scroll_host/scroll_host_interface.dart';
+import 'package:angulardart_components/src/utils/angular/scroll_host/sticky_controller_impl.dart';
+import 'package:angulardart_components/utils/async/async.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
+import 'package:angulardart_components/utils/browser/feature_detector/feature_detector.dart'
     as feature_detector;
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// Base implementation of [ScrollHost] with common methods.
 abstract class ScrollHostBase implements ScrollHost {

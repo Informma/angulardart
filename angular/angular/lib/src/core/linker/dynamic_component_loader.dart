@@ -1,5 +1,5 @@
-import 'package:angular/src/di/injector.dart';
-import 'package:angular/src/utilities.dart';
+import 'package:angulardart/src/di/injector.dart';
+import 'package:angulardart/src/utilities.dart';
 
 import 'component_factory.dart' show ComponentRef;
 import 'component_loader.dart' show ComponentLoader;

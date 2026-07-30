@@ -1,7 +1,7 @@
 targets:
   $default:
     builders:
-      angular|angular:
+      angulardart|angulardart:
         generate_for:
           exclude: [
             "lib/*.dart",
@@ -10,15 +10,15 @@ targets:
             "lib/src/**",
             "lib/visitors/**",
             ]
-      angular_components|scss_builder:
+      angulardart_components|scss_builder:
         enabled: True
-      angular_gallery|angular_gallery:
+      angulardart_gallery|angulardart_gallery:
         enabled: False
 
 builders:
   angular_gallery_section:
     target: ':angular_gallery_section'
-    import: 'package:angular_gallery_section/builder.dart'
+    import: 'package:angulardart_gallery_section/builder.dart'
     builder_factories: [
       'galleryInfoBuilder',
       'componentApiBuilder',
@@ -28,4 +28,4 @@ builders:
       ".dart": [".gallery_info.json", ".api.dart"],
       "$lib$": ["gallery_section.dart", "gallery_section_summary.json"]}
     auto_apply: dependents
-    runs_before: ["angular|angular", "angular_components|scss_builder"]
+    runs_before: ["angulardart|angulardart", "angulardart_components|scss_builder"]

@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
-import 'package:angular_ast/src/expression/micro/lexer.dart';
-import 'package:angular_ast/src/expression/micro/token.dart';
+import 'package:angulardart_ast/src/expression/micro/lexer.dart';
+import 'package:angulardart_ast/src/expression/micro/token.dart';
 
 void main() {
   // Returns the html parsed as a series of tokens.

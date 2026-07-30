@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:intl/intl.dart';
-import 'package:angular_components/material_datepicker/range.dart';
+import 'package:angulardart_components/material_datepicker/range.dart';
 
 /// Converts current date range to comparison date range.
 ///

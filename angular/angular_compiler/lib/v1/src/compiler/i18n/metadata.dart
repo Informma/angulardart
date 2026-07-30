@@ -1,6 +1,6 @@
 import 'package:source_span/source_span.dart' show SourceSpan;
-import 'package:angular_ast/angular_ast.dart';
-import 'package:angular_compiler/v2/context.dart';
+import 'package:angulardart_ast/angulardart_ast.dart';
+import 'package:angulardart_compiler/v2/context.dart';
 
 const i18nDescription = 'i18n';
 const i18nDescriptionPrefix = '$i18nDescription:';

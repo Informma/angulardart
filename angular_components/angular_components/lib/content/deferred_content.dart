@@ -4,8 +4,8 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 import 'deferred_content_aware.dart';
 

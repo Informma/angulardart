@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
-import 'package:angular/src/devtools/error.dart';
-import 'package:angular/src/devtools/reference_counter.dart';
+import 'package:angulardart/src/devtools/error.dart';
+import 'package:angulardart/src/devtools/reference_counter.dart';
 
 final throwsDevToolsError = throwsA(isA<DevToolsError>());
 

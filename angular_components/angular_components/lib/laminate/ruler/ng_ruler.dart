@@ -5,11 +5,11 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:angular/angular.dart' hide Visibility;
-import 'package:angular_components/laminate/enums/position.dart';
-import 'package:angular_components/laminate/enums/visibility.dart';
-import 'package:angular_components/laminate/ruler/dom_ruler.dart';
-import 'package:angular_components/src/laminate/ruler/ruler_interface.dart';
+import 'package:angulardart/angulardart.dart' hide Visibility;
+import 'package:angulardart_components/laminate/enums/position.dart';
+import 'package:angulardart_components/laminate/enums/visibility.dart';
+import 'package:angulardart_components/laminate/ruler/dom_ruler.dart';
+import 'package:angulardart_components/src/laminate/ruler/ruler_interface.dart';
 
 /// An implementation of ruler that works on Angular [ElementRef] objects.
 @Deprecated('Use DomRuler instead. ElementRef is deprecated.')

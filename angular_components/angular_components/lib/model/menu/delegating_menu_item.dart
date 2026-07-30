@@ -4,8 +4,8 @@
 
 import 'package:built_collection/built_collection.dart';
 import 'package:observable/observable.dart';
-import 'package:angular_components/model/menu/menu.dart';
-import 'package:angular_components/model/ui/icon.dart';
+import 'package:angulardart_components/model/menu/menu.dart';
+import 'package:angulardart_components/model/ui/icon.dart';
 
 /// Delegate menu item class so other classes can implement the [MenuItem]
 /// interface without implementing all the members.

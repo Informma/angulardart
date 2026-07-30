@@ -5,11 +5,11 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/annotations/rtl_annotation.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/laminate/ruler/dom_ruler.dart';
-import 'package:angular_components/src/laminate/popup/popup_source.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/annotations/rtl_annotation.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/laminate/ruler/dom_ruler.dart';
+import 'package:angulardart_components/src/laminate/popup/popup_source.dart';
 
 /// A handler to return the position and size of the *content* of [element].
 ///

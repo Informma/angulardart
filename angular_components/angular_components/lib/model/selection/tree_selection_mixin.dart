@@ -5,8 +5,8 @@
 import 'dart:collection';
 import 'package:meta/meta.dart';
 
-import 'package:angular_components/model/selection/select.dart';
-import 'package:angular_components/model/selection/selection_options.dart';
+import 'package:angulardart_components/model/selection/select.dart';
+import 'package:angulardart_components/model/selection/selection_options.dart';
 
 /// A mixin created to support tree-based selection options.
 ///

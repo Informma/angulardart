@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 import 'base_material_input.dart';
 

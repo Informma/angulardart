@@ -1,7 +1,7 @@
 targets:
   $default:
     builders:
-      angular_components|scss_builder:
+      angulardart_components|scss_builder:
         enabled: True
-      angular_gallery|angular_gallery:
+      angulardart_gallery|angulardart_gallery:
         enabled: False

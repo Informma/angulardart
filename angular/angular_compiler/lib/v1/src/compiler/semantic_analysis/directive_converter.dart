@@ -1,12 +1,12 @@
 import 'package:source_span/source_span.dart';
-import 'package:angular_compiler/v1/src/compiler/compile_metadata.dart';
-import 'package:angular_compiler/v1/src/compiler/expression_parser/ast.dart'
+import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart';
+import 'package:angulardart_compiler/v1/src/compiler/expression_parser/ast.dart'
     as ast;
-import 'package:angular_compiler/v1/src/compiler/ir/model.dart' as ir;
-import 'package:angular_compiler/v1/src/compiler/schema/element_schema_registry.dart';
-import 'package:angular_compiler/v1/src/compiler/semantic_analysis/binding_converter.dart';
-import 'package:angular_compiler/v1/src/compiler/template_ast.dart' as ast;
-import 'package:angular_compiler/v1/src/compiler/template_parser.dart';
+import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart' as ir;
+import 'package:angulardart_compiler/v1/src/compiler/schema/element_schema_registry.dart';
+import 'package:angulardart_compiler/v1/src/compiler/semantic_analysis/binding_converter.dart';
+import 'package:angulardart_compiler/v1/src/compiler/template_ast.dart' as ast;
+import 'package:angulardart_compiler/v1/src/compiler/template_parser.dart';
 
 /// Converts [CompileDirectiveMetadata] objects into
 /// [ir.Directive] instances.

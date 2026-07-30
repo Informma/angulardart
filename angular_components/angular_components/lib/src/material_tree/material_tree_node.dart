@@ -4,15 +4,15 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/src/material_tree/material_tree_expand_state.dart';
-import 'package:angular_components/src/material_tree/material_tree_root.dart';
-import 'package:angular_components/model/selection/select.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
-import 'package:angular_components/model/selection/selection_options.dart';
-import 'package:angular_components/model/ui/has_factory.dart';
-import 'package:angular_components/utils/async/async.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/src/material_tree/material_tree_expand_state.dart';
+import 'package:angulardart_components/src/material_tree/material_tree_root.dart';
+import 'package:angulardart_components/model/selection/select.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/selection/selection_options.dart';
+import 'package:angulardart_components/model/ui/has_factory.dart';
+import 'package:angulardart_components/utils/async/async.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// Returns whether [option] should be shown as expandable.
 typedef IsExpandable<T> = bool Function(T option);

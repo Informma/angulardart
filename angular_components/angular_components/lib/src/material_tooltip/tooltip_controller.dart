@@ -4,7 +4,7 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 
 /// Lightweight interface for Tooltip components to implement so they can be
 /// controlled by a [TooltipController].

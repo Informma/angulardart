@@ -4,14 +4,14 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
-import 'package:angular_components/button_decorator/button_decorator.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/material_menu/affix/base_affix.dart';
-import 'package:angular_components/material_menu/affix/icon_affix_model.dart';
-import 'package:angular_components/material_menu/common/menu_root.dart';
-import 'package:angular_components/model/ui/icon.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/meta.dart';
+import 'package:angulardart_components/button_decorator/button_decorator.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/material_menu/affix/base_affix.dart';
+import 'package:angulardart_components/material_menu/affix/icon_affix_model.dart';
+import 'package:angulardart_components/material_menu/common/menu_root.dart';
+import 'package:angulardart_components/model/ui/icon.dart';
 
 /// Icon affix component - if the icon has an action attached to it, then
 /// clicking/triggering the icon will also run the action.

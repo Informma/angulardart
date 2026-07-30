@@ -4,9 +4,9 @@
 
 import 'package:build/build.dart';
 import 'package:sass/src/ast/sass.dart';
-import 'package:angular_gallery_section/g3doc_markdown.dart';
-import 'package:angular_gallery_section/components/gallery_component/documentation_info.dart';
-import 'package:angular_gallery_section/visitors/path_utils.dart' as path_utils;
+import 'package:angulardart_gallery_section/g3doc_markdown.dart';
+import 'package:angulardart_gallery_section/components/gallery_component/documentation_info.dart';
+import 'package:angulardart_gallery_section/visitors/path_utils.dart' as path_utils;
 
 /// Collects documentation information from a Sass file identified by [assetId].
 ///

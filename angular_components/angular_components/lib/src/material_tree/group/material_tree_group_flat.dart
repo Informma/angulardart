@@ -2,16 +2,16 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/button_decorator/button_decorator.dart';
-import 'package:angular_components/dynamic_component/dynamic_component.dart';
-import 'package:angular_components/material_checkbox/material_checkbox.dart';
-import 'package:angular_components/material_radio/material_radio.dart';
-import 'package:angular_components/material_radio/material_radio_group.dart';
-import 'package:angular_components/src/material_tree/material_tree_node.dart';
-import 'package:angular_components/src/material_tree/material_tree_root.dart';
-import 'package:angular_components/mixins/material_dropdown_base.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/button_decorator/button_decorator.dart';
+import 'package:angulardart_components/dynamic_component/dynamic_component.dart';
+import 'package:angulardart_components/material_checkbox/material_checkbox.dart';
+import 'package:angulardart_components/material_radio/material_radio.dart';
+import 'package:angulardart_components/material_radio/material_radio_group.dart';
+import 'package:angulardart_components/src/material_tree/material_tree_node.dart';
+import 'package:angulardart_components/src/material_tree/material_tree_root.dart';
+import 'package:angulardart_components/mixins/material_dropdown_base.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
 
 /// A variant of [MaterialTreeGroupComponent] without hierarchy or selection.
 ///

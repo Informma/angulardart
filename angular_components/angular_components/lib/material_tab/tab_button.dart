@@ -4,10 +4,10 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/material_button/material_button_base.dart';
-import 'package:angular_components/material_ripple/material_ripple.dart';
-import 'package:angular_components/material_tab/tab_mixin.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/material_button/material_button_base.dart';
+import 'package:angulardart_components/material_ripple/material_ripple.dart';
+import 'package:angulardart_components/material_tab/tab_mixin.dart';
 
 /// A specialized button component used only by the tab strip.
 @Component(

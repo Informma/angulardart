@@ -4,12 +4,12 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
-import 'package:angular_components/button_decorator/button_decorator.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/material_ripple/material_ripple.dart';
-import 'package:angular_components/theme/dark_theme.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/meta.dart';
+import 'package:angulardart_components/button_decorator/button_decorator.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/material_ripple/material_ripple.dart';
+import 'package:angulardart_components/theme/dark_theme.dart';
 
 import 'material_button_base.dart';
 

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/experimental.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/experimental.dart';
 
 import '../bootstrap.dart';
 import '../errors.dart';

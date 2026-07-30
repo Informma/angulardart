@@ -4,10 +4,10 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/content/deferred_content_aware.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/laminate/popup/popup.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/content/deferred_content_aware.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/laminate/popup/popup.dart';
 
 /// A simple handle for Dropdown components.
 /// Components wishing to control an ancestral dropdown can have this interface

@@ -2,13 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/annotations/rtl_annotation.dart';
-import 'package:angular_components/content/deferred_content.dart';
-import 'package:angular_components/material_tab/material_tab.dart';
-import 'package:angular_components/material_tab/material_tab_panel.dart';
-import 'package:angular_gallery_section/components/content/delayed_content.dart';
-import 'package:angular_gallery_section/components/content/named_content.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/annotations/rtl_annotation.dart';
+import 'package:angulardart_components/content/deferred_content.dart';
+import 'package:angulardart_components/material_tab/material_tab.dart';
+import 'package:angulardart_components/material_tab/material_tab_panel.dart';
+import 'package:angulardart_gallery_section/components/content/delayed_content.dart';
+import 'package:angulardart_gallery_section/components/content/named_content.dart';
 
 @Component(
   selector: 'material-tab-panel-example',

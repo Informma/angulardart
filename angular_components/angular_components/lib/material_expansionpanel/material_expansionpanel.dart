@@ -6,22 +6,22 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math';
 
-import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
-import 'package:angular_components/button_decorator/button_decorator.dart';
-import 'package:angular_components/content/deferred_content.dart';
-import 'package:angular_components/content/deferred_content_aware.dart';
-import 'package:angular_components/focus/focus.dart';
-import 'package:angular_components/focus/keyboard_only_focus_indicator.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/material_yes_no_buttons/material_yes_no_buttons.dart';
-import 'package:angular_components/model/action/async_action.dart';
-import 'package:angular_components/model/observable/observable.dart';
-import 'package:angular_components/utils/angular/id/id.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
-import 'package:angular_components/utils/disposer/disposable_callback.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/meta.dart';
+import 'package:angulardart_components/button_decorator/button_decorator.dart';
+import 'package:angulardart_components/content/deferred_content.dart';
+import 'package:angulardart_components/content/deferred_content_aware.dart';
+import 'package:angulardart_components/focus/focus.dart';
+import 'package:angulardart_components/focus/keyboard_only_focus_indicator.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/material_yes_no_buttons/material_yes_no_buttons.dart';
+import 'package:angulardart_components/model/action/async_action.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
+import 'package:angulardart_components/utils/angular/id/id.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
+import 'package:angulardart_components/utils/disposer/disposable_callback.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 import 'package:intl/intl.dart';
 
 /// A material-styled expansion-panel.

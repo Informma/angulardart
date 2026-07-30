@@ -5,22 +5,22 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
-import 'package:angular_components/content/deferred_content.dart';
-import 'package:angular_components/focus/focus.dart';
-import 'package:angular_components/focus/focus_trap.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/material_button/material_fab.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/material_list/material_list_item.dart';
-import 'package:angular_components/material_menu/menu_root.dart';
-import 'package:angular_components/material_popup/material_popup.dart';
-import 'package:angular_components/material_tooltip/material_tooltip.dart';
-import 'package:angular_components/mixins/track_layout_changes.dart';
-import 'package:angular_components/model/a11y/keyboard_handler_mixin.dart';
-import 'package:angular_components/model/menu/menu.dart';
-import 'package:angular_components/model/observable/observable.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/meta.dart';
+import 'package:angulardart_components/content/deferred_content.dart';
+import 'package:angulardart_components/focus/focus.dart';
+import 'package:angulardart_components/focus/focus_trap.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/material_button/material_fab.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/material_list/material_list_item.dart';
+import 'package:angulardart_components/material_menu/menu_root.dart';
+import 'package:angulardart_components/material_popup/material_popup.dart';
+import 'package:angulardart_components/material_tooltip/material_tooltip.dart';
+import 'package:angulardart_components/mixins/track_layout_changes.dart';
+import 'package:angulardart_components/model/a11y/keyboard_handler_mixin.dart';
+import 'package:angulardart_components/model/menu/menu.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
 
 import 'menu_item_groups.dart';
 

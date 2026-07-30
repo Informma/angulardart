@@ -12,7 +12,7 @@ import 'visibility.dart';
 /// ```dart
 /// import 'dart:html';
 ///
-/// import 'package:angular/angular.dart';
+/// import 'package:angulardart/angulardart.dart';
 ///
 /// @Directive(selector: '[myHighlight]')
 /// class HighlightDirective {

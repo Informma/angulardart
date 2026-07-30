@@ -1,5 +1,5 @@
-import 'package:angular_compiler/v1/src/compiler/analyzed_class.dart';
-import 'package:angular_compiler/v1/src/compiler/expression_parser/ast.dart' as ast;
+import 'package:angulardart_compiler/v1/src/compiler/analyzed_class.dart';
+import 'package:angulardart_compiler/v1/src/compiler/expression_parser/ast.dart' as ast;
 import 'package:test/test.dart';
 
 void main() {

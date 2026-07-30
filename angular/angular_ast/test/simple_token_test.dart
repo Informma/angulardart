@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:angular_ast/src/token/tokens.dart';
+import 'package:angulardart_ast/src/token/tokens.dart';
 
 void main() {
   NgSimpleToken token;

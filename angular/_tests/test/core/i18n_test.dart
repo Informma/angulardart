@@ -1,7 +1,7 @@
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_test/angular_test.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_test/angulardart_test.dart';
 import 'package:test/test.dart';
 
 import 'i18n_test.template.dart' as ng;

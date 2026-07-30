@@ -8,15 +8,15 @@ import 'package:built_collection/built_collection.dart';
 import 'package:observable/observable.dart';
 import 'package:quiver/core.dart' show Optional;
 import 'package:quiver/strings.dart' show isNotEmpty;
-import 'package:angular_components/model/a11y/active_item.dart';
-import 'package:angular_components/model/collection/combined_list.dart';
-import 'package:angular_components/model/collection/labeled_list.dart';
-import 'package:angular_components/model/observable/observable.dart';
-import 'package:angular_components/model/ui/accepts_width.dart';
-import 'package:angular_components/model/ui/display_name.dart';
-import 'package:angular_components/model/ui/icon.dart';
-import 'package:angular_components/utils/angular/properties/properties.dart';
-import 'package:angular_components/utils/id_generator/id_generator.dart';
+import 'package:angulardart_components/model/a11y/active_item.dart';
+import 'package:angulardart_components/model/collection/combined_list.dart';
+import 'package:angulardart_components/model/collection/labeled_list.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
+import 'package:angulardart_components/model/ui/accepts_width.dart';
+import 'package:angulardart_components/model/ui/display_name.dart';
+import 'package:angulardart_components/model/ui/icon.dart';
+import 'package:angulardart_components/utils/angular/properties/properties.dart';
+import 'package:angulardart_components/utils/id_generator/id_generator.dart';
 
 import 'menu_item_affix.dart';
 

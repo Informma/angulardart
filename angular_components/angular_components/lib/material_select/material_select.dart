@@ -4,17 +4,17 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/focus/focus_item.dart';
-import 'package:angular_components/focus/focus_list.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/material_list/material_list.dart';
-import 'package:angular_components/model/selection/select.dart';
-import 'package:angular_components/model/selection/selection_container.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
-import 'package:angular_components/model/selection/selection_options.dart';
-import 'package:angular_components/model/ui/has_factory.dart';
-import 'package:angular_components/model/ui/template_support.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/focus/focus_item.dart';
+import 'package:angulardart_components/focus/focus_list.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/material_list/material_list.dart';
+import 'package:angulardart_components/model/selection/select.dart';
+import 'package:angulardart_components/model/selection/selection_container.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/selection/selection_options.dart';
+import 'package:angulardart_components/model/ui/has_factory.dart';
+import 'package:angulardart_components/model/ui/template_support.dart';
 
 import 'material_select_base.dart';
 import 'material_select_item.dart';

@@ -5,7 +5,7 @@ targets:
     builders:
       sass_builder|sass_builder:
         enabled: False
-      angular_components|scss_builder:
+      angulardart_components|scss_builder:
         enabled: True
   scss_builder:
     sources: ["lib/builder.dart"]
@@ -17,7 +17,7 @@ targets:
 builders:
   scss_builder:
     target: "scss_builder"
-    import: "package:angular_components/builder.dart"
+    import: "package:angulardart_components/builder.dart"
     builder_factories: ["scssBuilder"]
     build_to: cache
     build_extensions:

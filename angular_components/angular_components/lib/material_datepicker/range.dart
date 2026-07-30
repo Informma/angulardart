@@ -2,14 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/di.dart';
-import 'package:angular_components/material_datepicker/proto/date.pb.dart'
+import 'package:angulardart/di.dart';
+import 'package:angulardart_components/material_datepicker/proto/date.pb.dart'
     as dateproto;
 import 'package:intl/intl.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/material_datepicker/proto/date_range.pb.dart'
+import 'package:angulardart_components/material_datepicker/proto/date_range.pb.dart'
     as proto;
-import 'package:angular_components/model/date/date.dart';
+import 'package:angulardart_components/model/date/date.dart';
 
 /// If the given range is valid (non-null with non-null start and end dates),
 /// returns the result of calling the given function. Otherwise returns `null`.

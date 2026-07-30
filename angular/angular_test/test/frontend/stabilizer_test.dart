@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:test/test.dart';
-import 'package:angular/angular.dart';
-import 'package:angular_test/angular_test.dart';
-import 'package:angular_test/src/errors/will_never_stabilize.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_test/angulardart_test.dart';
+import 'package:angulardart_test/src/errors/will_never_stabilize.dart';
 
 import 'stabilizer_test.template.dart' as template;
 

@@ -8,8 +8,8 @@ import 'dart:convert';
 import 'package:build/build.dart';
 import 'package:mustache/mustache.dart' show Template;
 import 'package:path/path.dart' as p;
-import 'package:angular_gallery_section/resolved_config.dart';
-import 'package:angular_gallery_section/components/gallery_component/documentation_info.dart';
+import 'package:angulardart_gallery_section/resolved_config.dart';
+import 'package:angulardart_gallery_section/components/gallery_component/documentation_info.dart';
 
 /// A builder for generating an API page for an Angular component.
 ///

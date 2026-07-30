@@ -2,20 +2,20 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/content/deferred_content.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/laminate/overlay/module.dart';
-import 'package:angular_components/laminate/overlay/zindexer.dart';
-import 'package:angular_components/laminate/popup/module.dart';
-import 'package:angular_components/laminate/popup/popup.dart';
-import 'package:angular_components/material_button/material_button.dart';
-import 'package:angular_components/material_popup/material_popup.dart';
-import 'package:angular_components/material_select/material_dropdown_select.dart';
-import 'package:angular_components/material_tooltip/material_tooltip.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
-import 'package:angular_components/model/selection/selection_options.dart';
-import 'package:angular_gallery_section/annotation/gallery_section_config.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/content/deferred_content.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/laminate/overlay/module.dart';
+import 'package:angulardart_components/laminate/overlay/zindexer.dart';
+import 'package:angulardart_components/laminate/popup/module.dart';
+import 'package:angulardart_components/laminate/popup/popup.dart';
+import 'package:angulardart_components/material_button/material_button.dart';
+import 'package:angulardart_components/material_popup/material_popup.dart';
+import 'package:angulardart_components/material_select/material_dropdown_select.dart';
+import 'package:angulardart_components/material_tooltip/material_tooltip.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/selection/selection_options.dart';
+import 'package:angulardart_gallery_section/annotation/gallery_section_config.dart';
 
 @GallerySectionConfig(
   displayName: 'Material Popup',

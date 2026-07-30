@@ -6,14 +6,14 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:js_util';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/material_datepicker/calendar.dart';
-import 'package:angular_components/material_datepicker/module.dart';
-import 'package:angular_components/model/date/date.dart';
-import 'package:angular_components/model/observable/observable.dart';
-import 'package:angular_components/utils/browser/feature_detector/feature_detector.dart'
+import 'package:angulardart_components/material_datepicker/calendar.dart';
+import 'package:angulardart_components/material_datepicker/module.dart';
+import 'package:angulardart_components/model/date/date.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
+import 'package:angulardart_components/utils/browser/feature_detector/feature_detector.dart'
     show isEdge, isFirefox;
 
 import '../src/material_datepicker/calendar_listener.dart';

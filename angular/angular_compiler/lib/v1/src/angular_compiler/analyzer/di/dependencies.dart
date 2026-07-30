@@ -4,9 +4,9 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
-import 'package:angular_compiler/v1/cli.dart';
-import 'package:angular_compiler/v2/analyzer.dart';
-import 'package:angular_compiler/v2/context.dart';
+import 'package:angulardart_compiler/v1/cli.dart';
+import 'package:angulardart_compiler/v2/analyzer.dart';
+import 'package:angulardart_compiler/v2/context.dart';
 
 import '../common.dart';
 import '../types.dart';

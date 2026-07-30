@@ -4,7 +4,7 @@
 
 import 'dart:async';
 
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// A generic implementation of managed zone that has no dependencies directly
 /// on a framework like Angular. This makes it more testable than the VmTurnZone

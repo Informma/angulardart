@@ -1,6 +1,6 @@
 import 'package:source_span/source_span.dart';
-import 'package:angular_ast/angular_ast.dart';
-import 'package:angular_compiler/v2/context.dart';
+import 'package:angulardart_ast/angulardart_ast.dart';
+import 'package:angulardart_compiler/v2/context.dart';
 
 /// Collects parsing exceptions from `angular_ast`, converting to [BuildError].
 ///

@@ -1,7 +1,7 @@
-import 'package:angular_compiler/v1/src/compiler/ir/model.dart' as ir;
-import 'package:angular_compiler/v1/src/compiler/view_compiler/bound_value_converter.dart'
+import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart' as ir;
+import 'package:angulardart_compiler/v1/src/compiler/view_compiler/bound_value_converter.dart'
     show BoundValueConverter;
-import 'package:angular_compiler/v1/src/compiler/view_compiler/ir/provider_source.dart';
+import 'package:angulardart_compiler/v1/src/compiler/view_compiler/ir/provider_source.dart';
 
 import 'compile_element.dart' show CompileElement;
 

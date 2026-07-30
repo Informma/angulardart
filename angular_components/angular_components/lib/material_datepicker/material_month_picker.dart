@@ -5,13 +5,13 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/material_datepicker/calendar.dart';
-import 'package:angular_components/material_datepicker/module.dart';
-import 'package:angular_components/model/date/date.dart';
-import 'package:angular_components/model/observable/observable.dart';
+import 'package:angulardart_components/material_datepicker/calendar.dart';
+import 'package:angulardart_components/material_datepicker/module.dart';
+import 'package:angulardart_components/model/date/date.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
 
 import '../src/material_datepicker/calendar_listener.dart';
 import '../src/material_datepicker/enum_parsing.dart';

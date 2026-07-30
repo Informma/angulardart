@@ -4,15 +4,15 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/laminate/popup/popup.dart'
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/laminate/popup/popup.dart'
     show DomPopupSourceFactory;
-import 'package:angular_components/material_tooltip/module.dart';
-import 'package:angular_components/model/action/delayed_action.dart';
-import 'package:angular_components/utils/angular/css/css.dart';
-import 'package:angular_components/utils/browser/feature_detector/feature_detector.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/material_tooltip/module.dart';
+import 'package:angulardart_components/model/action/delayed_action.dart';
+import 'package:angulardart_components/utils/angular/css/css.dart';
+import 'package:angulardart_components/utils/browser/feature_detector/feature_detector.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 import 'ink_tooltip.dart';
 import 'ink_tooltip.template.dart' as ng;

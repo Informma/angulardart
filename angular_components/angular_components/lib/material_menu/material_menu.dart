@@ -4,20 +4,20 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/focus/focus.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/material_button/material_button.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/material_menu/menu_popup.dart';
-import 'package:angular_components/material_menu/menu_popup_wrapper.dart';
-import 'package:angular_components/material_popup/material_popup.dart';
-import 'package:angular_components/material_tooltip/material_tooltip.dart';
-import 'package:angular_components/mixins/focusable_mixin.dart';
-import 'package:angular_components/model/a11y/keyboard_handler_mixin.dart';
-import 'package:angular_components/model/menu/menu.dart';
-import 'package:angular_components/utils/angular/css/css.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/focus/focus.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/material_button/material_button.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/material_menu/menu_popup.dart';
+import 'package:angulardart_components/material_menu/menu_popup_wrapper.dart';
+import 'package:angulardart_components/material_popup/material_popup.dart';
+import 'package:angulardart_components/material_tooltip/material_tooltip.dart';
+import 'package:angulardart_components/mixins/focusable_mixin.dart';
+import 'package:angulardart_components/model/a11y/keyboard_handler_mixin.dart';
+import 'package:angulardart_components/model/menu/menu.dart';
+import 'package:angulardart_components/utils/angular/css/css.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// The Material Menu renders a menu based on a [MenuModel] object. This menu
 /// comprises a `material-list` in a `material-popup` and a

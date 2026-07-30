@@ -1,5 +1,5 @@
-import 'package:angular/src/meta.dart';
-import 'package:angular/src/utilities.dart';
+import 'package:angulardart/src/meta.dart';
+import 'package:angulardart/src/utilities.dart';
 
 import '../../core/change_detection/differs/default_iterable_differ.dart';
 import '../../core/linker.dart';

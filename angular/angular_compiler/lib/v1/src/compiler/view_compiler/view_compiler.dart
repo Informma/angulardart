@@ -1,12 +1,12 @@
-import 'package:angular_compiler/v1/cli.dart';
-import 'package:angular_compiler/v1/src/compiler/expression_parser/parser.dart';
-import 'package:angular_compiler/v1/src/compiler/identifiers.dart';
-import 'package:angular_compiler/v1/src/compiler/ir/model.dart' as ir;
-import 'package:angular_compiler/v1/src/compiler/output/output_ast.dart' as o;
-import 'package:angular_compiler/v1/src/compiler/schema/element_schema_registry.dart';
-import 'package:angular_compiler/v1/src/compiler/template_ast.dart'
+import 'package:angulardart_compiler/v1/cli.dart';
+import 'package:angulardart_compiler/v1/src/compiler/expression_parser/parser.dart';
+import 'package:angulardart_compiler/v1/src/compiler/identifiers.dart';
+import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart' as ir;
+import 'package:angulardart_compiler/v1/src/compiler/output/output_ast.dart' as o;
+import 'package:angulardart_compiler/v1/src/compiler/schema/element_schema_registry.dart';
+import 'package:angulardart_compiler/v1/src/compiler/template_ast.dart'
     show templateVisitAll;
-import 'package:angular_compiler/v1/src/compiler/view_type.dart';
+import 'package:angulardart_compiler/v1/src/compiler/view_type.dart';
 
 import 'compile_element.dart' show CompileElement;
 import 'compile_view.dart' show CompileView;

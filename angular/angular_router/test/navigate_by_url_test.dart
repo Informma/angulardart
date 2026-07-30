@@ -1,10 +1,10 @@
 
 import 'package:collection/collection.dart';
 import 'package:test/test.dart';
-import 'package:angular_router/angular_router.dart';
-import 'package:angular_router/src/router/router_impl.dart';
-import 'package:angular_router/testing.dart';
-import 'package:angular_test/angular_test.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+import 'package:angulardart_router/src/router/router_impl.dart';
+import 'package:angulardart_router/testing.dart';
+import 'package:angulardart_test/angulardart_test.dart';
 
 void main() {
   tearDown(disposeAnyRunningTest);

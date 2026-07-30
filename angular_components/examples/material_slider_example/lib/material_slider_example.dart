@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/material_slider/material_slider.dart';
-import 'package:angular_components/material_toggle/material_toggle.dart';
-import 'package:angular_gallery_section/annotation/gallery_section_config.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/material_slider/material_slider.dart';
+import 'package:angulardart_components/material_toggle/material_toggle.dart';
+import 'package:angulardart_gallery_section/annotation/gallery_section_config.dart';
 
 @GallerySectionConfig(
   displayName: 'Material Slider',

@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/focus/focus.dart';
-import 'package:angular_components/utils/angular/properties/properties.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/focus/focus.dart';
+import 'package:angulardart_components/utils/angular/properties/properties.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// Used in conjunction with [FocusItemDirective] or
 /// other directive implementing [FocusableItem], to provide a means to move

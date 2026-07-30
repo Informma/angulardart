@@ -1,4 +1,4 @@
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 
 import 'directives/router_link_active_directive.dart';
 import 'directives/router_link_directive.dart';

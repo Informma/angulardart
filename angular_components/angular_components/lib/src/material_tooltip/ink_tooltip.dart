@@ -4,13 +4,13 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/content/deferred_content.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/laminate/popup/popup.dart' show PopupSource;
-import 'package:angular_components/material_popup/material_popup.dart';
-import 'package:angular_components/material_tooltip/module.dart';
-import 'package:angular_components/utils/angular/css/css.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/content/deferred_content.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/laminate/popup/popup.dart' show PopupSource;
+import 'package:angulardart_components/material_popup/material_popup.dart';
+import 'package:angulardart_components/material_tooltip/module.dart';
+import 'package:angulardart_components/utils/angular/css/css.dart';
 
 import 'tooltip_controller.dart';
 import 'tooltip_target.dart';

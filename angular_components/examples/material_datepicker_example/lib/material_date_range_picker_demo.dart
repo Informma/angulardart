@@ -2,19 +2,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/laminate/popup/popup.dart';
-import 'package:angular_components/material_checkbox/material_checkbox.dart';
-import 'package:angular_components/material_datepicker/comparison.dart';
-import 'package:angular_components/material_datepicker/date_range_input.dart';
-import 'package:angular_components/material_datepicker/material_date_range_picker.dart';
-import 'package:angular_components/material_datepicker/model.dart';
-import 'package:angular_components/material_datepicker/module.dart';
-import 'package:angular_components/material_datepicker/preset.dart';
-import 'package:angular_components/material_datepicker/range.dart';
-import 'package:angular_components/model/date/date.dart';
-import 'package:angular_components/utils/browser/window/module.dart';
+import 'package:angulardart_components/laminate/popup/popup.dart';
+import 'package:angulardart_components/material_checkbox/material_checkbox.dart';
+import 'package:angulardart_components/material_datepicker/comparison.dart';
+import 'package:angulardart_components/material_datepicker/date_range_input.dart';
+import 'package:angulardart_components/material_datepicker/material_date_range_picker.dart';
+import 'package:angulardart_components/material_datepicker/model.dart';
+import 'package:angulardart_components/material_datepicker/module.dart';
+import 'package:angulardart_components/material_datepicker/preset.dart';
+import 'package:angulardart_components/material_datepicker/range.dart';
+import 'package:angulardart_components/model/date/date.dart';
+import 'package:angulardart_components/utils/browser/window/module.dart';
 
 // Like [commonRanges], but longer, to test scrolling
 List<DatepickerPreset> manyPresets(Clock clock) => [

@@ -1,3 +1,9 @@
+## 8.0.5
+
+- Added `topics` for better discoverability on pub.dev
+- Added explicit `platforms` declaration for web support
+- Added `issue_tracker` URL
+
 ## 8.0.4
 
 - Fixed repository URL to point to the correct subdirectory in the monorepo

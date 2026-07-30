@@ -1,11 +1,21 @@
 name: angulardart
-version: 8.0.4
+version: 8.0.5
 description: >-
   Fast and productive web framework by Google.
   Separate, but similar to the JavaScript framework with a similar name.
 repository: https://github.com/angulardart/angular/tree/master/angular
+issue_tracker: https://github.com/angulardart/angular/issues
+topics:
+  - angular
+  - web
+  - framework
+  - dart
+
 environment:
   sdk: '>=3.0.0 <4.0.0'
+
+platforms:
+  web:
 
 dependencies:
   built_collection: ^5.1.0

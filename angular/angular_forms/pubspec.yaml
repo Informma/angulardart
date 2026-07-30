@@ -1,10 +1,19 @@
 name: angulardart_forms
 repository: https://github.com/angulardart/angular/tree/master/angular_forms
+issue_tracker: https://github.com/angulardart/angular/issues
 description: Forms framework for AngularDart.
-version: 5.0.1
+version: 5.0.2
+topics:
+  - angular
+  - forms
+  - web
+  - validation
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+
+platforms:
+  web:
 
 dependencies:
   angulardart: ^8.0.0

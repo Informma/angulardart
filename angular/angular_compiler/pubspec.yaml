@@ -1,10 +1,19 @@
 name: angulardart_compiler
 repository: https://github.com/angulardart/angular/tree/master/angular_compiler
+issue_tracker: https://github.com/angulardart/angular/issues
 description: Compiler for AngularDart.
-version: 3.0.1
+version: 3.0.2
+topics:
+  - angular
+  - compiler
+  - code-generation
+  - web
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+
+platforms:
+  web:
 
 dependencies:
   analyzer: ^6.0.0

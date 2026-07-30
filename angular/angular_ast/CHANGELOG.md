@@ -1,3 +1,9 @@
+## 3.0.2
+
+- Added `topics` for better discoverability on pub.dev
+- Added `issue_tracker` URL
+- Added explicit `platforms` declaration for web support
+
 ## 3.0.1
 
 - Fixed repository URL to point to the correct subdirectory in the monorepo

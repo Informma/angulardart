@@ -3,7 +3,7 @@
 /// Import this library as follows:
 ///
 /// ```
-/// import 'package:angular/angular.dart';
+/// import 'package:angulardart/angulardart.dart';
 /// ```
 ///
 /// For help using this library, see the AngularDart documentation:

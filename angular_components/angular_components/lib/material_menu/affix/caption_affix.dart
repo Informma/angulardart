@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
-import 'package:angular_components/material_menu/affix/base_affix.dart';
-import 'package:angular_components/material_menu/affix/caption_affix_model.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/meta.dart';
+import 'package:angulardart_components/material_menu/affix/base_affix.dart';
+import 'package:angulardart_components/material_menu/affix/caption_affix_model.dart';
 
 /// Simple text menu item affix.
 @Component(

@@ -4,7 +4,7 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 
 /// A mixin for use by tab button component and tab dropdown menu component.
 abstract mixin class TabMixin {

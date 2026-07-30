@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:angular/src/utilities.dart';
+import 'package:angulardart/src/utilities.dart';
 
 import 'di_tokens.dart';
 

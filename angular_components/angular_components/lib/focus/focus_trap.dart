@@ -4,10 +4,10 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/focus/focus.dart';
-import 'package:angular_components/utils/browser/dom_iterator/dom_iterator.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/focus/focus.dart';
+import 'package:angulardart_components/utils/browser/dom_iterator/dom_iterator.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// Focus trap designed for usage in popups and modals.
 ///

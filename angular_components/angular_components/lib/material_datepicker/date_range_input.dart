@@ -4,13 +4,13 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
-import 'package:angular_components/material_datepicker/calendar.dart';
-import 'package:angular_components/material_datepicker/date_input.dart';
-import 'package:angular_components/material_input/material_input.dart';
-import 'package:angular_components/model/date/date.dart';
-import 'package:angular_components/model/observable/observable.dart';
+import 'package:angulardart_components/material_datepicker/calendar.dart';
+import 'package:angulardart_components/material_datepicker/date_input.dart';
+import 'package:angulardart_components/material_input/material_input.dart';
+import 'package:angulardart_components/model/date/date.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
 
 /// A date-range-input is two date inputs glued together.
 ///

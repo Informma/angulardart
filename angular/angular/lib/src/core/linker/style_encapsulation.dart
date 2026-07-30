@@ -1,9 +1,9 @@
 import 'dart:html';
 
 import 'package:meta/dart2js.dart' as dart2js;
-import 'package:angular/src/core/linker/app_view_utils.dart';
-import 'package:angular/src/runtime/dom_helpers.dart';
-import 'package:angular/src/utilities.dart';
+import 'package:angulardart/src/core/linker/app_view_utils.dart';
+import 'package:angulardart/src/runtime/dom_helpers.dart';
+import 'package:angulardart/src/utilities.dart';
 
 /// Clears all component styles from the DOM.
 ///

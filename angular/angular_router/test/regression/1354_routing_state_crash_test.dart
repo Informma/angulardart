@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:test/test.dart';
-import 'package:angular/angular.dart';
-import 'package:angular_router/angular_router.dart';
-import 'package:angular_router/testing.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+import 'package:angulardart_router/testing.dart';
 
 import '1354_routing_state_crash_test.template.dart' as ng;
 

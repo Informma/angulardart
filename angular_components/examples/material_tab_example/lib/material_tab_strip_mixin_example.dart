@@ -2,11 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/annotations/rtl_annotation.dart';
-import 'package:angular_components/material_tab/fixed_material_tab_strip.dart';
-import 'package:angular_components/utils/browser/dom_service/angular_2.dart';
-import 'package:angular_components/utils/browser/window/module.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/annotations/rtl_annotation.dart';
+import 'package:angulardart_components/material_tab/fixed_material_tab_strip.dart';
+import 'package:angulardart_components/utils/browser/dom_service/angular_2.dart';
+import 'package:angulardart_components/utils/browser/window/module.dart';
 
 @Component(
   selector: 'material-tab-strip-mixin-example',

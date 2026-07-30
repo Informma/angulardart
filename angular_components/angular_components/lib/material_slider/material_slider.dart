@@ -6,11 +6,11 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math' as math;
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/check.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
 
 /// A [material slider](https://material.io/guidelines/components/sliders.html)
 /// which works for integer values.

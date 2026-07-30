@@ -2,11 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/material_tree/material_tree.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/material_tree/material_tree.dart';
 import 'material_tree_demo_options.dart' as data;
-import 'package:angular_components/model/selection/selection_model.dart';
-import 'package:angular_components/model/selection/selection_options.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/selection/selection_options.dart';
 
 /// An example that renders a [MaterialTreeComponent] with first group expanded
 /// and a "View more" link.

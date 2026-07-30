@@ -4,13 +4,13 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/material_button/material_button.dart';
-import 'package:angular_components/material_stepper/material_step.dart';
-import 'package:angular_components/material_stepper/material_stepper.dart';
-import 'package:angular_components/model/action/async_action.dart';
-import 'package:angular_gallery_section/annotation/gallery_section_config.dart';
-import 'package:angular_components/utils/angular/scroll_host/angular_2.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/material_button/material_button.dart';
+import 'package:angulardart_components/material_stepper/material_step.dart';
+import 'package:angulardart_components/material_stepper/material_stepper.dart';
+import 'package:angulardart_components/model/action/async_action.dart';
+import 'package:angulardart_gallery_section/annotation/gallery_section_config.dart';
+import 'package:angulardart_components/utils/angular/scroll_host/angular_2.dart';
 
 @GallerySectionConfig(
   displayName: 'Material Stepper',

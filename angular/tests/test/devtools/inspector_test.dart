@@ -1,9 +1,9 @@
 import 'dart:html' as html;
 
 import 'package:test/test.dart';
-import 'package:angular/angular.dart';
-import 'package:angular/src/devtools.dart';
-import 'package:angular_test/angular_test.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/src/devtools.dart';
+import 'package:angulardart_test/angulardart_test.dart';
 
 import 'inspector_test.template.dart' as ng;
 

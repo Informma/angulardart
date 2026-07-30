@@ -7,11 +7,11 @@ import 'package:meta/meta.dart';
 import 'package:observable/observable.dart';
 import 'package:quiver/core.dart' show Optional;
 import 'package:quiver/strings.dart';
-import 'package:angular_components/model/menu/menu.dart';
-import 'package:angular_components/model/selection/select.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
-import 'package:angular_components/model/ui/has_renderer.dart';
-import 'package:angular_components/model/ui/icon.dart';
+import 'package:angulardart_components/model/menu/menu.dart';
+import 'package:angulardart_components/model/selection/select.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/ui/has_renderer.dart';
+import 'package:angulardart_components/model/ui/icon.dart';
 
 /// A [MenuItemGroup] that contains a [SelectionModel].
 ///

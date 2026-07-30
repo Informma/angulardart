@@ -6,11 +6,11 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math' as math;
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/src/utils/angular/scroll_host/scroll_host_event_impl.dart';
-import 'package:angular_components/src/utils/angular/scroll_host/scroll_host_interface.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/src/utils/angular/scroll_host/scroll_host_event_impl.dart';
+import 'package:angulardart_components/src/utils/angular/scroll_host/scroll_host_interface.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 enum GestureDirection { up, down, left, right }
 

@@ -5,9 +5,9 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/utils/angular/imperative_view/imperative_view.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/utils/angular/imperative_view/imperative_view.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// Dynamic content that can be inserted into a host container.
 abstract class Portal<T> {

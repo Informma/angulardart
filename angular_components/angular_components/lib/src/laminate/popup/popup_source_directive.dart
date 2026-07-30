@@ -5,13 +5,13 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/focus/focus_interface.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/src/laminate/popup/dom_popup_source.dart';
-import 'package:angular_components/src/laminate/popup/popup_source.dart';
-import 'package:angular_components/utils/angular/properties/properties.dart';
-import 'package:angular_components/utils/angular/reference/reference.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/focus/focus_interface.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/src/laminate/popup/dom_popup_source.dart';
+import 'package:angulardart_components/src/laminate/popup/popup_source.dart';
+import 'package:angulardart_components/utils/angular/properties/properties.dart';
+import 'package:angulardart_components/utils/angular/reference/reference.dart';
 
 /// A directive that exposes the [PopupSource] interface as `popupSource`.
 @Directive(

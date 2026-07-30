@@ -4,8 +4,8 @@
 
 import 'package:collection/collection.dart';
 import 'package:test/test.dart';
-import 'package:angular/angular.dart';
-import 'package:angular_test/angular_test.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_test/angulardart_test.dart';
 
 /// A mixin for components that receive a list of child elements/directives.
 abstract class HasChildren<T> {

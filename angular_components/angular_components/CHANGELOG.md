@@ -1,3 +1,22 @@
+## 2.0.0
+
+- **BREAKING CHANGE**: Require Dart ^3.0.0
+- **Null safety**: Full migration from pre-null-safety (SDK 2.10.5) to null safety
+  - 1566 errors fixed across lib/
+  - Fields initialized with `late`, `?`, or default values
+  - Optional parameters made explicitly nullable
+  - Return types made nullable where needed
+  - Null checks (`!`) added after verification
+- **Class modifiers Dart 3**: Converted abstract classes used as mixins to `abstract mixin class` or `mixin class`
+  - `HasDisabled` interface updated with setter
+  - `StickyController.stick()` parameters made nullable
+- **Dependencies updated**:
+  - `angular` : ^6.0.0 → ^8.0.0
+  - `angular_forms` : ^3.0.0 → ^5.0.0
+  - `web` : ^0.5.0 (replacing `js`)
+  - All other dependencies updated to latest compatible versions
+- **Published as** `angulardart_components` on pub.dev
+
 ## 1.0.3
 
 * Roll observable dependency.

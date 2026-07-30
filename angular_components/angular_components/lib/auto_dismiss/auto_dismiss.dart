@@ -5,8 +5,8 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/utils/browser/events/events.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/utils/browser/events/events.dart';
 
 /// A directive that publishes a (dismiss) event when a focus, click or mouseup
 /// event occurs outside of it.

@@ -2,11 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/material_chips/material_chip.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
-import 'package:angular_components/model/ui/has_renderer.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/material_chips/material_chip.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/ui/has_renderer.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// A __chips__ collection widget, displaying a list of objects as Chips.
 @Component(

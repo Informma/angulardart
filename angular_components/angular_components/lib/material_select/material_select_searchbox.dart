@@ -4,13 +4,13 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/focus/focus_interface.dart';
-import 'package:angular_components/material_input/material_input.dart';
-import 'package:angular_components/mixins/focusable_mixin.dart';
-import 'package:angular_components/model/selection/select.dart';
-import 'package:angular_components/utils/async/async.dart';
-import 'package:angular_components/utils/browser/events/events.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/focus/focus_interface.dart';
+import 'package:angulardart_components/material_input/material_input.dart';
+import 'package:angulardart_components/mixins/focusable_mixin.dart';
+import 'package:angulardart_components/model/selection/select.dart';
+import 'package:angulardart_components/utils/async/async.dart';
+import 'package:angulardart_components/utils/browser/events/events.dart';
 
 /// A simple component that maps an input box to the [Filterable] interface.
 ///

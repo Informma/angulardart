@@ -2,12 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular_components/model/selection/selection_options.dart';
-import 'package:angular_components/model/selection/tree_selection_mixin.dart';
-import 'package:angular_components/model/ui/has_renderer.dart';
-import 'package:angular_components/utils/async/async.dart';
+import 'package:angulardart_components/model/selection/selection_options.dart';
+import 'package:angulardart_components/model/selection/tree_selection_mixin.dart';
+import 'package:angulardart_components/model/ui/has_renderer.dart';
+import 'package:angulardart_components/utils/async/async.dart';
 
-export 'package:angular_components/model/selection/tree_selection_mixin.dart';
+export 'package:angulardart_components/model/selection/tree_selection_mixin.dart';
 
 /// A [SelectionOptions] implementation that supports hierarchy.
 ///

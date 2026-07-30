@@ -5,11 +5,11 @@
 import 'dart:html';
 import 'dart:math';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/utils/browser/events/events.dart';
-import 'package:angular_components/utils/browser/feature_detector/feature_detector.dart'
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/utils/browser/events/events.dart';
+import 'package:angulardart_components/utils/browser/feature_detector/feature_detector.dart'
     show supportsAnimationApi;
-import 'package:angular_components/utils/color/material.dart'
+import 'package:angulardart_components/utils/color/material.dart'
     show rippleOpacity;
 
 // The ripple size is 256x256 for optimal performance (power-of-two texture)

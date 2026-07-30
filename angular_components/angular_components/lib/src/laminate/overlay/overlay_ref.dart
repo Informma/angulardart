@@ -5,9 +5,9 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular_components/laminate/enums/visibility.dart';
-import 'package:angular_components/laminate/portal/portal.dart';
-import 'package:angular_components/src/laminate/overlay/overlay_state.dart';
+import 'package:angulardart_components/laminate/enums/visibility.dart';
+import 'package:angulardart_components/laminate/portal/portal.dart';
+import 'package:angulardart_components/src/laminate/overlay/overlay_state.dart';
 
 /// A handler to apply [state] to an existing [element].
 ///

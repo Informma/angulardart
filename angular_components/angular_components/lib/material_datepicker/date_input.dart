@@ -4,12 +4,12 @@
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/material_input/material_input.dart';
-import 'package:angular_components/model/date/date.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/material_input/material_input.dart';
+import 'package:angulardart_components/model/date/date.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 import 'calendar.dart';
 import 'module.dart';

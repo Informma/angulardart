@@ -1,4 +1,4 @@
-name: angular_ast
+name: angulardart_ast
 repository: https://github.com/angulardart/angular
 description: Parser and utilities for AngularDart templates
 version: 3.0.0

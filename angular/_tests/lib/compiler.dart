@@ -9,8 +9,8 @@ import 'package:build_test/build_test.dart' hide testBuilder;
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
-import 'package:angular/src/build.dart';
-import 'package:angular_compiler/v2/context.dart';
+import 'package:angulardart/src/build.dart';
+import 'package:angulardart_compiler/v2/context.dart';
 
 /// A 'test' build process (similar to the normal one).
 final Builder _testAngularBuilder = MultiplexingBuilder([
@@ -132,7 +132,7 @@ Future<void> _testBuilder(
 /// )
 /// ```
 ///
-/// Note that `package:angular/**.dart` is always included.
+/// Note that `package:angulardart/**.dart` is always included.
 Future<void> compilesExpecting(
   String input, {
   String inputSource,

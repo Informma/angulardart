@@ -5,13 +5,13 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
-import 'package:angular_components/laminate/overlay/constants.dart';
-import 'package:angular_components/laminate/popup/popup.dart';
-import 'package:angular_components/model/action/delayed_action.dart';
-import 'package:angular_components/src/material_tooltip/tooltip_controller.dart';
-import 'package:angular_components/utils/browser/events/events.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/meta.dart';
+import 'package:angulardart_components/laminate/overlay/constants.dart';
+import 'package:angulardart_components/laminate/popup/popup.dart';
+import 'package:angulardart_components/model/action/delayed_action.dart';
+import 'package:angulardart_components/src/material_tooltip/tooltip_controller.dart';
+import 'package:angulardart_components/utils/browser/events/events.dart';
 import 'package:meta/meta.dart';
 
 import 'tooltip_source.dart' show tooltipShowDelay;

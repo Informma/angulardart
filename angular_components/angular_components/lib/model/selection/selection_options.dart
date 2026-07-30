@@ -7,14 +7,14 @@ library angular_components.model.selection.selection_options;
 import 'dart:async';
 
 import 'package:meta/meta.dart';
-import 'package:angular_components/model/collection/labeled_list.dart';
-import 'package:angular_components/model/observable/observable.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/model/collection/labeled_list.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
-export 'package:angular_components/src/model/selection/delegating_selection_options.dart';
+export 'package:angulardart_components/src/model/selection/delegating_selection_options.dart';
 
-part 'package:angular_components/src/model/selection/future_selection_options_impl.dart';
-part 'package:angular_components/src/model/selection/stream_selection_options_impl.dart';
+part 'package:angulardart_components/src/model/selection/future_selection_options_impl.dart';
+part 'package:angulardart_components/src/model/selection/stream_selection_options_impl.dart';
 
 /// An interface for functions that segment [items] into option groups.
 typedef OptionGroupMapper<T> = List<OptionGroup<T>> Function(Iterable<T> items);

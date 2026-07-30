@@ -5,8 +5,8 @@
 import 'dart:async';
 
 import 'package:meta/meta.dart';
-import 'package:angular_components/utils/angular/scroll_host/interface.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/angular/scroll_host/interface.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// Helper class to detect scroll activity start/end points.
 ///

@@ -4,17 +4,17 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
-import 'package:angular_components/button_decorator/button_decorator.dart';
-import 'package:angular_components/dynamic_component/dynamic_component.dart';
-import 'package:angular_components/focus/keyboard_only_focus_indicator.dart';
-import 'package:angular_components/material_checkbox/material_checkbox.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/src/material_tree/material_tree_node.dart';
-import 'package:angular_components/src/material_tree/material_tree_root.dart';
-import 'package:angular_components/mixins/material_dropdown_base.dart';
-import 'package:angular_components/model/selection/selection_options.dart';
+import 'package:angulardart_components/button_decorator/button_decorator.dart';
+import 'package:angulardart_components/dynamic_component/dynamic_component.dart';
+import 'package:angulardart_components/focus/keyboard_only_focus_indicator.dart';
+import 'package:angulardart_components/material_checkbox/material_checkbox.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/src/material_tree/material_tree_node.dart';
+import 'package:angulardart_components/src/material_tree/material_tree_root.dart';
+import 'package:angulardart_components/mixins/material_dropdown_base.dart';
+import 'package:angulardart_components/model/selection/selection_options.dart';
 
 const materialTreeLeftPaddingToken =
     OpaqueToken('MaterialTreeGroupComponent_materialTreeLeftPaddingToken');

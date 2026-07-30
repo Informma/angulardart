@@ -1,16 +1,16 @@
 targets:
   $default:
     builders:
-      angular_components|scss_builder:
+      angulardart_components|scss_builder:
         enabled: True
-      angular|angular:
+      angulardart|angulardart:
         generate_for:
           exclude: ["lib/**"]
 
 builders:
   angular_gallery:
     target: ":angular_gallery"
-    import: "package:angular_gallery/builders.dart"
+    import: "package:angulardart_gallery/builders.dart"
     builder_factories: [
       galleryAppBuilder,
       galleryLibBuilder,
@@ -20,4 +20,4 @@ builders:
       ".html": [".dart"],
       "$web$": ["index.html", "main.dart", "style.scss"]}
     auto_apply: dependents
-    runs_before: ["angular|angular", "angular_components|scss_builder"]
+    runs_before: ["angulardart|angulardart", "angulardart_components|scss_builder"]

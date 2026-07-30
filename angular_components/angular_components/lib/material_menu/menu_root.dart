@@ -2,4 +2,4 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-export 'package:angular_components/material_menu/common/menu_root.dart';
+export 'package:angulardart_components/material_menu/common/menu_root.dart';

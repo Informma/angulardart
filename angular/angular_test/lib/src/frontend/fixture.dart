@@ -1,7 +1,7 @@
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/src/utilities.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/src/utilities.dart';
 
 import 'bed.dart';
 import 'stabilizer.dart';

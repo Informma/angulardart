@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular_components/material_datepicker/comparison_option.dart';
-import 'package:angular_components/material_datepicker/range.dart';
-import 'package:angular_components/model/date/date.dart';
+import 'package:angulardart_components/material_datepicker/comparison_option.dart';
+import 'package:angulardart_components/material_datepicker/range.dart';
+import 'package:angulardart_components/model/date/date.dart';
 
 /// An implementation of [DateRangeComparison] that has [DatepickerDateRange]s
 /// instead of plain [DateRange]s.

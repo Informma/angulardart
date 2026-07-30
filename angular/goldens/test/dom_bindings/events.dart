@@ -2,7 +2,7 @@
 library golden;
 
 import 'package:js/js.dart';
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 
 import 'events.template.dart' as ng;
 

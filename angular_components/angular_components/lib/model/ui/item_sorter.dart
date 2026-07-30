@@ -4,7 +4,7 @@
 
 import 'dart:collection';
 
-import 'package:angular_components/model/ui/has_renderer.dart';
+import 'package:angulardart_components/model/ui/has_renderer.dart';
 
 /// Returns a new list of items sorted according to the string obtained from
 /// [itemRenderer].

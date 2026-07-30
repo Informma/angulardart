@@ -6,27 +6,27 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:meta/meta.dart';
-import 'package:angular_components/content/deferred_content_aware.dart';
-import 'package:angular_components/focus/focus_interface.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/laminate/enums/visibility.dart'
+import 'package:angulardart_components/content/deferred_content_aware.dart';
+import 'package:angulardart_components/focus/focus_interface.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/laminate/enums/visibility.dart'
     as visibility;
-import 'package:angular_components/laminate/overlay/module.dart';
-import 'package:angular_components/laminate/overlay/overlay.dart';
-import 'package:angular_components/laminate/overlay/zindexer.dart';
-import 'package:angular_components/laminate/popup/module.dart';
-import 'package:angular_components/laminate/popup/popup.dart';
-import 'package:angular_components/mixins/material_dropdown_base.dart';
-import 'package:angular_components/model/math/box.dart';
-import 'package:angular_components/model/ui/toggle.dart';
-import 'package:angular_components/utils/async/async.dart';
-import 'package:angular_components/utils/browser/dom_service/angular_2.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
-import 'package:angular_components/utils/id_generator/id_generator.dart';
+import 'package:angulardart_components/laminate/overlay/module.dart';
+import 'package:angulardart_components/laminate/overlay/overlay.dart';
+import 'package:angulardart_components/laminate/overlay/zindexer.dart';
+import 'package:angulardart_components/laminate/popup/module.dart';
+import 'package:angulardart_components/laminate/popup/popup.dart';
+import 'package:angulardart_components/mixins/material_dropdown_base.dart';
+import 'package:angulardart_components/model/math/box.dart';
+import 'package:angulardart_components/model/ui/toggle.dart';
+import 'package:angulardart_components/utils/async/async.dart';
+import 'package:angulardart_components/utils/browser/dom_service/angular_2.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/id_generator/id_generator.dart';
 
-export 'package:angular_components/laminate/popup/popup.dart'
+export 'package:angulardart_components/laminate/popup/popup.dart'
     show PopupSourceDirective;
 
 /// A popup component with material design look-and-feel.

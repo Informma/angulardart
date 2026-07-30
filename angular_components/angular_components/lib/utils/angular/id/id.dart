@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/utils/id_generator/id_generator.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/utils/id_generator/id_generator.dart';
 
 /// A directive that assign a unique id to its element.
 ///

@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:quiver/strings.dart' show isBlank;
-import 'package:angular_components/utils/angular/properties/properties.dart'
+import 'package:angulardart_components/utils/angular/properties/properties.dart'
     show getInt;
 
 /// Provides computation of tabindex for components which actively maintain

@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 
 // TODO(google): Remove this once use of '#' in a template is either
 // consistent, or has a way to declare specifically what you want - e.g. the

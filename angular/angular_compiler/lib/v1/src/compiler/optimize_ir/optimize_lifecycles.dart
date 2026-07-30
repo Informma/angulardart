@@ -1,4 +1,4 @@
-import 'package:angular_compiler/v1/src/compiler/ir/model.dart' as ir;
+import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart' as ir;
 
 /// Optimizes lifecycle hooks in the directive.
 ///

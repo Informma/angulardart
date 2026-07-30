@@ -1,4 +1,4 @@
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 
 /// A bridge between a control and a native element.
 ///

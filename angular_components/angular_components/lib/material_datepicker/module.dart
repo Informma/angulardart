@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/laminate/popup/module.dart';
-import 'package:angular_components/model/date/time_zone_aware_clock.dart';
+import 'package:angulardart_components/laminate/popup/module.dart';
+import 'package:angulardart_components/model/date/time_zone_aware_clock.dart';
 
 import 'model.dart';
 

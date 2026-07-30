@@ -4,9 +4,9 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/meta.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
 import 'package:meta/meta.dart';
 
 /// [KeyboardOnlyFocusIndicatorDirective] is a decorator that hides the outline

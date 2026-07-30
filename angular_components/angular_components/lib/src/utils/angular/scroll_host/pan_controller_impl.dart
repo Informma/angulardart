@@ -5,11 +5,11 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/utils/angular/scroll_host/interface.dart';
-import 'package:angular_components/utils/async/async.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/utils/angular/scroll_host/interface.dart';
+import 'package:angulardart_components/utils/async/async.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// A non-touchscreen version of pan controller, as it relies on wheel events
 /// that are not present on touchscreen displays.

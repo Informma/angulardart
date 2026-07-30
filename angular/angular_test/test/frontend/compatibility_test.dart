@@ -1,10 +1,10 @@
 import 'dart:html';
 
 import 'package:test/test.dart';
-import 'package:angular/angular.dart';
-import 'package:angular/src/core/linker/dynamic_component_loader.dart';
-import 'package:angular_test/angular_test.dart';
-import 'package:angular_test/compatibility.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/src/core/linker/dynamic_component_loader.dart';
+import 'package:angulardart_test/angulardart_test.dart';
+import 'package:angulardart_test/compatibility.dart';
 
 import 'compatibility_test.template.dart' as ng;
 

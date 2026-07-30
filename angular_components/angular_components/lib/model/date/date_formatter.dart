@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:intl/intl.dart';
-import 'package:angular_components/model/date/date.dart';
+import 'package:angulardart_components/model/date/date.dart';
 
 final _dayFormat = DateFormat.d();
 final _dateFormat = DateFormat.yMMMd();

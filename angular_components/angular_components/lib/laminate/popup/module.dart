@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/laminate/overlay/module.dart';
-import 'package:angular_components/src/laminate/popup/dom_popup_source.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/laminate/overlay/module.dart';
+import 'package:angulardart_components/src/laminate/popup/dom_popup_source.dart';
 
 const inlinePositions = RelativePosition.InlinePositions;
 

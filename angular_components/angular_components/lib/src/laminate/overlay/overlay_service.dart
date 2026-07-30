@@ -5,10 +5,10 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/src/laminate/overlay/overlay_ref.dart';
-import 'package:angular_components/src/laminate/overlay/overlay_state.dart';
-import 'package:angular_components/src/laminate/overlay/render/overlay_dom_render_service.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/src/laminate/overlay/overlay_ref.dart';
+import 'package:angulardart_components/src/laminate/overlay/overlay_state.dart';
+import 'package:angulardart_components/src/laminate/overlay/render/overlay_dom_render_service.dart';
 import 'package:logging/logging.dart';
 
 /// A low-level service which exists to be able to manage the overlay

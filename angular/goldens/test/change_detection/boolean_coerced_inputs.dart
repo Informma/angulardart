@@ -2,7 +2,7 @@
 library golden;
 
 import 'package:js/js.dart';
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 
 import 'boolean_coerced_inputs.template.dart' as ng;
 

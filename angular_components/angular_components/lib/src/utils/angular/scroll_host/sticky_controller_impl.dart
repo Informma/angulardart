@@ -6,8 +6,8 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math' show min, max;
 
-import 'package:angular_components/utils/angular/scroll_host/interface.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
+import 'package:angulardart_components/utils/angular/scroll_host/interface.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
 
 class StickyControllerImpl implements StickyController {
   final DomService _domService;

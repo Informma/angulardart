@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:quiver/core.dart';
-import 'package:angular_components/model/formatters/formatter.dart';
+import 'package:angulardart_components/model/formatters/formatter.dart';
 
 /// Designates a model class which has a canonical _display name_ (label) field.
 abstract class HasUIDisplayName {

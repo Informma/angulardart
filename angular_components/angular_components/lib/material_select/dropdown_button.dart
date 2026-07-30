@@ -5,15 +5,15 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/button_decorator/button_decorator.dart';
-import 'package:angular_components/focus/focus_interface.dart';
-import 'package:angular_components/focus/keyboard_only_focus_indicator.dart';
-import 'package:angular_components/glyph/glyph.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/mixins/button_wrapper.dart';
-import 'package:angular_components/mixins/focusable_mixin.dart';
-import 'package:angular_components/utils/id_generator/id_generator.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/button_decorator/button_decorator.dart';
+import 'package:angulardart_components/focus/focus_interface.dart';
+import 'package:angulardart_components/focus/keyboard_only_focus_indicator.dart';
+import 'package:angulardart_components/glyph/glyph.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/mixins/button_wrapper.dart';
+import 'package:angulardart_components/mixins/focusable_mixin.dart';
+import 'package:angulardart_components/utils/id_generator/id_generator.dart';
 
 /// A button styled specifically for dropdowns.
 ///
@@ -27,7 +27,7 @@ import 'package:angular_components/utils/id_generator/id_generator.dart';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'dropdown_button.html',
   styleUrls: [
-    'package:angular_components/button_decorator/button_decorator.scss.css',
+    'package:angulardart_components/button_decorator/button_decorator.scss.css',
     'dropdown_button.scss.css'
   ],
   directives: [

@@ -4,21 +4,21 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:meta/meta.dart';
-import 'package:angular_components/laminate/overlay/constants.dart';
-import 'package:angular_components/src/laminate/overlay/overlay_service.dart';
-import 'package:angular_components/src/laminate/overlay/render/overlay_dom_render_service.dart';
-import 'package:angular_components/src/laminate/overlay/render/overlay_style_config.dart';
-import 'package:angular_components/laminate/overlay/zindexer.dart';
-import 'package:angular_components/laminate/ruler/dom_ruler.dart';
-import 'package:angular_components/model/math/box.dart';
-import 'package:angular_components/utils/angular/imperative_view/imperative_view.dart';
-import 'package:angular_components/utils/angular/managed_zone/angular_2.dart';
-import 'package:angular_components/utils/browser/dom_service/angular_2.dart';
-import 'package:angular_components/utils/browser/window/module.dart';
+import 'package:angulardart_components/laminate/overlay/constants.dart';
+import 'package:angulardart_components/src/laminate/overlay/overlay_service.dart';
+import 'package:angulardart_components/src/laminate/overlay/render/overlay_dom_render_service.dart';
+import 'package:angulardart_components/src/laminate/overlay/render/overlay_style_config.dart';
+import 'package:angulardart_components/laminate/overlay/zindexer.dart';
+import 'package:angulardart_components/laminate/ruler/dom_ruler.dart';
+import 'package:angulardart_components/model/math/box.dart';
+import 'package:angulardart_components/utils/angular/imperative_view/imperative_view.dart';
+import 'package:angulardart_components/utils/angular/managed_zone/angular_2.dart';
+import 'package:angulardart_components/utils/browser/dom_service/angular_2.dart';
+import 'package:angulardart_components/utils/browser/window/module.dart';
 
-export 'package:angular_components/src/laminate/overlay/render/overlay_dom_render_service.dart'
+export 'package:angulardart_components/src/laminate/overlay/render/overlay_dom_render_service.dart'
     show
         overlayContainerName,
         overlayContainerParent,

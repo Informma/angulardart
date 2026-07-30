@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:test/test.dart';
-import 'package:angular/angular.dart';
-import 'package:angular_test/angular_test.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_test/angulardart_test.dart';
 
 import 'on_push_test.template.dart' as ng;
 

@@ -1,8 +1,8 @@
 import 'dart:html';
 
 import 'package:test/test.dart';
-import 'package:angular/angular.dart';
-import 'package:angular_test/src/bootstrap.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_test/src/bootstrap.dart';
 
 import 'bootstrap_test.template.dart' as ng_generated;
 

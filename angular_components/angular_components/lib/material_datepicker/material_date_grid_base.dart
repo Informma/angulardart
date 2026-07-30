@@ -6,16 +6,16 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/material_datepicker/calendar.dart';
-import 'package:angular_components/src/material_datepicker/calendar_listener.dart';
-import 'package:angular_components/src/material_datepicker/enum_parsing.dart';
-import 'package:angular_components/model/date/date.dart';
-import 'package:angular_components/model/observable/observable.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/material_datepicker/calendar.dart';
+import 'package:angulardart_components/src/material_datepicker/calendar_listener.dart';
+import 'package:angulardart_components/src/material_datepicker/enum_parsing.dart';
+import 'package:angulardart_components/model/date/date.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// What sort of selections a calendar supports.
 enum CalendarSelectionMode { NONE, SINGLE_DATE, DATE_RANGE }

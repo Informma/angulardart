@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:meta/meta.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// The object that gets sent on scroll events.
 abstract class ScrollHostEvent {

@@ -4,9 +4,9 @@
 
 import 'dart:math';
 
-import 'package:angular_components/src/laminate/enums/base.dart';
+import 'package:angulardart_components/src/laminate/enums/base.dart';
 
-export 'package:angular_components/src/laminate/enums/base.dart';
+export 'package:angulardart_components/src/laminate/enums/base.dart';
 
 /// Enum for browser display alignment options.
 class Alignment implements ElementStyleEnum {

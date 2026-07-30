@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
-import 'package:angular/angular.dart';
-import 'package:angular_forms/angular_forms.dart';
-import 'package:angular_test/angular_test.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_forms/angulardart_forms.dart';
+import 'package:angulardart_test/angulardart_test.dart';
 
 import 'validator_directives_test.template.dart' as ng;
 

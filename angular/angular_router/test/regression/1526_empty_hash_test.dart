@@ -1,6 +1,6 @@
 
 import 'package:test/test.dart';
-import 'package:angular_router/angular_router.dart';
+import 'package:angulardart_router/angulardart_router.dart';
 
 void main() {
   late LocationStrategy locationStrategy;

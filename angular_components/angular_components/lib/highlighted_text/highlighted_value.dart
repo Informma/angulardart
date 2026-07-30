@@ -2,11 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/highlighted_text/highlighted_text.dart';
-import 'package:angular_components/model/ui/has_renderer.dart';
-import 'package:angular_components/model/ui/highlight_provider.dart';
-import 'package:angular_components/model/ui/highlighted_text_model.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/highlighted_text/highlighted_text.dart';
+import 'package:angulardart_components/model/ui/has_renderer.dart';
+import 'package:angulardart_components/model/ui/highlight_provider.dart';
+import 'package:angulardart_components/model/ui/highlighted_text_model.dart';
 
 /// An alternate api to [HighlightedTextComponent] that uses a highlighter
 /// and accepts a value that it converts to text segments using a

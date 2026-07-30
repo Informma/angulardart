@@ -1,6 +1,6 @@
-import 'package:angular/src/meta.dart';
-import 'package:angular/src/reflector.dart' as reflector;
-import 'package:angular/src/utilities.dart';
+import 'package:angulardart/src/meta.dart';
+import 'package:angulardart/src/reflector.dart' as reflector;
+import 'package:angulardart/src/utilities.dart';
 import 'package:meta/meta.dart';
 
 import '../errors.dart' as errors;

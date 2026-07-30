@@ -4,13 +4,13 @@
 
 import 'dart:html' show Event;
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
-import 'package:angular_components/src/material_datepicker/sequential.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/src/material_datepicker/sequential.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
-export 'package:angular_components/src/material_datepicker/sequential.dart';
+export 'package:angulardart_components/src/material_datepicker/sequential.dart';
 
 /// Next/prev buttons.
 ///

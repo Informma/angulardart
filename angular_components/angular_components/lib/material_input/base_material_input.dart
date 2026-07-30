@@ -5,23 +5,23 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
-import 'package:angular_components/focus/focus.dart';
-import 'package:angular_components/forms/error_renderer.dart' show ErrorFn;
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/mixins/focusable_mixin.dart';
-import 'package:angular_components/utils/angular/properties/properties.dart';
-import 'package:angular_components/utils/angular/reference/reference.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
-import 'package:angular_components/utils/id_generator/id_generator.dart';
-import 'package:angular_forms/angular_forms.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/meta.dart';
+import 'package:angulardart_components/focus/focus.dart';
+import 'package:angulardart_components/forms/error_renderer.dart' show ErrorFn;
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/mixins/focusable_mixin.dart';
+import 'package:angulardart_components/utils/angular/properties/properties.dart';
+import 'package:angulardart_components/utils/angular/reference/reference.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/id_generator/id_generator.dart';
+import 'package:angulardart_forms/angulardart_forms.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/strings.dart' show isEmpty, isNotEmpty;
 
 import 'deferred_validator.dart';
 
-export 'package:angular_components/forms/error_renderer.dart' show ErrorFn;
+export 'package:angulardart_components/forms/error_renderer.dart' show ErrorFn;
 
 /// Key used in the Control's error map, when there is an error.
 const String materialInputErrorKey = 'material-input-error';

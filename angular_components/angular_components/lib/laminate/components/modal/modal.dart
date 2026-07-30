@@ -5,13 +5,13 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/content/deferred_content_aware.dart';
-import 'package:angular_components/src/laminate/components/modal/modal_controller_directive.dart';
-import 'package:angular_components/laminate/overlay/overlay.dart';
-import 'package:angular_components/model/action/async_action.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/content/deferred_content_aware.dart';
+import 'package:angulardart_components/src/laminate/components/modal/modal_controller_directive.dart';
+import 'package:angulardart_components/laminate/overlay/overlay.dart';
+import 'package:angulardart_components/model/action/async_action.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// May be added to DI to enforce that a single [Modal] is visible at a time.
 ///

@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart' as collection;
-import 'package:angular_components/model/ui/display_name.dart';
+import 'package:angulardart_components/model/ui/display_name.dart';
 
 /// Returns a non-null label.
 typedef LabelFunction = String Function();

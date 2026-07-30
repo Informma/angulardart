@@ -17,7 +17,7 @@ library angular_components.model.observable.observable;
 
 import 'dart:async';
 
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// Compares two objects for reference or content equality.
 typedef EqualsFn<T> = bool Function(T a, T b);

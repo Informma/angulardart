@@ -5,23 +5,23 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/content/deferred_content.dart';
-import 'package:angular_components/focus/focus.dart';
-import 'package:angular_components/focus/keyboard_only_focus_indicator.dart';
-import 'package:angular_components/laminate/enums/alignment.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/material_popup/material_popup.dart';
-import 'package:angular_components/mixins/material_dropdown_base.dart';
-import 'package:angular_components/model/selection/select.dart';
-import 'package:angular_components/model/selection/selection_container.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
-import 'package:angular_components/model/selection/selection_options.dart';
-import 'package:angular_components/model/ui/has_factory.dart';
-import 'package:angular_components/src/material_tree/material_tree_filter.dart';
-import 'package:angular_components/src/material_tree/material_tree_root.dart';
-import 'package:angular_components/utils/angular/css/css.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/content/deferred_content.dart';
+import 'package:angulardart_components/focus/focus.dart';
+import 'package:angulardart_components/focus/keyboard_only_focus_indicator.dart';
+import 'package:angulardart_components/laminate/enums/alignment.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/material_popup/material_popup.dart';
+import 'package:angulardart_components/mixins/material_dropdown_base.dart';
+import 'package:angulardart_components/model/selection/select.dart';
+import 'package:angulardart_components/model/selection/selection_container.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/selection/selection_options.dart';
+import 'package:angulardart_components/model/ui/has_factory.dart';
+import 'package:angulardart_components/src/material_tree/material_tree_filter.dart';
+import 'package:angulardart_components/src/material_tree/material_tree_root.dart';
+import 'package:angulardart_components/utils/angular/css/css.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
 
 import 'material_tree_impl.dart';
 

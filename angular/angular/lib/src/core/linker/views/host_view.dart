@@ -2,14 +2,14 @@ import 'dart:html';
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:meta/meta.dart';
-import 'package:angular/src/core/change_detection/host.dart';
-import 'package:angular/src/core/linker/component_factory.dart';
-import 'package:angular/src/core/linker/view_container.dart';
-import 'package:angular/src/core/linker/view_fragment.dart';
-import 'package:angular/src/di/injector.dart';
-import 'package:angular/src/meta.dart';
-import 'package:angular/src/runtime/dom_helpers.dart';
-import 'package:angular/src/utilities.dart';
+import 'package:angulardart/src/core/change_detection/host.dart';
+import 'package:angulardart/src/core/linker/component_factory.dart';
+import 'package:angulardart/src/core/linker/view_container.dart';
+import 'package:angulardart/src/core/linker/view_fragment.dart';
+import 'package:angulardart/src/di/injector.dart';
+import 'package:angulardart/src/meta.dart';
+import 'package:angulardart/src/runtime/dom_helpers.dart';
+import 'package:angulardart/src/utilities.dart';
 
 import 'component_view.dart';
 import 'dynamic_view.dart';

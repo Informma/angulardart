@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular_components/model/observable/observable.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
 
 /// Something that can move to a next/previous element.
 ///

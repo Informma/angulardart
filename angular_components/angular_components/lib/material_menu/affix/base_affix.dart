@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/model/menu/menu_item_affix.dart';
-import 'package:angular_components/model/ui/has_renderer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/model/menu/menu_item_affix.dart';
+import 'package:angulardart_components/model/ui/has_renderer.dart';
 
 /// Base interface for any components that renders a [MenuItemAffix].
 abstract class BaseAffixComponent<ModelType extends MenuItemAffix>

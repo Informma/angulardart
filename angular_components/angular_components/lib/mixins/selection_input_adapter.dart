@@ -4,12 +4,12 @@
 
 import 'dart:async';
 
-import 'package:angular/di.dart';
+import 'package:angulardart/di.dart';
 import 'package:meta/meta.dart';
-import 'package:angular_components/model/selection/selection_container.dart';
-import 'package:angular_components/model/selection/selection_model.dart';
-import 'package:angular_components/model/selection/selection_options.dart';
-import 'package:angular_components/model/selection/string_selection_options.dart';
+import 'package:angulardart_components/model/selection/selection_container.dart';
+import 'package:angulardart_components/model/selection/selection_model.dart';
+import 'package:angulardart_components/model/selection/selection_options.dart';
+import 'package:angulardart_components/model/selection/string_selection_options.dart';
 
 /// A mixin to provide a simplier API for accepting [SelectionModel] and
 /// [SelectionOptions] for [SelectionContainer] components.

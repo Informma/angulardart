@@ -4,7 +4,7 @@
 
 import 'dart:html';
 
-import 'package:angular_components/utils/browser/events/events.dart';
+import 'package:angulardart_components/utils/browser/events/events.dart';
 
 /// Callback to handle a keyboard event
 typedef KeyboardEventHandler = void Function(KeyboardEvent event);

@@ -4,13 +4,13 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular/experimental.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service_webdriver_testability.dart';
-import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/experimental.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service_webdriver_testability.dart';
+import 'package:angulardart_components/utils/disposer/disposer.dart';
 
-export 'package:angular_components/utils/browser/dom_service/dom_service.dart';
+export 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
 
 // This is a pattern which allows a singleton service to be shared in an
 // application without binding the service at the application level, while

@@ -2,13 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:meta/meta.dart';
-import 'package:angular_components/material_menu/affix/base_affix.dart';
-import 'package:angular_components/material_menu/affix/icon_affix.template.dart'
+import 'package:angulardart_components/material_menu/affix/base_affix.dart';
+import 'package:angulardart_components/material_menu/affix/icon_affix.template.dart'
     as ng;
-import 'package:angular_components/model/menu/menu_item_affix.dart';
-import 'package:angular_components/model/ui/icon.dart';
+import 'package:angulardart_components/model/menu/menu_item_affix.dart';
+import 'package:angulardart_components/model/ui/icon.dart';
 
 /// Affix containing an icon.
 class IconAffix extends BaseMenuItemAffixModel {

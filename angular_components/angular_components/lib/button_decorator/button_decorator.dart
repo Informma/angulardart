@@ -5,11 +5,11 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/focus/focus.dart';
-import 'package:angular_components/interfaces/has_disabled.dart';
-import 'package:angular_components/mixins/has_tab_index.dart';
-import 'package:angular_components/utils/browser/events/events.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/focus/focus.dart';
+import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/mixins/has_tab_index.dart';
+import 'package:angulardart_components/utils/browser/events/events.dart';
 
 /// ButtonDirective adds all basic required a11y functional for any element,
 /// that are designed to work as a button (clickable icon, etc.)

@@ -4,19 +4,19 @@
 
 import 'dart:html';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/content/deferred_content.dart';
-import 'package:angular_components/focus/focus.dart';
-import 'package:angular_components/focus/focus_trap.dart';
-import 'package:angular_components/laminate/popup/popup.dart';
-import 'package:angular_components/material_list/material_list.dart';
-import 'package:angular_components/material_menu/menu_item_groups.dart';
-import 'package:angular_components/material_menu/menu_popup_wrapper.dart';
-import 'package:angular_components/material_menu/menu_root.dart';
-import 'package:angular_components/material_popup/material_popup.dart';
-import 'package:angular_components/mixins/focusable_mixin.dart';
-import 'package:angular_components/model/menu/menu.dart';
-import 'package:angular_components/utils/angular/css/css.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/content/deferred_content.dart';
+import 'package:angulardart_components/focus/focus.dart';
+import 'package:angulardart_components/focus/focus_trap.dart';
+import 'package:angulardart_components/laminate/popup/popup.dart';
+import 'package:angulardart_components/material_list/material_list.dart';
+import 'package:angulardart_components/material_menu/menu_item_groups.dart';
+import 'package:angulardart_components/material_menu/menu_popup_wrapper.dart';
+import 'package:angulardart_components/material_menu/menu_root.dart';
+import 'package:angulardart_components/material_popup/material_popup.dart';
+import 'package:angulardart_components/mixins/focusable_mixin.dart';
+import 'package:angulardart_components/model/menu/menu.dart';
+import 'package:angulardart_components/utils/angular/css/css.dart';
 
 /// A popup that renders a [MenuModel] using a [MenuItemGroupsComponent].
 @Component(

@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:angular_ast/angular_ast.dart';
+import 'package:angulardart_ast/angulardart_ast.dart';
 
 void main() {
   // Returns the html parsed as a series of tokens.

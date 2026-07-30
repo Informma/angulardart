@@ -6,13 +6,13 @@ import 'dart:async' show Stream, StreamController;
 import 'dart:html'
     show Element, NodeValidator, NodeValidatorBuilder, UIEvent, UriPolicy;
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:logging/logging.dart' show Logger;
 import 'package:quiver/check.dart';
-import 'package:angular_components/utils/angular/properties/properties.dart';
-import 'package:angular_components/utils/browser/dom_service/dom_service.dart'
+import 'package:angulardart_components/utils/angular/properties/properties.dart';
+import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart'
     show DomService;
-import 'package:angular_components/utils/disposer/disposer.dart' show Disposer;
+import 'package:angulardart_components/utils/disposer/disposer.dart' show Disposer;
 
 /// Injection token for the URI whitelist. This whitelist defines which URIs
 /// may be valid targets for links.

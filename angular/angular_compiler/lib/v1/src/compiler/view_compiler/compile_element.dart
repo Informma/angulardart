@@ -1,4 +1,4 @@
-import 'package:angular/src/meta.dart';
+import 'package:angulardart/src/meta.dart';
 
 import '../compile_metadata.dart'
     show

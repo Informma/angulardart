@@ -7,11 +7,11 @@ library angular_components.material_tree.src.material_tree_filter;
 
 import 'dart:async';
 
-import 'package:angular/angular.dart';
-import 'package:angular_components/material_input/material_input.dart';
-import 'package:angular_components/src/material_tree/material_tree_root.dart';
-import 'package:angular_components/model/selection/select.dart';
-import 'package:angular_components/utils/async/async.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/material_input/material_input.dart';
+import 'package:angulardart_components/src/material_tree/material_tree_root.dart';
+import 'package:angulardart_components/model/selection/select.dart';
+import 'package:angulardart_components/utils/async/async.dart';
 
 /// A simple component that maps an input box to the [Filterable] interface.
 @Component(

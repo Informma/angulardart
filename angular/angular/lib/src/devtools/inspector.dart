@@ -344,12 +344,12 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
     return InspectorNode((b) {
       final componentView = data.componentView;
       if (componentView != null) {
-        b.component
+        b.component!
           ..name = componentView.ctx.runtimeType.toString()
           ..id = _referenceCounter.toId(componentView, groupName);
       }
       if (data.directives.isNotEmpty) {
-        b.directives.replace([
+        b.directives!.replace([
           for (final directive in data.directives)
             InspectorDirective((b) => b
               ..name = directive.runtimeType.toString()

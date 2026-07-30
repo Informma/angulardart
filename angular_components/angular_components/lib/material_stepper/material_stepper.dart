@@ -5,17 +5,17 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:angular/angular.dart';
+import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
-import 'package:angular_components/button_decorator/button_decorator.dart';
-import 'package:angular_components/laminate/portal/portal.dart';
-import 'package:angular_components/material_icon/material_icon.dart';
-import 'package:angular_components/material_stepper/common.dart';
-import 'package:angular_components/material_stepper/material_step.dart';
-import 'package:angular_components/material_yes_no_buttons/material_yes_no_buttons.dart';
-import 'package:angular_components/model/action/async_action.dart';
-import 'package:angular_components/utils/angular/scroll_host/angular_2.dart';
-import 'package:angular_components/utils/browser/events/events.dart';
+import 'package:angulardart_components/button_decorator/button_decorator.dart';
+import 'package:angulardart_components/laminate/portal/portal.dart';
+import 'package:angulardart_components/material_icon/material_icon.dart';
+import 'package:angulardart_components/material_stepper/common.dart';
+import 'package:angulardart_components/material_stepper/material_step.dart';
+import 'package:angulardart_components/material_yes_no_buttons/material_yes_no_buttons.dart';
+import 'package:angulardart_components/model/action/async_action.dart';
+import 'package:angulardart_components/utils/angular/scroll_host/angular_2.dart';
+import 'package:angulardart_components/utils/browser/events/events.dart';
 
 /// A material-design-styled stepper.
 ///

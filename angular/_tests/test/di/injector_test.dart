@@ -2,11 +2,11 @@
 
 import 'package:test/test.dart';
 import 'package:_tests/matchers.dart';
-import 'package:angular/angular.dart';
-import 'package:angular/experimental.dart';
-import 'package:angular/src/di/injector.dart';
-import 'package:angular/src/reflector.dart' as reflector;
-import 'package:angular_test/angular_test.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/experimental.dart';
+import 'package:angulardart/src/di/injector.dart';
+import 'package:angulardart/src/reflector.dart' as reflector;
+import 'package:angulardart_test/angulardart_test.dart';
 
 import 'injector_test.template.dart' as ng;
 

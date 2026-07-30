@@ -9,8 +9,8 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:quiver/core.dart';
 import 'package:quiver/time.dart';
-import 'package:angular_components/model/observable/observable.dart';
-import 'package:angular_components/utils/comparators/comparators.dart';
+import 'package:angulardart_components/model/observable/observable.dart';
+import 'package:angulardart_components/utils/comparators/comparators.dart';
 
 /// A calendar date. Year / month / day.
 class Date extends Comparators<Date> {

@@ -1,7 +1,7 @@
 name: angulardart_router
-repository: https://github.com/angulardart/angular
+repository: https://github.com/angulardart/angular/tree/master/angular_router
 description: Router for AngularDart.
-version: 4.0.0
+version: 4.0.1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

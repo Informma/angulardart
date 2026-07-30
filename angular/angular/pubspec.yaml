@@ -1,9 +1,9 @@
 name: angulardart
-version: 8.0.2
+version: 8.0.4
 description: >-
   Fast and productive web framework by Google.
   Separate, but similar to the JavaScript framework with a similar name.
-repository: https://github.com/angulardart/angular
+repository: https://github.com/angulardart/angular/tree/master/angular
 environment:
   sdk: '>=3.0.0 <4.0.0'
 

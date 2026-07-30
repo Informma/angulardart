@@ -1,3 +1,7 @@
+## 4.0.1
+
+- Fixed repository URL to point to the correct subdirectory in the monorepo
+
 ## 4.0.0
 
 - **BREAKING CHANGE**: Require Dart ^3.0.0

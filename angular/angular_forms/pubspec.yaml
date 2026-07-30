@@ -1,7 +1,7 @@
 name: angulardart_forms
-repository: https://github.com/angulardart/angular
+repository: https://github.com/angulardart/angular/tree/master/angular_forms
 description: Forms framework for AngularDart.
-version: 5.0.0
+version: 5.0.1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

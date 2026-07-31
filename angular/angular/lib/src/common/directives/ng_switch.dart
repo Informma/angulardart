@@ -69,8 +69,8 @@ class SwitchView {
 /// Try the [live example][ex].
 /// For details, see the [Structural Directives section on `ngSwitch`][guide].
 ///
-/// [ex]: https://angulardart.dev/examples/template-syntax#ngSwitch
-/// [guide]: https://webdev.dartlang.org/angular/guide/structural-directives.html#ngSwitch
+/// [ex]: https://angulardartreborn.com/examples/template-syntax#ngSwitch
+/// [guide]: https://angulardartreborn.com/guide/structural-directives.html#ngSwitch
 ///
 @Directive(
   selector: '[ngSwitch]',

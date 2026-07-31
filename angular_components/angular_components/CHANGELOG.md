@@ -875,7 +875,7 @@
 > [webdev](https://pub.dev/packages/webdev) CLI, or, for advanced
 > users, the [build_runner](https://pub.dev/packages/build_runner) CLI.
 >
-> Please see the Dart 2 [migration guide](https://webdev.dartlang.org/dart-2) for
+> Please see the Dart 2 [migration guide](https://angulardartreborn.com/dart-2) for
 > more details.
 
 ### Breaking Changes

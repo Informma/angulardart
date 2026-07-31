@@ -1,7 +1,7 @@
 name: angulardart_forms
 repository: https://github.com/flutterdocteur/angulardart/tree/main/angular/angular_forms
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues
-homepage: https://github.com/flutterdocteur/angulardart
+homepage: https://angulardartreborn.com
 description: Forms framework for AngularDart.
 version: 5.0.8
 topics:

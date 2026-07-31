@@ -1,7 +1,7 @@
 name: angulardart_ast
 repository: https://github.com/flutterdocteur/angulardart/tree/main/angular/angular_ast
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues
-homepage: https://github.com/flutterdocteur/angulardart
+homepage: https://angulardartreborn.com
 description: Parser and utilities for AngularDart templates
 version: 3.0.8
 topics:

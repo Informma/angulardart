@@ -1,3 +1,39 @@
+## 8.0.15
+
+- Added `example/example.dart` for better visibility on pub.dev
+- Updated `example/README.md` with code examples
+
+## 8.0.14
+
+- Updated banner image to 800x450 for pub.dev display
+
+## 8.0.13
+
+- Updated banner image dimensions
+
+## 8.0.12
+
+- Improved README with comprehensive documentation
+- Added banners and logos for pub.dev
+
+## 8.0.11
+
+- Added logo and banner to pub.dev package page
+- Updated repository URLs
+
+## 8.0.10
+
+- Added README, LICENSE, and media assets
+- Fixed repository URLs
+
+## 8.0.9
+
+- General documentation improvements
+
+## 8.0.8
+
+- Fixed missing `model.g.dart` in published package
+
 ## 8.0.7
 
 - Fixed missing `model.g.dart` in published package by adding `.pubignore`

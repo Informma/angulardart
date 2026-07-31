@@ -14,6 +14,8 @@ void main() {
     test('should detect properties on regular elements', () {
       expect(registry.hasProperty('div', 'id'), true);
       expect(registry.hasProperty('div', 'title'), true);
+      expect(registry.hasProperty('div', 'textContent'), true);
+      expect(registry.hasProperty('span', 'textContent'), true);
       expect(registry.hasProperty('h1', 'align'), true);
       expect(registry.hasProperty('h2', 'align'), true);
       expect(registry.hasProperty('h3', 'align'), true);

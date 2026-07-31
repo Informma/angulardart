@@ -1,4 +1,4 @@
-<img src="https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png" alt="AngularDart Router banner" style="width: 100%; max-width: 100%;" />
+![AngularDart Router banner](https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png)
 
 <p align="center">
   <a href="https://pub.dev/packages/angulardart_router">

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png" alt="AngularDart" style="width: 100%; max-width: 100%;" />
+  <img src="https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png" alt="AngularDart" />
 </p>
 
 <p align="center">

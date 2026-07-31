@@ -1,3 +1,12 @@
+<p align="center">
+  <a href="https://angulardartreborn.com">
+    <img src="https://img.shields.io/badge/website-angulardartreborn.com-blue" alt="Website" />
+  </a>
+  <a href="https://pub.dev/packages/angulardart_cli">
+    <img src="https://img.shields.io/pub/v/angulardart_cli.svg" alt="pub package" />
+  </a>
+</p>
+
 # AngularDart CLI
 
 A command line interface for scaffolding AngularDart projects and components. Compatible with Dart 3 and the latest AngularDart packages.

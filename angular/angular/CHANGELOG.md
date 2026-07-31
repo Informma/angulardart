@@ -915,13 +915,13 @@ Welcome to AngularDart v5.0.0, with full support for Dart 2. Please note that
 this release is not compatible with older versions of Dart 1.XX. Additionally:
 
 *   _Dartium_ is no longer supported. Instead, use the new
-    [DartDevCompiler](https://webdev.dartlang.org/tools/dartdevc)
+    [DartDevCompiler](https://angulardartreborn.com/tools/dartdevc)
 *   Pub _transformers_ are no longer used. Instead, use the new
     [webdev](https://pub.dev/packages/webdev) CLI, or, for advanced users, the
     [build_runner](https://pub.dev/packages/build_runner) CLI.
 
 More details of
-[changes to Dart 2 for web users](https://webdev.dartlang.org/dart-2) are
+[changes to Dart 2 for web users](https://angulardartreborn.com/dart-2) are
 available on our website.
 
 **Thanks**, and enjoy AngularDart!

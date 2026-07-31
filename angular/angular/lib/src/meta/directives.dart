@@ -32,8 +32,8 @@ import 'visibility.dart';
 ///
 /// See also:
 ///
-/// * [Attribute Directives](https://webdev.dartlang.org/angular/guide/attribute-directives)
-/// * [Lifecycle Hooks](https://webdev.dartlang.org/angular/guide/lifecycle-hooks)
+/// * [Attribute Directives](https://angulardartreborn.com/guide/attribute-directives)
+/// * [Lifecycle Hooks](https://angulardartreborn.com/guide/lifecycle-hooks)
 ///
 @Target({TargetKind.classType})
 class Directive {
@@ -146,7 +146,7 @@ class Directive {
 /// the callbacks are called by the change detection at defined points in time
 /// during the life of the component.
 ///
-/// [LCH]: https://webdev.dartlang.org/angular/guide/lifecycle-hooks
+/// [LCH]: https://angulardartreborn.com/guide/lifecycle-hooks
 @Target({TargetKind.classType})
 class Component extends Directive {
   /// Defines the used change detection strategy.

@@ -1,4 +1,4 @@
-<img src="https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png" alt="AngularDart Forms banner" style="width: 100%; max-width: 100%;" />
+![AngularDart Forms banner](https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png)
 
 <p align="center">
   <a href="https://pub.dev/packages/angulardart_forms">

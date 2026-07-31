@@ -3,7 +3,7 @@ repository: https://github.com/flutterdocteur/angulardart/tree/main/angular/angu
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://github.com/flutterdocteur/angulardart
 description: Router for AngularDart.
-version: 4.0.6
+version: 4.0.7
 topics:
   - angular
   - router

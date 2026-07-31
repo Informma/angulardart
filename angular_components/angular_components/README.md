@@ -1,68 +1,181 @@
-[Material design] components for [AngularDart].
+![AngularDart Components banner](https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png)
 
-The [AngularDart Components Gallery] contains live examples and documentation.
+<p align="center">
+  <a href="https://pub.dev/packages/angulardart_components">
+    <img src="https://img.shields.io/pub/v/angulardart_components.svg" alt="pub package" />
+  </a>
+</p>
 
-This productive and stable set of widgets, contributed to by hundreds of
-Googlers, make debugging and deploying your app easier. Strict latency and
-testing policies make these widgets an excellent fit for projects using the
-Angular package.
+# AngularDart Components
 
-[Material design]: https://material.io/guidelines
-[AngularDart]: https://github.com/angulardart/angular
-[AngularDart Components Gallery]: https://angulardart.github.io/angular_components/
+**Material Design UI components for AngularDart. Used at Google in production apps.**
 
-## Useful links
+Part of the [AngularDart](https://pub.dev/packages/angulardart) ecosystem.
 
-* [Material Design site](https://material.io)
-* [Gitter chat room](https://gitter.im/angulardart/community)
+## Components
 
-## Required Fonts
+### Buttons
+- `MaterialButtonComponent` - Standard button
+- `MaterialFabComponent` - Floating action button
+- `MaterialIconButtonComponent` - Icon-only button
+- `MaterialYesNoButtonsComponent` - Confirm/cancel buttons
 
-Add the following font downloads to the head element of your page:
+### Form Controls
+- `MaterialCheckboxComponent` - Checkbox input
+- `MaterialRadioComponent` / `MaterialRadioGroupComponent` - Radio buttons
+- `MaterialInputComponent` - Text input with floating label
+- `MaterialAutoSuggestInputComponent` - Input with autocomplete
+- `MaterialSelectComponent` / `MaterialDropdownSelectComponent` - Dropdown selection
+- `MaterialToggleComponent` - Toggle switch
+- `MaterialSliderComponent` - Range slider
+- `MaterialDatepickerComponent` - Date picker
+- `MaterialDateRangePickerComponent` - Date range picker
+- `MaterialTimePickerComponent` - Time picker
 
-* __Roboto Font__
-([example](https://github.com/angulardart/angular_components/blob/7f254c89cbbd512cc284a7e9d03bb687f9948bd9/angular_gallery/lib/builder/template/index.html.mustache#L9))
+### Navigation
+- `MaterialTabComponent` / `MaterialTabPanelComponent` - Tabs
+- `MaterialMenuComponent` / `MaterialDropdownMenuComponent` - Menus
+- `MaterialTreeComponent` - Tree view
+- `MaterialStepperComponent` - Step-by-step wizard
 
-  ```html
-  <link
-    rel="stylesheet"
-    type="text/css"
-    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-  ```
+### Layout
+- `MaterialCardComponent` - Card container
+- `MaterialDialogComponent` - Modal dialog
+- `MaterialExpansionPanelComponent` - Expandable panel
+- `MaterialPopupComponent` - Popup overlay
+- `MaterialTooltipComponent` / `MaterialIconTooltipComponent` - Tooltips
+- `MaterialSpinnerComponent` - Loading indicator
+- `MaterialProgressComponent` - Progress bar
 
-* __Material Icon Font__
-([example](https://github.com/angulardart/angular_components/blob/7f254c89cbbd512cc284a7e9d03bb687f9948bd9/angular_gallery/lib/builder/template/index.html.mustache#L11))
+### Content
+- `MaterialIconComponent` - Material icons
+- `MaterialGlyphComponent` - Custom glyphs
+- `MaterialChipComponent` / `MaterialChipsComponent` - Chips/tags
+- `MaterialListComponent` / `MaterialListItemComponent` - List items
+- `MaterialScorecardComponent` / `MaterialScoreboardComponent` - Score display
+- `MaterialReorderListComponent` - Drag-and-drop reorderable list
+- `SimpleHtmlComponent` - Safe HTML rendering
 
-  ```html
-  <link
-    rel="stylesheet"
-    type="text/css"
-    href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  ```
+## Installation
 
-## Custom component styles
+Add to your `pubspec.yaml`:
 
-The styles of these components can be customized in your project with a
-component's provided [Sass mixins](https://sass-lang.com/guide#topic-6).
+```yaml
+dependencies:
+  angulardart: ^8.0.0
+  angulardart_components: ^2.0.0
+```
 
-1. Add a dev dependency on the
-[sass_builder](https://pub.dev/packages/sass_builder) package to your
-`pubspec.yaml`:
+## Quick Start
 
-  ```yaml
-  dev_dependencies:
-    sass_builder: ^2.0.0 # update for the latest version
-  ```
+```dart
+import 'package:angulardart/angular.dart';
+import 'package:angulardart_components/angulardart_components.dart';
 
-2. Now you can import styles and mixins from this package via dart style package
-imports in your Sass files.
-
-  In your `.scss` files:
-
-  ```scss
-  @import 'package:angular_components/css/material/material';
-
-  .blue {
-    color: $mat-blue;
+@Component(
+  selector: 'my-app',
+  template: '''
+    <material-button (trigger)="onClick()">Click me</material-button>
+    <material-checkbox [(checked)]="isChecked">Accept terms</material-checkbox>
+    <material-input label="Name" [(ngModel)]="name"></material-input>
+  ''',
+  directives: [
+    MaterialButtonComponent,
+    MaterialCheckboxComponent,
+    MaterialInputComponent,
+  ],
+)
+class AppComponent {
+  bool isChecked = false;
+  String name = '';
+  
+  void onClick() {
+    print('Button clicked!');
   }
-  ```
+}
+```
+
+## Material Design Theming
+
+Customize the look and feel with Material Design themes:
+
+```dart
+import 'package:angulardart_components/css/material/material.scss';
+```
+
+## Forms Integration
+
+Use components with AngularDart Forms:
+
+```dart
+@Component(
+  selector: 'my-form',
+  template: '''
+    <material-input
+      label="Email"
+      [ngModel]="email"
+      (ngModelChange)="email = \$event"
+      required>
+    </material-input>
+    <material-checkbox [(ngModel)]="acceptTerms">
+      I accept the terms
+    </material-checkbox>
+  ''',
+  directives: [
+    MaterialInputComponent,
+    MaterialCheckboxComponent,
+    formDirectives,
+  ],
+)
+class MyForm {
+  String email = '';
+  bool acceptTerms = false;
+}
+```
+
+## Dialogs
+
+```dart
+@Component(
+  selector: 'my-app',
+  template: '''
+    <material-button (trigger)="showDialog()">Open Dialog</material-button>
+    <material-dialog #dialog>
+      <h3 header>Confirm</h3>
+      <div>Are you sure?</div>
+      <material-yes-no-buttons
+        footer
+        (yes)="dialog.close()"
+        (no)="dialog.close()">
+      </material-yes-no-buttons>
+    </material-dialog>
+  ''',
+  directives: [
+    MaterialButtonComponent,
+    MaterialDialogComponent,
+    MaterialYesNoButtonsComponent,
+  ],
+)
+class AppComponent {
+  @ViewChild('dialog')
+  MaterialDialogComponent? dialog;
+  
+  void showDialog() {
+    dialog?.open();
+  }
+}
+```
+
+## Documentation
+
+- [API Reference](https://pub.dev/documentation/angulardart_components/latest/)
+- [AngularDart main package](https://pub.dev/packages/angulardart)
+
+## Requirements
+
+- Dart SDK >= 3.0.0
+- AngularDart >= 8.0.0
+
+## License
+
+MIT License

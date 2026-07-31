@@ -3,12 +3,16 @@ repository: https://github.com/flutterdocteur/angulardart/tree/main/angular/angu
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://github.com/flutterdocteur/angulardart
 description: Compiler for AngularDart.
-version: 3.0.4
+version: 3.0.5
 topics:
   - angular
   - compiler
   - code-generation
   - web
+
+screenshots:
+  - description: 'AngularDart Compiler logo'
+    path: logo.png
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

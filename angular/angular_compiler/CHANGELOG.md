@@ -1,3 +1,8 @@
+## 3.0.10
+
+- Updated documentation links to point to angulardartreborn.com
+- Updated homepage to https://angulardartreborn.com
+
 ## 3.0.9
 
 - Added `textContent` to DOM element schema registry, fixing `[textContent]` binding support on all HTML elements

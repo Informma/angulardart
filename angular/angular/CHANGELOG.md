@@ -1,3 +1,8 @@
+## 8.0.17
+
+- Updated documentation links to point to angulardartreborn.com
+- Updated homepage to https://angulardartreborn.com
+
 ## 8.0.16
 
 - Added `example/example.dart` for better visibility on pub.dev

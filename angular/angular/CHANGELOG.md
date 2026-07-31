@@ -1,3 +1,8 @@
+## 8.0.16
+
+- Added `example/example.dart` for better visibility on pub.dev
+- Updated `example/README.md` with code examples
+
 ## 8.0.15
 
 - Added `example/example.dart` for better visibility on pub.dev

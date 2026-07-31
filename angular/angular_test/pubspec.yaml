@@ -3,7 +3,7 @@ repository: https://github.com/flutterdocteur/angulardart/tree/main/angular/angu
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://github.com/flutterdocteur/angulardart
 description: Testing runner and library for AngularDart
-version: 5.0.2
+version: 5.0.3
 topics:
   - angular
   - testing

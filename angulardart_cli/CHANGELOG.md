@@ -1,3 +1,8 @@
+## 1.0.9
+
+- Updated documentation links to point to angulardartreborn.com
+- Updated homepage to https://angulardartreborn.com
+
 ## 1.0.2
 
 - Added `topics` for better discoverability on pub.dev

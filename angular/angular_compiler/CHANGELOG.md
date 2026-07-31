@@ -1,3 +1,7 @@
+## 3.0.9
+
+- Added `textContent` to DOM element schema registry, fixing `[textContent]` binding support on all HTML elements
+
 ## 3.0.2
 
 - Added `topics` for better discoverability on pub.dev

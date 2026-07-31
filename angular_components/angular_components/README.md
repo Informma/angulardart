@@ -1,4 +1,4 @@
-![AngularDart Components banner](https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png)
+<img src="https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png" alt="AngularDart Components banner" style="width: 100%; max-width: 100%;" />
 
 <p align="center">
   <a href="https://pub.dev/packages/angulardart_components">

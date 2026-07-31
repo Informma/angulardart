@@ -1,3 +1,5 @@
+![AngularDart banner](https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png)
+
 # AngularDart
 
 A fast and productive web framework by Google. AngularDart is separate from, but similar to, the JavaScript framework with a similar name.

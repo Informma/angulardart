@@ -10,6 +10,7 @@ build/
 
 # Generated files
 *.g.dart
+!angular/angular/lib/src/devtools/model.g.dart
 *.freezed.dart
 
 # Test coverage

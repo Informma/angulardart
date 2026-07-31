@@ -1,3 +1,8 @@
+## 8.0.7
+
+- Fixed missing `model.g.dart` in published package by adding `.pubignore`
+- The file was excluded by `.gitignore` which prevented it from being published
+
 ## 8.0.6
 
 - Restored non-null assertions in `inspector.dart` for compatibility with dependency lower bounds

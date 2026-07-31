@@ -3,13 +3,17 @@ repository: https://github.com/flutterdocteur/angulardart/tree/main/angular/angu
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://github.com/flutterdocteur/angulardart
 description: Parser and utilities for AngularDart templates
-version: 3.0.4
+version: 3.0.5
 topics:
   - angular
   - parser
   - ast
   - template
   - web
+
+screenshots:
+  - description: 'AngularDart AST logo'
+    path: logo.png
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

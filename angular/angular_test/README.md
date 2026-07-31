@@ -1,70 +1,163 @@
-Testing infrastructure for [AngularDart][webdev_angular], used with the
-[`build_runner` package][build_runner].
+![AngularDart Test banner](https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png)
 
-See https://github.com/angulardart for current updates on this project.
+<p align="center">
+  <a href="https://pub.dev/packages/angulardart_test">
+    <img src="https://img.shields.io/pub/v/angulardart_test.svg" alt="pub package" />
+  </a>
+</p>
 
-Documentation and examples:
+# AngularDart Test
 
-* [`_tests/test/`][test_folder] (tests for the main dart-lang/angular package)
+**Testing utilities and helpers for AngularDart components.**
 
-[pub_angular_test]: https://pub.dev/packages/angular_test
-[pub_test]: https://pub.dev/packages/test
-[build_runner]: https://pub.dev/packages/build_runner
-[test_folder]: https://github.com/angulardart/angular/tree/master/_tests/test
-[webdev_angular]: https://pub.dev/packages/angular
+Part of the [AngularDart](https://pub.dev/packages/angulardart) ecosystem.
 
-Additional resources:
+## Features
 
-*   Community/support: [Gitter chat room]
+- **Component testing** - Test AngularDart components in isolation
+- **NgTestBed** - Create and manage component test fixtures
+- **Test fixtures** - Interact with rendered components
+- **Zone stabilization** - Wait for async operations to complete
+- **Change detection** - Trigger and verify view updates
 
-[Gitter chat room]: https://gitter.im/angulardart/community
+## Installation
 
-## Overview
+Add to your `pubspec.yaml`:
 
-`angular_test` is a library for writing tests for AngularDart components.
+```yaml
+dev_dependencies:
+  angulardart_test: ^5.0.0
+  build_runner: ^2.4.0
+  build_test: ^2.2.0
+  build_web_compilers: ^4.0.0
+```
+
+## Quick Start
 
 ```dart
-// Assume this is 'my_test.dart'.
-import 'my_test.template.dart' as ng;
+import 'package:angulardart/angular.dart';
+import 'package:angulardart_test/angulardart_test.dart';
+import 'package:test/test.dart';
+
+import 'my_component.dart';
+import 'my_component.template.dart' as ng;
 
 void main() {
   ng.initReflector();
   tearDown(disposeAnyRunningTest);
 
-  test('should render "Hello World"', () async {
-    final testBed = new NgTestBed<HelloWorldComponent>();
-    final testFixture = await testBed.create();
-    expect(testFixture.text, 'Hello World');
-    await testFixture.update((c) => c.name = 'Universe');
-    expect(testFixture.text, 'Hello Universe');
+  test('should render greeting', () async {
+    final testBed = NgTestBed<HelloComponent>();
+    final fixture = await testBed.create();
+    
+    expect(fixture.text, contains('Hello'));
+    
+    await fixture.update((c) => c.name = 'World');
+    expect(fixture.text, contains('Hello World'));
   });
-}
-
-@Component(selector: 'test', template: 'Hello {{name}}')
-class HelloWorldComponent {
-  String name = 'World';
 }
 ```
 
-To use `angular_test`, configure your package's `pubspec.yaml` as follows:
+## Testing with NgTestBed
+
+### Create a test fixture
+
+```dart
+final testBed = NgTestBed<MyComponent>();
+final fixture = await testBed.create();
+```
+
+### Access component instance
+
+```dart
+final component = fixture.rootElement.componentInstance;
+```
+
+### Update component state
+
+```dart
+await fixture.update((c) {
+  c.name = 'New Value';
+});
+```
+
+### Query DOM elements
+
+```dart
+final element = fixture.rootElement.querySelector('.my-class');
+expect(element.text, 'Expected text');
+```
+
+### Trigger events
+
+```dart
+await fixture.update((c) {
+  c.onButtonClick();
+});
+```
+
+## Testing with Dependencies
+
+```dart
+test('should work with services', () async {
+  final testBed = NgTestBed<MyComponent>(
+    beforeChangeDetection: (component) {
+      component.service = MockService();
+    },
+  );
+  
+  final fixture = await testBed.create();
+  expect(fixture.text, contains('Data from mock'));
+});
+```
+
+## Async Testing
+
+AngularDart tests run in zones. Use `tearDown` to clean up:
+
+```dart
+import 'package:angulardart_test/angulardart_test.dart';
+
+void main() {
+  tearDown(disposeAnyRunningTest);
+  
+  test('async test', () async {
+    final testBed = NgTestBed<MyComponent>();
+    final fixture = await testBed.create();
+    
+    // Wait for async operations
+    await fixture.update((c) {});
+  });
+}
+```
+
+## Configuration
+
+Add to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  build_runner: ^2.0.0
-  build_test: ^2.0.0
-  build_web_compilers: ^3.0.0
+  build_runner: ^2.4.0
+  build_test: ^2.2.0
+  build_web_compilers: ^4.0.0
 ```
 
-**IMPORTANT**: `angular_test` will not run without these dependencies set.
-
-To run tests, use `pub run build_runner test`. It automatically compiles your
-templates and annotations with AngularDart, and then compiles all of the Dart
-code to JavaScript in order to run browser tests. Here's an example of using
-Chrome with Dartdevc:
+Run tests:
 
 ```bash
-pub run build_runner test -- -p chrome
+dart run build_runner test -- -p chrome
 ```
 
-For more information using `pub run build_runner test`, see the documentation:
-https://github.com/dart-lang/build/tree/master/build_runner#built-in-commands
+## Documentation
+
+- [API Reference](https://pub.dev/documentation/angulardart_test/latest/)
+- [AngularDart main package](https://pub.dev/packages/angulardart)
+
+## Requirements
+
+- Dart SDK >= 3.0.0
+- AngularDart >= 8.0.0
+
+## License
+
+MIT License

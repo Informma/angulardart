@@ -165,6 +165,21 @@ class Unparser implements AstVisitor<void, String> {
   }
 
   @override
+  void visitLiteralList(
+    LiteralList ast,
+    void _,
+  ) {
+    sb.write('[');
+    var isFirst = true;
+    for (var element in ast.elements) {
+      if (!isFirst) sb.write(', ');
+      isFirst = false;
+      _visit(element);
+    }
+    sb.write(']');
+  }
+
+  @override
   void visitMethodCall(
     MethodCall ast,
     void _,

@@ -508,6 +508,13 @@ class _AngularSubsetVisitor extends GeneralizingAstVisitor<ast.AST> {
   }
 
   @override
+  ast.AST visitListLiteral(ListLiteral astNode) {
+    return ast.LiteralList(
+      astNode.elements.map((e) => e.accept(this)!).toList(),
+    );
+  }
+
+  @override
   ast.AST visitBinaryExpression(BinaryExpression astNode) {
     switch (astNode.operator.type) {
       case TokenType.PLUS:

@@ -342,6 +342,29 @@ class LiteralPrimitive extends AST {
       visitor.visitLiteralPrimitive(this, context);
 }
 
+/// Represents a list literal expression.
+///
+/// ```
+/// // ['/guide', '/home']
+/// LiteralList([
+///   LiteralPrimitive('/guide'),
+///   LiteralPrimitive('/home'),
+/// ])
+/// ```
+class LiteralList extends AST {
+  /// Elements of the list.
+  final List<AST> elements;
+
+  LiteralList(this.elements);
+
+  @override
+  R visit<R, C, CO extends C>(
+    AstVisitor<R, C?> visitor, [
+    CO? context,
+  ]) =>
+      visitor.visitLiteralList(this, context);
+}
+
 /// Represents converting a result or multiple results explicitly to a [String].
 ///
 /// ```
@@ -561,6 +584,7 @@ abstract class AstVisitor<R, C> {
   R visitKeyedRead(KeyedRead ast, C context);
   R visitKeyedWrite(KeyedWrite ast, C context);
   R visitLiteralPrimitive(LiteralPrimitive ast, C context);
+  R visitLiteralList(LiteralList ast, C context);
   R visitMethodCall(MethodCall ast, C context);
   R visitNamedExpr(NamedExpr ast, C context);
   R visitPipe(BindingPipe ast, C context);
@@ -640,6 +664,11 @@ class RecursiveAstVisitor<C> implements AstVisitor<void, C> {
   void visitLiteralPrimitive(LiteralPrimitive ast, C context) {}
 
   @override
+  void visitLiteralList(LiteralList ast, C context) {
+    visitAll(ast.elements, context);
+  }
+
+  @override
   void visitMethodCall(MethodCall ast, C context) {
     ast.receiver.visit(this, context);
     visitAll(ast.args, context);
@@ -709,6 +738,10 @@ class AstTransformer implements AstVisitor<AST, void> {
   @override
   AST visitLiteralPrimitive(LiteralPrimitive ast, _) =>
       LiteralPrimitive(ast.value);
+
+  @override
+  AST visitLiteralList(LiteralList ast, _) =>
+      LiteralList(_visitAll(ast.elements));
 
   @override
   AST visitPropertyRead(PropertyRead ast, _) =>

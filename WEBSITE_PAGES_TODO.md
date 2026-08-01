@@ -1,62 +1,72 @@
-# Pages à créer sur angulardartreborn.com
+# Pages du site angulardartreborn.com
 
-**PRIORITÉ HAUTE** - Ces pages sont référencées dans le code source et la documentation mais n'existent pas encore sur le site.
+**STATUT: IMPLÉMENTÉ** - Toutes les pages listées ont été créées et sont disponibles sur le site.
 
-## Pages de guide (documentation principale)
+## Pages implémentées
 
-| URL | Description | Fichier source référençant |
-|-----|-------------|---------------------------|
-| `/guide` | Index des guides | `angular/angular/lib/angulardart.dart` |
-| `/guide/template-syntax` | Syntaxe des templates (ngIf, ngFor, ngClass, ngStyle, ngModel, ngSwitch, $event, ref-vars) | `angular/angular/lib/src/common/directives/*.dart`, `angular_components/lib/app_layout/README.md`, `angular_components/lib/simple_html/README.md` |
-| `/guide/attribute-directives` | Directives d'attribut | `angular/angular/lib/src/meta/directives.dart` |
-| `/guide/structural-directives` | Directives structurelles | `angular/angular/lib/src/common/directives/ng_switch.dart` |
-| `/guide/lifecycle-hooks` | Hooks de cycle de vie | `angular/angular/lib/src/meta/directives.dart`, `angular/angular/lib/src/meta/lifecycle_hooks.dart` |
-| `/guide/forms` | Guide des formulaires | `angular/angular_forms/lib/src/directives/ng_model.dart` |
-| `/guide/security` | Sécurité (sanitization) | `angular/angular_compiler/lib/v1/src/compiler/template_parser/ast_template_parser.dart` |
+### Guides
+- ✅ `/guide` - Introduction à AngularDart
+- ✅ `/guide/template-syntax` - Syntaxe des templates
+- ✅ `/guide/attribute-directives` - Directives d'attribut
+- ✅ `/guide/structural-directives` - Directives structurelles
+- ✅ `/guide/lifecycle-hooks` - Hooks de cycle de vie
+- ✅ `/guide/forms` - Formulaires
+- ✅ `/guide/security` - Sécurité
 
-## Pages d'exemples
+### Exemples
+- ✅ `/examples/lifecycle-hooks` - Exemples de lifecycle hooks
+- ✅ `/examples/template-syntax` - Exemples de template syntax
 
-| URL | Description | Fichier source référençant |
-|-----|-------------|---------------------------|
-| `/examples/lifecycle-hooks` | Exemples des hooks de cycle de vie | `angular/angular/lib/src/meta/lifecycle_hooks.dart` |
-| `/examples/template-syntax` | Exemples de syntaxe de template | `angular/angular/lib/src/common/directives/ng_class.dart`, `ng_style.dart`, `ng_switch.dart` |
-| `/angular/angular_forms/lib/src/directives/ng_model.dart` | Exemple ngModel | `angular/angular_forms/lib/src/directives/ng_model.dart` |
+### Référence
+- ✅ `/cheatsheet` - Cheatsheet AngularDart
+- ✅ `/tools/dartdevc` - DartDevCompiler
+- ✅ `/dart-2` - Guide de migration Dart 2
 
-## Pages d'outils
+## Architecture
 
-| URL | Description | Fichier source référençant |
-|-----|-------------|---------------------------|
-| `/tools/dartdevc` | DartDevCompiler | `angular/angular/CHANGELOG.md` |
+Le site utilise une approche de navigation basée sur l'URL avec:
+- `AppComponent` qui détecte le chemin actuel et affiche soit la landing page, soit le layout de documentation
+- `DocsLayoutComponent` avec une sidebar de navigation et le contenu de la page active
+- Chaque page est un composant séparé avec son contenu en Markdown
+- Le package `markdown` est utilisé pour convertir le Markdown en HTML
 
-## Autres pages
+## Fichiers créés
 
-| URL | Description | Fichier source référençant |
-|-----|-------------|---------------------------|
-| `/cheatsheet` | Cheatsheet AngularDart | `angular/angular/lib/angulardart.dart` |
-| `/dart-2` | Guide de migration Dart 2 | `angular/angular/CHANGELOG.md`, `angular_components/angular_components/CHANGELOG.md` |
+```
+lib/src/
+├── app_component.dart (modifié pour supporter la navigation)
+├── components/
+│   └── docs_layout_component.dart/html (nouveau)
+├── docs/
+│   └── markdown_renderer.dart (nouveau)
+└── pages/
+    ├── guide_page.dart
+    ├── template_syntax_page.dart
+    ├── attribute_directives_page.dart
+    ├── structural_directives_page.dart
+    ├── lifecycle_hooks_page.dart
+    ├── forms_page.dart
+    ├── security_page.dart
+    ├── examples_lifecycle_page.dart
+    ├── examples_template_page.dart
+    ├── cheatsheet_page.dart
+    ├── tools_dartdevc_page.dart
+    └── dart2_migration_page.dart
+```
 
-## Résumé des priorités
+## Styles CSS
 
-### Priorité 1 - Pages essentielles
-1. `/guide/template-syntax` - Référencée 8+ fois dans les directives
-2. `/guide/lifecycle-hooks` - Référencée 5+ fois
-3. `/guide` - Index des guides
+Les styles pour la documentation ont été ajoutés dans `web/styles.css`:
+- Layout avec sidebar et contenu
+- Typographie pour le contenu Markdown
+- Navigation avec états actifs
+- Responsive design
 
-### Priorité 2 - Pages importantes
-4. `/guide/forms` - Guide des formulaires
-5. `/guide/security` - Sécurité
-6. `/guide/attribute-directives` - Directives d'attribut
-7. `/guide/structural-directives` - Directives structurelles
-8. `/cheatsheet` - Cheatsheet
+## Déploiement
 
-### Priorité 3 - Pages secondaires
-9. `/examples/lifecycle-hooks` - Exemples
-10. `/examples/template-syntax` - Exemples
-11. `/tools/dartdevc` - Outils (historique)
-12. `/dart-2` - Migration (historique)
+Le site est déployé via `deploy.sh` qui:
+1. Build le projet en mode release
+2. Copie les fichiers vers le VPS
+3. Redémarre le service
 
-## Notes
-
-- Les URLs avec des ancres (ex: `#ngIf`, `#aftercontent`) doivent être gérées par les pages parentes
-- Le site redirige actuellement vers la page d'accueil si une page n'existe pas
-- Ces URLs sont utilisées dans les commentaires de documentation du code source (dartdoc)
+Les pages sont maintenant accessibles sur https://angulardartreborn.com

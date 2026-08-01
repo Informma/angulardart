@@ -1,3 +1,9 @@
+## 4.0.10
+
+- Added support for `List<String>` in `routerLink` directive
+- `routerLink` now accepts both `String` and `List<dynamic>` types
+- List values are automatically converted to path strings
+
 ## 4.0.9
 
 - Updated documentation links to point to angulardartreborn.com

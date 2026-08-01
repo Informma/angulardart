@@ -1,3 +1,10 @@
+## 8.0.18
+
+- Added `SafeHtml`, `SafeUrl`, `SafeStyle`, `SafeResourceUrl` types for bypassing sanitization
+- Added `SafeHtmlDirective` (`[safeHtml]`) for rendering trusted HTML without sanitization
+- Updated `sanitizeHtml`, `sanitizeStyle`, `sanitizeUrl`, `sanitizeResourceUrl` to respect SafeHtml types
+- Added missing `OnChanges` lifecycle hook
+
 ## 8.0.17
 
 - Updated documentation links to point to angulardartreborn.com

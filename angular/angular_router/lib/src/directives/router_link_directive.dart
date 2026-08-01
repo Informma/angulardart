@@ -48,8 +48,15 @@ class RouterLink implements OnDestroy {
   }
 
   @Input()
-  set routerLink(String routerLink) {
-    _routerLink = routerLink;
+  set routerLink(dynamic routerLink) {
+    if (routerLink is String) {
+      _routerLink = routerLink;
+    } else if (routerLink is List) {
+      // Convert list to path string
+      _routerLink = routerLink.map((e) => e.toString()).join('/');
+    } else {
+      throw ArgumentError('routerLink must be a String or List, got ${routerLink.runtimeType}');
+    }
     _cachedVisibleHref = null;
     _cachedUrl = null;
   }

@@ -301,6 +301,10 @@ class _AstToExpressionVisitor
       o.literal(ast.value);
 
   @override
+  o.Expression visitLiteralList(compiler_ast.LiteralList ast, _) =>
+      o.literalArr(_visitAll(ast.elements, false /*visitingRoot */));
+
+  @override
   o.Expression visitMethodCall(compiler_ast.MethodCall ast, _) {
     var args = _visitAll(ast.args, false /*visitingRoot */);
     var namedArgs =

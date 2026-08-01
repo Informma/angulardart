@@ -1,3 +1,9 @@
+## 3.0.11
+
+- Added support for list literals in template expressions
+- Fixed template parser to accept `[routerLink]="['/path']"` syntax
+- Added `LiteralList` AST node and visitor implementations
+
 ## 3.0.10
 
 - Updated documentation links to point to angulardartreborn.com

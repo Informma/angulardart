@@ -102,6 +102,64 @@ void main() {
 
 ---
 
+## ✅ Bug 4: `<base href>` obligatoire pour PathLocationStrategy
+
+**Sévérité:** Critique (page noire sans erreur visible)  
+**Composant:** `angulardart_router`  
+**Statut:** Documenté (comportement attendu)
+
+### Description
+Le `PathLocationStrategy` utilisé par défaut par `routerProviders` exige soit un élément `<base href="/">` dans le HTML, soit le token `appBaseHref`. Sans cela, le router lève une `ArgumentError` au démarrage qui peut passer inaperçue si la console n'est pas ouverte.
+
+### Erreur
+```
+EXCEPTION: Invalid argument(s): No base href set. Please provide a value for the appBaseHref token or add a base element to the document.
+```
+
+### Solution
+Ajouter `<base href="/">` dans le `<head>` de `web/index.html` :
+```html
+<head>
+    <meta charset="utf-8">
+    <base href="/">
+    ...
+</head>
+```
+
+Ou fournir le token `appBaseHref` dans l'injecteur :
+```dart
+@GenerateInjector([
+  routerProviders,
+  const ValueProvider.forToken(appBaseHref, '/'),
+])
+final InjectorFactory appInjector = appInjector$Injector;
+```
+
+---
+
+## ✅ Bug 5: `runAppLegacy` ne fonctionne pas en mode release
+
+**Sévérité:** Critique (page noire)  
+**Composant:** `angulardart` (bootstrap)  
+**Statut:** Documenté
+
+### Description
+`runAppLegacy` utilise `ReflectiveInjector` qui nécessite la réflexion runtime pour résoudre les component factories. En mode dart2js release (`-O4`), les noms de types sont mangelés et le reflector ne retrouve pas les factories enregistrées par `initReflector()`.
+
+### Solution
+Utiliser `runApp` avec `@GenerateInjector` qui génère un injecteur statique à la compilation :
+```dart
+@GenerateInjector([routerProviders])
+final InjectorFactory appInjector = ng_main.appInjector$Injector;
+
+void main() {
+  ng.initReflector();
+  runApp(ng.AppComponentNgFactory, createInjector: appInjector);
+}
+```
+
+---
+
 ## Résumé des corrections
 
 Tous les bugs identifiés ont été corrigés:
@@ -109,14 +167,19 @@ Tous les bugs identifiés ont été corrigés:
 1. ✅ **Template Parser** - Support complet des list literals ajouté
 2. ✅ **routerLink** - Accepte maintenant `String` et `List<String>`
 3. ✅ **Documentation** - Exemples mis à jour avec la bonne utilisation de `routerProviders`
+4. ✅ **`<base href>`** - Documenté comme obligatoire pour PathLocationStrategy
+5. ✅ **`runAppLegacy`** - Documenté comme incompatible avec le mode release
 
-Les corrections sont disponibles dans le commit `ef2adcf` et peuvent être publiées dans la prochaine version des packages.
+Les corrections sont disponibles dans les versions publiées :
+- `angulardart` 8.0.17
+- `angulardart_router` 4.0.10
+- `angulardart_compiler` 3.0.11
 
 ---
 
 ## Recommandations pour la publication
 
-1. Publier `angulardart_compiler` avec la version 3.0.11 (ou 3.1.0 si breaking changes acceptés)
-2. Publier `angulardart_router` avec la version 4.0.10 (ou 4.1.0)
-3. Mettre à jour le site web pour utiliser les nouvelles versions
-4. Documenter les nouvelles fonctionnalités dans le changelog
+1. ✅ `angulardart_compiler` 3.0.11 publié
+2. ✅ `angulardart_router` 4.0.10 publié
+3. ✅ `angulardart` 8.0.17 publié
+4. ✅ Site web mis à jour et fonctionnel sur https://angulardartreborn.com

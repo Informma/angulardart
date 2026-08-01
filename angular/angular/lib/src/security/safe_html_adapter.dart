@@ -2,40 +2,65 @@
 /// compiler when it "sees" that a potential unsafe operation would otherwise be
 /// used (i.e. `<div [innerHtml]="someValue"></div>`).
 import 'html_sanitizer.dart';
+import 'safe_html.dart';
 import 'style_sanitizer.dart';
 import 'url_sanitizer.dart';
 
 /// Converts [stringOrSafeOrBypass] into a `String` safe to use within the DOM.
+///
+/// If [stringOrSafeOrBypass] is a [SafeHtml] instance, the HTML is returned
+/// as-is without sanitization.
 String? sanitizeHtml(Object? stringOrSafeOrBypass) {
   if (stringOrSafeOrBypass == null) {
     return null;
+  }
+  if (stringOrSafeOrBypass is SafeHtml) {
+    return stringOrSafeOrBypass.toString();
   }
   final unsafeString = stringOrSafeOrBypass.toString();
   return sanitizeHtmlInternal(unsafeString);
 }
 
 /// Converts [stringOrSafeOrBypass] into a `String` safe to use within the DOM.
+///
+/// If [stringOrSafeOrBypass] is a [SafeStyle] instance, the style is returned
+/// as-is without sanitization.
 String? sanitizeStyle(Object? stringOrSafeOrBypass) {
   if (stringOrSafeOrBypass == null) {
     return null;
+  }
+  if (stringOrSafeOrBypass is SafeStyle) {
+    return stringOrSafeOrBypass.toString();
   }
   final unsafeString = stringOrSafeOrBypass.toString();
   return internalSanitizeStyle(unsafeString);
 }
 
 /// Converts [stringOrSafeOrBypass] into a `String` safe to use within the DOM.
+///
+/// If [stringOrSafeOrBypass] is a [SafeUrl] instance, the URL is returned
+/// as-is without sanitization.
 String? sanitizeUrl(Object? stringOrSafeOrBypass) {
   if (stringOrSafeOrBypass == null) {
     return null;
+  }
+  if (stringOrSafeOrBypass is SafeUrl) {
+    return stringOrSafeOrBypass.toString();
   }
   final unsafeString = stringOrSafeOrBypass.toString();
   return internalSanitizeUrl(unsafeString);
 }
 
 /// Converts [stringOrSafeOrBypass] into a `String` safe to use within the DOM.
+///
+/// If [stringOrSafeOrBypass] is a [SafeResourceUrl] instance, the URL is returned
+/// as-is without sanitization.
 String? sanitizeResourceUrl(Object? stringOrSafeOrBypass) {
   if (stringOrSafeOrBypass == null) {
     return null;
+  }
+  if (stringOrSafeOrBypass is SafeResourceUrl) {
+    return stringOrSafeOrBypass.toString();
   }
   return stringOrSafeOrBypass.toString();
 }

@@ -58,6 +58,7 @@ export 'src/meta.dart'
         Input,
         Module,
         MultiToken,
+        OnChanges,
         OnDestroy,
         OnInit,
         OpaqueToken,
@@ -77,5 +78,7 @@ export 'src/meta.dart'
         provide,
         visibleForTemplate;
 export 'src/runtime/check_binding.dart' show debugCheckBindings;
+export 'src/security/safe_html.dart'
+    show SafeHtml, SafeStyle, SafeUrl, SafeResourceUrl;
 // TODO(b/116697059): Move to a testonly=1 library.
 export 'src/testability.dart' show Testability, TestabilityRegistry;

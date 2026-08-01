@@ -20,6 +20,20 @@ abstract class AfterChanges {
   void ngAfterChanges();
 }
 
+/// Implement this interface to get notified when any data-bound property of
+/// your directive changes.
+///
+/// [ngOnChanges] is called right before [ngOnInit] and whenever any data-bound
+/// input properties change.
+///
+/// **WARNING**: It is invalid to implement both [DoCheck] _and_ [OnChanges]
+/// or [AfterChanges]. `ngOnChanges` and `ngAfterChanges` will never be called,
+/// as `ngDoCheck` is used instead of the default change detector.
+abstract class OnChanges {
+  /// Executed whenever any data-bound input properties change.
+  void ngOnChanges();
+}
+
 /// Implement to execute [ngOnInit] after the first change-detection completed.
 ///
 /// [ngOnInit] is called right after the component or directive's data-bound

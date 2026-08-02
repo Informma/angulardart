@@ -1,3 +1,11 @@
+## 3.0.14
+
+- Fixed 13 failing tests (159/159 now passing)
+- Fixed wrong import path in `runtime_source_resolution.dart` (`package:angular/angular.dart` → `package:angulardart/angulardart.dart`)
+- Added robust `normalize`/`matchesCode` matcher in `reflector_test.dart` to handle dart_style 2.3.6 + code_builder formatting differences
+- Updated `generate_injector_test.dart` expected output for code_builder 4.x
+- Fixed import path in reflector relative paths test
+
 ## 3.0.13
 
 - Stabilized `v1/cli.dart` API by removing `@experimental` annotation

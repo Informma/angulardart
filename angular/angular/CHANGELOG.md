@@ -1,3 +1,9 @@
+## 8.0.19
+
+- Added `documentation` field to `pubspec.yaml` for improved pub.dev API reference linking
+- Added dartdoc category annotations for better API documentation organization
+- Improved API reference documentation structure
+
 ## 8.0.18
 
 - Added `SafeHtml`, `SafeUrl`, `SafeStyle`, `SafeResourceUrl` types for bypassing sanitization

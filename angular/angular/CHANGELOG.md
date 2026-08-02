@@ -1,3 +1,12 @@
+## 8.1.0
+
+- Updated analyzer from ^6.0.0 to ^14.0.0
+- Updated build from ^2.4.0 to ^4.0.0
+- Updated source_gen from ^1.5.0 to ^4.0.0
+- Updated built_value and built_value_generator to ^8.12.6
+- Updated build_runner to ^2.16.0
+- No breaking API changes, only internal dependency updates
+
 ## 8.0.21
 
 - Updated dependencies: `intl` ^0.20.0, `web` ^1.0.0, `lints` ^6.0.0

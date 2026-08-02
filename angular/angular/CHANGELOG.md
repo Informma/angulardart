@@ -1,3 +1,9 @@
+## 8.0.21
+
+- Updated dependencies: `intl` ^0.20.0, `web` ^1.0.0, `lints` ^6.0.0
+- Fixed 2 lint warnings in `devtools/inspector.dart` (unnecessary_non_null_assertion)
+- Added `// ignore_for_file: experimental_member_use` in `build.dart`
+
 ## 8.0.20
 
 - chore: add 8.0.19 changelog entry and release automation scripts

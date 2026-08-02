@@ -1,3 +1,8 @@
+## 3.0.13
+
+- Stabilized `v1/cli.dart` API by removing `@experimental` annotation
+- Stabilized `CompilerFlags` fields: `enableDevTools`, `forceMinifyWhitespace`, `emitComponentFactories`, `emitInjectableFactories`, `exportUserCodeFromTemplate`, `policyExceptionInPackages`
+
 ## 3.0.11
 
 - Added support for list literals in template expressions

@@ -46,6 +46,13 @@
 - Compilateur now builds (except for NgFor & NgModel
 - Migration AngularDart vers Dart 3 terminée (0 erreurs)
 
+## 8.0.20
+
+- Updated dependencies: `intl` ^0.20.0, `web` ^1.0.0, `lints` ^6.0.0
+- Updated `angulardart_compiler` dependency to ^3.0.13 (stabilized APIs)
+- Fixed 2 lint warnings in `devtools/inspector.dart` (unnecessary_non_null_assertion)
+- Added `// ignore_for_file: experimental_member_use` in `build.dart`
+
 ## 8.0.19
 
 - Added `documentation` field to `pubspec.yaml` for improved pub.dev API reference linking

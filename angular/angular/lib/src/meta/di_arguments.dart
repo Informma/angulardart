@@ -39,6 +39,8 @@ import 'package:meta/meta_meta.dart';
 /// var injector = Injector.resolveAndCreate([Engine, Car]);
 /// expect(injector.get(Car).engine, new isInstanceOf<Engine>());
 /// ```
+///
+/// {@category Dependency Injection}
 @Target({TargetKind.parameter})
 class Inject {
   final Object token;
@@ -108,6 +110,8 @@ class Inject {
 /// ## Use #3: A static class method
 ///
 /// This works the same way as with top-level functions.
+///
+/// {@category Dependency Injection}
 @Target({
   TargetKind.classType,
   TargetKind.function,
@@ -135,6 +139,8 @@ class Injectable {
 /// var injector = Injector.resolveAndCreate([Car]);
 /// expect(injector.get(Car).engine, isNull);
 /// ```
+///
+/// {@category Dependency Injection}
 @Target({TargetKind.parameter})
 class Optional {
   const Optional();
@@ -162,6 +168,8 @@ class Optional {
 /// var child = inj.resolveAndCreateChild([NeedsDependency]);
 /// expect(() => child.get(NeedsDependency), throws);
 /// ```
+///
+/// {@category Dependency Injection}
 @Target({TargetKind.parameter})
 class Self {
   const Self();
@@ -189,6 +197,8 @@ class Self {
 /// var inj = Injector.resolveAndCreate([Dependency, NeedsDependency]);
 /// expect(() => inj.get(NeedsDependency), throws);
 /// ```
+///
+/// {@category Dependency Injection}
 @Target({TargetKind.parameter})
 class SkipSelf {
   const SkipSelf();
@@ -247,6 +257,8 @@ class SkipSelf {
 ///
 /// bootstrap(App);
 ///```
+///
+/// {@category Dependency Injection}
 @Target({TargetKind.parameter})
 class Host {
   const Host();

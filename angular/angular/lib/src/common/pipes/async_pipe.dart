@@ -78,6 +78,7 @@ final _observableStrategy = _ObservableStrategy();
 /// }
 /// ```
 ///
+/// {@category Pipes}
 @Pipe('async', pure: false)
 class AsyncPipe implements OnDestroy {
   Object? _latestValue;

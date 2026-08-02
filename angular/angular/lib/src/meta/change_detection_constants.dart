@@ -19,6 +19,8 @@ class ChangeDetectorState {
 /// time change detection is triggered.
 ///
 /// ! Changes to this class require updates to view_compiler/constants.dart.
+///
+/// {@category Change Detection}
 class ChangeDetectionStrategy {
   /// The default type of change detection, always checking for changes.
   ///

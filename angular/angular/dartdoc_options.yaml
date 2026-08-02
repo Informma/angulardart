@@ -1,0 +1,49 @@
+dartdoc:
+  categories:
+    "Core":
+      markdown: doc/CORE.md
+      name: Core
+    "Dependency Injection":
+      markdown: doc/DI.md
+      name: Dependency Injection
+    "Templates & Directives":
+      markdown: doc/TEMPLATES.md
+      name: Templates & Directives
+    "Pipes":
+      markdown: doc/PIPES.md
+      name: Pipes
+    "Change Detection":
+      markdown: doc/CHANGE_DETECTION.md
+      name: Change Detection
+    "Security":
+      markdown: doc/SECURITY.md
+      name: Security
+    "DevTools":
+      markdown: doc/DEVTOOLS.md
+      name: DevTools
+    "Testing":
+      markdown: doc/TESTING.md
+      name: Testing
+  categoryOrder:
+    - "Core"
+    - "Dependency Injection"
+    - "Templates & Directives"
+    - "Pipes"
+    - "Change Detection"
+    - "Security"
+    - "DevTools"
+    - "Testing"
+  showUndocumentedCategories: false
+  ignore:
+    - ambiguous-doc-reference
+    - ambiguous-reexport
+    - broken-link
+    - category-order-gives-missing-package-name
+    - deprecated
+    - no-defining-library-found
+    - tool-error
+    - unresolved-export
+  errors:
+    - unresolved-export
+  warnings:
+    - unknown-file

@@ -9,6 +9,8 @@ import 'package:meta/meta.dart';
 /// **NOTE**: This API is currently _transitional_. Please use carefully, and
 /// avoid methods that are marked `@Deprecated(...)`, as they will be eventually
 /// removed entirely.
+///
+/// {@category Change Detection}
 abstract class ChangeDetectorRef {
   /// Marks this and all `ChangeDetectionStrategy.OnPush` ancestors as dirty.
   ///

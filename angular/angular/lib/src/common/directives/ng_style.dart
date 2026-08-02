@@ -54,6 +54,8 @@ import '../../core/change_detection/differs/default_keyvalue_differ.dart';
 ///
 /// [guide]: https://angulardartreborn.com/guide/template-syntax.html#ngStyle
 /// [ex]: https://angulardartreborn.com/examples/template-syntax#ngStyle
+///
+/// {@category Templates & Directives}
 @Directive(
   selector: '[ngStyle]',
 )

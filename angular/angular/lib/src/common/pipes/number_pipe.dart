@@ -66,6 +66,8 @@ class _NumberPipe {
 ///
 /// For more information on the acceptable range for each of these numbers and other
 /// details see your native internationalization library.
+///
+/// {@category Pipes}
 @Pipe('number')
 class DecimalPipe extends _NumberPipe {
   String? transform(num? value, [String? digits]) {
@@ -85,6 +87,8 @@ class DecimalPipe extends _NumberPipe {
 ///     $pipe.percent(expression, [digitInfo])
 ///
 /// For more information about `digitInfo` see [DecimalPipe]
+///
+/// {@category Pipes}
 @Pipe('percent')
 class PercentPipe extends _NumberPipe {
   String? transform(num? value, [String? digits]) {
@@ -108,6 +112,8 @@ class PercentPipe extends _NumberPipe {
 /// whether to use the currency symbol (e.g. $) or the currency code (e.g. USD)
 /// in the output. The default for this value is `false`.
 /// For more information about `digitInfo` see [DecimalPipe]
+///
+/// {@category Pipes}
 @Pipe('currency')
 class CurrencyPipe extends _NumberPipe {
   String? transform(

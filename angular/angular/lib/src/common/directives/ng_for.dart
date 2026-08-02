@@ -82,6 +82,8 @@ import '../../core/linker.dart';
 /// page.
 ///
 /// [guide]: https://angulardartreborn.com/guide/template-syntax.html#ngFor
+///
+/// {@category Templates & Directives}
 @Directive(
   selector: '[ngFor][ngForOf]',
 )

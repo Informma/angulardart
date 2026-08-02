@@ -48,6 +48,8 @@ import 'package:angulardart/src/utilities.dart';
 ///
 /// [ex]: https://angulardartreborn.com/examples/template-syntax#ngClass
 /// [guide]: https://angulardartreborn.com/guide/template-syntax.html#ngClass
+///
+/// {@category Templates & Directives}
 @Directive(
   selector: '[ngClass]',
 )

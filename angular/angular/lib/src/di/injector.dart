@@ -1,3 +1,22 @@
+/// Dependency injection system for AngularDart.
+///
+/// AngularDart uses a hierarchical [Injector] to manage service instances
+/// and their dependencies. Injectors form a tree structure where child
+/// injectors can override services from parent injectors.
+///
+/// Key concepts:
+///
+/// - [Injector] - The main interface for retrieving dependencies.
+/// - [InjectorFactory] - A function that creates an injector.
+/// - Tokens like [Inject], [Optional], [Self], [Host], [SkipSelf] control
+///   how dependencies are resolved in the injector tree.
+///
+/// See also:
+///
+/// - [Provider], [Module] for configuring providers.
+/// - The [AngularDart Guide](https://angulardartreborn.com/guide).
+library;
+
 import 'dart:collection';
 
 import 'package:meta/meta.dart';
@@ -46,6 +65,8 @@ typedef InjectorFactory = Injector Function(Injector parent);
 /// applications. There are hidden contracts that are not implementable by
 /// client code. If you need a _mock-like_ implementation of [Injector] instead
 /// prefer using [Injector.map].
+///
+/// {@category Dependency Injection}
 abstract class Injector {
   @visibleForTesting
   const Injector();

@@ -1,3 +1,9 @@
+## 3.0.11
+
+- Migrated to `analyzer` ^14.0.0 (from ^6.0.0)
+- Migrated to `build_test` ^3.0.0 (from ^2.2.3)
+- Migrated to `build_runner` ^2.16.0 (from ^2.4.0)
+
 ## 3.0.9
 
 - Updated documentation links to point to angulardartreborn.com

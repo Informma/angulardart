@@ -10,10 +10,10 @@ void main() {
 
     setUpAll(() async {
       testLib = await resolveLibrary(r'''
-        @Directive()
+        @Directive(selector: 'test')
         class ADirective {}
 
-        @Component()
+        @Component(selector: 'test')
         class AComponent {}
 
         @Injectable()

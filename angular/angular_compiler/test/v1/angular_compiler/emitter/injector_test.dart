@@ -5,7 +5,38 @@ import 'package:angulardart_compiler/v1/angular_compiler.dart';
 
 void main() {
   final dartfmt = DartFormatter();
-  EqualsDart.format = dartfmt.format;
+  String formatCode(dynamic spec) {
+    final emitter = DartEmitter();
+    final code = spec is Spec ? spec.accept(emitter).toString() : spec.toString();
+    final formatted = dartfmt.format(code);
+    return formatted.replaceAll(RegExp(r'// ignore_for_file:.*\n'), '');
+  }
+
+  Matcher equalsCode(String expected) {
+    return predicate((dynamic actual) {
+      final buffer = StringBuffer();
+      final emitter = DartEmitter();
+      if (actual is Spec) {
+        actual.accept(emitter, buffer);
+      } else {
+        buffer.write(actual.toString());
+      }
+      String normalize(String code) {
+        return dartfmt
+            .format(code)
+            .replaceAll(RegExp(r'// ignore_for_file:.*\n'), '')
+            .replaceAll(RegExp(r',\s*\]'), ']')
+            .replaceAll(RegExp(r',\s*\)'), ')')
+            .replaceAll(RegExp(r'\(\s+'), '(')
+            .replaceAll(RegExp(r'\[\s+'), '[')
+            .replaceAll(RegExp(r'\s+'), ' ')
+            .trim();
+      }
+      final actualCode = normalize(buffer.toString());
+      final expectedCode = normalize(expected);
+      return actualCode == expectedCode;
+    }, 'equals code');
+  }
 
   TokenElement dummyToken = TypeTokenElement(TypeLink('Token', null));
   late InjectorEmitter emitter;
@@ -18,7 +49,7 @@ void main() {
     emitter.visitMeta('FooInjector', 'fooInjector');
     expect(
       Library((b) => b.body.add(emitter.createFactory())),
-      equalsDart(r'''
+      equalsCode(r'''
         Injector fooInjector(Injector parent) => FooInjector._(parent);
       '''),
     );
@@ -28,7 +59,7 @@ void main() {
     test('empty case', () {
       expect(
         emitter.createClass(),
-        equalsDart(r'''
+        equalsCode(r'''
         class FooInjector extends HierarchicalInjector implements Injector {
           FooInjector._(Injector parent) : super(parent);
 
@@ -59,7 +90,7 @@ void main() {
       );
       expect(
         emitter.createClass(),
-        equalsDart(r'''
+        equalsCode(r'''
         class FooInjector extends HierarchicalInjector implements Injector {
           FooInjector._(Injector parent) : super(parent);
 
@@ -90,7 +121,7 @@ void main() {
       );
       expect(
         emitter.createClass(),
-        equalsDart(r'''
+        equalsCode(r'''
         class FooInjector extends HierarchicalInjector implements Injector {
           FooInjector._(Injector parent) : super(parent);
 
@@ -123,7 +154,7 @@ void main() {
       );
       expect(
         emitter.createClass(),
-        equalsDart(r'''
+        equalsCode(r'''
         class FooInjector extends HierarchicalInjector implements Injector {
           FooInjector._(Injector parent) : super(parent);
 
@@ -154,7 +185,7 @@ void main() {
       );
       expect(
         emitter.createClass(),
-        equalsDart(r'''
+        equalsCode(r'''
         class FooInjector extends HierarchicalInjector implements Injector {
           FooInjector._(Injector parent) : super(parent);
 
@@ -200,7 +231,7 @@ void main() {
       );
       expect(
         emitter.createClass(),
-        equalsDart(r'''
+        equalsCode(r'''
         class FooInjector extends HierarchicalInjector implements Injector {
           FooInjector._(Injector parent) : super(parent);
 

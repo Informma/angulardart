@@ -46,7 +46,7 @@ class ComponentVisitorExceptionHandler {
   }
 }
 
-Future<ElementDeclarationResult> _resolvedClassResult(
+Future<FragmentDeclarationResult> _resolvedClassResult(
   Resolver resolver,
   Element element,
 ) async {
@@ -54,7 +54,7 @@ Future<ElementDeclarationResult> _resolvedClassResult(
   try {
     assetId = await resolver.assetIdForElement(element);
   } on UnresolvableAssetException catch (_) {
-    _throwInvalidSummaryError(element.source!.fullName);
+    _throwInvalidSummaryError(element.library?.firstFragment.source.fullName ?? '');
   }
   // A `part of` dart file is not a standalone dart library. Thus,
   // [library] is null when an error occurs in a `part of` dart file.
@@ -70,9 +70,9 @@ Future<ElementDeclarationResult> _resolvedClassResult(
   );
   final result = await element.session!.getResolvedLibraryByElement(library);
   if (result is ResolvedLibraryResult) {
-    return result.getElementDeclaration(element)!;
+    return result.getFragmentDeclaration(element.firstFragment)!;
   }
-  _throwInvalidSummaryError(library.source.fullName);
+  _throwInvalidSummaryError(library.firstFragment.source.fullName);
 }
 
 Never _throwInvalidSummaryError(String summaryName) {
@@ -117,7 +117,7 @@ class AngularAnalysisError extends AsyncBuildError {
           indexedAnnotation.element, annotationSource));
     }
 
-    ElementDeclarationResult result;
+    FragmentDeclarationResult result;
     try {
       result = await _resolvedClassResult(resolver, indexedAnnotation.element);
     } on BuildError catch (buildError) {
@@ -187,7 +187,7 @@ class AngularAnalysisError extends AsyncBuildError {
 class UnresolvedExpressionError extends AsyncBuildError {
   final Iterable<AstNode> expressions;
   final ClassElement componentType;
-  final CompilationUnitElement compilationUnit;
+  final LibraryFragment compilationUnit;
 
   UnresolvedExpressionError(
       this.expressions, this.componentType, this.compilationUnit);
@@ -201,7 +201,7 @@ class UnresolvedExpressionError extends AsyncBuildError {
   // all code paths that call this function are unreachable.
   // If we don't see any errors in the wild, delete this code.
   BuildError _buildErrorForUnresolvedExpressions(Iterable<AstNode> expressions,
-      ClassElement componentType, CompilationUnitElement compilationUnit) {
+      ClassElement componentType, LibraryFragment compilationUnit) {
     return BuildError.withoutContext(
       messages.unresolvedSource(
         expressions.map((e) {
@@ -209,8 +209,8 @@ class UnresolvedExpressionError extends AsyncBuildError {
             sourceSpanWithLineInfo(
               e.offset,
               e.length,
-              componentType.source.contents.data,
-              componentType.source.uri,
+              componentType.library.firstFragment.source.contents.data,
+              componentType.library.firstFragment.source.uri,
             ),
             'This argument *may* have not been resolved',
           );
@@ -231,11 +231,11 @@ class UnusedDirectiveTypeError extends ErrorMessageForAnnotation {
   final CompileTypedMetadata directiveType;
 
   static IndexedAnnotation firstComponentAnnotation(ClassElement element) {
-    final index = element.metadata.indexWhere(isComponent);
+    final index = element.metadata.annotations.indexWhere(isComponent);
     if (index == -1) {
       throw ArgumentError('[element] must have a @Component annotation');
     }
-    return IndexedAnnotation(element, element.metadata[index], index);
+    return IndexedAnnotation(element, element.metadata.annotations[index], index);
   }
 
   UnusedDirectiveTypeError(this.element, this.directiveType)
@@ -279,7 +279,7 @@ class ErrorMessageForAnnotation extends AsyncBuildError {
   Future<BuildError> resolve(Resolver resolver) async {
     final annotationIndex = indexedAnnotation.annotationIndex;
 
-    ElementDeclarationResult result;
+    FragmentDeclarationResult result;
     try {
       result = await _resolvedClassResult(resolver, indexedAnnotation.element);
     } on BuildError catch (buildError) {

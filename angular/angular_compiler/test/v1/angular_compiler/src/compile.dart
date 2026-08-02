@@ -13,7 +13,7 @@ Future<T> _recordLogs<T>(
   final logger = Logger('_recordLogs');
   final records = <LogRecord>[];
   final subscription = logger.onRecord.listen(records.add);
-  return scopeLogAsync(() async {
+  return () async {
     return runWithContext(
       CompileContext.forTesting(),
       run,
@@ -22,7 +22,7 @@ Future<T> _recordLogs<T>(
       onLog(records);
       return result;
     });
-  }, logger);
+  }();
 }
 
 /// Executes the [run] function with the result of analyzing [source].

@@ -1,25 +1,24 @@
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+// ignore: implementation_imports
 import 'package:analyzer/src/dart/element/type.dart';
 import 'package:source_gen/src/utils.dart';
 
-/// Returns the import URL for [type].
 String getTypeImport(DartType type) {
   var aliasElement = type.alias?.element;
   if (aliasElement != null) {
-    return normalizeUrl(aliasElement.library.source.uri).toString();
+    return normalizeUrl(aliasElement.library.firstFragment.source.uri).toString();
   }
   if (type is DynamicType) {
     return 'dart:core';
   }
   if (type is InterfaceType) {
-    return normalizeUrl(type.element.library.source.uri).toString();
+    return normalizeUrl(type.element.library.firstFragment.source.uri).toString();
   }
   throw UnimplementedError('(${type.runtimeType}) $type');
 }
 
-/// Forwards and backwards-compatible method of getting the "name" of [type].
 String? getTypeName(DartType type) {
   var aliasElement = type.alias?.element;
   if (aliasElement != null) {
@@ -40,15 +39,6 @@ String? getTypeName(DartType type) {
   throw UnimplementedError('(${type.runtimeType}) $type');
 }
 
-/// Returns the bound [DartType] from the instance [object].
-///
-/// For example for the following code:
-/// ```
-/// const foo = const <String>[];
-/// const bar = const ['A string'];
-/// ```
-///
-/// ... both `foo` and `bar` should return the [DartType] for `String`.
 DartType typeArgumentOf(DartObject object, [int index = 0]) {
   var type = object.type;
   if (type is ParameterizedType) {
@@ -63,7 +53,7 @@ DartType typeArgumentOf(DartObject object, [int index = 0]) {
 String? typeToCode(DartType? type) {
   if (type == null) {
     return null;
-  } else if (type.isDynamic) {
+  } else if (type is DynamicType) {
     return 'dynamic';
   } else if (type is InterfaceType) {
     var typeArguments = type.typeArguments;
@@ -75,20 +65,15 @@ String? typeToCode(DartType? type) {
     }
   } else if (type is TypeParameterType) {
     return type.element.name;
-  } else if (type.isVoid) {
+  } else if (type is VoidType) {
     return 'void';
   } else {
     throw UnimplementedError('(${type.runtimeType}) $type');
   }
 }
 
-/// Returns a canonical URL pointing to [element].
-///
-/// For example:
-///  * `List` would be `'dart:core#List'`,
-///  * `Duration.zero` would be `'dart:core#Duration.zero'`.
 Uri urlOf(Element? element, [String? name]) {
-  if (element?.source == null) {
+  if (element?.library == null) {
     return Uri(scheme: 'dart', path: 'core', fragment: 'dynamic');
   }
 
@@ -98,7 +83,5 @@ Uri urlOf(Element? element, [String? name]) {
     fragment = '${enclosing.name}.$fragment';
   }
 
-  // NOTE: element.source.uri might be a file that is not importable (i.e. is
-  // a "part"), while element.library.source.uri is always importable.
-  return normalizeUrl(element.library!.source.uri).replace(fragment: fragment);
+  return normalizeUrl(element.library!.firstFragment.source.uri).replace(fragment: fragment);
 }

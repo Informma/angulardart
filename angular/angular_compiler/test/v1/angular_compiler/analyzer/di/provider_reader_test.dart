@@ -23,7 +23,7 @@ void main() {
     late ClassElement $ExamplePrime;
     late ClassElement $DependencyA;
     late ClassElement $DependencyB;
-    late FunctionElement $createExample;
+    late TopLevelFunctionElement $createExample;
     late MethodElement $Example_create;
 
     setUpAll(() async {
@@ -101,10 +101,10 @@ void main() {
       $ExamplePrime = testLib.getClass('ExamplePrime')!;
       $DependencyA = testLib.getClass('DependencyA')!;
       $DependencyB = testLib.getClass('DependencyB')!;
-      $createExample = testLib.definingCompilationUnit.functions.first;
+      $createExample = testLib.firstFragment.element.topLevelFunctions.first;
       $Example_create = $Example.getMethod('create')!;
       providers =
-          $Example.metadata.first.computeConstantValue()!.toListValue()!;
+          $Example.metadata.annotations.first.computeConstantValue()!.toListValue()!;
     });
 
     test('a type (implicit provider)', () {

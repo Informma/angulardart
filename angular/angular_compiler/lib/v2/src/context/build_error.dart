@@ -54,8 +54,8 @@ abstract class BuildError extends Error {
     final annotation = context as ElementAnnotationImpl;
     final astNode = annotation.annotationAst;
     final file = SourceFile.fromString(
-      annotation.source.contents.data,
-      url: annotation.source.uri,
+      annotation.libraryFragment.source.contents.data,
+      url: annotation.libraryFragment.source.uri,
     );
     return BuildError.forSourceSpan(
       file.span(astNode.offset, astNode.offset + astNode.length),
@@ -68,7 +68,7 @@ abstract class BuildError extends Error {
     Element context,
     String message,
   ) {
-    final source = context.source;
+    final source = context.library?.firstFragment.source;
     if (source == null || source.contents.data.isEmpty) {
       final warning = source == null
           ? 'No source text available for $context'

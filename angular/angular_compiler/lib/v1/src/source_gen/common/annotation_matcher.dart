@@ -56,7 +56,7 @@ bool matchAnnotation(TypeChecker typeChecker, ElementAnnotation annotation) {
       message += ''
           '\n'
           '${annotation.annotationAst.toSource()} in '
-          '${annotation.librarySource.uri.toString()}';
+          '${annotation.libraryFragment.source.uri.toString()}';
     }
     throw ArgumentError.value(
       annotation,

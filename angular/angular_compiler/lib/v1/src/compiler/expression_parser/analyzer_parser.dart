@@ -333,7 +333,7 @@ class _AngularSubsetVisitor extends GeneralizingAstVisitor<ast.AST> {
     MethodInvocation astNode,
     ast.PropertyRead receiver,
     List<Expression> posArgs,
-    List<NamedExpression> namedArgs,
+    List<NamedArgument> namedArgs,
   ) {
     if (!allowPipes) {
       return _notSupported(
@@ -386,12 +386,12 @@ class _AngularSubsetVisitor extends GeneralizingAstVisitor<ast.AST> {
     }
     final allArgs = call.argumentList.arguments;
     final posArgs = <Expression>[];
-    final namedArgs = <NamedExpression>[];
+    final namedArgs = <NamedArgument>[];
     for (final arg in allArgs) {
-      if (arg is NamedExpression) {
+      if (arg is NamedArgument) {
         namedArgs.add(arg);
       } else {
-        posArgs.add(arg);
+        posArgs.add(arg as Expression);
       }
     }
     if (receiver is ast.PropertyRead && receiver.name == r'$pipe') {
@@ -405,7 +405,7 @@ class _AngularSubsetVisitor extends GeneralizingAstVisitor<ast.AST> {
     final callPos =
         posArgs.map((a) => a.accept(this)).whereType<ast.AST>().toList();
     final callNamed = namedArgs
-        .map((a) => ast.NamedExpr(a.name.label.name, a.expression.accept(this)))
+        .map((a) => ast.NamedExpr(a.name.lexeme, a.argumentExpression.accept(this)))
         .toList();
     if (methodName != null) {
       if (_isNullAwareCall(call)) {

@@ -14,7 +14,7 @@ import '../src/resolve.dart';
 void main() {
   CompileContext.overrideForTesting();
 
-  final dartfmt = DartFormatter();
+  final dartfmt = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion);
   final angular = 'package:angulardart';
   final libReflection = '$angular/src/core/reflection/reflection.dart';
 
@@ -27,6 +27,7 @@ void main() {
     }
     return formatted
         .replaceAll(RegExp(r'// ignore_for_file:.*\n'), '')
+        .replaceAll(RegExp(r'\.new\('), '(')
         .replaceAll(RegExp(r',\s*\]'), ']')
         .replaceAll(RegExp(r',\s*\)'), ')')
         .replaceAll(RegExp(r'\(\s+'), '(')
@@ -362,6 +363,7 @@ void main() {
       },
       (r) => r.libraryFor(AssetId('a', 'test/a_test.dart')),
       packageConfig: await packageConfigFuture,
+      readAllSourcesFromFilesystem: true,
     );
     final library = LibraryReader(pkgATest);
     final reflector = ReflectableReader.noLinking();

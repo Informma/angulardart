@@ -237,9 +237,9 @@ class ReflectableEmitter {
 
     String name;
     if (bound is ConstructorElement) {
-      name = bound.enclosingElement.name;
+      name = bound.enclosingElement.name ?? '';
     } else if (bound is MethodElement) {
-      name = '${bound.enclosingElement.name}.${bound.name}';
+      name = '${bound.enclosingElement?.name ?? ''}.${bound.name}';
     } else {
       name = bound!.name!;
     }
@@ -295,7 +295,7 @@ class ReflectableEmitter {
     final clazz = bound.returnType;
     var constructor = clazz.name;
     // Support named constructors.
-    if (bound.name.isNotEmpty == true) {
+    if ((bound.name ?? '').isNotEmpty) {
       constructor = '$constructor.${bound.name}';
     }
     _initReflectorBody.addExpression(

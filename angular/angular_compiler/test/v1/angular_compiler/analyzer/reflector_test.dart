@@ -29,7 +29,7 @@ void main() {
       ReflectableOutput(
         registerFunctions: [
           DependencyInvocation(
-            testLib.definingCompilationUnit.functions.firstWhere(
+            testLib.firstFragment.element.topLevelFunctions.firstWhere(
               (e) => e.name == 'getDuration',
             ),
             [
@@ -53,7 +53,7 @@ void main() {
       }
     ''');
     final output = await ReflectableReader.noLinking().resolve(testLib);
-    final clazz = testLib.definingCompilationUnit.classes.first;
+    final clazz = testLib.firstFragment.element.classes.first;
     expect(
       output,
       ReflectableOutput(registerClasses: [

@@ -2,7 +2,7 @@ import 'package:analyzer/dart/ast/ast.dart' hide Directive;
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/dart/element/visitor.dart';
+import 'package:analyzer/dart/element/visitor2.dart';
 import 'package:analyzer/src/dart/element/element.dart';
 import 'package:angulardart/src/meta.dart';
 import 'package:angulardart_compiler/v1/angular_compiler.dart';
@@ -47,7 +47,7 @@ AngularArtifacts findComponentsAndDirectives(
 }
 
 /// Collects components and directives within a library.
-class _NormalizedComponentVisitor extends RecursiveElementVisitor<void> {
+class _NormalizedComponentVisitor extends RecursiveElementVisitor2<void> {
   final List<NormalizedComponentWithViewDirectives> components = [];
   final List<CompileDirectiveMetadata> directives = [];
   final LibraryReader _library;
@@ -153,24 +153,24 @@ class _NormalizedComponentVisitor extends RecursiveElementVisitor<void> {
       final annotationImpl = annotation as ElementAnnotationImpl;
       for (final argument
           in annotationImpl.annotationAst.arguments!.arguments) {
-        if (argument is NamedExpression) {
-          final namedArg = argument as NamedExpression;
-          if (namedArg.name.label.name == field) {
-            if (namedArg.expression is! ListLiteral) {
+        if (argument is NamedArgument) {
+          final namedArg = argument as NamedArgument;
+          if (namedArg.name.lexeme == field) {
+            if (namedArg.argumentExpression is! ListLiteral) {
               _exceptionHandler.handle(UnresolvedExpressionError(
-                [namedArg.expression],
+                [namedArg.argumentExpression],
                 element,
-                annotationImpl.compilationUnit,
+                annotationImpl.libraryFragment,
               ));
               break;
             }
-            final values = namedArg.expression as ListLiteral;
+            final values = namedArg.argumentExpression as ListLiteral;
             if (values.elements.isNotEmpty &&
                 values.elements.any(_isUnresolvedOrNotAnExpression)) {
               _exceptionHandler.handle(UnresolvedExpressionError(
                 values.elements.where(_isUnresolvedOrNotAnExpression),
                 element,
-                annotationImpl.compilationUnit,
+                annotationImpl.libraryFragment,
               ));
             }
           }
@@ -182,7 +182,7 @@ class _NormalizedComponentVisitor extends RecursiveElementVisitor<void> {
 
   static bool _isUnresolvedOrNotAnExpression(CollectionElement e) {
     if (e is Expression) {
-      return e.staticType?.isDynamic != false;
+      return e.staticType is DynamicType;
     } else {
       return true;
     }
@@ -204,7 +204,7 @@ class _NormalizedComponentVisitor extends RecursiveElementVisitor<void> {
 }
 
 class _ComponentVisitor
-    extends RecursiveElementVisitor<CompileDirectiveMetadata> {
+    extends RecursiveElementVisitor2<CompileDirectiveMetadata> {
   final _fieldInputs = <String, String>{};
   final _setterInputs = <String, String>{};
   final _inputs = <String, String>{};
@@ -233,8 +233,8 @@ class _ComponentVisitor
     AnnotationInformation<ClassElement>? directiveInfo;
     AnnotationInformation<ClassElement>? linkInfo;
 
-    for (var index = 0; index < element.metadata.length; index++) {
-      final annotation = element.metadata[index];
+    for (var index = 0; index < element.metadata.annotations.length; index++) {
+      final annotation = element.metadata.annotations[index];
       final annotationInfo =
           AnnotationInformation(element, annotation, index, _exceptionHandler);
       final constantValue = annotationInfo.constantValue;
@@ -273,14 +273,27 @@ class _ComponentVisitor
   }
 
   @override
-  CompileDirectiveMetadata? visitPropertyAccessorElement(
-    PropertyAccessorElement element,
+  CompileDirectiveMetadata? visitGetterElement(
+    GetterElement element,
   ) {
-    super.visitPropertyAccessorElement(element);
+    super.visitGetterElement(element);
     _visitClassMember(
       element,
-      isGetter: element.isGetter,
-      isSetter: element.isSetter,
+      isGetter: true,
+      isSetter: false,
+    );
+    return null;
+  }
+
+  @override
+  CompileDirectiveMetadata? visitSetterElement(
+    SetterElement element,
+  ) {
+    super.visitSetterElement(element);
+    _visitClassMember(
+      element,
+      isGetter: false,
+      isSetter: true,
     );
     return null;
   }
@@ -291,9 +304,9 @@ class _ComponentVisitor
     bool isSetter = false,
   }) {
     for (var annotationIndex = 0;
-        annotationIndex < element.metadata.length;
+        annotationIndex < element.metadata.annotations.length;
         annotationIndex++) {
-      var annotation = element.metadata[annotationIndex];
+      var annotation = element.metadata.annotations[annotationIndex];
       final annotationInfo = AnnotationInformation(
           element, annotation, annotationIndex, _exceptionHandler);
       if (annotationInfo.isInputType) {
@@ -310,10 +323,8 @@ class _ComponentVisitor
           if (setter == null) {
             return;
           }
-          final propertyType = setter.parameters.first.type;
-          final dynamicType = setter.library.typeProvider.dynamicType;
-          // Resolves unspecified or bounded generic type parameters.
-          final resolvedType = propertyType.resolveToBound(dynamicType);
+          final propertyType = setter.formalParameters.first.type;
+          final resolvedType = setter.library.typeSystem.resolveToBound(propertyType);
           final typeName = getTypeName(resolvedType);
           _addPropertyBindingTo(
               isField ? _fieldInputs : _setterInputs, annotation, element,
@@ -357,7 +368,7 @@ class _ComponentVisitor
           if (setter == null) {
             return;
           }
-          final queryType = setter.parameters.first.type;
+          final queryType = setter.formalParameters.first.type;
           final contentQuery = _getQuery(
             annotationInfo,
             // Avoid emitting the '=' part of the setter.
@@ -381,7 +392,7 @@ class _ComponentVisitor
           if (setter == null) {
             return;
           }
-          final queryType = setter.parameters.first.type;
+          final queryType = setter.formalParameters.first.type;
           final viewQuery = _getQuery(
             annotationInfo,
             // Avoid emitting the '=' part of the setter.
@@ -437,15 +448,15 @@ class _ComponentVisitor
   ///
   /// May return null if no setter corresponds to [element], or the [element]
   /// itself is invalid (e.g. a setter without parameters or a body).
-  PropertyAccessorElement? _setterFor(Element element) {
+  SetterElement? _setterFor(Element element) {
     // Resolves specified generic type parameters.
     final setter = _directiveClassElement!
         .lookUpSetter(
-            element.displayName, _directiveClassElement!.library);
+            name: element.displayName, library: _directiveClassElement!.library);
     if (setter == null) {
       return null;
     }
-    if (setter.parameters.isEmpty) {
+    if (setter.formalParameters.isEmpty) {
       CompileContext.current.reportAndRecover(
         BuildError.forElement(
           element,
@@ -529,7 +540,7 @@ class _ComponentVisitor
     final property = coerceString(
       value,
       'hostPropertyName',
-      defaultTo: element.name,
+      defaultTo: element.name!,
     )!;
     // Allows using static members for @HostBinding. For example:
     //
@@ -546,7 +557,7 @@ class _ComponentVisitor
         return;
       }
       var classId = CompileIdentifierMetadata(
-          name: _directiveClassElement!.name,
+          name: _directiveClassElement!.name!,
           moduleUrl: moduleUrl(_directiveClassElement!.library),
           analyzedClass: AnalyzedClass(_directiveClassElement!));
       bindTo = ast.PropertyRead(ast.StaticRead(classId), element.name!);
@@ -558,7 +569,7 @@ class _ComponentVisitor
     var eventName = coerceString(value, 'eventName')!;
     var methodName = element.name;
     var methodArgs = coerceStringList(value, 'args');
-    if (methodArgs.isEmpty && element.parameters.length == 1) {
+    if (methodArgs.isEmpty && element.formalParameters.length == 1) {
       // Infer $event.
       methodArgs = const [r'$event'];
     }
@@ -719,8 +730,8 @@ class _ComponentVisitor
       List<LifecycleHooks> lifecycleHooks, ClassElement element, bool isComp) {
     if (lifecycleHooks.contains(LifecycleHooks.doCheck)) {
       final ngDoCheck = element.getMethod('ngDoCheck') ??
-          element.lookUpInheritedMethod('ngDoCheck', element.library);
-      if (ngDoCheck != null && ngDoCheck.isAsynchronous) {
+          element.lookUpMethod(name: 'ngDoCheck', library: element.library);
+      if (ngDoCheck != null && ngDoCheck.firstFragment.isAsynchronous) {
         CompileContext.current.reportAndRecover(
           BuildError.forElement(
             ngDoCheck,
@@ -792,15 +803,15 @@ class _ComponentVisitor
             .arguments
             ?.arguments
             .firstWhereOrNull((argument) =>
-                argument is NamedExpression &&
-                (argument as NamedExpression).name.label.name == 'template') as NamedExpression?;
+                argument is NamedArgument &&
+                (argument as NamedArgument).name.lexeme == 'template') as NamedArgument?;
     if (templateExpression != null) {
-      if (templateExpression.expression is SingleStringLiteral) {
-        return (templateExpression.expression as SingleStringLiteral)
+      if (templateExpression.argumentExpression is SingleStringLiteral) {
+        return (templateExpression.argumentExpression as SingleStringLiteral)
             .contentsOffset;
       }
-      if (templateExpression.expression is AdjacentStrings) {
-        var offset = (templateExpression.expression as AdjacentStrings).offset;
+      if (templateExpression.argumentExpression is AdjacentStrings) {
+        var offset = (templateExpression.argumentExpression as AdjacentStrings).offset;
         return offset;
       }
     }
@@ -846,19 +857,19 @@ class _ComponentVisitor
 
     // There is an implicit "export" for the directive class itself
     exports.add(CompileIdentifierMetadata(
-        name: element.name,
+        name: element.name!,
         moduleUrl: moduleUrl(element.library),
         analyzedClass: AnalyzedClass(element)));
 
     var arguments = annotation.annotationAst.arguments!.arguments;
     var exportsArg = arguments
-        .whereType<NamedExpression>()
-        .firstWhereOrNull((arg) => arg.name.label.name == 'exports');
-    if (exportsArg == null || exportsArg.expression is! ListLiteral) {
+        .whereType<NamedArgument>()
+        .firstWhereOrNull((arg) => arg.name.lexeme == 'exports');
+    if (exportsArg == null || exportsArg.argumentExpression is! ListLiteral) {
       return exports;
     }
 
-    var staticNames = (exportsArg.expression as ListLiteral).elements;
+    var staticNames = (exportsArg.argumentExpression as ListLiteral).elements;
     for (var staticName in staticNames) {
       if (staticName is! Identifier) {
         _exceptionHandler.handle(ErrorMessageForAnnotation(annotationInfo,
@@ -875,7 +886,7 @@ class _ComponentVisitor
       AnalyzedClass? analyzedClass;
       if (id is PrefixedIdentifier) {
         // We only allow prefixed identifiers to have library prefixes.
-        if (id.prefix.staticElement is! PrefixElement) {
+        if (id.prefix.element is! PrefixElement) {
           _exceptionHandler.handle(ErrorMessageForAnnotation(
               annotationInfo,
               'Item $id in the "exports" field must be either a simple '
@@ -888,7 +899,7 @@ class _ComponentVisitor
         name = id.name;
       }
 
-      final staticElement = id.staticElement;
+      final staticElement = id.element;
       if (staticElement is ClassElement) {
         analyzedClass = AnalyzedClass(staticElement);
       } else if (staticElement == null) {
@@ -906,7 +917,7 @@ class _ComponentVisitor
     }
     if (unresolvedExports.isNotEmpty) {
       _exceptionHandler.handle(UnresolvedExpressionError(unresolvedExports,
-          _directiveClassElement!, annotation.compilationUnit));
+          _directiveClassElement!, annotation.libraryFragment));
     }
     return exports;
   }

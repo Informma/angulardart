@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 import 'package:angulardart_compiler/v1/angular_compiler.dart';
 
 void main() {
-  final dartfmt = DartFormatter();
+  final dartfmt = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion);
   String formatCode(dynamic spec) {
     final emitter = DartEmitter();
     final code = spec is Spec ? spec.accept(emitter).toString() : spec.toString();

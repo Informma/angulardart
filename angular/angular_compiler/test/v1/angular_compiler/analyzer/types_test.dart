@@ -48,9 +48,9 @@ void main() {
 
     group('injection annotations', () {
       Element getParameterFrom(String name) =>
-          testLib.definingCompilationUnit.functions
+          testLib.firstFragment.element.topLevelFunctions
               .firstWhere((e) => e.name == name)
-              .parameters
+              .formalParameters
               .first;
 
       const {

@@ -95,7 +95,7 @@ class DependencyReader {
 
   DependencyInvocation<E> _parseDependencies<E extends Element>(
     E bound,
-    List<ParameterElement> parameters,
+    List<FormalParameterElement> parameters,
   ) {
     final positional = <DependencyElement>[];
     for (final parameter in parameters) {
@@ -171,13 +171,13 @@ class DependencyReader {
       throw BuildError.forElement(
           element, 'Could not find a valid constructor');
     }
-    return _parseDependencies(constructor, constructor.parameters);
+    return _parseDependencies(constructor, constructor.formalParameters);
   }
 
   DependencyInvocation<ExecutableElement> _parseFunctionDependencies(
     ExecutableElement element,
   ) =>
-      _parseDependencies(element, element.parameters);
+      _parseDependencies(element, element.formalParameters);
 }
 
 /// Statically analyzed arguments needed to invoke a constructor or function.

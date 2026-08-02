@@ -68,7 +68,6 @@ class CompilerFlags {
     );
 
   /// Whether to emit code that supports developer tooling.
-  @experimental
   final bool enableDevTools;
 
   /// Whether to opt-in to supporting a legacy mode of style encapsulation.
@@ -87,23 +86,18 @@ class CompilerFlags {
   final bool enableDataDebugSource;
 
   /// Whether to operate as if `preserveWhitespace: false` is always set.
-  @experimental
   final bool forceMinifyWhitespace;
 
   /// Whether to emit code supporting `SlowComponentLoader`.
-  @experimental
   final bool emitComponentFactories;
 
   /// Whether to emit code supporting `ReflectiveInjector`.
-  @experimental
   final bool emitInjectableFactories;
 
   /// Whether to emit `export {{file.dart}}` in `file.template.dart`.
-  @experimental
   final bool exportUserCodeFromTemplate;
 
   /// Exceptions keyed by `PolicyName` => `Packages`.
-  @experimental
   final Map<String, Set<String>> policyExceptionInPackages;
 
   /// Exceptions keyed by `Name` -> `Paths`.

@@ -4,7 +4,7 @@ issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://angulardartreborn.com
 documentation: https://angulardartreborn.com/guide
 description: Testing runner and library for AngularDart
-version: 5.0.10
+version: 6.0.0
 topics:
   - angular
   - testing
@@ -28,16 +28,6 @@ dependencies:
   lints: ^6.1.0
 
 dev_dependencies:
-  build_runner: ^2.4.0
-  build_test: ^3.5.19
-  build_web_compilers: ^4.0.0
-  test: ^1.25.0
-
-dependency_overrides:
-  angulardart:
-    path: ../angular
-  angulardart_compiler:
-    path: ../angular_compiler
-  angulardart_ast:
-    path: ../angular_ast
-  analyzer: ^14.0.0
+  build_runner: ^2.16.0
+  build_test: ^3.0.0
+  test: ^1.31.0

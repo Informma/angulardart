@@ -51,7 +51,7 @@ DartType getExpressionType(ast.AST expression, AnalyzedClass analyzedClass) {
 ///
 /// Returns null otherwise.
 DartType? getIterableElementType(DartType dartType) => dartType is InterfaceType
-    ? dartType.element.lookUpInheritedConcreteGetter('single', dartType.element.library)?.returnType
+    ? dartType.element.lookUpGetter(name: 'single', library: dartType.element.library)?.returnType
     : null;
 
 /// Returns an int type using the [analyzedClass]'s context.
@@ -93,19 +93,19 @@ bool isString(ast.AST expression, AnalyzedClass analyzedClass) {
 }
 
 String typeToCode(DartType type) {
-  if (type.isDynamic) {
+  if (type is DynamicType) {
     return 'dynamic';
   } else if (type is InterfaceType) {
     var typeArguments = type.typeArguments;
     if (typeArguments.isEmpty) {
-      return type.element.name;
+      return type.element.name!;
     } else {
       final typeArgumentsStr = typeArguments.map(typeToCode).join(', ');
-      return '${type.element.name}<$typeArgumentsStr>';
+      return '${type.element.name!}<$typeArgumentsStr>';
     }
   } else if (type is TypeParameterType) {
-    return type.element.name;
-  } else if (type.isVoid) {
+    return type.element.name!;
+  } else if (type is VoidType) {
     return 'void';
   } else {
     throw UnimplementedError('(${type.runtimeType}) $type');
@@ -114,13 +114,13 @@ String typeToCode(DartType type) {
 
 PropertyInducingElement? _getField(AnalyzedClass clazz, String name) {
   var getter =
-      clazz.classElement.lookUpGetter(name, clazz.classElement.library);
+      clazz.classElement.lookUpGetter(name: name, library: clazz.classElement.library);
   return getter?.variable;
 }
 
 MethodElement? _getMethod(AnalyzedClass clazz, String name) {
   var element = clazz.classElement;
-  return element.lookUpMethod(name, element.library);
+  return element.lookUpMethod(name: name, library: element.library);
 }
 
 // TODO(het): Make this work with chained expressions.
@@ -152,7 +152,7 @@ bool isImmutable(ast.AST expression, AnalyzedClass? analyzedClass) {
           : analyzedClass;
       var field = _getField(clazz, expression.name);
       if (field != null) {
-        return !field.isSynthetic && (field.isFinal || field.isConst);
+        return !field.isOriginDeclaration && (field.isFinal || field.isConst);
       }
       if (_getMethod(clazz, expression.name) != null) {
         // methods are immutable
@@ -188,9 +188,9 @@ ast.ASTWithSource rewriteTearOff(
 
   if (unwrappedExpression is ast.PropertyRead) {
     // Find the method, either on "this." or "super.".
-    final method = analyzedClass.classElement.lookUpInheritedMethod(
-      unwrappedExpression.name,
-      analyzedClass.classElement.library,
+    final method = analyzedClass.classElement.lookUpMethod(
+      name: unwrappedExpression.name,
+      library: analyzedClass.classElement.library,
     );
 
     // If not found, we do not perform any re-write.
@@ -201,7 +201,7 @@ ast.ASTWithSource rewriteTearOff(
     // If we have no positional parameters (optional or otherwise), then we
     // translate the call into "foo()". If we have at least one, we translate
     // the call into "foo($event)".
-    final positionalParameters = method.parameters.where((p) => !p.isNamed);
+    final positionalParameters = method.formalParameters.where((p) => !p.isNamed);
     if (positionalParameters.isEmpty) {
       return ast.ASTWithSource.from(
           original, _simpleMethodCall(unwrappedExpression));
@@ -371,7 +371,7 @@ class _TypeResolver extends ast.AstVisitor<DartType, dynamic> {
   /// Returns dynamic if [receiverType] has no [getterName].
   DartType _lookupGetterReturnType(DartType receiverType, String getterName) {
     if (receiverType is InterfaceType) {
-      var getter = receiverType.element.lookUpInheritedConcreteGetter(getterName, receiverType.element.library);
+      var getter = receiverType.element.lookUpGetter(name: getterName, library: receiverType.element.library);
       if (getter != null) return getter.returnType;
     }
     return _dynamicType;
@@ -382,7 +382,7 @@ class _TypeResolver extends ast.AstVisitor<DartType, dynamic> {
   /// Returns dynamic if [receiverType] has no [methodName].
   DartType _lookupMethodReturnType(DartType receiverType, String methodName) {
     if (receiverType is InterfaceType) {
-      var method = receiverType.element.lookUpInheritedConcreteMethod(methodName, receiverType.element.library);
+      var method = receiverType.element.lookUpMethod(name: methodName, library: receiverType.element.library);
       if (method != null) return method.returnType;
     }
     return _dynamicType;

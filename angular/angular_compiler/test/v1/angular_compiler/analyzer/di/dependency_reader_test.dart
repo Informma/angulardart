@@ -68,14 +68,14 @@ void main() {
 
     ClassElement? classNamed(String name) => library.getClass(name);
 
-    FunctionElement functionNamed(String name) =>
-        library.definingCompilationUnit.functions
+    TopLevelFunctionElement functionNamed(String name) =>
+        library.firstFragment.element.topLevelFunctions
             .firstWhere((e) => e.name == name);
 
     test('a function with no parameters', () {
       final function = functionNamed('createExample0');
       final deps = reader.parseDependencies(function);
-      expect(deps.bound, const TypeMatcher<FunctionElement>());
+      expect(deps.bound, const TypeMatcher<TopLevelFunctionElement>());
       expect(deps.positional, isEmpty);
       expect(deps.named, isEmpty);
     });
@@ -83,7 +83,7 @@ void main() {
     test('a function with one parameter', () {
       final function = functionNamed('createExample1');
       final deps = reader.parseDependencies(function);
-      expect(deps.bound, const TypeMatcher<FunctionElement>());
+      expect(deps.bound, const TypeMatcher<TopLevelFunctionElement>());
       expect(deps.positional, [
         DependencyElement(
           TypeTokenElement(
@@ -97,7 +97,7 @@ void main() {
     test('a function with two parameters, of which one is named', () {
       final function = functionNamed('createExample2');
       final deps = reader.parseDependencies(function);
-      expect(deps.bound, const TypeMatcher<FunctionElement>());
+      expect(deps.bound, const TypeMatcher<TopLevelFunctionElement>());
       expect(deps.positional, [
         DependencyElement(
           TypeTokenElement(

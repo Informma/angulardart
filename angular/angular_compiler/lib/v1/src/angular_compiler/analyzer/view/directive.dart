@@ -34,7 +34,9 @@ class DirectiveVisitor {
 
   /// Throws a [BuildError] if [element] is not an instance-level member.
   static void _assertInstance(Element element, String message) {
-    if (element is ClassMemberElement && !element.isStatic) {
+    final isStatic = (element is ExecutableElement && element.isStatic) ||
+        (element is VariableElement && element.isStatic);
+    if (!isStatic) {
       return;
     }
     throw BuildError.forElement(element, message);
@@ -48,11 +50,11 @@ class DirectiveVisitor {
     throw BuildError.forElement(element, message);
   }
 
-  static bool _isRequired(ParameterElement e) => e.isRequiredPositional;
+  static bool _isRequired(FormalParameterElement e) => e.isRequiredPositional;
 
   static void _assertExactArgs(Element element, String message, int exactArgs) {
     if (element is MethodElement &&
-        element.parameters.where(_isRequired).length != exactArgs) {
+        element.formalParameters.where(_isRequired).length != exactArgs) {
       throw BuildError.forElement(element, message);
     }
   }
@@ -72,7 +74,7 @@ class DirectiveVisitor {
   }
 
   void _visitDirectiveOrSupertype(ClassElement element) {
-    for (final accessor in element.accessors) {
+    for (final accessor in [...element.getters, ...element.setters]) {
       _visitMember(accessor);
     }
     for (final method in element.methods) {

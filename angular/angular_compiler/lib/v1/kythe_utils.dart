@@ -27,7 +27,7 @@ Future<AngularArtifacts?>? angularArtifactsForKythe(LibraryElement element,
         assetId,
         policyExceptions: {},
         policyExceptionsInPackages: {},
-        isNullSafe: element.isNonNullableByDefault,
+        isNullSafe: true,
         enableDevTools: false,
       ), () async {
     try {

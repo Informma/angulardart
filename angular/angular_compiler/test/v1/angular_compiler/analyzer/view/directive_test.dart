@@ -9,7 +9,7 @@ void main() {
     final library = await resolveLibrary(source);
     try {
       final visitDirective = const DirectiveVisitor().visitDirective;
-      library.definingCompilationUnit.classes.forEach(visitDirective);
+      library.firstFragment.element.classes.forEach(visitDirective);
       fail('Expected an error to be thrown');
     } catch (e) {
       expect(e.toString(), matcherOrString);

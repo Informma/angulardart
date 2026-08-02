@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/dart/element/visitor.dart';
+import 'package:analyzer/dart/element/visitor2.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart';
 import 'package:angulardart_compiler/v1/src/compiler/output/convert.dart';
@@ -13,7 +13,7 @@ import 'component_visitor_exceptions.dart';
 import 'dart_object_utils.dart';
 import 'lifecycle_hooks.dart';
 
-class PipeVisitor extends RecursiveElementVisitor<CompilePipeMetadata> {
+class PipeVisitor extends RecursiveElementVisitor2<CompilePipeMetadata> {
   final LibraryReader _library;
   final ComponentVisitorExceptionHandler _exceptionHandler;
 
@@ -46,14 +46,14 @@ class PipeVisitor extends RecursiveElementVisitor<CompilePipeMetadata> {
     AnnotationInformation<ClassElement> annotation,
   ) {
     FunctionType? transformType;
-    final transformMethod = annotation.element.lookUpInheritedMethod('transform', annotation.element.library);
+    final transformMethod = annotation.element.lookUpMethod(name: 'transform', library: annotation.element.library);
     if (transformMethod != null) {
       // The pipe defines a 'transform' method.
       transformType = transformMethod.type;
     } else {
       // The pipe may define a function-typed 'transform' property. This is
       // supported for backwards compatibility.
-      final transformGetter = annotation.element.lookUpInheritedConcreteGetter('transform', annotation.element.library);
+      final transformGetter = annotation.element.lookUpGetter(name: 'transform', library: annotation.element.library);
       final transformGetterType = transformGetter?.returnType;
       if (transformGetterType is FunctionType) {
         transformType = transformGetterType;

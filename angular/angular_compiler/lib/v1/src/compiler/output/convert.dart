@@ -20,7 +20,7 @@ o.OutputType? fromDartType(DartType? dartType, {bool resolveBounds = true}) {
     // an explicit type, such as a generic type parameter bound.
     return null;
   }
-  if (dartType.isVoid) {
+  if (dartType is VoidType) {
     return o.VOID_TYPE;
   }
   if (dartType.isDartCoreNull) {
@@ -36,13 +36,11 @@ o.OutputType? fromDartType(DartType? dartType, {bool resolveBounds = true}) {
     return o.DYNAMIC_TYPE;
   }
   if (dartType is TypeParameterType && resolveBounds) {
-    // Resolve generic type to its bound or dynamic if it has none.
-    final dynamicType = dartType.element.library!.typeProvider.dynamicType;
-    dartType = dartType.resolveToBound(dynamicType);
+    dartType = dartType.element.library!.typeSystem.resolveToBound(dartType);
   }
   // Note this check for dynamic should come after the check for a type
   // parameter, since a type parameter could resolve to dynamic.
-  if (dartType.isDynamic) {
+  if (dartType is DynamicType) {
     return o.DYNAMIC_TYPE;
   }
   var typeArguments = <o.OutputType>[];
@@ -105,7 +103,7 @@ o.OutputType fromTypeLink(TypeLink? typeLink, LibraryReader library) {
 o.FunctionType fromFunctionType(FunctionType functionType) {
   final returnType = fromDartType(functionType.returnType);
   final paramTypes = <o.OutputType>[];
-  for (var parameter in functionType.parameters) {
+  for (var parameter in functionType.formalParameters) {
     paramTypes.add(fromDartType(parameter.type)!);
   }
   var outputType = o.FunctionType(returnType, paramTypes);

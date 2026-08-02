@@ -28,8 +28,8 @@ class InjectorReader {
 
   /// Returns a list of all injectors needing generation in [element].
   static List<InjectorReader> findInjectors(LibraryElement element) {
-    final source = element.source.uri;
-    return element.definingCompilationUnit.topLevelVariables
+    final source = element.firstFragment.source.uri;
+    return element.topLevelVariables
         .where(_shouldGenerateInjector)
         .map((field) => InjectorReader(
               field,
@@ -272,7 +272,7 @@ class InjectorReader {
           provider.token,
           _tokenToIdentifier(provider.token),
           _referSafe(provider.useClass.symbol, provider.useClass.import),
-          name.isNotEmpty ? name : null,
+          (name?.isNotEmpty ?? false) ? name : null,
           _computeDependencies(provider.dependencies.positional),
           provider.isMulti,
         );

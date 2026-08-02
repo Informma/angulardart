@@ -75,8 +75,8 @@ class ReflectableReader {
   static FutureOr<bool> _nullHasInput(_) => false;
   static Future<bool> _nullIsLibrary(_) async => false;
 
-  static Iterable<CompilationUnitElement> _allUnits(LibraryElement lib) sync* {
-    yield lib.definingCompilationUnit;
+  static Iterable<LibraryFragment> _allUnits(LibraryElement lib) sync* {
+    yield lib.firstFragment;
   }
 
   /// Returns information needed to write `.template.dart` files.
@@ -84,7 +84,7 @@ class ReflectableReader {
     final registerClasses = <ReflectableClass>[];
     final registerFunctions = <DependencyInvocation<ExecutableElement>>[];
     for (final unit in _allUnits(library)) {
-      for (final type in unit.classes) {
+      for (final type in unit.element.classes) {
         final reflectable = _resolveClass(type);
         if (reflectable != null) {
           registerClasses.add(reflectable);
@@ -94,7 +94,7 @@ class ReflectableReader {
         }
       }
       if (recordInjectableFactories) {
-        registerFunctions.addAll(_resolveFunctions(unit.functions));
+        registerFunctions.addAll(_resolveFunctions(unit.element.topLevelFunctions));
       }
     }
     var urlsNeedingInitReflector = const <String>[];
@@ -129,7 +129,7 @@ class ReflectableReader {
     return ReflectableClass(
       element: element,
       factory: factory,
-      name: element.name,
+      name: element.name!,
       registerComponentFactory: isComponent && recordComponentFactories,
     );
   }
@@ -169,7 +169,7 @@ class ReflectableReader {
     final results = <String>[];
     final futures = <Future<void>>[];
 
-    for (final import in library.libraryImports) {
+    for (final import in library.firstFragment.libraryImports) {
       final uri = import.uri is DirectiveUriWithRelativeUriString
           ? (import.uri as DirectiveUriWithRelativeUriString).relativeUriString
           : '';
@@ -184,7 +184,7 @@ class ReflectableReader {
       }());
     }
 
-    for (final export in library.libraryExports) {
+    for (final export in library.firstFragment.libraryExports) {
       final uri = export.uri is DirectiveUriWithRelativeUriString
           ? (export.uri as DirectiveUriWithRelativeUriString).relativeUriString
           : '';
@@ -205,9 +205,9 @@ class ReflectableReader {
 
   Future<bool> _needsInitReflector(
     String uri,
-    ImportElementPrefix? prefix,
+    PrefixFragment? prefix,
   ) async {
-    if (prefix is DeferredImportElementPrefix) {
+    if (prefix != null && prefix.isDeferred) {
       return false;
     }
     if (uri.endsWith(outputExtension)) {

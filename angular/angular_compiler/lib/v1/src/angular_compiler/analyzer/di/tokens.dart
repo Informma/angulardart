@@ -18,7 +18,7 @@ class TokenReader {
   ///
   /// Only a [DartType] or `OpaqueToken` are currently supported.
   TokenElement parseTokenObject(DartObject object,
-      [ParameterElement? element]) {
+      [FormalParameterElement? element]) {
     final constant = ConstantReader(object);
     if (constant.isNull) {
       final errorMsg = 'Annotation on element has errors and was unresolvable.';
@@ -104,7 +104,7 @@ class TokenReader {
     if (clazz.constructors.length != 1 ||
         clazz.unnamedConstructor == null ||
         !clazz.unnamedConstructor!.isConst ||
-        clazz.unnamedConstructor!.parameters.isNotEmpty ||
+        clazz.unnamedConstructor!.formalParameters.isNotEmpty ||
         clazz.typeParameters.isNotEmpty) {
       var supertypeName =
           clazz.supertype!.getDisplayString(withNullability: false);
@@ -139,7 +139,7 @@ class TokenReader {
   /// Returns [element] parsed into a [TokenElement].
   ///
   /// Uses the type definition, unless `@Inject` is specified.
-  TokenElement parseTokenParameter(ParameterElement element) {
+  TokenElement parseTokenParameter(FormalParameterElement element) {
     final constTypeOrToken =
         $Inject.firstAnnotationOfExact(element)?.getField('token') ??
             $OpaqueToken.firstAnnotationOf(element);
@@ -149,7 +149,7 @@ class TokenReader {
   }
 
   /// Returns the type of [element] as a [TokenElement].
-  TypeTokenElement parseTokenType(ParameterElement element) {
+  TypeTokenElement parseTokenType(FormalParameterElement element) {
     return _parseType(element.type);
   }
 

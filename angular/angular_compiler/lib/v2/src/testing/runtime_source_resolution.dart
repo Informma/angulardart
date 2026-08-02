@@ -93,6 +93,7 @@ Future<LibraryElement> resolve(
       sources,
       (resolver) => resolver.libraryFor(_defaultAssetId),
       packageConfig: config,
+      readAllSourcesFromFilesystem: true,
     ),
     ['non-nullable'],
   );

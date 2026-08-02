@@ -34,6 +34,7 @@ Future<LibraryElement> resolveLibrary(String source) async {
       (resolver) async => (await resolver.findLibraryByName('_test'))!,
       inputId: AssetId('test_lib', 'lib/test_lib.dart'),
       packageConfig: packageConfig,
+      readAllSourcesFromFilesystem: true,
     ),
     ['non-nullable'],
   );
@@ -49,5 +50,5 @@ Future<ClassElement?> resolveClass(
   final library = await resolveLibrary(source);
   return name != null
       ? library.getClass(name)
-      : library.definingCompilationUnit.classes.first;
+      : library.firstFragment.element.classes.first;
 }

@@ -59,9 +59,9 @@ class TemplateOutliner implements Builder {
     final components = <ClassElement>[];
     final directives = <ClassElement>[];
     final injectors = <String>[];
-    var units = [library.definingCompilationUnit];
-    var types = units.expand((unit) => unit.classes);
-    var fields = units.expand((unit) => unit.topLevelVariables);
+    var units = [library.firstFragment];
+    var types = units.expand((unit) => unit.element.classes);
+    var fields = units.expand((unit) => unit.element.topLevelVariables);
     for (final clazz in types) {
       final component = $Component.firstAnnotationOfExact(
         clazz,
@@ -90,8 +90,7 @@ class TemplateOutliner implements Builder {
     // Unlike the main compiler, we do not do an allow-list check here; this is
     // both to speed up the outliner (reducing duplicate checks) and because we
     // do not have a configured CompileContext when the outliner is run.
-    final emitNullSafeCode = library.isNonNullableByDefault;
-    final languageVersion = emitNullSafeCode ? '' : '// @dart=2.9\n\n';
+    final languageVersion = '';
     final output = StringBuffer('$languageVersion$_analyzerIgnores\n');
     if (exportUserCodeFromTemplate) {
       output
@@ -113,11 +112,11 @@ class TemplateOutliner implements Builder {
     }
 
     output.writeln('// Required for "type inference" (scoping).');
-    for (final d in library.libraryImports) {
-      if (d.prefix is! DeferredImportElementPrefix && d.uri is DirectiveUriWithRelativeUriString) {
+    for (final d in library.firstFragment.libraryImports) {
+      if (d.prefix?.isDeferred != true && d.uri is DirectiveUriWithRelativeUriString) {
         var directive = "import '${(d.uri as DirectiveUriWithRelativeUriString).relativeUriString}'";
         if (d.prefix != null) {
-          directive += ' as ${d.prefix!.element.name}';
+          directive += ' as ${d.prefix!.name}';
         }
         if (d.combinators.isNotEmpty) {
           final isShow = d.combinators.first is ShowElementCombinator;

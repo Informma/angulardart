@@ -57,6 +57,8 @@ Provider<T> provide<T extends Object>(
 /// **NOTE**: The fields in this class are _soft deprecated_, and should not be
 /// inspected or accessed at runtime. Future implementations may optimize by
 /// removing them entirely.
+///
+/// {@category Dependency Injection}
 @optionalTypeArgs
 class Provider<T extends Object> {
   /// Key used for injection, commonly a [Type] or [OpaqueToken].

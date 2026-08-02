@@ -42,6 +42,8 @@ import 'package:angulardart/src/utilities.dart';
 /// **WARNING**: It is not supported to create a non-const instance of this
 /// class or sub-types of this class. Instances should only be created or
 /// referenced using the `const` operator.
+///
+/// {@category Dependency Injection}
 @optionalTypeArgs
 class OpaqueToken<T extends Object> {
   final String _uniqueName;
@@ -124,6 +126,8 @@ class OpaqueToken<T extends Object> {
 /// **WARNING**: It is not supported to create a non-const instance of this
 /// class or sub-types of this class. Instances should only be created or
 /// referenced using the `const` operator.
+///
+/// {@category Dependency Injection}
 @optionalTypeArgs
 class MultiToken<T extends Object> extends OpaqueToken<List<T>> {
   const MultiToken([String uniqueName = '']) : super(uniqueName);

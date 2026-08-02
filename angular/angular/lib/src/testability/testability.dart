@@ -17,7 +17,10 @@ part 'js_impl.dart';
 
 /// Provides testing hooks also accessible via JavaScript APIs in the browser.
 ///
-/// TODO(b/168535057): Add `dispose` function (to unsubscribe, remove elements).
+/// Use [whenStable] to register callbacks that fire when the application
+/// becomes stable (no pending change detection cycles).
+///
+/// {@category Testing}
 @sealed
 class Testability {
   final NgZone _ngZone;

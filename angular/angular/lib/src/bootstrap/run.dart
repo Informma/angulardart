@@ -1,3 +1,15 @@
+/// Bootstrapping functions for starting AngularDart applications.
+///
+/// Provides [runApp] and related functions for creating and initializing
+/// an AngularDart application. These functions set up the root injector,
+/// create the [ApplicationRef], and bootstrap the root component.
+///
+/// See also:
+///
+/// - [ApplicationRef] for managing the running application.
+/// - [Injector] for dependency injection configuration.
+library;
+
 import 'package:meta/meta.dart';
 import 'package:angulardart/src/di/injector/runtime.dart';
 import 'package:angulardart/src/meta.dart';
@@ -166,6 +178,8 @@ Injector _identityInjector(Injector parent) => parent;
 /// Returns a [ComponentRef] with the created root component instance within the
 /// context of a new [ApplicationRef], with change detection and other framework
 /// internals setup.
+///
+/// {@category Core}
 ComponentRef<T> runApp<T extends Object>(
   ComponentFactory<T> componentFactory, {
   InjectorFactory createInjector = _identityInjector,
@@ -183,6 +197,8 @@ ComponentRef<T> runApp<T extends Object>(
 /// component.
 ///
 /// See [runApp] for additional details.
+///
+/// {@category Core}
 Future<ComponentRef<T>> runAppAsync<T extends Object>(
   ComponentFactory<T> componentFactory, {
   required Future<void> Function(Injector) beforeComponentCreated,

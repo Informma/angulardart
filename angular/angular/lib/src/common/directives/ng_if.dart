@@ -27,6 +27,8 @@ import 'package:angulardart/src/runtime/check_binding.dart';
 /// ```
 ///
 /// [guide]: https://angulardartreborn.com/guide/template-syntax.html#ngIf
+///
+/// {@category Templates & Directives}
 @Directive(
   selector: '[ngIf]',
 )

@@ -51,6 +51,8 @@ import 'invalid_pipe_argument_exception.dart' show InvalidPipeArgumentException;
 /// ```
 /// The first example generates two `<li>` elements with text `b` and `c`.
 /// The second example uses the string `'abcdefghij'`.
+///
+/// {@category Pipes}
 @Pipe('slice', pure: false)
 class SlicePipe {
   dynamic transform(dynamic value, int start, [int? end]) {

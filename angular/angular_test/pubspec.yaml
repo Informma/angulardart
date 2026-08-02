@@ -2,8 +2,9 @@ name: angulardart_test
 repository: https://github.com/flutterdocteur/angulardart/tree/main/angular/angular_test
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://angulardartreborn.com
+documentation: https://angulardartreborn.com/guide
 description: Testing runner and library for AngularDart
-version: 5.0.9
+version: 5.0.10
 topics:
   - angular
   - testing

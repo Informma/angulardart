@@ -1,3 +1,14 @@
+/// Core application reference and lifecycle management for AngularDart.
+///
+/// Provides [ApplicationRef], which manages the root component(s), change
+/// detection, and application-level lifecycle of an AngularDart application.
+///
+/// See also:
+///
+/// - [runApp] in `package:angulardart/angulardart.dart` for bootstrapping.
+/// - [ExceptionHandler] for global error handling.
+library;
+
 import 'dart:async';
 import 'dart:html';
 
@@ -26,7 +37,25 @@ ApplicationRef internalCreateApplicationRef(
 
 /// A reference to an Angular application running on a page.
 ///
-/// For more about Angular applications, see the documentation for [bootstrap].
+/// An [ApplicationRef] is created when an AngularDart application is
+/// bootstrapped via [runApp]. It manages the root component(s), triggers
+/// change detection, and handles application-level lifecycle events.
+///
+/// The application reference is responsible for:
+///
+/// - Bootstrapping root components with [bootstrap].
+/// - Running change detection on each microtask via [tick].
+/// - Handling uncaught exceptions through [ExceptionHandler].
+/// - Disposing of the application and all its components via [dispose].
+///
+/// For more about Angular applications, see the documentation for [runApp].
+///
+/// See also:
+///
+/// * [runApp], which creates an [ApplicationRef] and bootstraps a component.
+/// * [Change Detection Guide](https://angulardartreborn.com/guide/template-syntax).
+///
+/// {@category Core}
 class ApplicationRef extends ChangeDetectionHost {
   final _disposeListeners = <void Function()>[];
   final _rootComponents = <ComponentRef<void>>[];
@@ -55,6 +84,9 @@ class ApplicationRef extends ChangeDetectionHost {
   }
 
   /// Register a listener to be called when the application is disposed.
+  ///
+  /// Dispose listeners are invoked in the order they were registered when
+  /// [dispose] is called.
   void registerDisposeListener(void Function() listener) {
     _disposeListeners.add(listener);
   }
@@ -65,6 +97,9 @@ class ApplicationRef extends ChangeDetectionHost {
   /// Angular mounts the specified application component onto DOM elements
   /// identified by the component's selector and kicks off automatic change
   /// detection to finish initializing the component.
+  ///
+  /// Returns a [ComponentRef] for the bootstrapped component, which can be
+  /// used to access the component instance, its injector, or to destroy it.
   ComponentRef<T> bootstrap<T extends Object>(
     ComponentFactory<T> componentFactory,
   ) {
@@ -121,6 +156,9 @@ class ApplicationRef extends ChangeDetectionHost {
   }
 
   /// Dispose of this application and all of its components.
+  ///
+  /// Cancels internal subscriptions, destroys all root components in reverse
+  /// order, and invokes all registered dispose listeners.
   void dispose() {
     _onErrorSub.cancel();
     _onMicroSub.cancel();

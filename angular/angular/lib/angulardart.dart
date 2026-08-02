@@ -2,19 +2,67 @@
 ///
 /// Import this library as follows:
 ///
-/// ```
+/// ```dart
 /// import 'package:angulardart/angulardart.dart';
 /// ```
 ///
-/// For help using this library, see the AngularDart documentation:
+/// ## Getting Started
 ///
-/// * [AngularDart guide][]
-/// * [AngularDart cheat sheet][cheatsheet]
+/// The fastest way to get started is with the [AngularDart CLI][cli]:
 ///
-/// [AngularDart]: https://angulardartreborn.com/angular
+/// ```bash
+/// dart pub global activate angulardart_cli
+/// ngdart new my_app
+/// cd my_app
+/// dart pub get
+/// dart run build_runner serve
+/// ```
+///
+/// ## Minimal Example
+///
+/// ```dart
+/// import 'package:angulardart/angulardart.dart';
+///
+/// @Component(
+///   selector: 'my-app',
+///   template: '<h1>Hello {{name}}!</h1>',
+/// )
+/// class AppComponent {
+///   String name = 'World';
+/// }
+///
+/// void main() => runApp(AppComponent, 'my-app');
+/// ```
+///
+/// ## What's Included
+///
+/// This library exports the core AngularDart APIs:
+///
+/// - **Bootstrapping**: [runApp], [runAppAsync] for starting applications.
+/// - **Components & Directives**: [Component], [Directive], [Pipe] annotations.
+/// - **Dependency Injection**: [Injector], [Provider], [Module], and related
+///   annotations ([Inject], [Optional], [Self], [Host], [SkipSelf]).
+/// - **Lifecycle Hooks**: [OnInit], [OnDestroy], [OnChanges], [AfterChanges],
+///   [AfterContentInit], [AfterContentChecked], [AfterViewInit],
+///   [AfterViewChecked], [DoCheck].
+/// - **Change Detection**: [ChangeDetectionStrategy], [ChangeDetectorRef].
+/// - **Common Directives**: [NgIf], [NgFor], [NgSwitch], [NgClass], [NgStyle].
+/// - **Common Pipes**: [DatePipe], [UpperCasePipe], [LowerCasePipe],
+///   [SlicePipe], [AsyncPipe], and more.
+/// - **Security**: [SafeHtml], [SafeUrl], [SafeStyle], [SafeResourceUrl].
+/// - **DevTools**: [enableDevTools] for debugging support.
+///
+/// ## Documentation
+///
+/// - [AngularDart Guide][AngularDart guide] - Comprehensive documentation.
+/// - [AngularDart Cheat Sheet][cheatsheet] - Quick reference.
+/// - [API Reference](https://pub.dev/documentation/angulardart/latest/) -
+///   This page.
+///
+/// [AngularDart]: https://angulardartreborn.com
 /// [AngularDart guide]: https://angulardartreborn.com/guide
 /// [cheatsheet]: https://angulardartreborn.com/cheatsheet
-
+/// [cli]: https://pub.dev/packages/angulardart_cli
 library angular;
 
 export 'src/bootstrap/run.dart'

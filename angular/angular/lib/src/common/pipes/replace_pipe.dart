@@ -26,6 +26,8 @@ import 'invalid_pipe_argument_exception.dart' show InvalidPipeArgumentException;
 /// --Note--: The 'pattern' parameter will be converted to a RegExp instance.
 /// Make sure to escape the string properly if you are matching for regular
 /// expression special characters like parenthesis, brackets etc.
+///
+/// {@category Pipes}
 @Pipe('replace')
 class ReplacePipe {
   const ReplacePipe();

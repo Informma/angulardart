@@ -39,6 +39,8 @@ import 'package:angulardart/src/meta.dart';
 ///   ],
 /// );
 /// ```
+///
+/// {@category Dependency Injection}
 class Module {
   final List<Module> include;
   final List<Provider<Object>> provide;

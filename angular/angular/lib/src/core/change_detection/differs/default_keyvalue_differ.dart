@@ -1,5 +1,11 @@
 import 'dart:collection';
 
+/// Tracks changes in a `Map` between change detection cycles.
+///
+/// Used internally by pipes like `AsyncPipe` to efficiently detect additions,
+/// removals, and value changes in a map. After calling [diff], the results
+/// can be iterated via [forEachAddedItem], [forEachRemovedItem], and
+/// [forEachChangedItem].
 class DefaultKeyValueDiffer {
   final _records = LinkedHashMap<Object?, KeyValueChangeRecord>.identity();
 
@@ -201,6 +207,11 @@ class DefaultKeyValueDiffer {
   }
 }
 
+/// A record representing a single key-value pair that has changed in a map.
+///
+/// Tracks the [key], [currentValue], and [previousValue] of the entry.
+///
+/// Used by [DefaultKeyValueDiffer] to report additions, removals, and changes.
 class KeyValueChangeRecord {
   Object? key;
   Object? currentValue;

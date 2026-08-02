@@ -30,6 +30,13 @@ typedef TrackByFn = Object? Function(int index, dynamic item);
 
 Object? _trackByIdentity(int index, dynamic item) => item;
 
+/// Tracks changes in an iterable collection (such as a `List`) between
+/// change detection cycles.
+///
+/// Used internally by `*ngFor` to efficiently detect additions, removals,
+/// moves, and identity changes in a collection. After calling [diff],
+/// the results can be iterated via [forEachAddedItem], [forEachRemovedItem],
+/// [forEachMovedItem], and [forEachIdentityChange].
 class DefaultIterableDiffer {
   final TrackByFn _trackByFn;
   int? _length;
@@ -607,6 +614,13 @@ class DefaultIterableDiffer {
   }
 }
 
+/// A record representing a single item in a collection that has changed.
+///
+/// Tracks the [item], its [trackById] (as determined by [TrackByFn]),
+/// and its [currentIndex] and [previousIndex] within the collection.
+///
+/// Used by [DefaultIterableDiffer] to report additions, removals, moves,
+/// and identity changes.
 class CollectionChangeRecord {
   dynamic item;
   dynamic trackById;

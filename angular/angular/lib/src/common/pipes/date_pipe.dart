@@ -67,6 +67,8 @@ import 'invalid_pipe_argument_exception.dart';
 ///     {{ $pipe.date(dateObj, 'medium') }}    // output is 'Jun 15, 2015, 9:43:11 PM'
 ///     {{ $pipe.date(dateObj, 'shortTime') }} // output is '9:43 PM'
 ///     {{ $pipe.date(dateObj, 'mmss') }}      // output is '43:11'
+///
+/// {@category Pipes}
 @Pipe('date', pure: true)
 class DatePipe {
   static final Map<String, String> _ALIASES = {

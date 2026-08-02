@@ -31,6 +31,8 @@ library safe_html;
 /// sanitization when used with `[innerHtml]` bindings.
 ///
 /// Use [SafeHtml.trusted] to create an instance from a trusted HTML string.
+///
+/// {@category Security}
 class SafeHtml {
   final String _html;
 
@@ -51,6 +53,8 @@ class SafeHtml {
 /// URL sanitization.
 ///
 /// Use [SafeUrl.trusted] to create an instance from a trusted URL string.
+///
+/// {@category Security}
 class SafeUrl {
   final String _url;
 
@@ -70,6 +74,8 @@ class SafeUrl {
 /// style sanitization.
 ///
 /// Use [SafeStyle.trusted] to create an instance from a trusted style string.
+///
+/// {@category Security}
 class SafeStyle {
   final String _style;
 
@@ -89,6 +95,8 @@ class SafeStyle {
 /// resource URL sanitization (e.g., for `<iframe src>`).
 ///
 /// Use [SafeResourceUrl.trusted] to create an instance from a trusted URL.
+///
+/// {@category Security}
 class SafeResourceUrl {
   final String _url;
 

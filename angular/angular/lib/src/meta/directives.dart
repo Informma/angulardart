@@ -1,3 +1,21 @@
+/// Annotations and metadata for defining AngularDart components, directives,
+/// pipes, and dependency injection.
+///
+/// This library provides the core decorators used to build AngularDart
+/// applications:
+///
+/// - [Directive] and [Component] for defining reusable UI elements.
+/// - [Pipe] for declaring template transformation functions.
+/// - [Inject], [Injectable], [Optional], [Self], [Host], [SkipSelf] for
+///   configuring dependency injection.
+/// - [Input], [Output], [HostBinding], [HostListener] for data binding.
+/// - [ViewChild], [ViewChildren], [ContentChild], [ContentChildren] for
+///   querying the component tree.
+///
+/// See the [AngularDart Guide](https://angulardartreborn.com/guide) for
+/// comprehensive documentation.
+library;
+
 import 'package:meta/meta_meta.dart';
 
 import 'change_detection_constants.dart';
@@ -35,6 +53,7 @@ import 'visibility.dart';
 /// * [Attribute Directives](https://angulardartreborn.com/guide/attribute-directives)
 /// * [Lifecycle Hooks](https://angulardartreborn.com/guide/lifecycle-hooks)
 ///
+/// {@category Templates & Directives}
 @Target({TargetKind.classType})
 class Directive {
   /// The CSS selector that triggers the instantiation of the directive.
@@ -147,6 +166,8 @@ class Directive {
 /// during the life of the component.
 ///
 /// [LCH]: https://angulardartreborn.com/guide/lifecycle-hooks
+///
+/// {@category Templates & Directives}
 @Target({TargetKind.classType})
 class Component extends Directive {
   /// Defines the used change detection strategy.
@@ -208,7 +229,38 @@ class Component extends Directive {
   ///
   final List<Object?> exports;
 
+  /// The URL of an external template file.
+  ///
+  /// Use [templateUrl] to load a template from an external HTML file. If
+  /// [template] is also specified, [template] takes precedence.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// @Component(
+  ///   selector: 'my-comp',
+  ///   templateUrl: 'my_comp.html',
+  /// )
+  /// class MyComponent {}
+  /// ```
   final String? templateUrl;
+
+  /// An inline HTML template for this component.
+  ///
+  /// Use [template] to define the component's view directly in Dart. For
+  /// larger templates, prefer [templateUrl] to load from an external file.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// @Component(
+  ///   selector: 'my-comp',
+  ///   template: '<h1>Hello {{name}}!</h1>',
+  /// )
+  /// class MyComponent {
+  ///   String name = 'World';
+  /// }
+  /// ```
   final String? template;
 
   /// Removes all whitespace except `&ngsp;` and `&nbsp;` from template if set
@@ -218,8 +270,54 @@ class Component extends Directive {
   /// a template.
   /// &nbsp; represents the standard non-breaking space entity in html markup.
   final bool preserveWhitespace;
+
+  /// A list of URLs of external CSS/SCSS stylesheets to apply to this component.
+  ///
+  /// Styles are scoped to this component based on the [encapsulation] strategy.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// @Component(
+  ///   selector: 'my-comp',
+  ///   template: '<h1>Styled</h1>',
+  ///   styleUrls: ['my_comp.scss'],
+  /// )
+  /// class MyComponent {}
+  /// ```
   final List<String> styleUrls;
+
+  /// A list of inline CSS styles to apply to this component.
+  ///
+  /// Styles are scoped to this component based on the [encapsulation] strategy.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// @Component(
+  ///   selector: 'my-comp',
+  ///   template: '<h1>Hello</h1>',
+  ///   styles: ['h1 { color: red; }'],
+  /// )
+  /// class MyComponent {}
+  /// ```
   final List<String> styles;
+
+  /// A list of directives that can be used within this component's template.
+  ///
+  /// Directives must be listed explicitly so the compiler knows which
+  /// directives and components are available in the template scope.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// @Component(
+  ///   selector: 'my-comp',
+  ///   template: '<child-comp></child-comp>',
+  ///   directives: [ChildComponent],
+  /// )
+  /// class MyComponent {}
+  /// ```
   final List<Object> directives;
 
   /// Declares generic type arguments for any generic [directives].
@@ -227,7 +325,30 @@ class Component extends Directive {
   /// See [Typed] for details.
   final List<Typed<Object>> directiveTypes;
 
+  /// A list of pipes that can be used within this component's template.
+  ///
+  /// Pipes must be listed explicitly so the compiler knows which pipes
+  /// are available in the template scope.
+  ///
+  /// ### Example
+  ///
+  /// ```dart
+  /// @Component(
+  ///   selector: 'my-comp',
+  ///   template: '{{ birthday | myDatePipe }}',
+  ///   pipes: [MyDatePipe],
+  /// )
+  /// class MyComponent {}
+  /// ```
   final List<Object> pipes;
+
+  /// Controls how this component's styles are scoped to the DOM.
+  ///
+  /// Defaults to [ViewEncapsulation.Emulated], which emulates scoped styles
+  /// by adding unique attributes to elements. Other options:
+  ///
+  /// - [ViewEncapsulation.None] - styles are global (not recommended).
+  /// - [ViewEncapsulation.ShadowDom] - uses native Shadow DOM (if supported).
   final ViewEncapsulation encapsulation;
 
   const Component({
@@ -260,6 +381,7 @@ class Component extends Directive {
 /// A "pure" pipe is only re-evaluated when either the input or any of the
 /// arguments change. When not specified, pipes default to being pure.
 ///
+/// {@category Pipes}
 @Target({TargetKind.classType})
 class Pipe {
   final String name;

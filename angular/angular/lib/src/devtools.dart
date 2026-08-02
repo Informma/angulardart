@@ -20,6 +20,8 @@ bool _isDevToolsEnabled = false;
 /// Enables developer tools if in development mode.
 ///
 /// Calling this method in release mode has no effect.
+///
+/// {@category DevTools}
 void enableDevTools() {
   if (isDevMode) {
     _isDevToolsEnabled = true;

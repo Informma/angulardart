@@ -72,6 +72,7 @@ class SwitchView {
 /// [ex]: https://angulardartreborn.com/examples/template-syntax#ngSwitch
 /// [guide]: https://angulardartreborn.com/guide/structural-directives.html#ngSwitch
 ///
+/// {@category Templates & Directives}
 @Directive(
   selector: '[ngSwitch]',
   visibility: Visibility.all,

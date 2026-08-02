@@ -28,19 +28,8 @@ dependencies:
 dev_dependencies:
   angulardart_test: ^5.0.0
   build_runner: ^2.4.0
-  build_test: ^3.5.19
+  build_test: ^2.2.3
   build_web_compilers: ^4.0.0
   mockito: ^5.4.0
-  lints: ^6.1.0
+  lints: ^4.0.0
   test: ^1.25.0
-
-dependency_overrides:
-  angulardart:
-    path: ../angular
-  angulardart_compiler:
-    path: ../angular_compiler
-  angulardart_ast:
-    path: ../angular_ast
-  angulardart_test:
-    path: ../angular_test
-  analyzer: ^14.0.0

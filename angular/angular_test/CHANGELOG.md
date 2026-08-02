@@ -1,3 +1,12 @@
+## 5.1.0
+
+- Updated to angulardart ^8.1.0
+- Updated build_test to ^3.0.0
+- Updated build_runner to ^2.16.0
+- Updated test to ^1.31.0
+- Updated lints to ^6.1.0
+- Removed build_web_compilers (incompatible with analyzer 14.x on SDK <3.13.0)
+
 ## 5.0.9
 
 - Updated documentation links to point to angulardartreborn.com

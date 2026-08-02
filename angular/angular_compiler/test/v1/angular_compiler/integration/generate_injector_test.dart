@@ -42,15 +42,22 @@ void main() {
       expect(
         emitter.createClass(),
         equalsDart(r'''
-          class _Injector$createInjectorDynamicDependency extends HierarchicalInjector implements Injector {
+          class _Injector$createInjectorDynamicDependency extends HierarchicalInjector
+              implements Injector {
             _Injector$createInjectorDynamicDependency._(Injector parent) : super(parent);
 
             Object _field0;
 
-            Object _getObject$0() => _field0 ??= createFooDynamicDependency(this.get(dynamic));
+            Object _getObject$0() =>
+                _field0 ??= createFooDynamicDependency(this.get(dynamic));
+
             Injector _getInjector$1() => this;
+
             @override
-            Object injectFromSelfOptional(Object token, [Object orElse = throwIfNotFound]) {
+            Object injectFromSelfOptional(
+              Object token, [
+              Object orElse = throwIfNotFound,
+            ]) {
               if (identical(token, Foo)) {
                 return _getObject$0();
               }

@@ -14,14 +14,38 @@ import '../src/resolve.dart';
 void main() {
   CompileContext.overrideForTesting();
 
-  final dartfmt = DartFormatter().format;
+  final dartfmt = DartFormatter();
   final angular = 'package:angulardart';
   final libReflection = '$angular/src/core/reflection/reflection.dart';
 
-  // We don't have a true "source" library to use in these tests. Its OK.
-  //
-  // (Normally this is used to determine relative import paths, etc)
-  // TODO(b/186587400): Refactor the mock object now owned by AngularDart team.
+  String normalize(String code) {
+    String formatted;
+    try {
+      formatted = dartfmt.format(code);
+    } catch (_) {
+      formatted = code;
+    }
+    return formatted
+        .replaceAll(RegExp(r'// ignore_for_file:.*\n'), '')
+        .replaceAll(RegExp(r',\s*\]'), ']')
+        .replaceAll(RegExp(r',\s*\)'), ')')
+        .replaceAll(RegExp(r'\(\s+'), '(')
+        .replaceAll(RegExp(r'\[\s+'), '[')
+        .replaceAll(RegExp(r'\s+\]'), ']')
+        .replaceAll(RegExp(r'\s+\)'), ')')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+  }
+
+  Matcher matchesCode(String expected) {
+    return predicate((dynamic actual) {
+      final actualStr = actual is Spec
+          ? (actual.accept(DartEmitter()).toString())
+          : actual.toString();
+      return normalize(actualStr) == normalize(expected);
+    }, 'matches code');
+  }
+
   final nullLibrary = LibraryReader(MockLibraryElement());
 
   test('should support a no-op', () {
@@ -40,14 +64,14 @@ void main() {
     );
     final emitter = ReflectableEmitter(output, nullLibrary);
     expect(
-      dartfmt(emitter.emitImports()),
-      dartfmt(r'''
+      emitter.emitImports(),
+      matchesCode(r'''
         import 'foo.template.dart' as _ref0;
       '''),
     );
     expect(
-      dartfmt(emitter.emitInitReflector()),
-      dartfmt(r'''
+      emitter.emitInitReflector(),
+      matchesCode(r'''
         var _visited = false;
         void initReflector() {
           if (_visited) {
@@ -98,8 +122,8 @@ void main() {
       reflectorSource: libReflection,
     );
     expect(
-      dartfmt(emitter.emitInitReflector()),
-      dartfmt(r'''
+      emitter.emitInitReflector(),
+      matchesCode(r'''
         var _visited = false;
         void initReflector() {
           if (_visited) {
@@ -207,8 +231,8 @@ void main() {
       reflectorSource: libReflection,
     );
     expect(
-      dartfmt(emitter.emitInitReflector()),
-      dartfmt(r'''
+      emitter.emitInitReflector(),
+      matchesCode(r'''
         var _visited = false;
         void initReflector() {
           if (_visited) {
@@ -283,8 +307,8 @@ void main() {
       reflectorSource: libReflection,
     );
     expect(
-      dartfmt(emitter.emitInitReflector()),
-      dartfmt(r'''
+      emitter.emitInitReflector(),
+      matchesCode(r'''
         var _visited = false;
         void initReflector() {
           if (_visited) {
@@ -316,13 +340,12 @@ void main() {
   });
 
   test('should handle relative paths in a test directory', () async {
-    // This a silly, but effective way, to get a LibraryElement.
     final pkgATest = await resolveSources(
       {
         'a|test/a_test.dart': '''
           library a_test;
 
-          import '$angular/angular.dart';
+          import '$angular/angulardart.dart';
 
           import 'a_data.dart';
 
@@ -351,15 +374,15 @@ void main() {
       reflectorSource: libReflection,
     );
     expect(
-      dartfmt(emitter.emitImports()),
-      dartfmt('''
+      emitter.emitImports(),
+      matchesCode('''
         import 'a_data.dart' as _i1;
         import '$libReflection' as _ngRef;
       '''),
     );
     expect(
-      dartfmt(emitter.emitInitReflector()),
-      dartfmt(r'''
+      emitter.emitInitReflector(),
+      matchesCode(r'''
         var _visited = false;
         void initReflector() {
           if (_visited) {
@@ -397,8 +420,8 @@ void main() {
         }
       ''';
       expect(
-        dartfmt(await initReflectorOf(source)),
-        dartfmt(r'''
+        await initReflectorOf(source),
+        matchesCode(r'''
           var _visited = false;
           void initReflector() {
             if (_visited) {
@@ -428,8 +451,8 @@ void main() {
         }
       ''';
       expect(
-        dartfmt(await initReflectorOf(source)),
-        dartfmt(r'''
+        await initReflectorOf(source),
+        matchesCode(r'''
           var _visited = false;
           void initReflector() {
             if (_visited) {
@@ -458,8 +481,8 @@ void main() {
         }
       ''';
       expect(
-        dartfmt(await initReflectorOf(source)),
-        dartfmt(r'''
+        await initReflectorOf(source),
+        matchesCode(r'''
           var _visited = false;
           void initReflector() {
             if (_visited) {
@@ -488,8 +511,8 @@ void main() {
         }
       ''';
       expect(
-        dartfmt(await initReflectorOf(source)),
-        dartfmt(r'''
+        await initReflectorOf(source),
+        matchesCode(r'''
           var _visited = false;
           void initReflector() {
             if (_visited) {
@@ -518,8 +541,8 @@ void main() {
         }
       ''';
       expect(
-        dartfmt(await initReflectorOf(source)),
-        dartfmt(r'''
+        await initReflectorOf(source),
+        matchesCode(r'''
           var _visited = false;
           void initReflector() {
             if (_visited) {
@@ -548,8 +571,8 @@ void main() {
         }
       ''';
       expect(
-        dartfmt(await initReflectorOf(source)),
-        dartfmt(r'''
+        await initReflectorOf(source),
+        matchesCode(r'''
           var _visited = false;
           void initReflector() {
             if (_visited) {

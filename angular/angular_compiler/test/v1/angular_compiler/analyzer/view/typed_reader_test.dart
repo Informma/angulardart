@@ -9,10 +9,10 @@ const testImport = 'asset:test_lib/lib/test_lib.dart';
 
 Future<TypedElement> parse(String source) async {
   final amendedSource = '''
-    @Component()
+    @Component(selector: 'generic')
     class GenericComponent<T> {}
 
-    @Directive()
+    @Directive(selector: 'generic')
     class GenericDirective<K, V> {}
 
     $source
@@ -239,11 +239,19 @@ void main() {
   });
 
   group('throws', () {
-    Future<void> parseTyped(LibraryElement element) async {
+    Future<void> parseTypedExpectingError(
+      LibraryElement element,
+      Matcher errorMatcher,
+    ) async {
       final example = element.getClass('Example')!;
       final typedReader = TypedReader(example);
       final typedValue = example.metadata.first.computeConstantValue()!;
-      typedReader.parse(typedValue);
+      try {
+        typedReader.parse(typedValue);
+        fail('Expected an error to be thrown');
+      } catch (e) {
+        expect(e.toString(), errorMatcher);
+      }
     }
 
     test('if expression isn\'t of type "Typed"', () async {
@@ -254,73 +262,73 @@ void main() {
         @typed
         class Example {}
         ''',
-        parseTyped,
-        errors: [
+        (lib) => parseTypedExpectingError(
+          lib,
           contains('Expected an expression of type "Typed", but got "int"'),
-        ],
+        ),
       );
     });
     test('if a concrete type is used as a type argument of "Typed"', () async {
       await compilesExpecting(
         '''
-        @Directive()
+        @Directive(selector: 'generic')
         class ConcreteDirective {}
         const typed = Typed<ConcreteDirective>();
 
         @typed
         class Example {}
         ''',
-        parseTyped,
-        errors: [
+        (lib) => parseTypedExpectingError(
+          lib,
           allOf(
             contains('Expected a generic type'),
             contains('got concrete type "ConcreteDirective"'),
-          )
-        ],
+          ),
+        ),
       );
     });
     test('if a non-existent type parameter is flowed', () async {
       await compilesExpecting(
         '''
-        @Component()
+        @Component(selector: 'generic')
         class GenericComponent<T> {}
         const typed = Typed<GenericComponent>.of([#X]);
 
         @typed
         class Example {}
         ''',
-        parseTyped,
-        errors: [
+        (lib) => parseTypedExpectingError(
+          lib,
           allOf(
             contains('Attempted to flow a type parameter "X"'),
             contains('"Example" declares no such generic type parameter'),
           ),
-        ],
+        ),
       );
     });
     test("if a type argument isn't a supported type", () async {
       await compilesExpecting(
         '''
-        @Component()
+        @Component(selector: 'generic')
         class GenericComponent<T> {}
         const typed = Typed<GenericComponent>.of([12]);
 
         @typed
         class Example {}
         ''',
-        parseTyped,
-        errors: [
+        (lib) => parseTypedExpectingError(
+          lib,
           allOf([
             contains('Expected a type argument of "Typed" to be of'),
             contains('Got an expression of type "int"'),
           ]),
-        ],
+        ),
       );
     });
     test('if "Typed.on" is specified anywhere other than the root', () async {
       await compilesExpecting(
         '''
-       @Component()
+       @Component(selector: 'generic')
         class GenericComponent<T> {}
         const typed = Typed<GenericComponent>.of([
           Typed<List>.of([#X], on: 'foo'),
@@ -329,12 +337,12 @@ void main() {
         @typed
         class Example {}
         ''',
-        parseTyped,
-        errors: [
+        (lib) => parseTypedExpectingError(
+          lib,
           contains(
               'The "on" argument is only supported on the root "Typed" of a '
-              '"Typed" expression')
-        ],
+              '"Typed" expression'),
+        ),
       );
     });
 
@@ -346,19 +354,19 @@ void main() {
         @typed
         class Example {}
         ''',
-        parseTyped,
-        errors: [
+        (lib) => parseTypedExpectingError(
+          lib,
           contains(
               'Expected a "Typed" expression with a "Component" or "Directive" '
-              'annotated type, but got "Typed<List>"')
-        ],
+              'annotated type, but got "Typed<List>"'),
+        ),
       );
     });
 
     test('if a private type argument is used', () async {
       await compilesExpecting(
         '''
-        @Component()
+        @Component(selector: 'generic')
         class GenericComponent<T> {}
         class _Private {}
         const typed = Typed<GenericComponent<_Private>>();
@@ -366,12 +374,12 @@ void main() {
         @typed
         class Example {}
         ''',
-        parseTyped,
-        errors: [
+        (lib) => parseTypedExpectingError(
+          lib,
           contains(
               'Directive type arguments must be public, but "GenericComponent" '
-              'was given private type argument "_Private" by "Example".')
-        ],
+              'was given private type argument "_Private" by "Example".'),
+        ),
       );
     });
   });

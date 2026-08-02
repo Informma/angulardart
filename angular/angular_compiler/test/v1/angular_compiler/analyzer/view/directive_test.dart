@@ -2,13 +2,18 @@ import 'package:test/test.dart';
 import 'package:angulardart_compiler/v1/angular_compiler.dart';
 
 import '../../src/compile.dart';
+import '../../src/resolve.dart';
 
 void main() {
-  Future<void> expectBuildError(String source, Object matcherOrString) {
-    return compilesExpecting(source, (library) async {
+  Future<void> expectBuildError(String source, Object matcherOrString) async {
+    final library = await resolveLibrary(source);
+    try {
       final visitDirective = const DirectiveVisitor().visitDirective;
       library.definingCompilationUnit.classes.forEach(visitDirective);
-    }, errors: [matcherOrString]);
+      fail('Expected an error to be thrown');
+    } catch (e) {
+      expect(e.toString(), matcherOrString);
+    }
   }
 
   test('should catch a @HostBinding on a private member', () async {

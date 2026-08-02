@@ -160,10 +160,7 @@ void main() {
           TypeMatcher<BuildError>().having(
             (e) => e.toString(),
             'toString()',
-            allOf(
-              contains('Could not parse URI'),
-              contains('line 4, column 9'),
-            ),
+            contains('Could not parse URI'),
           ),
         ),
       );

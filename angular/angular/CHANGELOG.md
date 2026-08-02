@@ -1,3 +1,51 @@
+## 8.0.20
+
+- chore: add 8.0.19 changelog entry and release automation scripts
+- docs: add documentation field to pubspec, dartdoc categories, and improve API reference
+- chore: bump version to 8.0.18 and update CHANGELOG
+- feat: add SafeHtml types and SafeHtmlDirective for trusted HTML rendering
+- quick docs for bug fixes
+- Add comprehensive bug fix summary
+- Bump versions for bug fix releases
+- Update bug report - all bugs fixed
+- Fix template parser to support list literals
+- Document bugs found in angulardart_router v4.0.9
+- Update WEBSITE_PAGES_TODO.md - all pages implemented
+- Bump versions for pub.dev publication
+- Integrate angulardartreborn.com as official website
+- chore: bump angulardart_compiler to 3.0.9
+- fix: add textContent to DOM element schema registry
+- Bump to 8.0.16 with example improvements
+- Update CHANGELOG.md with versions 8.0.8-8.0.15
+- Add example.dart for pub.dev display
+- Bump versions for 800x450 banner
+- Update banner to 800x450 for pub.dev
+- Update banner to 1920x1080 and revert README to markdown syntax
+- Bump versions for banner width fix
+- Fix banner width to take full width on pub.dev
+- Improve README for all packages with banners, logos, and detailed documentation
+- Add logo and banner to pub.dev package page (v8.0.11)
+- Bump versions for re-publication with updated metadata
+- Add README, LICENSE, media assets and fix repository URLs
+- updated for better info in general
+- Fix gitignore to include model.g.dart in published package
+- Fix missing model.g.dart in published package
+- fixes on platform support
+- updated all pubspec.yaml files
+- updated all pubspec.yaml files
+- added angulardart_cli
+- updated to push to pub.dev
+- fix for || and && operands
+- fix : visitPrefixNot gère maintenant les expressions nullable
+- fixes on order of checks for elementProperties
+- fixes on ngIf & [class.X]
+- updated README.md's
+- Migration to Dart3 done :)
+- fixes on tests
+- NgFor & NGModel now OK, build_runner works :)
+- Compilateur now builds (except for NgFor & NgModel
+- Migration AngularDart vers Dart 3 terminée (0 erreurs)
+
 ## 8.0.19
 
 - Added `documentation` field to `pubspec.yaml` for improved pub.dev API reference linking

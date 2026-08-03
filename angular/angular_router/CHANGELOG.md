@@ -1,3 +1,7 @@
+## 4.1.1
+
+- Removed build_web_compilers from dev_dependencies (incompatible with build 4.x)
+
 ## 4.1.0
 
 - Updated to angulardart ^8.1.0

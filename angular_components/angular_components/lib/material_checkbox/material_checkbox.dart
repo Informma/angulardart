@@ -66,7 +66,7 @@ class MaterialCheckboxComponent
   MaterialCheckboxComponent(
       this._root,
       this._changeDetector,
-      @Self() @Optional() NgControl cd,
+      @Self() @Optional() NgControl? cd,
       @Attribute('tabindex') String hostTabIndex,
       @Attribute('role') String role)
       : _defaultTabIndex =

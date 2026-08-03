@@ -23,7 +23,7 @@ import 'package:angulardart_components/content/deferred_content_aware.dart';
 )
 class MaterialStackableDrawerComponent
     extends MaterialTemporaryDrawerComponent {
-  final MaterialStackableDrawerComponent parent;
+  final MaterialStackableDrawerComponent? parent;
 
   MaterialStackableDrawerComponent(@Optional() @SkipSelf() this.parent)
       : super();

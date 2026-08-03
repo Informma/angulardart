@@ -1,3 +1,7 @@
+## 3.0.12
+
+- Fixed null safety in `desugar.dart` visitor
+
 ## 3.0.11
 
 - Migrated to `analyzer` ^14.0.0 (from ^6.0.0)

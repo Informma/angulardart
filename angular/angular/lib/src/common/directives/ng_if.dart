@@ -49,7 +49,11 @@ class NgIf {
       return;
     }
     if (newCondition) {
-      _viewContainer?.createEmbeddedView(_templateRef!);
+      final viewContainer = _viewContainer;
+      final templateRef = _templateRef;
+      if (viewContainer != null && templateRef != null) {
+        viewContainer.createEmbeddedView(templateRef);
+      }
     } else {
       _viewContainer?.clear();
     }

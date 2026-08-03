@@ -1,3 +1,8 @@
+## 2.0.9
+
+- Updated dependency versions: `web` ^1.0.0, `build` ^4.0.0, `intl` ^0.20.0, `lints` ^6.0.0
+- Fixed `analysis_options.yaml` to use `package:lints` instead of discontinued `package:pedantic`
+
 ## 2.0.8
 
 - Updated documentation links to point to angulardartreborn.com

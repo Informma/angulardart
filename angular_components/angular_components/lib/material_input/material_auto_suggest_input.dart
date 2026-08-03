@@ -347,13 +347,13 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   final PopupSizeProvider? _popupSizeDelegate;
 
   /// Control used to forward errors.
-  NgControl _cd;
+  NgControl? _cd;
 
   // Use a factory as a layer of indirection, in order to resolve a default
   // IdGenerator if there is none bound.
   factory MaterialAutoSuggestInputComponent(
-          @Optional() @Self() NgControl cd,
-          @Optional() IdGenerator idGenerator,
+          @Optional() @Self() NgControl? cd,
+          @Optional() IdGenerator? idGenerator,
           ChangeDetectorRef changeDetector,
           @Optional() @SkipSelf() PopupSizeProvider popupSizeDelegate) =>
       MaterialAutoSuggestInputComponent.protected(
@@ -369,7 +369,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
         popupId = idGenerator.nextId(),
         inputId = idGenerator.nextId() {
     if (_cd != null) {
-      _cd.valueAccessor = this;
+      _cd!.valueAccessor = this;
     }
     selection = SelectionModel.single();
   }

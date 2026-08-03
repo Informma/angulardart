@@ -58,9 +58,9 @@ class MaterialSelectDropdownItemComponent<T>
   MaterialSelectDropdownItemComponent(
       HtmlElement element,
       @Attribute('role') String role,
-      @Optional() DropdownHandle dropdown,
-      @Optional() ActivationHandler activationHandler,
-      @Optional() IdGenerator idGenerator,
+      @Optional() DropdownHandle? dropdown,
+      @Optional() ActivationHandler? activationHandler,
+      @Optional() IdGenerator? idGenerator,
       ChangeDetectorRef cdRef)
       : _generatedId =
             (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId(),

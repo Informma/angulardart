@@ -141,6 +141,10 @@ class NgFor implements DoCheck {
     // TODO(rado): check if change detection can produce a change record that is
     // easier to consume than current.
 
+    if (_viewContainer == null || _templateRef == null) return;
+    final viewContainer = _viewContainer!;
+    final templateRef = _templateRef!;
+
     final insertTuples = <_RecordViewTuple>[];
     changes.forEachOperation((
       CollectionChangeRecord item,
@@ -148,17 +152,17 @@ class NgFor implements DoCheck {
       int? currentIndex,
     ) {
       if (item.previousIndex == null) {
-        var view = _viewContainer!.insertEmbeddedView(
-          _templateRef!,
+        var view = viewContainer.insertEmbeddedView(
+          templateRef,
           currentIndex!,
         );
         var tuple = _RecordViewTuple(item, view);
         insertTuples.add(tuple);
       } else if (currentIndex == null) {
-        _viewContainer!.remove(adjustedPreviousIndex!);
+        viewContainer.remove(adjustedPreviousIndex!);
       } else {
         var view = _getEmbeddedViewRef(adjustedPreviousIndex!);
-        _viewContainer!.move(view, currentIndex);
+        viewContainer.move(view, currentIndex);
         var tuple = _RecordViewTuple(item, view);
         insertTuples.add(tuple);
       }
@@ -167,7 +171,7 @@ class NgFor implements DoCheck {
     for (var i = 0; i < insertTuples.length; i++) {
       _perViewChange(insertTuples[i].view, insertTuples[i].record);
     }
-    for (var i = 0, len = _viewContainer!.length; i < len; i++) {
+    for (var i = 0, len = viewContainer.length; i < len; i++) {
       var viewRef = _getEmbeddedViewRef(i);
       viewRef.setLocal('first', identical(i, 0));
       viewRef.setLocal('last', identical(i, len - 1));

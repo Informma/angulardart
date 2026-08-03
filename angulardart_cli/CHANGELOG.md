@@ -1,3 +1,9 @@
+## 1.0.10
+
+- Updated generated project dependencies to latest versions
+- Fixed `camelCased` getter crash on trailing separators
+- Changed pipe template to use `implements` instead of `extends` for `PipeTransform`
+
 ## 1.0.9
 
 - Updated documentation links to point to angulardartreborn.com

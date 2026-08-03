@@ -136,7 +136,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
 
   /// If a parent provides a [PopupSizeProvider], the provider will be used
   /// instead of the implementation of this class.
-  final PopupSizeProvider _popupSizeDelegate;
+  final PopupSizeProvider? _popupSizeDelegate;
 
   /// Text label for select item that deselects the current selection.
   @Input()
@@ -193,9 +193,9 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   MaterialDropdownSelectComponent(
-      @Optional() IdGenerator idGenerator,
+      @Optional() IdGenerator? idGenerator,
       @Optional() @SkipSelf() this._popupSizeDelegate,
-      @Optional() @Inject(rtlToken) bool rtl,
+      @Optional() @Inject(rtlToken) bool? rtl,
       @Attribute('popupClass') String popupClass,
       @Attribute('buttonAriaRole') this.buttonAriaRole,
       this._changeDetector,
@@ -203,7 +203,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
       : activeModel = ActiveItemModel(idGenerator),
         popupClassName = constructEncapsulatedCss(popupClass, element.classes),
         listId = (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId() {
-    isRtl = rtl;
+    isRtl = rtl ?? false;
     preferredPositions = RelativePosition.overlapAlignments;
     iconName = 'arrow_drop_down';
   }

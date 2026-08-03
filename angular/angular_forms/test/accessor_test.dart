@@ -87,7 +87,7 @@ class IntValueAccessor implements ControlValueAccessor<dynamic>, Validator {
   @override
   void writeValue(dynamic value) {
     var normalizedValue = value!.toString();
-    js_util.setProperty(_elementRef!, 'value', normalizedValue);
+    js_util.setProperty(_elementRef as Object, 'value', normalizedValue);
   }
 
   @override

@@ -105,7 +105,7 @@ class MaterialDateRangePickerComponent
         PopupSizeProvider {
   Focusable? _dateRangeEditor;
   bool _focusOnDateRangeEditorInit = false;
-  final PopupSizeProvider _popupSizeProvider;
+  final PopupSizeProvider? _popupSizeProvider;
 
   @ViewChild(ButtonDirective)
   set focusableElement(ButtonDirective button) {
@@ -402,9 +402,9 @@ class MaterialDateRangePickerComponent
   final String popupClassName;
 
   MaterialDateRangePickerComponent(
-      @Optional() @Inject(datepickerClock) Clock clock,
+      @Optional() @Inject(datepickerClock) Clock? clock,
       Clock legacyClock,
-      @Optional() DatepickerConfig config,
+      @Optional() DatepickerConfig? config,
       @Attribute('popupClass') String popupClass,
       @Optional() @SkipSelf() this._popupSizeProvider,
       HtmlElement element,

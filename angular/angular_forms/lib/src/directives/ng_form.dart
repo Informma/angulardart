@@ -79,7 +79,7 @@ import 'shared.dart' show setUpControl, setUpControlGroup, composeValidators;
 class NgForm extends AbstractNgForm<ControlGroup> {
   NgForm(
     @Optional() @Self() @Inject(NG_VALIDATORS) List<dynamic>? validators,
-    ChangeDetectorRef changeDetectorRef,
+    @Optional() ChangeDetectorRef? changeDetectorRef,
   ) : super(changeDetectorRef) {
     form = ControlGroup({}, composeValidators(validators));
   }
@@ -98,7 +98,7 @@ abstract class AbstractNgForm<T extends AbstractControlGroup>
   AbstractNgForm(this.changeDetectorRef);
 
   @protected
-  final ChangeDetectorRef changeDetectorRef;
+  final ChangeDetectorRef? changeDetectorRef;
 
   @override
   T? form;
@@ -122,7 +122,7 @@ abstract class AbstractNgForm<T extends AbstractControlGroup>
     scheduleMicrotask(() {
       setUpControl(ctrl, dir);
       ctrl.updateValueAndValidity(emitEvent: false);
-      changeDetectorRef.markForCheck();
+      changeDetectorRef?.markForCheck();
     });
   }
 
@@ -133,7 +133,7 @@ abstract class AbstractNgForm<T extends AbstractControlGroup>
       if (container != null) {
         container.removeControl(dir.name);
         container.updateValueAndValidity(emitEvent: false);
-        changeDetectorRef.markForCheck();
+        changeDetectorRef?.markForCheck();
       }
     });
   }
@@ -146,7 +146,7 @@ abstract class AbstractNgForm<T extends AbstractControlGroup>
     scheduleMicrotask(() {
       setUpControlGroup(group, dir);
       group.updateValueAndValidity(emitEvent: false);
-      changeDetectorRef.markForCheck();
+      changeDetectorRef?.markForCheck();
     });
   }
 
@@ -157,7 +157,7 @@ abstract class AbstractNgForm<T extends AbstractControlGroup>
       if (container != null) {
         container.removeControl(dir.name);
         container.updateValueAndValidity(emitEvent: false);
-        changeDetectorRef.markForCheck();
+        changeDetectorRef?.markForCheck();
       }
     });
   }

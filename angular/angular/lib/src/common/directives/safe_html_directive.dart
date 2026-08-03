@@ -34,28 +34,28 @@ import 'package:angulardart/angulardart.dart';
 /// built-in sanitization.
 @Directive(selector: '[safeHtml]')
 class SafeHtmlDirective implements OnInit {
-  final HtmlElement _element;
+  final HtmlElement? _element;
 
   /// The trusted HTML content to render.
   @Input()
   String? safeHtml;
 
   /// Creates a [SafeHtmlDirective] instance.
-  SafeHtmlDirective(this._element);
+  SafeHtmlDirective(@Optional() this._element);
 
   @override
   void ngOnInit() {
     final value = safeHtml;
     if (value == null) {
-      _element.innerHtml = '';
+      _element?.innerHtml = '';
     } else {
       // Use NodeTreeSanitizer.trusted to bypass sanitization
       final fragment = DocumentFragment.html(
         value,
         treeSanitizer: NodeTreeSanitizer.trusted,
       );
-      _element.innerHtml = '';
-      _element.append(fragment);
+      _element?.innerHtml = '';
+      _element?.append(fragment);
     }
   }
 }

@@ -25,9 +25,9 @@ const NUMBER_VALUE_ACCESSOR = ExistingProvider.forToken(
 class NumberValueAccessor extends Object
     with TouchHandler, ChangeHandler<double?>
     implements ControlValueAccessor<Object?> {
-  final InputElement _element;
+  final InputElement? _element;
 
-  NumberValueAccessor(HtmlElement element) : _element = element as InputElement;
+  NumberValueAccessor(@Optional() HtmlElement? element) : _element = element as InputElement?;
 
   @HostListener('change', ['\$event.target.value'])
   @HostListener('input', ['\$event.target.value'])
@@ -37,11 +37,11 @@ class NumberValueAccessor extends Object
 
   @override
   void writeValue(value) {
-    _element.value = '$value';
+    _element?.value = '$value';
   }
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    _element.disabled = isDisabled;
+    _element?.disabled = isDisabled;
   }
 }

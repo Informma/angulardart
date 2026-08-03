@@ -77,39 +77,39 @@ class RadioButtonState {
 class RadioControlValueAccessor extends Object
     with TouchHandler, ChangeHandler<RadioButtonState>
     implements ControlValueAccessor<RadioButtonState>, OnDestroy, OnInit {
-  final HtmlElement _element;
-  final RadioControlRegistry _registry;
-  final Injector _injector;
+  final HtmlElement? _element;
+  final RadioControlRegistry? _registry;
+  final Injector? _injector;
   RadioButtonState? _state;
   late NgControl _control;
 
   @Input()
   String? name;
 
-  RadioControlValueAccessor(this._element, this._registry, this._injector);
+  RadioControlValueAccessor(@Optional() this._element, @Optional() this._registry, @Optional() this._injector);
 
   @HostListener('change')
   void changeHandler() {
     onChange(RadioButtonState(true, _state!.value), rawValue: _state!.value);
-    _registry.select(this);
+    _registry?.select(this);
   }
 
   @override
   void ngOnInit() {
-    _control = _injector.provideType(NgControl);
-    _registry.add(_control, this);
+    _control = _injector!.provideType(NgControl);
+    _registry?.add(_control, this);
   }
 
   @override
   void ngOnDestroy() {
-    _registry.remove(this);
+    _registry?.remove(this);
   }
 
   @override
   void writeValue(RadioButtonState? value) {
     _state = value;
     if (value?.checked ?? false) {
-      js_util.setProperty(_element, 'checked', true);
+      js_util.setProperty(_element!, 'checked', true);
     }
   }
 
@@ -119,6 +119,6 @@ class RadioControlValueAccessor extends Object
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    setElementDisabled(_element, isDisabled);
+    setElementDisabled(_element!, isDisabled);
   }
 }

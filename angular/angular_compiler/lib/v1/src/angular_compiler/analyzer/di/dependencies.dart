@@ -140,8 +140,24 @@ class DependencyReader {
     DartType type, {
     required bool isOptional,
   }) {
-    // Temporarily disabled for analyzer 13.x compatibility
-    return;
+    if (!CompileContext.current.emitNullSafeCode) {
+      return;
+    }
+    if (type.isExplicitlyNonNullable) {
+      if (isOptional) {
+        throw BuildError.forElement(
+          element,
+          messages.optionalDependenciesNullable,
+        );
+      }
+    } else if (type.isExplicitlyNullable) {
+      if (!isOptional) {
+        throw BuildError.forElement(
+          element,
+          messages.optionalDependenciesNullable,
+        );
+      }
+    }
   }
 
   DependencyInvocation<ConstructorElement> _parseClassDependencies(

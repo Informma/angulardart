@@ -33,12 +33,12 @@ import 'package:angulardart/src/runtime/check_binding.dart';
   selector: '[ngIf]',
 )
 class NgIf {
-  final TemplateRef _templateRef;
-  final ViewContainerRef _viewContainer;
+  final TemplateRef? _templateRef;
+  final ViewContainerRef? _viewContainer;
 
   bool _prevCondition = false;
 
-  NgIf(this._viewContainer, this._templateRef);
+  NgIf(@Optional() this._viewContainer, @Optional() this._templateRef);
 
   /// Whether the content of the directive should be visible.
   @Input()
@@ -49,9 +49,9 @@ class NgIf {
       return;
     }
     if (newCondition) {
-      _viewContainer.createEmbeddedView(_templateRef);
+      _viewContainer?.createEmbeddedView(_templateRef!);
     } else {
-      _viewContainer.clear();
+      _viewContainer?.clear();
     }
     _prevCondition = newCondition;
   }

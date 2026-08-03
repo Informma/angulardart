@@ -179,10 +179,10 @@ class NgSwitchWhen {
   dynamic _value = _WHEN_DEFAULT;
 
   NgSwitchWhen(
-    ViewContainerRef viewContainer,
-    TemplateRef templateRef,
+    @Optional() ViewContainerRef? viewContainer,
+    @Optional() TemplateRef? templateRef,
     @Host() this._switch,
-  ) : _view = SwitchView(viewContainer, templateRef);
+  ) : _view = SwitchView(viewContainer!, templateRef!);
 
   @Input()
   set ngSwitchCase(dynamic value) {

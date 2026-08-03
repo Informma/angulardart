@@ -60,11 +60,11 @@ import '../../core/change_detection/differs/default_keyvalue_differ.dart';
   selector: '[ngStyle]',
 )
 class NgStyle implements DoCheck {
-  final Element _ngElement;
+  final Element? _ngElement;
   Map<String, String?>? _rawStyle;
   DefaultKeyValueDiffer? _differ;
 
-  NgStyle(this._ngElement);
+  NgStyle(@Optional() this._ngElement);
 
   @Input('ngStyle')
   set rawStyle(Map<String, String?>? v) {
@@ -87,7 +87,7 @@ class NgStyle implements DoCheck {
   }
 
   void _setProperty(KeyValueChangeRecord record) {
-    _ngElement.style.setProperty(
+    _ngElement?.style.setProperty(
       unsafeCast(record.key),
       unsafeCast(record.currentValue),
     );

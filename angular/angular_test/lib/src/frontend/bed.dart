@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
+// ignore: experimental_member_use
 import 'package:angulardart/experimental.dart';
 
 import '../bootstrap.dart';
@@ -360,6 +361,7 @@ class NgTestBed<T extends Object> {
       }
 
       return bootstrapForTest<T>(
+        // ignore: experimental_member_use
         (_componentFactory ?? typeToFactory(type)) as ComponentFactory<T>,
         _host ?? _defaultHost(),
         _createRootInjectorFactory(),

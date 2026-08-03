@@ -50,9 +50,25 @@ DartType getExpressionType(ast.AST expression, AnalyzedClass analyzedClass) {
 /// Returns the element type of [dartType], assuming it implements `Iterable`.
 ///
 /// Returns null otherwise.
-DartType? getIterableElementType(DartType dartType) => dartType is InterfaceType
-    ? dartType.element.lookUpGetter(name: 'single', library: dartType.element.library)?.returnType
-    : null;
+DartType? getIterableElementType(DartType dartType) {
+  if (dartType is! InterfaceType) return null;
+  final singleGetter = dartType.element.lookUpGetter(
+    name: 'single',
+    library: dartType.element.library,
+  );
+  if (singleGetter == null) return null;
+  final returnType = singleGetter.returnType;
+  if (returnType is TypeParameterType) {
+    final typeParams = dartType.element.typeParameters;
+    final typeArgs = dartType.typeArguments;
+    for (var i = 0; i < typeParams.length; i++) {
+      if (identical(typeParams[i], returnType.element)) {
+        return i < typeArgs.length ? typeArgs[i] : null;
+      }
+    }
+  }
+  return returnType;
+}
 
 /// Returns an int type using the [analyzedClass]'s context.
 DartType intType(AnalyzedClass analyzedClass) =>

@@ -1,3 +1,8 @@
+## 3.1.0
+
+- fix: resolve all dart analyze warnings and info messages
+- fix: release.sh now looks for commits touching the package directory
+
 ## 3.0.13
 
 - chore: add release.sh scripts to all packages

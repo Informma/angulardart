@@ -9,6 +9,7 @@ analyzer:
     unused_local_variable: warning
     uri_has_not_been_generated: ignore
     deprecated_member_use_from_same_package: ignore
+    deprecated_member_use: ignore
 
 linter:
   rules:

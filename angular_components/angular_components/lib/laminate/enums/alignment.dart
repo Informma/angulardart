@@ -10,30 +10,27 @@ export 'package:angulardart_components/src/laminate/enums/base.dart';
 
 /// Enum for browser display alignment options.
 class Alignment implements ElementStyleEnum {
-  /// Align content before a container.
-  ///
-  /// This is *not* equivalent to any CSS positioning model.
-  static const Before = BeforeCustomAlignment();
+  static const before = BeforeCustomAlignment();
+  static const start = Alignment('Start', 'flex-start');
+  static const center = Alignment('Center', 'center');
+  static const end = Alignment('End', 'flex-end');
+  static const after = AfterCustomAlignment();
 
-  /// Align content to the start of a container.
-  ///
-  /// This is equivalent to 'flex-start'.
-  static const Start = Alignment('Start', 'flex-start');
-
-  /// Align content to the center of a container.
-  ///
-  /// This is equivalent to 'center'.
-  static const Center = Alignment('Center', 'center');
-
-  /// Align content to the end of a container.
-  ///
-  /// This is equivalent to 'flex-end'.
-  static const End = Alignment('End', 'flex-end');
-
-  /// Align content after a container.
-  ///
-  /// This is *not* equivalent to any CSS positioning model.
-  static const After = AfterCustomAlignment();
+  @Deprecated('Use before instead')
+  // ignore: constant_identifier_names
+  static const Before = before;
+  @Deprecated('Use start instead')
+  // ignore: constant_identifier_names
+  static const Start = start;
+  @Deprecated('Use center instead')
+  // ignore: constant_identifier_names
+  static const Center = center;
+  @Deprecated('Use end instead')
+  // ignore: constant_identifier_names
+  static const End = end;
+  @Deprecated('Use after instead')
+  // ignore: constant_identifier_names
+  static const After = after;
 
   final String _displayName;
   final String? _cssPropertyValue;
@@ -47,16 +44,16 @@ class Alignment implements ElementStyleEnum {
   ///
   /// A null value is treated as 'start'. Else throws [ArgumentError].
   factory Alignment.parse(String displayName) {
-    if (displayName == null || displayName == 'start') {
-      return Alignment.Start;
+    if (displayName == 'start') {
+      return Alignment.start;
     } else if (displayName == 'center') {
-      return Alignment.Center;
+      return Alignment.center;
     } else if (displayName == 'end') {
-      return Alignment.End;
+      return Alignment.end;
     } else if (displayName == 'before') {
-      return Alignment.Before;
+      return Alignment.before;
     } else if (displayName == 'after') {
-      return Alignment.After;
+      return Alignment.after;
     } else {
       throw ArgumentError.value(displayName, 'displayName');
     }
@@ -73,7 +70,7 @@ class Alignment implements ElementStyleEnum {
   /// of the content being aligned.
   ///
   /// This is provided to optimize positioning logic.
-  bool get requiresContentSizeToPosition => this != Start;
+  bool get requiresContentSizeToPosition => this != start;
 
   /// Returns the calculated x position from [sourceRect].
   ///
@@ -84,9 +81,9 @@ class Alignment implements ElementStyleEnum {
       throw ArgumentError.notNull('contentRect');
     }
     var left = sourceRect.left;
-    if (this == Center) {
+    if (this == center) {
       left += sourceRect.width / 2 - contentRect!.width / 2;
-    } else if (this == End) {
+    } else if (this == end) {
       left += sourceRect.width - contentRect!.width;
     }
     return left;
@@ -101,9 +98,9 @@ class Alignment implements ElementStyleEnum {
       throw ArgumentError.notNull('contentRect');
     }
     var top = sourceRect.top;
-    if (this == Center) {
+    if (this == center) {
       top += sourceRect.height / 2 - contentRect!.height / 2;
-    } else if (this == End) {
+    } else if (this == end) {
       top += sourceRect.height - contentRect!.height;
     }
     return top;
@@ -174,282 +171,288 @@ class AfterCustomAlignment extends _CustomAlignment {
 class RelativePosition {
   /// A set of [RelativePosition]s that are covering the point.
   static const overlapAlignments = [
-    RelativePosition(originX: Alignment.Start, originY: Alignment.Start),
+    RelativePosition(originX: Alignment.start, originY: Alignment.start),
     RelativePosition(
-        originX: Alignment.End,
-        originY: Alignment.Start,
-        animationOrigin: _AnimationOrigins.DOWN_LEFT),
+        originX: Alignment.end,
+        originY: Alignment.start,
+        animationOrigin: _AnimationOrigins.downLeft),
     RelativePosition(
-        originX: Alignment.Start,
-        originY: Alignment.End,
-        animationOrigin: _AnimationOrigins.UP_RIGHT),
+        originX: Alignment.start,
+        originY: Alignment.end,
+        animationOrigin: _AnimationOrigins.upRight),
     RelativePosition(
-        originX: Alignment.End,
-        originY: Alignment.End,
-        animationOrigin: _AnimationOrigins.UP_LEFT),
+        originX: Alignment.end,
+        originY: Alignment.end,
+        animationOrigin: _AnimationOrigins.upLeft),
     RelativePosition(
-        originX: Alignment.Center,
-        originY: Alignment.Start,
-        animationOrigin: _AnimationOrigins.DOWN),
+        originX: Alignment.center,
+        originY: Alignment.start,
+        animationOrigin: _AnimationOrigins.down),
     RelativePosition(
-        originX: Alignment.Center,
-        originY: Alignment.End,
-        animationOrigin: _AnimationOrigins.UP),
+        originX: Alignment.center,
+        originY: Alignment.end,
+        animationOrigin: _AnimationOrigins.up),
   ];
 
-  /// A set of [RelativePosition]s that are appropriate for inline-type editors
-  /// such as dropdown(s) that will appear at the point and either flow down or
-  /// up; as well as left or right, depending on available space.
-  static const InlinePositions = [
-    InlineBottom,
-    InlineBottomLeft,
-    InlineBottomRight,
-    InlineTop,
-    InlineTopLeft,
-    InlineTopRight,
+  static const inlinePositions = [
+    inlineBottom,
+    inlineBottomLeft,
+    inlineBottomRight,
+    inlineTop,
+    inlineTopLeft,
+    inlineTopRight,
   ];
+  @Deprecated('Use inlinePositions instead')
+  // ignore: constant_identifier_names
+  static const InlinePositions = inlinePositions;
 
-  /// A position that starts at the origin and flows downwards.
-  static const InlineBottom =
-      RelativePosition(animationOrigin: _AnimationOrigins.DOWN);
+  static const inlineBottom =
+      RelativePosition(animationOrigin: _AnimationOrigins.down);
+  @Deprecated('Use inlineBottom instead')
+  // ignore: constant_identifier_names
+  static const InlineBottom = inlineBottom;
 
-  /// A position that starts at the origin and flows upwards.
-  static const InlineTop = RelativePosition(
-      originY: Alignment.End, animationOrigin: _AnimationOrigins.UP);
+  static const inlineTop = RelativePosition(
+      originY: Alignment.end, animationOrigin: _AnimationOrigins.up);
+  @Deprecated('Use inlineTop instead')
+  // ignore: constant_identifier_names
+  static const InlineTop = inlineTop;
 
-  /// A position that starts at the origin and flows downwards and left
-  static const InlineBottomLeft = RelativePosition(
-      originX: Alignment.End, animationOrigin: _AnimationOrigins.DOWN_LEFT);
+  static const inlineBottomLeft = RelativePosition(
+      originX: Alignment.end, animationOrigin: _AnimationOrigins.downLeft);
+  @Deprecated('Use inlineBottomLeft instead')
+  // ignore: constant_identifier_names
+  static const InlineBottomLeft = inlineBottomLeft;
 
-  /// A position that starts at the origin and flows upwards and left
-  static const InlineTopLeft = RelativePosition(
-      originX: Alignment.End,
-      originY: Alignment.End,
-      animationOrigin: _AnimationOrigins.UP_LEFT);
+  static const inlineTopLeft = RelativePosition(
+      originX: Alignment.end,
+      originY: Alignment.end,
+      animationOrigin: _AnimationOrigins.upLeft);
+  @Deprecated('Use inlineTopLeft instead')
+  // ignore: constant_identifier_names
+  static const InlineTopLeft = inlineTopLeft;
 
-  /// A position that starts at the origin and flows downwards and right
-  static const InlineBottomRight = RelativePosition(
-      originX: Alignment.Start, animationOrigin: _AnimationOrigins.DOWN_RIGHT);
+  static const inlineBottomRight = RelativePosition(
+      originX: Alignment.start, animationOrigin: _AnimationOrigins.downRight);
+  @Deprecated('Use inlineBottomRight instead')
+  // ignore: constant_identifier_names
+  static const InlineBottomRight = inlineBottomRight;
 
-  /// A position that starts at the origin and flows upwards and right
-  static const InlineTopRight = RelativePosition(
-      originX: Alignment.Start,
-      originY: Alignment.End,
-      animationOrigin: _AnimationOrigins.UP_RIGHT);
+  static const inlineTopRight = RelativePosition(
+      originX: Alignment.start,
+      originY: Alignment.end,
+      animationOrigin: _AnimationOrigins.upRight);
+  @Deprecated('Use inlineTopRight instead')
+  // ignore: constant_identifier_names
+  static const InlineTopRight = inlineTopRight;
 
-  /// A set of [RelativePosition]s that are appropriate for offset-type menus
-  /// that appear usually offset of one of the four points of the origin
-  /// (e.g. bottom right, bottom left, top right, top left).
-  static const OffsetPositions = [
-    OffsetBottomRight,
-    OffsetBottomLeft,
-    OffsetTopRight,
-    OffsetTopLeft
+  static const offsetPositions = [
+    offsetBottomRight,
+    offsetBottomLeft,
+    offsetTopRight,
+    offsetTopLeft
   ];
+  @Deprecated('Use offsetPositions instead')
+  // ignore: constant_identifier_names
+  static const OffsetPositions = offsetPositions;
 
-  /// A position that starts at the origin's bottom right point and flows
-  /// downwards and to the right.
-  static const OffsetBottomRight = RelativePosition(
-      originX: Alignment.After,
-      originY: Alignment.After,
-      animationOrigin: _AnimationOrigins.DOWN_RIGHT);
+  static const offsetBottomRight = RelativePosition(
+      originX: Alignment.after,
+      originY: Alignment.after,
+      animationOrigin: _AnimationOrigins.downRight);
+  @Deprecated('Use offsetBottomRight instead')
+  // ignore: constant_identifier_names
+  static const OffsetBottomRight = offsetBottomRight;
 
-  /// A position that starts at the origin's bottom left point and flows
-  /// downwards and to the left.
-  static const OffsetBottomLeft = RelativePosition(
-      originX: Alignment.Before,
-      originY: Alignment.After,
-      animationOrigin: _AnimationOrigins.DOWN_LEFT);
+  static const offsetBottomLeft = RelativePosition(
+      originX: Alignment.before,
+      originY: Alignment.after,
+      animationOrigin: _AnimationOrigins.downLeft);
+  @Deprecated('Use offsetBottomLeft instead')
+  // ignore: constant_identifier_names
+  static const OffsetBottomLeft = offsetBottomLeft;
 
-  /// A position that starts at the origin's top right point and flows upwards
-  /// and to the right.
-  static const OffsetTopRight = RelativePosition(
-      originX: Alignment.After,
-      originY: Alignment.Before,
-      animationOrigin: _AnimationOrigins.UP_RIGHT);
+  static const offsetTopRight = RelativePosition(
+      originX: Alignment.after,
+      originY: Alignment.before,
+      animationOrigin: _AnimationOrigins.upRight);
+  @Deprecated('Use offsetTopRight instead')
+  // ignore: constant_identifier_names
+  static const OffsetTopRight = offsetTopRight;
 
-  /// A position that starts at the origin's top left point and flows upwards
-  /// and to the left.
-  static const OffsetTopLeft = RelativePosition(
-      originX: Alignment.Before,
-      originY: Alignment.Before,
-      animationOrigin: _AnimationOrigins.UP_LEFT);
+  static const offsetTopLeft = RelativePosition(
+      originX: Alignment.before,
+      originY: Alignment.before,
+      animationOrigin: _AnimationOrigins.upLeft);
+  @Deprecated('Use offsetTopLeft instead')
+  // ignore: constant_identifier_names
+  static const OffsetTopLeft = offsetTopLeft;
 
-  /// Comprehensive offset positions; contains all positions that are
-  /// immediately adjacent to but not overlapping the target.
-  ///
-  /// For corners, we just reuse the already-existing [OffsetPositions]. For
-  /// positions adjacent to the edges, we define a bunch of `Adjacent`
-  /// positions. The whole set looks like:
-  ///
-  ///           AB  C  DE
-  ///           P+-----+F
-  ///            |     |
-  ///            |     |
-  ///           O|     |G
-  ///            |     |
-  ///            |     |
-  ///           N+-----+H
-  ///           ML  K  JI
-  ///
-  /// A: OffsetTopLeft
-  /// B: AdjacentTopLeft
-  /// C: AdjacentTop
-  /// D: AdjacentTopRight
-  /// E: OffsetTopRight
-  /// F: AdjacentRightTop
-  /// G: AdjacentRight
-  /// H: AdjacentRightBottom
-  /// I: OffsetBottomRight
-  /// J: AdjacentBottomRight
-  /// K: AdjacentBottom
-  /// L: AdjacentBottomLeft
-  /// M: OffsetBottomLeft
-  /// N: AdjacentLeftBottom
-  /// O: AdjacentLeft
-  /// P: AdjacentLeftTop
-  ///
-  /// Note that the list of positions are listed here in priority order
-  /// for hovercard positioning; which is probably a sane default for most basic
-  /// pop-ups. That ordering tries all cardinal directions, then the other non-
-  /// corner alignments, and finally the corners.
-  static const ComprehensiveOffsetPositions = [
-    // cardinal directions
-    AdjacentCardinal,
-    // edges
-    AdjacentTopEdge,
-    AdjacentRightEdge,
-    AdjacentBottomEdge,
-    AdjacentLeftEdge,
-    // corners
-    OffsetPositions,
+  static const comprehensiveOffsetPositions = [
+    adjacentCardinal,
+    adjacentTopEdge,
+    adjacentRightEdge,
+    adjacentBottomEdge,
+    adjacentLeftEdge,
+    offsetPositions,
   ];
+  @Deprecated('Use comprehensiveOffsetPositions instead')
+  // ignore: constant_identifier_names
+  static const ComprehensiveOffsetPositions = comprehensiveOffsetPositions;
 
-  /// Offsets that'll position the popup adjacent to the origin element in one
-  /// of the four cardinal directions: directly above, below, to the left, or to
-  /// the right.
-  static const AdjacentCardinal = [
-    AdjacentTop,
-    AdjacentRight,
-    AdjacentBottom,
-    AdjacentLeft
+  static const adjacentCardinal = [
+    adjacentTop,
+    adjacentRight,
+    adjacentBottom,
+    adjacentLeft
   ];
+  @Deprecated('Use adjacentCardinal instead')
+  // ignore: constant_identifier_names
+  static const AdjacentCardinal = adjacentCardinal;
 
-  /// Offsets that'll position the popup adjacent to the top edge of the origin
-  /// element.
-  ///
-  /// It'll try centering the popup, and will fall back to left- or
-  /// right-aligning it.
-  static const AdjacentTopEdge = [
-    AdjacentTop,
-    AdjacentTopLeft,
-    AdjacentTopRight
+  static const adjacentTopEdge = [
+    adjacentTop,
+    adjacentTopLeft,
+    adjacentTopRight
   ];
-  static const AdjacentTopLeft = RelativePosition(
-      originX: Alignment.Start,
-      originY: Alignment.Before,
-      animationOrigin: _AnimationOrigins.UP_RIGHT);
-  static const AdjacentTop = RelativePosition(
-      originX: Alignment.Center,
-      originY: Alignment.Before,
-      animationOrigin: _AnimationOrigins.UP);
-  static const AdjacentTopRight = RelativePosition(
-      originX: Alignment.End,
-      originY: Alignment.Before,
-      animationOrigin: _AnimationOrigins.UP_LEFT);
+  @Deprecated('Use adjacentTopEdge instead')
+  // ignore: constant_identifier_names
+  static const AdjacentTopEdge = adjacentTopEdge;
+  static const adjacentTopLeft = RelativePosition(
+      originX: Alignment.start,
+      originY: Alignment.before,
+      animationOrigin: _AnimationOrigins.upRight);
+  @Deprecated('Use adjacentTopLeft instead')
+  // ignore: constant_identifier_names
+  static const AdjacentTopLeft = adjacentTopLeft;
+  static const adjacentTop = RelativePosition(
+      originX: Alignment.center,
+      originY: Alignment.before,
+      animationOrigin: _AnimationOrigins.up);
+  @Deprecated('Use adjacentTop instead')
+  // ignore: constant_identifier_names
+  static const AdjacentTop = adjacentTop;
+  static const adjacentTopRight = RelativePosition(
+      originX: Alignment.end,
+      originY: Alignment.before,
+      animationOrigin: _AnimationOrigins.upLeft);
+  @Deprecated('Use adjacentTopRight instead')
+  // ignore: constant_identifier_names
+  static const AdjacentTopRight = adjacentTopRight;
 
-  /// Offsets that'll position the popup adjacent to the right edge of the
-  /// origin element.
-  ///
-  /// It'll try centering the popup, and will fall back to top- or
-  /// bottom-aligning it.
-  static const AdjacentRightEdge = [
-    AdjacentRight,
-    AdjacentRightTop,
-    AdjacentRightBottom
+  static const adjacentRightEdge = [
+    adjacentRight,
+    adjacentRightTop,
+    adjacentRightBottom
   ];
-  static const AdjacentRightTop = RelativePosition(
-      originX: Alignment.After,
-      originY: Alignment.Start,
-      animationOrigin: _AnimationOrigins.DOWN_RIGHT);
-  static const AdjacentRight = RelativePosition(
-      originX: Alignment.After,
-      originY: Alignment.Center,
-      animationOrigin: _AnimationOrigins.RIGHT);
-  static const AdjacentRightBottom = RelativePosition(
-      originX: Alignment.After,
-      originY: Alignment.End,
-      animationOrigin: _AnimationOrigins.UP_RIGHT);
+  @Deprecated('Use adjacentRightEdge instead')
+  // ignore: constant_identifier_names
+  static const AdjacentRightEdge = adjacentRightEdge;
+  static const adjacentRightTop = RelativePosition(
+      originX: Alignment.after,
+      originY: Alignment.start,
+      animationOrigin: _AnimationOrigins.downRight);
+  @Deprecated('Use adjacentRightTop instead')
+  // ignore: constant_identifier_names
+  static const AdjacentRightTop = adjacentRightTop;
+  static const adjacentRight = RelativePosition(
+      originX: Alignment.after,
+      originY: Alignment.center,
+      animationOrigin: _AnimationOrigins.right);
+  @Deprecated('Use adjacentRight instead')
+  // ignore: constant_identifier_names
+  static const AdjacentRight = adjacentRight;
+  static const adjacentRightBottom = RelativePosition(
+      originX: Alignment.after,
+      originY: Alignment.end,
+      animationOrigin: _AnimationOrigins.upRight);
+  @Deprecated('Use adjacentRightBottom instead')
+  // ignore: constant_identifier_names
+  static const AdjacentRightBottom = adjacentRightBottom;
 
-  /// Offsets that'll position the popup adjacent to the bottom edge of the
-  /// origin element.
-  ///
-  /// It'll try centering the popup, and will fall back to left- or
-  /// right-aligning it.
-  static const AdjacentBottomEdge = [
-    AdjacentBottom,
-    AdjacentBottomLeft,
-    AdjacentBottomRight
+  static const adjacentBottomEdge = [
+    adjacentBottom,
+    adjacentBottomLeft,
+    adjacentBottomRight
   ];
-  static const AdjacentBottomRight = RelativePosition(
-      originX: Alignment.End,
-      originY: Alignment.After,
-      animationOrigin: _AnimationOrigins.DOWN_LEFT);
-  static const AdjacentBottom = RelativePosition(
-      originX: Alignment.Center,
-      originY: Alignment.After,
-      animationOrigin: _AnimationOrigins.DOWN);
-  static const AdjacentBottomLeft = RelativePosition(
-      originX: Alignment.Start,
-      originY: Alignment.After,
-      animationOrigin: _AnimationOrigins.DOWN_RIGHT);
+  @Deprecated('Use adjacentBottomEdge instead')
+  // ignore: constant_identifier_names
+  static const AdjacentBottomEdge = adjacentBottomEdge;
+  static const adjacentBottomRight = RelativePosition(
+      originX: Alignment.end,
+      originY: Alignment.after,
+      animationOrigin: _AnimationOrigins.downLeft);
+  @Deprecated('Use adjacentBottomRight instead')
+  // ignore: constant_identifier_names
+  static const AdjacentBottomRight = adjacentBottomRight;
+  static const adjacentBottom = RelativePosition(
+      originX: Alignment.center,
+      originY: Alignment.after,
+      animationOrigin: _AnimationOrigins.down);
+  @Deprecated('Use adjacentBottom instead')
+  // ignore: constant_identifier_names
+  static const AdjacentBottom = adjacentBottom;
+  static const adjacentBottomLeft = RelativePosition(
+      originX: Alignment.start,
+      originY: Alignment.after,
+      animationOrigin: _AnimationOrigins.downRight);
+  @Deprecated('Use adjacentBottomLeft instead')
+  // ignore: constant_identifier_names
+  static const AdjacentBottomLeft = adjacentBottomLeft;
 
-  /// Offsets that'll position the popup adjacent to the top edge of the origin
-  /// element.
-  ///
-  /// It'll try centering the popup, and will fall back to left- or
-  /// right-aligning it.
-  static const AdjacentLeftEdge = [
-    AdjacentLeft,
-    AdjacentLeftTop,
-    AdjacentLeftBottom
+  static const adjacentLeftEdge = [
+    adjacentLeft,
+    adjacentLeftTop,
+    adjacentLeftBottom
   ];
-  static const AdjacentLeftBottom = RelativePosition(
-      originX: Alignment.Before,
-      originY: Alignment.End,
-      animationOrigin: _AnimationOrigins.UP_LEFT);
-  static const AdjacentLeft = RelativePosition(
-      originX: Alignment.Before,
-      originY: Alignment.Center,
-      animationOrigin: _AnimationOrigins.LEFT);
-  static const AdjacentLeftTop = RelativePosition(
-      originX: Alignment.Before,
-      originY: Alignment.Start,
-      animationOrigin: _AnimationOrigins.DOWN_LEFT);
+  @Deprecated('Use adjacentLeftEdge instead')
+  // ignore: constant_identifier_names
+  static const AdjacentLeftEdge = adjacentLeftEdge;
+  static const adjacentLeftBottom = RelativePosition(
+      originX: Alignment.before,
+      originY: Alignment.end,
+      animationOrigin: _AnimationOrigins.upLeft);
+  @Deprecated('Use adjacentLeftBottom instead')
+  // ignore: constant_identifier_names
+  static const AdjacentLeftBottom = adjacentLeftBottom;
+  static const adjacentLeft = RelativePosition(
+      originX: Alignment.before,
+      originY: Alignment.center,
+      animationOrigin: _AnimationOrigins.left);
+  @Deprecated('Use adjacentLeft instead')
+  // ignore: constant_identifier_names
+  static const AdjacentLeft = adjacentLeft;
+  static const adjacentLeftTop = RelativePosition(
+      originX: Alignment.before,
+      originY: Alignment.start,
+      animationOrigin: _AnimationOrigins.downLeft);
+  @Deprecated('Use adjacentLeftTop instead')
+  // ignore: constant_identifier_names
+  static const AdjacentLeftTop = adjacentLeftTop;
 
   final Alignment originX;
   final Alignment originY;
   final String? animationOrigin;
 
   const RelativePosition(
-      {this.originX = Alignment.Start,
-      this.originY = Alignment.Start,
-      this.animationOrigin = _AnimationOrigins.DOWN_RIGHT});
+      {this.originX = Alignment.start,
+      this.originY = Alignment.start,
+      this.animationOrigin = _AnimationOrigins.downRight});
 
   RelativePosition flipRelativePosition() {
     return RelativePosition(
-        originX: _flipAlignment(this.originX),
-        originY: this.originY,
-        animationOrigin: _flipAnimation(this.animationOrigin));
+        originX: _flipAlignment(originX),
+        originY: originY,
+        animationOrigin: _flipAnimation(animationOrigin));
   }
 
   Alignment _flipAlignment(Alignment alignment) {
     // Start/End
-    if (alignment == Alignment.Start) return Alignment.End;
-    if (alignment == Alignment.End) return Alignment.Start;
+    if (alignment == Alignment.start) return Alignment.end;
+    if (alignment == Alignment.end) return Alignment.start;
     // Before/After
-    if (alignment == Alignment.Before) return Alignment.After;
-    if (alignment == Alignment.After) return Alignment.Before;
+    if (alignment == Alignment.before) return Alignment.after;
+    if (alignment == Alignment.after) return Alignment.before;
 
     return alignment;
   }
@@ -461,29 +464,53 @@ class RelativePosition {
 
   @override
   String toString() =>
-      'RelativePosition ' + {'originX': originX, 'originY': originY}.toString();
+      'RelativePosition ${{'originX': originX, 'originY': originY}}';
 }
 
 /// Origins for Material animation directions.
 class _AnimationOrigins {
-  static const UP_LEFT = 'bottom right';
-  static const UP = 'bottom center';
-  static const UP_RIGHT = 'bottom left';
+  static const upLeft = 'bottom right';
+  static const up = 'bottom center';
+  static const upRight = 'bottom left';
 
-  static const LEFT = 'center right';
-  static const OUTWARD = 'center left';
-  static const RIGHT = 'center left';
+  static const left = 'center right';
+  static const right = 'center left';
 
-  static const DOWN_LEFT = 'top right';
-  static const DOWN = 'top center';
-  static const DOWN_RIGHT = 'top left';
+  static const downLeft = 'top right';
+  static const down = 'top center';
+  static const downRight = 'top left';
+
+  @Deprecated('Use upLeft instead')
+  // ignore: constant_identifier_names, unused_field
+  static const UP_LEFT = upLeft;
+  @Deprecated('Use up instead')
+  // ignore: constant_identifier_names, unused_field
+  static const UP = up;
+  @Deprecated('Use upRight instead')
+  // ignore: constant_identifier_names, unused_field
+  static const UP_RIGHT = upRight;
+  @Deprecated('Use left instead')
+  // ignore: constant_identifier_names, unused_field
+  static const LEFT = left;
+  @Deprecated('Use right instead')
+  // ignore: constant_identifier_names, unused_field
+  static const RIGHT = right;
+  @Deprecated('Use downLeft instead')
+  // ignore: constant_identifier_names, unused_field
+  static const DOWN_LEFT = downLeft;
+  @Deprecated('Use down instead')
+  // ignore: constant_identifier_names, unused_field
+  static const DOWN = down;
+  @Deprecated('Use downRight instead')
+  // ignore: constant_identifier_names, unused_field
+  static const DOWN_RIGHT = downRight;
 
   static const Map<String, String> flippedAnimationOrigins = {
-    _AnimationOrigins.UP_LEFT: _AnimationOrigins.UP_RIGHT,
-    _AnimationOrigins.UP_RIGHT: _AnimationOrigins.UP_LEFT,
-    _AnimationOrigins.LEFT: _AnimationOrigins.RIGHT,
-    _AnimationOrigins.RIGHT: _AnimationOrigins.LEFT,
-    _AnimationOrigins.DOWN_LEFT: _AnimationOrigins.DOWN_RIGHT,
-    _AnimationOrigins.DOWN_RIGHT: _AnimationOrigins.DOWN_LEFT,
+    _AnimationOrigins.upLeft: _AnimationOrigins.upRight,
+    _AnimationOrigins.upRight: _AnimationOrigins.upLeft,
+    _AnimationOrigins.left: _AnimationOrigins.right,
+    _AnimationOrigins.right: _AnimationOrigins.left,
+    _AnimationOrigins.downLeft: _AnimationOrigins.downRight,
+    _AnimationOrigins.downRight: _AnimationOrigins.downLeft,
   };
 }

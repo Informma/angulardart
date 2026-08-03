@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of angular_components.model.selection.selection_model;
+part of '../../../model/selection/selection_model.dart';
 
 class _MultiSelectionModelImpl<T> extends Observable<ChangeRecord>
     with SelectionChangeNotifier<T>, CastIterable<T>
@@ -67,9 +67,6 @@ class _MultiSelectionModelImpl<T> extends Observable<ChangeRecord>
 
   @override
   void selectAll(Iterable<T> values) {
-    if (values == null) {
-      throw ArgumentError();
-    }
     final toAdd = values.where((v) => !selectedValues.contains(v)).toList();
     if (toAdd.isEmpty) return;
     bool wasEmpty = isEmpty;
@@ -83,9 +80,6 @@ class _MultiSelectionModelImpl<T> extends Observable<ChangeRecord>
 
   @override
   void deselectAll(Iterable<T> values) {
-    if (values == null) {
-      throw ArgumentError();
-    }
     final toRemove = values.where((v) => selectedValues.contains(v)).toList();
     if (toRemove.isEmpty) return;
     final wasNotEmpty = isNotEmpty;

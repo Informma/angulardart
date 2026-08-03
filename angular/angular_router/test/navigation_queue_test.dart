@@ -25,6 +25,7 @@ void main() {
     final testBed = NgTestBed<TestComponent>(
       ng.createTestComponentFactory(),
     ).addInjector(
+      // ignore: experimental_member_use
       (i) => ReflectiveInjector.resolveStaticAndCreate([
         ValueProvider.forToken(firstToken, firstCompleter.future),
         ValueProvider.forToken(secondToken, secondCompleter.future),
@@ -103,15 +104,15 @@ abstract class DelayedActivation implements CanActivate {
 
 @Component(selector: 'first', template: 'First')
 class FirstComponent extends DelayedActivation {
-  FirstComponent(@firstToken Future<void> future) : super(future);
+  FirstComponent(@firstToken super.future);
 }
 
 @Component(selector: 'second', template: 'Second')
 class SecondComponent extends DelayedActivation {
-  SecondComponent(@secondToken Future<void> future) : super(future);
+  SecondComponent(@secondToken super.future);
 }
 
 @Component(selector: 'third', template: 'Third')
 class ThirdComponent extends DelayedActivation {
-  ThirdComponent(@thirdToken Future<void> future) : super(future);
+  ThirdComponent(@thirdToken super.future);
 }

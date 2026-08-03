@@ -31,7 +31,9 @@ abstract class TemplateAstVisitor<R, C> {
 
   /// Visits all container ASTs.
   R? visitContainer(ContainerAst astNode, [C? context]) {
-    astNode.childNodes.forEach((c) => c.accept<R, C?>(this, context));
+    for (var c in astNode.childNodes) {
+      c.accept<R, C?>(this, context);
+    }
     return null;
   }
 

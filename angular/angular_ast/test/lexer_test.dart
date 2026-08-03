@@ -10,7 +10,7 @@ void main() {
   // Returns the html parsed as a series of tokens, then back to html.
   String untokenize(Iterable<NgToken> tokens) => tokens
       .fold(StringBuffer(),
-          (buffer, token) => (buffer as StringBuffer)..write(token.lexeme))
+          (buffer, token) => buffer..write(token.lexeme))
       .toString();
 
   test('should tokenize plain text', () {

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
 import 'package:angulardart/src/utilities.dart';
 
 import 'route_path.dart';
@@ -156,13 +157,12 @@ abstract class RouteDefinition {
   }
 
   /// Returns as a regular expression that matches this route.
-  RegExp toRegExp() => RegExp('/?' +
-      path.replaceAll(_findParameters,
-          r"((?:[\w'\.\-~!\$&\(\)\*\+,;=:@]|%[0-9a-fA-F]{2})+)"));
+  RegExp toRegExp() => RegExp('/?${path.replaceAll(_findParameters,
+          r"((?:[\w'\.\-~!\$&\(\)\*\+,;=:@]|%[0-9a-fA-F]{2})+)")}');
 
   /// Returns as a valid URL with [paramValues] filled into [parameters].
   String toUrl([Map<String, String> paramValues = const {}]) {
-    var url = '/' + path;
+    var url = '/$path';
     for (final parameter in parameters) {
       url = url.replaceFirst(
           ':$parameter', Uri.encodeComponent(paramValues[parameter]!));
@@ -179,17 +179,12 @@ class ComponentRouteDefinition extends RouteDefinition {
   final ComponentFactory<Object>? component;
 
   ComponentRouteDefinition._({
-    String? path,
+    super.path,
     this.component,
-    bool? useAsDefault,
-    dynamic additionalData,
-    RoutePath? routePath,
-  }) : super._(
-          path: path,
-          useAsDefault: useAsDefault,
-          additionalData: additionalData,
-          routePath: routePath,
-        );
+    super.useAsDefault,
+    super.additionalData,
+    super.routePath,
+  }) : super._();
 
   @override
   void assertValid() {
@@ -212,17 +207,13 @@ class DeferredRouteDefinition extends RouteDefinition {
   final FutureOr<void> Function(RouterState)? prefetcher;
 
   DeferredRouteDefinition._({
-    String? path,
+    super.path,
     required this.loader,
     this.prefetcher,
-    bool? useAsDefault,
-    dynamic additionalData,
-    RoutePath? routePath,
-  }) : super._(
-            path: path,
-            useAsDefault: useAsDefault,
-            additionalData: additionalData,
-            routePath: routePath);
+    super.useAsDefault,
+    super.additionalData,
+    super.routePath,
+  }) : super._();
 }
 
 class RedirectRouteDefinition extends RouteDefinition {
@@ -230,16 +221,12 @@ class RedirectRouteDefinition extends RouteDefinition {
   final String redirectTo;
 
   RedirectRouteDefinition._({
-    String? path,
+    super.path,
     required this.redirectTo,
-    bool? useAsDefault,
-    dynamic additionalData,
-    RoutePath? routePath,
-  }) : super._(
-            path: path,
-            useAsDefault: useAsDefault,
-            additionalData: additionalData,
-            routePath: routePath);
+    super.useAsDefault,
+    super.additionalData,
+    super.routePath,
+  }) : super._();
 
   @override
   void assertValid() {

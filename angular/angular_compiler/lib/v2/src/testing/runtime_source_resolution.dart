@@ -3,6 +3,7 @@
 /// For functional tests that instrument the compiler in ad-hoc fashion; for
 /// example to expect that given source code produces an error or other
 /// specific output.
+library;
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';

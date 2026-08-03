@@ -22,7 +22,7 @@ class FocusActivableItemDirective extends RootFocusable
   @override
   late String key;
 
-  FocusActivableItemDirective(HtmlElement root) : super(root);
+  FocusActivableItemDirective(HtmlElement super.root);
 }
 
 /// A focusable component with a matching [key].

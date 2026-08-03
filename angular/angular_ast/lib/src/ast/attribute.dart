@@ -42,11 +42,11 @@ abstract mixin class AttributeAst implements TemplateAst {
   }
 
   @override
-  bool operator ==(Object o) {
-    if (o is AttributeAst) {
-      return name == o.name &&
-          value == o.value &&
-          _listEquals.equals(mustaches, o.mustaches);
+  bool operator ==(Object other) {
+    if (other is AttributeAst) {
+      return name == other.name &&
+          value == other.value &&
+          _listEquals.equals(mustaches, other.mustaches);
     }
     return false;
   }
@@ -170,9 +170,9 @@ class _SyntheticAttributeAst extends SyntheticTemplateAst with AttributeAst {
   _SyntheticAttributeAst(this.name, [this.value, this.mustaches]);
 
   _SyntheticAttributeAst.from(
-    TemplateAst origin,
+    TemplateAst super.origin,
     this.name, [
     this.value,
     this.mustaches,
-  ]) : super.from(origin);
+  ]) : super.from();
 }

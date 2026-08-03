@@ -58,6 +58,7 @@ class DateRangeChange {
   final Action? cause;
   DateRangeChange(this.date, this.cause);
 
+  @override
   String toString() => '[$date] with cause $cause';
 }
 
@@ -99,7 +100,9 @@ class DateRangeEditorModel
   final _changes = StreamController<DateRangeChange>.broadcast(sync: true);
   final Disposer _disposer = Disposer.oneShot();
 
+  @override
   Date? minDate;
+  @override
   Date? maxDate;
   bool requireFullPeriods;
   bool _comparisonEnabled = false;
@@ -147,13 +150,14 @@ class DateRangeEditorModel
   /// List of [ComparisonOption]s which fall within minDate/maxDate.
   ///
   /// Rebuilt as needed via calls to _updateValidComparisonOptions().
+  @override
   List<ComparisonOption> get validComparisonOptions => _validComparisonOptions;
   List<ComparisonOption> _validComparisonOptions = [];
 
   /// List of [ComparisonOption]s which client want to support.
   set supportedComparisonOptions(List<ComparisonOption> options) {
     if (options != _supportedComparisonOptions) {
-      assert(options != null && options.isNotEmpty);
+      assert(options.isNotEmpty);
       _supportedComparisonOptions = options;
       _comparisonOption = _supportedComparisonOptions.first;
       _updateValidComparisonOptions();
@@ -174,6 +178,7 @@ class DateRangeEditorModel
   /// Whether or not time comparison is enabled.
   @override
   bool get comparisonEnabled => _comparisonEnabled;
+  @override
   set comparisonEnabled(bool enabled) {
     _comparisonEnabled = enabled;
     calendar.value = calendar.value.select(rangeId,
@@ -186,6 +191,7 @@ class DateRangeEditorModel
   /// What time comparison setting is chosen.
   @override
   ComparisonOption? get comparisonOption => _comparisonOption;
+  @override
   set comparisonOption(ComparisonOption? option) {
     // Under "basic" mode, if user selects "custom" comparisonOption, show
     // calendar view and hide pre-defined view.
@@ -214,9 +220,6 @@ class DateRangeEditorModel
 
   /// Sets the model's state to a value from an earlier call to `save`.
   void restore(ModelState state) {
-    if (state == null) return;
-    // Reset value first to prevent setting calendar state from triggering a
-    // change event.
     _changeValue(state.value, Action.cancel);
     calendar.value = state.calendarState;
     comparisonEnabled = state.comparisonEnabled;

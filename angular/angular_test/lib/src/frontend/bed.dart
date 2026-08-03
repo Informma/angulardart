@@ -344,7 +344,7 @@ class NgTestBed<T extends Object> {
 
         // If there is no user hook, we are done.
         if (beforeComponentCreated == null) {
-          return null;
+          return;
         }
 
         // If there is a user hook, execute it within the ngZone:

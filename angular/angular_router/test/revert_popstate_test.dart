@@ -47,7 +47,10 @@ void main() {
     // resolved. In order to be sure we're testing the correct state, we listen
     // for the next `popstate` event and use a completer to signal that it has
     // occured.
-    var nextPopState = Completer<void>()..complete(window.onPopState.first);
+    var nextPopState = Completer<void>()..complete();
+    window.onPopState.first.then((_) {
+      if (!nextPopState.isCompleted) nextPopState.complete();
+    });
     // Prevent navigation on back button.
     await testFixture.update((_) {
       routerHook.canLeave = false;
@@ -60,7 +63,10 @@ void main() {
     // Location should not have changed.
     expect(location.path(), '/c');
 
-    nextPopState = Completer<void>()..complete(window.onPopState.first);
+    nextPopState = Completer<void>()..complete();
+    window.onPopState.first.then((_) {
+      if (!nextPopState.isCompleted) nextPopState.complete();
+    });
     // Allow navigation on back button.
     await testFixture.update((_) {
       routerHook.canLeave = true;

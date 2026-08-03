@@ -21,19 +21,19 @@ o.OutputType? fromDartType(DartType? dartType, {bool resolveBounds = true}) {
     return null;
   }
   if (dartType is VoidType) {
-    return o.VOID_TYPE;
+    return o.voidType;
   }
   if (dartType.isDartCoreNull) {
-    return o.NULL_TYPE;
+    return o.nullType;
   }
   if (dartType is NeverType) {
-    return o.NEVER_TYPE;
+    return o.neverType;
   }
   if (dartType is FunctionType) {
     return fromFunctionType(dartType);
   }
   if (dartType.element!.isPrivate) {
-    return o.DYNAMIC_TYPE;
+    return o.dynamicType;
   }
   if (dartType is TypeParameterType && resolveBounds) {
     dartType = dartType.element.library!.typeSystem.resolveToBound(dartType);
@@ -41,7 +41,7 @@ o.OutputType? fromDartType(DartType? dartType, {bool resolveBounds = true}) {
   // Note this check for dynamic should come after the check for a type
   // parameter, since a type parameter could resolve to dynamic.
   if (dartType is DynamicType) {
-    return o.DYNAMIC_TYPE;
+    return o.dynamicType;
   }
   var typeArguments = <o.OutputType>[];
   if (dartType is ParameterizedType) {
@@ -50,7 +50,7 @@ o.OutputType? fromDartType(DartType? dartType, {bool resolveBounds = true}) {
         // Temporary hack to avoid a stack overflow for <T extends List<T>>.
         //
         // See https://github.com/angulardart/angular/issues/1397.
-        typeArguments.add(o.DYNAMIC_TYPE);
+        typeArguments.add(o.dynamicType);
       } else {
         typeArguments.add(fromDartType(typeArgument, resolveBounds: false)!);
       }
@@ -75,7 +75,7 @@ o.OutputType? fromDartType(DartType? dartType, {bool resolveBounds = true}) {
 /// Creates an AST from code generation from [typeLink].
 o.OutputType fromTypeLink(TypeLink? typeLink, LibraryReader library) {
   if (typeLink == null || typeLink.isDynamic || typeLink.isPrivate) {
-    return o.DYNAMIC_TYPE;
+    return o.dynamicType;
   }
   var typeArguments = <o.OutputType>[];
   for (var i = 0; i < typeLink.generics.length; i++) {

@@ -36,9 +36,9 @@ abstract mixin class AnnotationAst implements TemplateAst {
   }
 
   @override
-  bool operator ==(Object o) {
-    if (o is AnnotationAst) {
-      return name == o.name && value == o.value;
+  bool operator ==(Object other) {
+    if (other is AnnotationAst) {
+      return name == other.name && value == other.value;
     }
     return false;
   }
@@ -120,6 +120,6 @@ class _SyntheticAnnotationAst extends SyntheticTemplateAst with AnnotationAst {
 
   _SyntheticAnnotationAst(this.name, [this.value]);
 
-  _SyntheticAnnotationAst.from(TemplateAst origin, this.name, [this.value])
-      : super.from(origin);
+  _SyntheticAnnotationAst.from(TemplateAst super.origin, this.name, [this.value])
+      : super.from();
 }

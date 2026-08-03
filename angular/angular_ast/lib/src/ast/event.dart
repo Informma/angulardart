@@ -39,10 +39,10 @@ abstract mixin class EventAst implements TemplateAst {
   ]) = ParsedEventAst;
 
   @override
-  bool operator ==(Object o) =>
-      o is EventAst &&
-      name == o.name &&
-      _listEquals.equals(reductions, o.reductions);
+  bool operator ==(Object other) =>
+      other is EventAst &&
+      name == other.name &&
+      _listEquals.equals(reductions, other.reductions);
 
   @override
   int get hashCode => hash2(name, reductions);
@@ -172,9 +172,9 @@ class _SyntheticEventAst extends SyntheticTemplateAst with EventAst {
   ]);
 
   _SyntheticEventAst.from(
-    TemplateAst origin,
+    TemplateAst super.origin,
     this.name,
     this.value, [
     this.reductions = const [],
-  ]) : super.from(origin);
+  ]) : super.from();
 }

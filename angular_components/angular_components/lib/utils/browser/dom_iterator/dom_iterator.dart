@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:collection';
 import 'dart:html';
 
 /// DomTreeIterator is tool that will let you traverse the dom in the dom order
@@ -27,7 +26,7 @@ class DomTreeIterator implements Iterator<Element> {
   /// [wraps] : if set to true, will not stop at the end of scope,
   ///   but instead will wrap through beginning and will end upon hitting
   ///   the starting element instead.
-  DomTreeIterator(element,
+  DomTreeIterator(Element element,
       {bool reverse = false, Element? scope, bool wraps = false})
       : _element = element,
         _startingElement = element,

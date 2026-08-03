@@ -65,7 +65,7 @@ import 'dart:async';
 ///       }
 ///     }
 ///
-/// <V> is the value type returned/resolved by the execution closure.
+/// `<V>` is the value type returned/resolved by the execution closure.
 class AsyncAction<V> {
   final Future<V> _onDone;
   final Future<bool> _onDefer;

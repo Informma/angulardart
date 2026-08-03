@@ -13,7 +13,7 @@
 /// complex domain objects that aren't able to implement [Observable].
 ///
 /// TODO(google): check with jmesserly: how to merge these with package:observe
-library angular_components.model.observable.observable;
+library;
 
 import 'dart:async';
 
@@ -37,8 +37,8 @@ class Change<T> {
   @override
   bool operator ==(other) =>
       (other is Change) &&
-      (this.previous == other.previous) &&
-      (this.next == other.next);
+      (previous == other.previous) &&
+      (next == other.next);
 
   @override
   int get hashCode => (next == null) ? 0 : next.hashCode;
@@ -261,7 +261,7 @@ class _MappedView<I, O> extends ObservableViewMixin<O> {
 /// new value is equivalent to the current value, nothing's added to the stream.
 class ObservableReference<T> extends ChangeNotificationProvider<T>
     with ObservableViewMixin<T> {
-  static bool _defaultEq(a, b) => a == b;
+  static bool _defaultEq(dynamic a, dynamic b) => a == b;
 
   final EqualsFn<T> _equalsFn;
   StreamSubscription? _listenSub;
@@ -278,6 +278,7 @@ class ObservableReference<T> extends ChangeNotificationProvider<T>
         super(coalesce);
 
   /// The currently-set value.
+  @override
   T get value => _value;
 
   /// Sets the value and publishes an event to the stream.
@@ -343,7 +344,6 @@ class ObservableComposite<T> extends ChangeNotificationProvider<T> {
   /// Starts listening on value changes (if not already doing so).
   ObserveAware? register(ObserveAware value,
       {ObserveAware? replaces, bool initialNotification = true}) {
-    if (value == null) return null;
     Stream? replacesStream = (replaces == null) ? null : replaces.stream;
     registerStream(value.stream,
         replaces: replacesStream, initialNotification: initialNotification);
@@ -355,7 +355,6 @@ class ObservableComposite<T> extends ChangeNotificationProvider<T> {
 
   /// Stops listening on value changes.
   void unregister(ObserveAware value) {
-    if (value == null) return;
     unregisterStream(value.stream);
   }
 
@@ -392,7 +391,6 @@ class ObservableComposite<T> extends ChangeNotificationProvider<T> {
 
   /// Stops listening on stream events.
   void unregisterStream(Stream stream) {
-    if (stream == null) return;
     StreamSubscription? subs = _subscriptions.remove(stream);
     if (subs != null) {
       subs.cancel();
@@ -402,7 +400,9 @@ class ObservableComposite<T> extends ChangeNotificationProvider<T> {
   @override
   void dispose() {
     super.dispose();
-    _subscriptions.values.forEach((subscription) => subscription.cancel());
+    for (var subscription in _subscriptions.values) {
+      subscription.cancel();
+    }
     _subscriptions.clear();
     _disposer.dispose();
   }

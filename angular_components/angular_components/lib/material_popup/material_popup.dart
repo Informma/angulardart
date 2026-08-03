@@ -79,7 +79,10 @@ class MaterialPopupComponent extends Object
         AfterViewInit,
         OnDestroy,
         DropdownHandle {
-  static const Duration SLIDE_DELAY = Duration(milliseconds: 150);
+  static const Duration slideDelay = Duration(milliseconds: 150);
+  @Deprecated('Use slideDelay instead')
+  // ignore: constant_identifier_names, unused_field
+  static const Duration SLIDE_DELAY = slideDelay;
 
   /// Stream on which an event is fired after the popup has finished opening.
   @Output('opened')
@@ -252,7 +255,7 @@ class MaterialPopupComponent extends Object
   MaterialPopupComponent(
       @Optional() @SkipSelf() this._hierarchy,
       @Optional() @SkipSelf() MaterialPopupComponent parentPopup,
-      @Attribute('role') String role,
+      @Attribute('role') this.role,
       this._ngZone,
       this._overlayService,
       this._domService,
@@ -263,13 +266,10 @@ class MaterialPopupComponent extends Object
       @Optional() this._popupSizeProvider,
       this._changeDetector,
       this._viewContainer,
-      this.elementRef)
-      : this.role = role ?? 'dialog' {
+      this.elementRef) {
     // Close popup if parent closes.
-    if (parentPopup != null) {
-      _disposer
-          .addStreamSubscription(parentPopup.onClose.listen((_) => close()));
-    }
+    _disposer
+        .addStreamSubscription(parentPopup.onClose.listen((_) => close()));
 
     // Create the PopupRef for the ACX focus library.
     _resolvedPopupRef = MaterialPopupRef(this);
@@ -279,6 +279,7 @@ class MaterialPopupComponent extends Object
   Stream<bool> get contentVisible => _onContentVisible.stream.distinct();
 
   /// The popup visible hierarchy.
+  @override
   PopupHierarchy get hierarchy {
     _hierarchy = _hierarchy ?? PopupHierarchy();
     return _hierarchy!;
@@ -447,7 +448,7 @@ class MaterialPopupComponent extends Object
     }));
 
     // Put the overlay in the live DOM so we can measure its size.
-    _overlayRef!.state.visibility = visibility.Visibility.Hidden;
+    _overlayRef!.state.visibility = visibility.Visibility.hidden;
     _overlayRef!.overlayElement.style
       ..display = ''
       ..visibility = 'hidden';
@@ -457,7 +458,7 @@ class MaterialPopupComponent extends Object
     _changeDetector.markForCheck();
 
     // Start listening to both the popup and the source's layout.
-    var initialData = Completer<Rectangle>();
+    var initialData = Completer<Rectangle?>();
     var popupContentsLayoutStream = _overlayRef!
         .measureSizeChanges()
         .asBroadcastStream(onListen: _visibleDisposer.addStreamSubscription);
@@ -513,7 +514,7 @@ class MaterialPopupComponent extends Object
     if (hasBox) {
       // If animating, wait until the animation has finished before notifying
       // listeners.
-      _animationTimer = Timer(SLIDE_DELAY, () {
+      _animationTimer = Timer(slideDelay, () {
         // No need to check whether the popup has been closed in the meantime,
         // since this callback will not fire in that case (clearTimeout).
         _animationTimer = null;
@@ -581,7 +582,7 @@ class MaterialPopupComponent extends Object
     if (hasBox) {
       // If animating, wait until the animation has finished before removing
       // popup contents.
-      _animationTimer = Timer(SLIDE_DELAY, () {
+      _animationTimer = Timer(slideDelay, () {
         // No need to check whether the popup has been opened in the meantime,
         // since this callback will not fire in that case (clearTimeout).
         _animationTimer = null;
@@ -600,7 +601,7 @@ class MaterialPopupComponent extends Object
     _changeDetector.markForCheck();
 
     // Set the overlay .pane to display: none.
-    _overlayRef!.state.visibility = visibility.Visibility.None;
+    _overlayRef!.state.visibility = visibility.Visibility.none;
     _overlayRef!.overlayElement.style.display = 'none';
 
     // Notify listeners that the popup is not visible.
@@ -611,8 +612,7 @@ class MaterialPopupComponent extends Object
   Rectangle<num>? get _sourceDimensions {
     var sourceDimensions = state.source?.dimensions;
     if (sourceDimensions == null) return null;
-    var containerRect = _overlayRef!.containerElement?.getBoundingClientRect();
-    if (containerRect == null) return null;
+    var containerRect = _overlayRef!.containerElement.getBoundingClientRect();
     return Rectangle(
         (sourceDimensions.left - containerRect.left).round(),
         (sourceDimensions.top - containerRect.top).round(),
@@ -637,7 +637,7 @@ class MaterialPopupComponent extends Object
     }
   }
 
-  void _reposition(_) {
+  void _reposition(dynamic _) {
     _repositionLoopId = window.requestAnimationFrame(_reposition);
 
     var sourceDimensions = _sourceDimensions;
@@ -793,11 +793,11 @@ class MaterialPopupComponent extends Object
         : state.offsetX - containerRect.left;
     final offsetY = state.offsetY - containerRect.top;
     _overlayRef!.state
-      ..left = position!.originX.calcLeft(sourceClientRect, contentClientRect) +
+      ..left = position.originX.calcLeft(sourceClientRect, contentClientRect) +
           offsetX
-      ..top = position!.originY.calcTop(sourceClientRect, contentClientRect) +
+      ..top = position.originY.calcTop(sourceClientRect, contentClientRect) +
           offsetY
-      ..visibility = visibility.Visibility.Visible;
+      ..visibility = visibility.Visibility.visible;
     _overlayRef!.overlayElement.style
       ..visibility = 'visible'
       ..display = '';
@@ -856,13 +856,13 @@ Stream<List<T?>> _mergeStreams<T>(List<Stream<T>> streams) {
       sync: true,
       onListen: () {
         var i = 0;
-        streams.forEach((stream) {
+        for (var stream in streams) {
           var n = i++;
           streamSubscriptions[n] = stream.listen((result) {
             cachedResults[n] = result;
             streamController.add(cachedResults);
           });
-        });
+        }
       },
       onCancel: () {
         for (var sub in streamSubscriptions) {

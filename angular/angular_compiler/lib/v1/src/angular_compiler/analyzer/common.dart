@@ -3,6 +3,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 // ignore: implementation_imports
 import 'package:analyzer/src/dart/element/type.dart';
+// ignore: implementation_imports
 import 'package:source_gen/src/utils.dart';
 
 String getTypeImport(DartType type) {

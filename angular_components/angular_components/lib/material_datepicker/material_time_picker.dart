@@ -63,7 +63,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   static List<DateTime> _generateTimeOptions(int increment,
       {bool utc = false}) {
     final time = utc ? _utcTime : _localTime;
-    final minutesToTime = (minutes) => time(minutes ~/ 60, minutes % 60);
+    DateTime minutesToTime(minutes) => time(minutes ~/ 60, minutes % 60);
     return List<DateTime>.generate(
         minutesInDay ~/ increment, (index) => minutesToTime(index * increment));
   }
@@ -111,6 +111,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   DateTime? get time => _withEpochDate(_time);
 
   /// Whether changing the selected time should be disabled.
+  @override
   @Input()
   bool disabled = false;
 
@@ -303,9 +304,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
     for (final format in formats) {
       try {
         final parsed = format.parseLoose(trimmed, utc);
-        if (parsed != null) {
-          return _withEpochDate(parsed);
-        }
+        return _withEpochDate(parsed);
       } on FormatException {
         // Ignores error, try different format.
       }
@@ -390,17 +389,16 @@ class TimeSelectionOptions extends StringSelectionOptions<DateTime>
   DateTime? _minTime;
   DateTime? _maxTime;
 
-  TimeSelectionOptions(List<DateTime> options) : super(options);
+  TimeSelectionOptions(super.options);
 
   set minTime(DateTime? time) => _minTime = time;
   set maxTime(DateTime? time) => _maxTime = time;
 
   @override
   SelectableOption getSelectable(DateTime item) {
-    return item is DateTime &&
-            ((_minTime != null && item.isBefore(_minTime!)) ||
+    return ((_minTime != null && item.isBefore(_minTime!)) ||
                 (_maxTime != null && item.isAfter(_maxTime!)))
-        ? SelectableOption.Disabled
-        : SelectableOption.Selectable;
+        ? SelectableOption.disabled
+        : SelectableOption.selectable;
   }
 }

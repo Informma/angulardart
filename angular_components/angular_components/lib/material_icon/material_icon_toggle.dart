@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 
 import 'material_icon.dart';
 

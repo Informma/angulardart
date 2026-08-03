@@ -10,7 +10,17 @@ part of '../../../material_datepicker/calendar.dart';
 enum CalendarResolution { days, weeks, months, years }
 
 /// What sort of selections a calendar supports.
-enum CalendarSelectionMode { NONE, SINGLE_DATE, DATE_RANGE }
+enum CalendarSelectionMode { none, singleDate, dateRange;
+  @Deprecated('Use none instead')
+  // ignore: constant_identifier_names
+  static const NONE = none;
+  @Deprecated('Use singleDate instead')
+  // ignore: constant_identifier_names
+  static const SINGLE_DATE = singleDate;
+  @Deprecated('Use dateRange instead')
+  // ignore: constant_identifier_names
+  static const DATE_RANGE = dateRange;
+}
 
 bool datesEqualAtResolution(Date a, Date b, CalendarResolution resolution) {
   switch (resolution) {
@@ -21,7 +31,6 @@ bool datesEqualAtResolution(Date a, Date b, CalendarResolution resolution) {
     case CalendarResolution.days:
       return a == b;
     case CalendarResolution.weeks:
-    default:
       throw ArgumentError('Equality not supported at resolution: $resolution');
   }
 }
@@ -36,7 +45,6 @@ int compareDatesAtResolution(Date a, Date b, CalendarResolution resolution) {
     case CalendarResolution.days:
       return a.compareTo(b);
     case CalendarResolution.weeks:
-    default:
       throw ArgumentError(
           'Comparison not supported at resolution: $resolution');
   }
@@ -61,7 +69,6 @@ class CalendarSelection {
   /// If this selection's start or end are null, that's interpreted as an
   /// open-ended range.
   bool contains(Date date) =>
-      date != null &&
       (start == null || !date.isBefore(start!)) &&
       (end == null || !date.isAfter(end!));
 
@@ -92,8 +99,8 @@ class CalendarSelection {
   int get hashCode => id.hashCode ^ start.hashCode ^ end.hashCode;
 
   @override
-  bool operator ==(o) =>
-      o is CalendarSelection && o.id == id && o.start == start && o.end == end;
+  bool operator ==(Object other) =>
+      other is CalendarSelection && other.id == id && other.start == start && other.end == end;
 }
 
 Date? firstDayOfMonth(Date? date) =>
@@ -150,12 +157,11 @@ class CalendarState {
   /// Return true if the given date is highlighted by the given selection,
   /// or by a preview of the given selection.
   bool highlighted(String id, Date date) {
-    assert(date != null);
     if (preview != null && currentSelection == id) {
       var current = selection(currentSelection!);
       var anchor = previewAnchoredAtStart ? current.start : current.end;
       var previewStart = earlierOf(preview!, anchor!);
-      var previewEnd = laterOf(preview!, anchor!);
+      var previewEnd = laterOf(preview!, anchor);
       return !date.isBefore(previewStart) && !date.isAfter(previewEnd);
     } else {
       return selection(id).contains(date);
@@ -217,7 +223,7 @@ class CalendarState {
   CalendarState setSelection(CalendarSelection val,
       {CausedBy cause = CausedBy.external,
       bool previewAnchoredAtStart = false}) {
-    var newSelections = [val]..addAll(selections.where((s) => s.id != val.id));
+    var newSelections = [val, ...selections.where((s) => s.id != val.id)];
     return CalendarState(
         selections: newSelections,
         currentSelection: currentSelection,
@@ -234,7 +240,6 @@ class CalendarState {
 
   /// Updates the preview endpoint and sets `cause` to `previewing`.
   CalendarState updateCurrentPreview(Date newPreviewTarget) {
-    assert(newPreviewTarget != null);
     return CalendarState(
         selections: selections,
         currentSelection: currentSelection,
@@ -293,7 +298,7 @@ class CalendarState {
       } else {
         // Modify end date.
         return setSelection(
-            CalendarSelection(currentSelection!, anchor!, preview!),
+            CalendarSelection(currentSelection!, anchor, preview!),
             cause: cause,
             previewAnchoredAtStart: false);
       }
@@ -321,7 +326,7 @@ class CalendarState {
       } else {
         // Move only the start date.
         return setSelection(
-            CalendarSelection(currentSelection!, preview!, anchor!),
+            CalendarSelection(currentSelection!, preview!, anchor),
             cause: cause,
             previewAnchoredAtStart: true);
       }
@@ -348,12 +353,15 @@ class CalendarState {
       'preview ${previewAnchoredAtStart ? "start" : "end"} - $preview';
 
   @override
-  bool operator ==(o) =>
-      o is CalendarState &&
-      currentSelection == o.currentSelection &&
-      cause == o.cause &&
-      preview == o.preview &&
-      previewAnchoredAtStart == o.previewAnchoredAtStart &&
-      resolution == o.resolution &&
-      _setEq(selections, o.selections);
+  bool operator ==(Object other) =>
+      other is CalendarState &&
+      currentSelection == other.currentSelection &&
+      cause == other.cause &&
+      preview == other.preview &&
+      previewAnchoredAtStart == other.previewAnchoredAtStart &&
+      resolution == other.resolution &&
+      _setEq(selections, other.selections);
+
+  @override
+  int get hashCode => Object.hash(currentSelection, cause, preview, previewAnchoredAtStart, resolution);
 }

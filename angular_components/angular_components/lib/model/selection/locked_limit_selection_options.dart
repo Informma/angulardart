@@ -16,7 +16,10 @@ import 'selection_options.dart';
 class LockedLimitSelectionOptions<T> extends DelegatingSelectionOptions<T>
     implements Filterable {
   // TODO(google): consider moving to [Filterable]
-  static const UNLIMITED = -1;
+  static const unlimited = -1;
+  @Deprecated('Use unlimited instead')
+  // ignore: constant_identifier_names, unused_field
+  static const UNLIMITED = unlimited;
 
   final int lockedLimit;
   final SelectionOptions<T> _options;
@@ -69,11 +72,11 @@ class LockedLimitSelectionOptions<T> extends DelegatingSelectionOptions<T>
   /// Filter up to [limit] results using [filterQuery]. [limit] is used instead
   /// of [lockedLimit] iff [unlockLimit] is true.
   @override
-  DisposableFuture<bool> filter(Object filterQuery, {int? limit = UNLIMITED}) {
+  DisposableFuture<bool> filter(Object filterQuery, {int? limit = unlimited}) {
     _currentLimit = _unlockLimit ? limit! : lockedLimit;
     // If the limit is locked and finite, only filter one extra item to
     // determine if results will be truncated to meet the lockedLimit.
-    if (!(_unlockLimit || limit == UNLIMITED)) {
+    if (!(_unlockLimit || limit == unlimited)) {
       limit = limit! + 1;
     }
 

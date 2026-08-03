@@ -5,7 +5,7 @@
 ///
 /// This module is not included in the `angular` module; you must import the
 /// forms module explicitly.
-library angular_forms; // name the library so we can run dartdoc on it by name.
+library; // name the library so we can run dartdoc on it by name.
 
 import 'src/directives/radio_control_value_accessor.dart'
     show RadioControlRegistry;
@@ -54,16 +54,24 @@ export 'src/model.dart'
         AbstractControlGroup,
         ControlGroup,
         ControlArray;
-export 'src/validators.dart' show NG_VALIDATORS, Validators;
+export 'src/validators.dart' show ngValidators, NG_VALIDATORS, Validators;
 
 /// Shorthand set of providers used for building Angular forms.
 ///
 /// ### Example
 ///
 /// ```dart
-/// runApp(createMyAppFactory(), [FORM_PROVIDERS]);
+/// runApp(createMyAppFactory(), [formProviders]);
 /// ````
-const List<Type> FORM_PROVIDERS = [RadioControlRegistry];
+const List<Type> formProviders = [RadioControlRegistry];
 
-/// See [FORM_PROVIDERS] instead.
-const FORM_BINDINGS = FORM_PROVIDERS;
+@Deprecated('Use formProviders instead')
+// ignore: constant_identifier_names
+const FORM_PROVIDERS = formProviders;
+
+/// See [formProviders] instead.
+const formBindings = formProviders;
+
+@Deprecated('Use formBindings instead')
+// ignore: constant_identifier_names
+const FORM_BINDINGS = formBindings;

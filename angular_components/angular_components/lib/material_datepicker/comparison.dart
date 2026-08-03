@@ -14,6 +14,7 @@ class DatepickerComparison implements DateRangeComparison {
   final DatepickerDateRange? range;
 
   /// The selected comparison range, if any.
+  @override
   final DatepickerDateRange? comparison;
 
   DatepickerComparison(DatepickerDateRange range, ComparisonOption option)
@@ -31,27 +32,30 @@ class DatepickerComparison implements DateRangeComparison {
   /// Construct a copy of `original` clamped to the given `min`/`max` dates.
   /// Existing clamping is removed before the new clamping is applied.
   DatepickerComparison.reclamp(DatepickerComparison orig, Date min, Date max)
-      : this.custom(orig?.range?.unclamped()?.clamp(min: min, max: max) as DatepickerDateRange?,
-            orig?.comparison?.unclamped()?.clamp(min: min, max: max) as DatepickerDateRange?);
+      : this.custom(orig.range?.unclamped().clamp(min: min, max: max),
+            orig.comparison?.unclamped().clamp(min: min, max: max));
 
   DatepickerComparison.custom(this.range, this.comparison);
 
+  @override
   bool get isComparisonEnabled => comparison != null;
 
   /// Checks the comparison date range has same logic as given comparisonOption.
   bool comparesTo(ComparisonOption option) =>
       comparison != null &&
-      option != null &&
       range != null &&
       comparison!.unclamped() ==
           option.computeComparisonRange(range!.unclamped());
 
-  bool operator ==(o) =>
-      o is DatepickerComparison &&
-      rangeEqual(range, o.range) &&
-      rangeEqual(comparison, o.comparison);
+  @override
+  bool operator ==(Object other) =>
+      other is DatepickerComparison &&
+      rangeEqual(range, other.range) &&
+      rangeEqual(comparison, other.comparison);
+  @override
   int get hashCode => isComparisonEnabled
       ? rangeHash(range) ^ rangeHash(comparison!)
       : rangeHash(range);
+  @override
   String toString() => 'DatepickerComparison -- $range / $comparison';
 }

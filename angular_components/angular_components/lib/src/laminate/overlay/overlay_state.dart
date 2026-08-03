@@ -48,8 +48,11 @@ int _stateHashCode(OverlayState a) {
 abstract class OverlayState {
   /// An overlay pane that centers its content both on the x and y-axis and
   /// captures events, preventing interaction with underlying content.
-  static const Dialog =
+  static const dialog =
       OverlayState(captureEvents: true, top: 0, bottom: 0, left: 0, right: 0);
+  @Deprecated('Use dialog instead')
+  // ignore: constant_identifier_names
+  static const Dialog = dialog;
 
   const factory OverlayState(
       {bool captureEvents,
@@ -154,11 +157,11 @@ class _ImmutableOverlayState implements OverlayState {
       this.minWidth,
       this.height,
       this.zIndex,
-      this.visibility = Visibility.None,
+      this.visibility = Visibility.none,
       this.position});
 
   @override
-  bool operator ==(o) => o is OverlayState && _stateEquals(this, o);
+  bool operator ==(Object other) => other is OverlayState && _stateEquals(this, other);
 
   // TODO(google): Consider caching since this is immutable anyway.
   @override
@@ -169,8 +172,7 @@ class _ImmutableOverlayState implements OverlayState {
 
   @override
   String toString() =>
-      'ImmutableOverlayState ' +
-      {
+      'ImmutableOverlayState ${{
         'captureEvents': captureEvents,
         'left': left,
         'top': top,
@@ -181,7 +183,7 @@ class _ImmutableOverlayState implements OverlayState {
         'visibility': visibility,
         'zIndex': zIndex,
         'position': position,
-      }.toString();
+      }}';
 }
 
 /// An interface that can mutate an active overlay pane.
@@ -200,12 +202,11 @@ class MutableOverlayState implements OverlayState {
   num? _minWidth;
   num? _height;
   int? _zIndex;
-  Visibility _visibility = Visibility.None;
+  Visibility _visibility = Visibility.none;
   Position? _position;
 
   /// Creates a mutable state by copying values from [other].
   factory MutableOverlayState.from(OverlayState other) {
-    if (other == null) return MutableOverlayState();
     if (other is MutableOverlayState) return other;
     return MutableOverlayState(
         captureEvents: other.captureEvents,
@@ -231,7 +232,7 @@ class MutableOverlayState implements OverlayState {
       num? minWidth,
       num? height,
       int? zIndex,
-      Visibility visibility = Visibility.None,
+      Visibility visibility = Visibility.none,
       Position? position}) {
     _captureEvents = captureEvents;
     _left = left;
@@ -246,7 +247,7 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  bool operator ==(o) => o is OverlayState && _stateEquals(this, o);
+  bool operator ==(Object other) => other is OverlayState && _stateEquals(this, other);
 
   @override
   int get hashCode => _stateHashCode(this);
@@ -355,8 +356,7 @@ class MutableOverlayState implements OverlayState {
 
   @override
   String toString() =>
-      'MutableOverlayState ' +
-      {
+      'MutableOverlayState ${{
         'captureEvents': captureEvents,
         'left': left,
         'top': top,
@@ -368,5 +368,5 @@ class MutableOverlayState implements OverlayState {
         'zIndex': zIndex,
         'visibility': visibility,
         'position': position
-      }.toString();
+      }}';
 }

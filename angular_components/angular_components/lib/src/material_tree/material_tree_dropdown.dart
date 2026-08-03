@@ -55,21 +55,24 @@ class MaterialTreeDropdownComponent<T>
   // Popup positioning to use when filtering is enabled.
   static const List<Object>
       _popupPositionsOffset = [
-    RelativePosition.AdjacentBottomLeft,
-    RelativePosition.AdjacentBottomEdge,
-    RelativePosition.AdjacentTopLeft,
-    RelativePosition.AdjacentTopEdge
+    RelativePosition.adjacentBottomLeft,
+    RelativePosition.adjacentBottomEdge,
+    RelativePosition.adjacentTopLeft,
+    RelativePosition.adjacentTopEdge
   ];
 
   // Popup positioning to use when filtering is disabled.
   static const List<RelativePosition> _popupPositionsInline =
-      RelativePosition.InlinePositions;
+      RelativePosition.inlinePositions;
 
-  static const String _DEFAULT_PLACEHOLDER = 'Select';
+  static const String _defaultPlaceholder = 'Select';
+  @Deprecated('Use _defaultPlaceholder instead')
+  // ignore: constant_identifier_names, unused_field
+  static const String _DEFAULT_PLACEHOLDER = _defaultPlaceholder;
 
   final DomService _domService;
   bool _expandAll = false;
-  String _placeholder = _DEFAULT_PLACEHOLDER;
+  String _placeholder = _defaultPlaceholder;
   bool _visible = false;
   List<Object>? _customPopupPositions;
 
@@ -108,6 +111,7 @@ class MaterialTreeDropdownComponent<T>
   /// the widget should toggle expansion when a non-leaf node is clicked. When
   /// `true` the widget should select non-leaf nodes when clicked and only
   /// toggle expansion when the expansion icon is clicked.
+  @override
   @Input()
   bool allowParentSingleSelection = false;
 
@@ -140,7 +144,7 @@ class MaterialTreeDropdownComponent<T>
   /// [defaultItemRenderer] in that order of preference.
   String get placeholder {
     if (selection is! MultiSelectionModel && selection.isNotEmpty) {
-      return (labelRenderer ?? (itemRenderer ?? defaultItemRenderer))(
+      return (labelRenderer!)(
           selection.selectedValues.first);
     }
     return _placeholder;
@@ -194,7 +198,7 @@ class MaterialTreeDropdownComponent<T>
   /// Placeholder to be used for the dropdown text when nothing is selected.
   @Input()
   set placeholder(String placeholder) {
-    _placeholder = placeholder ?? _DEFAULT_PLACEHOLDER;
+    _placeholder = placeholder;
   }
 
   /// List of positions to try and draw the options popup.

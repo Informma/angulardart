@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library angular_components.model.selection.selection_model;
+library;
 
 import 'dart:async';
 import 'dart:collection';
@@ -32,8 +32,8 @@ Object _defaultKeyProvider(Object o) => o;
 
 /// A mixin that provides the implementation of [castIterable].
 mixin class CastIterable<T> {
-  /// Casts [values] into an Iterable<T>.
-  Iterable<T> castIterable(Iterable values) => values.cast<T>();
+  /// Casts [values] into an `Iterable<T>`.
+  Iterable<T> castIterable(Iterable<Object?> values) => values.cast<T>();
 }
 
 /// Provides pattern to manage a collection of selected values.
@@ -114,8 +114,9 @@ abstract class SelectionModel<T> extends Object
   /// Returns ordered list of selected values.
   Iterable<T> get selectedValues;
 
-  /// Casts [values] into an Iterable<T>.
-  Iterable<T> castIterable(Iterable values);
+  /// Casts [values] into an `Iterable<T>`.
+  @override
+  Iterable<T> castIterable(Iterable<Object?> values);
 }
 
 abstract class NullSelectionModel<T> extends SingleSelectionModel<T> {

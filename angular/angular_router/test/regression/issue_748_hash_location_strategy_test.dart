@@ -6,7 +6,7 @@ import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_router/angulardart_router.dart';
 import 'package:angulardart_test/angulardart_test.dart';
 
-import '748_hash_location_strategy_test.template.dart' as ng;
+import 'issue_748_hash_location_strategy_test.template.dart' as ng;
 
 final platformLocation = FakePlatformLocation();
 
@@ -33,11 +33,14 @@ void main() {
 PlatformLocation platformLocationFactory() => platformLocation;
 
 class FakePlatformLocation implements BrowserPlatformLocation {
+  @override
   String pathname = '';
+  @override
   String search = '';
+  @override
   String hash = '';
-  final List<_StateCall> pushStateCalls = [];
-  final List<_StateCall> replaceStateCalls = [];
+  final List<StateCall> pushStateCalls = [];
+  final List<StateCall> replaceStateCalls = [];
 
   void reset() {
     pathname = '';
@@ -49,12 +52,12 @@ class FakePlatformLocation implements BrowserPlatformLocation {
 
   @override
   void pushState(Object? state, String title, String? url) {
-    pushStateCalls.add(_StateCall(state, title, url));
+    pushStateCalls.add(StateCall(state, title, url));
   }
 
   @override
   void replaceState(Object? state, String title, String? url) {
-    replaceStateCalls.add(_StateCall(state, title, url));
+    replaceStateCalls.add(StateCall(state, title, url));
   }
 
   @override
@@ -81,11 +84,11 @@ class FakePlatformLocation implements BrowserPlatformLocation {
   }
 }
 
-class _StateCall {
+class StateCall {
   final Object? state;
   final String title;
   final String? url;
-  _StateCall(this.state, this.title, this.url);
+  StateCall(this.state, this.title, this.url);
 }
 
 @GenerateInjector([

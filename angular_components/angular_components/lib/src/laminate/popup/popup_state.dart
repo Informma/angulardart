@@ -45,7 +45,6 @@ class PopupState extends Observable {
   /// Create a new popup state from [other].
   factory PopupState.from(PopupState other) {
     // TODO(google): Remove this once it's popup service has a default state.
-    if (other == null) return PopupState();
     return PopupState._(ObservableMap.from(other._backingMap));
   }
 
@@ -59,7 +58,7 @@ class PopupState extends Observable {
         for (var record in records) {
           if (record is MapChangeRecord<Symbol, dynamic>) {
             propertyRecords.add(PropertyChangeRecord(
-                this, record.key!, record.oldValue, record.newValue));
+                this, record.key, record.oldValue, record.newValue));
           }
         }
         return propertyRecords;
@@ -131,17 +130,17 @@ class PopupState extends Observable {
   }
 
   @override
-  bool operator ==(o) =>
-      o is PopupState &&
-      o.autoDismiss == autoDismiss &&
-      o.enforceSpaceConstraints == enforceSpaceConstraints &&
-      o.matchMinSourceWidth == matchMinSourceWidth &&
-      o.source == source &&
-      o.offsetX == offsetX &&
-      o.offsetY == offsetY &&
-      o.preferredPositions == preferredPositions &&
-      o.trackLayoutChanges == trackLayoutChanges &&
-      o.constrainToViewport == constrainToViewport;
+  bool operator ==(Object other) =>
+      other is PopupState &&
+      other.autoDismiss == autoDismiss &&
+      other.enforceSpaceConstraints == enforceSpaceConstraints &&
+      other.matchMinSourceWidth == matchMinSourceWidth &&
+      other.source == source &&
+      other.offsetX == offsetX &&
+      other.offsetY == offsetY &&
+      other.preferredPositions == preferredPositions &&
+      other.trackLayoutChanges == trackLayoutChanges &&
+      other.constrainToViewport == constrainToViewport;
 
   @override
   int get hashCode => hashObjects([
@@ -157,5 +156,5 @@ class PopupState extends Observable {
       ]);
 
   @override
-  String toString() => 'PopupState ' + _backingMap.toString();
+  String toString() => 'PopupState $_backingMap';
 }

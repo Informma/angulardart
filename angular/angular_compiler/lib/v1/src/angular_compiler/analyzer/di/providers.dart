@@ -214,7 +214,7 @@ abstract class ProviderElement {
   );
 
   @override
-  bool operator ==(Object o) => o is ProviderElement && o.token == token;
+  bool operator ==(Object other) => other is ProviderElement && other.token == token;
 
   /// Whether this represents a multi-binding.
   bool get isMulti {
@@ -237,18 +237,18 @@ class UseClassProviderElement extends ProviderElement {
 
   @visibleForTesting
   const UseClassProviderElement(
-    TokenElement e,
-    TypeLink? providerType,
+    super.e,
+    super.providerType,
     this.useClass, {
     required this.dependencies,
-  }) : super._(e, providerType);
+  }) : super._();
 
   @override
-  bool operator ==(Object o) =>
-      o is UseClassProviderElement &&
-      o.useClass == useClass &&
-      o.dependencies == dependencies &&
-      super == o;
+  bool operator ==(Object other) =>
+      other is UseClassProviderElement &&
+      other.useClass == useClass &&
+      other.dependencies == dependencies &&
+      super == other;
 
   @override
   int get hashCode =>
@@ -256,12 +256,11 @@ class UseClassProviderElement extends ProviderElement {
 
   @override
   String toString() =>
-      'UseClassProviderElement ' +
-      {
+      'UseClassProviderElement ${{
         'token': '$token',
         'useClass': '$useClass',
         'dependencies': '$dependencies',
-      }.toString();
+      }}';
 }
 
 /// A statically parsed `Provider` that redirects one token to another.
@@ -269,25 +268,24 @@ class UseExistingProviderElement extends ProviderElement {
   final TokenElement redirect;
 
   const UseExistingProviderElement(
-    TokenElement e,
-    TypeLink providerType,
+    super.e,
+    TypeLink super.providerType,
     this.redirect,
-  ) : super._(e, providerType);
+  ) : super._();
 
   @override
-  bool operator ==(Object o) =>
-      o is UseExistingProviderElement && o.redirect == redirect && super == o;
+  bool operator ==(Object other) =>
+      other is UseExistingProviderElement && other.redirect == redirect && super == other;
 
   @override
   int get hashCode => redirect.hashCode ^ super.hashCode;
 
   @override
   String toString() =>
-      'UseFactoryProviderElement ' +
-      {
+      'UseFactoryProviderElement ${{
         'token': '$token',
         'redirect': '$redirect',
-      }.toString();
+      }}';
 }
 
 /// A statically parsed `Provider` that describes a function invocation.
@@ -300,21 +298,18 @@ class UseFactoryProviderElement extends ProviderElement {
 
   @visibleForTesting
   const UseFactoryProviderElement(
-    TokenElement e,
-    TypeLink? providerType,
+    super.e,
+    super.providerType,
     this.useFactory, {
     required this.dependencies,
-  }) : super._(
-          e,
-          providerType,
-        );
+  }) : super._();
 
   @override
-  bool operator ==(Object o) =>
-      o is UseFactoryProviderElement &&
-      o.useFactory == useFactory &&
-      o.dependencies == dependencies &&
-      super == o;
+  bool operator ==(Object other) =>
+      other is UseFactoryProviderElement &&
+      other.useFactory == useFactory &&
+      other.dependencies == dependencies &&
+      super == other;
 
   @override
   int get hashCode =>
@@ -322,12 +317,11 @@ class UseFactoryProviderElement extends ProviderElement {
 
   @override
   String toString() =>
-      'UseFactoryProviderElement ' +
-      {
+      'UseFactoryProviderElement ${{
         'token': '$token',
         'useClass': '$useFactory',
         'dependencies': '$dependencies',
-      }.toString();
+      }}';
 }
 
 /// A statically parsed `Provider` that describes a constant expression.
@@ -337,13 +331,10 @@ class UseValueProviderElement extends ProviderElement {
 
   // Not visible for testing because its impractical to create one.
   const UseValueProviderElement._(
-    TokenElement e,
-    TypeLink providerType,
+    super.e,
+    TypeLink super.providerType,
     this.useValue,
-  ) : super._(
-          e,
-          providerType,
-        );
+  ) : super._();
 }
 
 /// Thrown when a value of `null` is read for a provider token.

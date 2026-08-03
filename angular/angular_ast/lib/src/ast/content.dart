@@ -64,12 +64,12 @@ abstract mixin class EmbeddedContentAst implements StandaloneTemplateAst {
   set closeComplement(CloseElementAst closeComplement);
 
   @override
-  bool operator ==(Object o) {
-    return o is EmbeddedContentAst &&
-        o.selector == selector &&
-        o.ngProjectAs == ngProjectAs &&
-        o.reference == reference &&
-        o.closeComplement == closeComplement;
+  bool operator ==(Object other) {
+    return other is EmbeddedContentAst &&
+        other.selector == selector &&
+        other.ngProjectAs == ngProjectAs &&
+        other.reference == reference &&
+        other.closeComplement == closeComplement;
   }
 
   @override
@@ -149,11 +149,11 @@ class _SyntheticEmbeddedContentAst extends SyntheticTemplateAst
   }
 
   _SyntheticEmbeddedContentAst.from(
-    TemplateAst origin, [
+    TemplateAst super.origin, [
     this.selector = '*',
     this.ngProjectAs,
     this.reference,
-  ]) : super.from(origin) {
+  ]) : super.from() {
     closeComplement = CloseElementAst('ng-content');
   }
 }

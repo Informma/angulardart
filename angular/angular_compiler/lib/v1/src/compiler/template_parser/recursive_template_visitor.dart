@@ -168,13 +168,13 @@ abstract class InPlaceRecursiveTemplateVisitor<C>
   void visitVariable(VariableAst ast, _) {}
 
   @override
-  void visitEvent(BoundEventAst ast, _) {}
+  void visitEvent(BoundEventAst ast, context) {}
 
   @override
   void visitElementProperty(BoundElementPropertyAst ast, _) {}
 
   @override
-  void visitAttr(AttrAst ast, _) {}
+  void visitAttr(AttrAst ast, context) {}
 
   @override
   void visitBoundText(BoundTextAst ast, _) {}

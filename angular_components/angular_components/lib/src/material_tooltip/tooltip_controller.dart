@@ -29,7 +29,7 @@ class TooltipController {
   ///
   /// If another [Tooltip] (the current tooltip) is active, it is deactivated.
   void activate(Tooltip tooltip) {
-    if (tooltip == null || tooltip == _activeTooltip) return;
+    if (tooltip == _activeTooltip) return;
     _activeTooltip?.deactivate();
     _activeTooltip = tooltip..activate();
   }
@@ -39,9 +39,6 @@ class TooltipController {
   /// The controller waits for a delay to allow for tooltips to keep
   /// themselves open as a result of being moused over.
   void deactivate(Tooltip tooltip) {
-    if (tooltip == null) return;
-
-    // Use a small delay just in case the user mouses into the tooltip.
     final tooltipToClose = tooltip;
     _closeTimerByTooltip[tooltipToClose]?.cancel();
     _closeTimerByTooltip[tooltipToClose] = Timer(keepAliveDuration, () {
@@ -53,7 +50,7 @@ class TooltipController {
 
   /// Deactivates [tooltip] without any delay.
   void deactivateImmediately(Tooltip tooltip) {
-    tooltip?.deactivate();
+    tooltip.deactivate();
     if (tooltip == _activeTooltip) _activeTooltip = null;
   }
 

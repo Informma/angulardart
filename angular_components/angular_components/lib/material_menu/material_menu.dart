@@ -67,6 +67,7 @@ class MaterialMenuComponent extends Object
   String? buttonText;
 
   /// Whether the menu is disabled or not.
+  @override
   @Input()
   bool disabled = false;
 
@@ -82,7 +83,7 @@ class MaterialMenuComponent extends Object
 
   bool get hasTooltip => menu?.hasTooltip ?? false;
 
-  bool get hasSubmenu => menu?.itemGroups?.isNotEmpty ?? false;
+  bool get hasSubmenu => menu?.itemGroups.isNotEmpty ?? false;
 
   bool get hasIcon => menu?.uiIcon != null;
 

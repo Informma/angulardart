@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/focus/focus.dart';
 import 'package:angulardart_components/interfaces/has_disabled.dart';
 import 'package:angulardart_components/material_icon/material_icon.dart';
@@ -54,9 +53,8 @@ class MaterialRadioComponent extends RootFocusable
       this._changeDetector,
       @Host() @Optional() this._group,
       @Self() @Optional() NgControl? cd,
-      @Attribute('role') String role)
-      : this.role = role ?? 'radio',
-        super(_root) {
+      @Attribute('role') this.role)
+      : super(_root) {
     // When NgControl is present on the host element, the component
     // participates in the Forms API.
     cd?.valueAccessor = this;
@@ -95,6 +93,7 @@ class MaterialRadioComponent extends RootFocusable
 
   /// Whether the radio should not respond to events, and have a style that
   /// suggests that interaction is not allowed.
+  @override
   @Input()
   @HostBinding('class.disabled')
   @HostBinding('attr.aria-disabled')

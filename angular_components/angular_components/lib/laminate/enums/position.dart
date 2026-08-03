@@ -7,10 +7,23 @@ import 'package:angulardart_components/src/laminate/enums/base.dart';
 export 'package:angulardart_components/src/laminate/enums/base.dart';
 
 class Position implements ElementStyleEnum {
+  static const relative = Position._('relative');
+  static const fixed = Position._('fixed');
+  static const absolute = Position._('absolute');
+  // ignore: constant_identifier_names
+  @Deprecated('Use relative instead')
+  // ignore: constant_identifier_names
+  static const Relative = relative;
+  @Deprecated('Use fixed instead')
+  // ignore: constant_identifier_names
+  static const Fixed = fixed;
+  @Deprecated('Use absolute instead')
+  // ignore: constant_identifier_names
+  static const Absolute = absolute;
+  // ignore: constant_identifier_names
+  @Deprecated('Use Position.relative instead')
+  // ignore: constant_identifier_names
   static const Static = Position._('static');
-  static const Relative = Position._('relative');
-  static const Fixed = Position._('fixed');
-  static const Absolute = Position._('absolute');
 
   final String _cssPropertyValue;
 

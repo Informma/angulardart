@@ -1,4 +1,4 @@
-library angular_ast.src.token.tokens;
+library;
 
 import '../hash.dart';
 
@@ -30,7 +30,7 @@ class NgSimpleToken implements NgBaseToken<NgSimpleTokenType> {
     NgSimpleTokenType.dash: '-',
     NgSimpleTokenType.openTagStart: '<',
     NgSimpleTokenType.tagEnd: '>',
-    NgSimpleTokenType.EOF: '',
+    NgSimpleTokenType.eof: '',
     NgSimpleTokenType.equalSign: '=',
     NgSimpleTokenType.forwardSlash: '/',
     NgSimpleTokenType.hash: '#',
@@ -97,8 +97,9 @@ class NgSimpleToken implements NgBaseToken<NgSimpleTokenType> {
     return NgSimpleToken._(NgSimpleTokenType.tagEnd, offset);
   }
 
+  // ignore: non_constant_identifier_names
   factory NgSimpleToken.EOF(int offset) {
-    return NgSimpleToken._(NgSimpleTokenType.EOF, offset);
+    return NgSimpleToken._(NgSimpleTokenType.eof, offset);
   }
 
   factory NgSimpleToken.equalSign(int offset) {
@@ -187,9 +188,9 @@ class NgSimpleToken implements NgBaseToken<NgSimpleTokenType> {
   );
 
   @override
-  bool operator ==(Object o) {
-    if (o is NgSimpleToken) {
-      return o.offset == offset && o.type == type;
+  bool operator ==(Object other) {
+    if (other is NgSimpleToken) {
+      return other.offset == offset && other.type == type;
     }
     return false;
   }
@@ -259,12 +260,12 @@ class NgSimpleQuoteToken extends _LexemeNgSimpleToken {
         );
 
   @override
-  bool operator ==(Object o) {
-    if (o is NgSimpleQuoteToken) {
-      return o.offset == offset &&
-          o.type == type &&
-          o.contentOffset == contentOffset &&
-          o.quoteEndOffset == quoteEndOffset;
+  bool operator ==(Object other) {
+    if (other is NgSimpleQuoteToken) {
+      return other.offset == offset &&
+          other.type == type &&
+          other.contentOffset == contentOffset &&
+          other.quoteEndOffset == quoteEndOffset;
     }
     return false;
   }
@@ -469,12 +470,12 @@ class NgToken implements NgBaseToken<NgTokenType> {
   });
 
   @override
-  bool operator ==(Object o) {
-    if (o is NgToken) {
-      if (errorSynthetic || o.errorSynthetic) {
-        return o.offset == offset && o.type == type;
+  bool operator ==(Object other) {
+    if (other is NgToken) {
+      if (errorSynthetic || other.errorSynthetic) {
+        return other.offset == offset && other.type == type;
       }
-      return o.offset == offset && o.type == type && o.lexeme == lexeme;
+      return other.offset == offset && other.type == type && other.lexeme == lexeme;
     }
     return false;
   }
@@ -543,11 +544,11 @@ class NgAttributeValueToken extends NgToken {
         );
 
   @override
-  bool operator ==(Object o) {
-    if (o is NgAttributeValueToken) {
-      return leftQuote == o.leftQuote &&
-          rightQuote == o.rightQuote &&
-          innerValue == o.innerValue;
+  bool operator ==(Object other) {
+    if (other is NgAttributeValueToken) {
+      return leftQuote == other.leftQuote &&
+          rightQuote == other.rightQuote &&
+          innerValue == other.innerValue;
     }
     return false;
   }

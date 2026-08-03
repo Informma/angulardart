@@ -10,7 +10,6 @@ import 'package:angulardart_components/src/material_tree/material_tree_root.dart
 import 'package:angulardart_components/model/selection/select.dart';
 import 'package:angulardart_components/model/selection/selection_model.dart';
 import 'package:angulardart_components/model/selection/selection_options.dart';
-import 'package:angulardart_components/model/ui/has_factory.dart';
 import 'package:angulardart_components/utils/async/async.dart';
 import 'package:angulardart_components/utils/disposer/disposer.dart';
 
@@ -21,7 +20,7 @@ typedef IsExpandable<T> = bool Function(T option);
 ///
 /// May serve strictly as an interface or be extended as a base class.
 class MaterialTreeNode<T> {
-  final OptionGroup<T> _EMPTY_OPTION_GROUP = OptionGroup<T>(const []);
+  final OptionGroup<T> _emptyOptionGroup = OptionGroup<T>(const []);
 
   final _expandedNodes = Map<T, Iterable<OptionGroup<T>>>.identity();
   var _disposer = Disposer.multi() as Disposer?;
@@ -41,7 +40,7 @@ class MaterialTreeNode<T> {
   /// May specify a custom [isExpandable].
   MaterialTreeNode(this._root, this._changeDetector,
       {IsExpandable<T>? isExpandable}) {
-    _group = _EMPTY_OPTION_GROUP;
+    _group = _emptyOptionGroup;
     if (!_root.supportsHierarchy) {
       _isExpandable = (_) => false;
       _parent = _NotAParent();
@@ -145,9 +144,9 @@ class MaterialTreeNode<T> {
   /// Returns whether [option] is selectable.
   bool isSelectable(T option) {
     return _allowParentSelection &&
-            _selectable!.getSelectable(option) == SelectableOption.Selectable ||
+            _selectable!.getSelectable(option) == SelectableOption.selectable ||
         !isExpandable(option) &&
-            _selectable!.getSelectable(option) == SelectableOption.Selectable;
+            _selectable!.getSelectable(option) == SelectableOption.selectable;
   }
 
   // True when flag for allowing parent selection is true for the selection
@@ -157,15 +156,15 @@ class MaterialTreeNode<T> {
       (!isMultiSelect && allowParentSingleSelection);
 
   /// Whether a disabled checkbox should be rendered for this option.
-  bool showDisabledCheckbox(option) =>
-      _selectable!.getSelectable(option) == SelectableOption.Disabled &&
+  bool showDisabledCheckbox(T option) =>
+      _selectable!.getSelectable(option) == SelectableOption.disabled &&
       !hasChildren(option);
 
   /// Returns whether [option] is selected.
   bool isSelected(T option) => _root.selection.isSelected(option);
 
   /// Returns any child groups of [option] that are loaded.
-  Iterable<OptionGroup>? getChildGroups(option) => _expandedNodes[option];
+  Iterable<OptionGroup>? getChildGroups(T option) => _expandedNodes[option];
 
   /// Expands the given [option].
   ///
@@ -175,7 +174,7 @@ class MaterialTreeNode<T> {
     Iterable<OptionGroup<T>> childGroups = await _parent!.childrenOf(option);
 
     setExpandedState(option, true);
-    if (expandAll && childGroups != null) {
+    if (expandAll) {
       for (var group in childGroups) {
         for (var option in group) {
           await expandOption(option);
@@ -214,7 +213,7 @@ class MaterialTreeNode<T> {
     if (!didClose) {
       return expandOption(option);
     }
-    return Future<Iterable<OptionGroup<T>>>.value();
+    return Future<Iterable<OptionGroup<T>>>.value(const []);
   }
 
   /// Sets the [isSelected] state of [option] and returns the result.
@@ -261,8 +260,7 @@ class MaterialTreeNode<T> {
   /// Whether to use a dynamic component to render an option.
   // TODO(google): Rename this is to control whether to use dynamic component
   // loader.
-  bool get useComponentRenderer =>
-      _root.factoryRenderer != null || _root.componentRenderer != null;
+  bool get useComponentRenderer => true;
 
   /// Whether to use a simple text formatter to render an option.
   bool get useItemRenderer => !useComponentRenderer;
@@ -271,16 +269,16 @@ class MaterialTreeNode<T> {
   bool get showSelectionState => isMultiSelect || !_root.optimizeForDropdown;
 
   /// Converts [T] into a component type (requires [useComponentRenderer]).
-  Type? getComponentType(option) =>
-      _root.componentRenderer != null ? _root.componentRenderer!(option) : null;
+  Type? getComponentType(Object option) =>
+      _root.componentRenderer(option);
 
   /// Converts [T] into a component factory (requires [factoryRenderer]).
-  ComponentFactory? getComponentFactory(option) =>
-      _root.factoryRenderer != null ? _root.factoryRenderer!(option) : null;
+  ComponentFactory? getComponentFactory(dynamic option) =>
+      _root.factoryRenderer(option);
 
   /// Converts [T] into a text equivalent (requires [useItemRenderer]).
   String getOptionAsText(T option) {
-    var itemRenderer = _root.itemRenderer ?? defaultItemRenderer;
+    var itemRenderer = _root.itemRenderer;
     return itemRenderer(option);
   }
 
@@ -297,7 +295,7 @@ class MaterialTreeNode<T> {
 // TODO(google): Remove once we switch over Selectable interfaces.
 class _AlwaysSelectable<T> implements Selectable<T> {
   @override
-  SelectableOption getSelectable(T item) => SelectableOption.Selectable;
+  SelectableOption getSelectable(T item) => SelectableOption.selectable;
 }
 
 class _NotAParent<P, C> implements Parent<P, C> {

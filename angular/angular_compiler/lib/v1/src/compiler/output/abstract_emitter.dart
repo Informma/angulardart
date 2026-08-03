@@ -267,7 +267,7 @@ abstract class AbstractEmitterVisitor
     if (!lineWasEmpty) {
       context.print('(');
     }
-    o.THIS_EXPR.visitExpression(this, context);
+    o.thisExpr.visitExpression(this, context);
     context.print('.${expr.name} = ');
     expr.value.visitExpression(this, context);
     if (!lineWasEmpty) {
@@ -578,7 +578,7 @@ abstract class AbstractEmitterVisitor
   void visitAllObjects<T>(void Function(T) handler, List<T> expressions,
       EmitterVisitorContext ctx, String separator,
       {bool newLine = false, bool keepOnSameLine = false}) {
-    const _MAX_OUTPUT_LENGTH = 80;
+    const maxOutputLength = 80;
     var length = expressions.length;
     for (var i = 0; i < length; i++) {
       handler(expressions[i]);
@@ -587,7 +587,7 @@ abstract class AbstractEmitterVisitor
         ctx.print(
             separator,
             keepOnSameLine
-                ? ctx.currentLineLength > _MAX_OUTPUT_LENGTH
+                ? ctx.currentLineLength > maxOutputLength
                 : newLine);
       }
     }

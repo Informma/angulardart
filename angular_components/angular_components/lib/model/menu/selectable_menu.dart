@@ -3,9 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:built_collection/built_collection.dart';
-import 'package:meta/meta.dart';
 import 'package:observable/observable.dart';
-import 'package:quiver/core.dart' show Optional;
 import 'package:quiver/strings.dart';
 import 'package:angulardart_components/model/menu/menu.dart';
 import 'package:angulardart_components/model/selection/select.dart';
@@ -31,8 +29,9 @@ class MenuItemGroupWithSelection<SelectionItemType>
   /// https://www.w3.org/TR/wai-aria-1.1/#menuitemradio
   /// https://www.w3.org/TR/wai-aria-1.1/#menuitemcheckbox
   @override
-  final String itemsRole;
-
+  String get itemsRole => selectionModel.isSingleSelect
+      ? 'menuitemradio'
+      : 'menuitemcheckbox';
   /// If true, the current menu should be closed when this item is selected.
   final bool shouldCloseMenuOnSelection;
 
@@ -43,9 +42,6 @@ class MenuItemGroupWithSelection<SelectionItemType>
       bool? shouldCloseMenuOnSelection})
       : shouldCloseMenuOnSelection = shouldCloseMenuOnSelection ??
             selectionModel is! MultiSelectionModel,
-        itemsRole = (selectionModel?.isSingleSelect ?? true)
-            ? 'menuitemradio'
-            : 'menuitemcheckbox',
         super(items, label);
 
   /// True if the selection model is multi-select.
@@ -61,7 +57,7 @@ class MenuItemGroupWithSelection<SelectionItemType>
       if (menuItem.value == item) return menuItem.selectableState;
     }
 
-    return SelectableOption.Selectable;
+    return SelectableOption.selectable;
   }
 }
 
@@ -135,7 +131,7 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
       Iterable<String>? cssClasses,
       MenuAction? action,
       ActionWithContext? actionWithContext,
-      SelectableOption selectableState = SelectableOption.Selectable,
+      SelectableOption selectableState = SelectableOption.selectable,
       bool? shouldSelectOnItemClick,
       MenuItemAffix? itemSuffix,
       ObservableList<MenuItemAffix>? itemSuffixes})
@@ -185,12 +181,12 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   String get uiDisplayName => label;
 
   @override
-  bool get enabled => selectableState == SelectableOption.Selectable;
+  bool get enabled => selectableState == SelectableOption.selectable;
 
   @override
   set enabled(bool value) {
     selectableState =
-        value ? SelectableOption.Selectable : SelectableOption.Disabled;
+        value ? SelectableOption.selectable : SelectableOption.disabled;
   }
 
   @override
@@ -232,4 +228,4 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
 }
 
 void _noOp() {}
-void _noOp2(_) {}
+void _noOp2(dynamic _) {}

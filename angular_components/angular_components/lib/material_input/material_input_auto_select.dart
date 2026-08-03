@@ -17,8 +17,8 @@ import 'base_material_input.dart';
 /// ACX team if you have a use case for the same.
 ///
 /// __Example usage:__
-///     <material-input autoSelect ngModel="Auto-selecting input">
-///     </material-input>
+///     `<material-input autoSelect ngModel="Auto-selecting input">`
+///     `</material-input>`
 @Directive(selector: 'material-input[autoSelect]:not([multiline])')
 class MaterialInputAutoSelectDirective implements OnDestroy {
   final _disposer = Disposer.oneShot();

@@ -23,6 +23,7 @@ mixin class MaterialInputWrapper implements HasDisabled {
   Function? checkValid;
 
   /// Whether this input is disabled.
+  @override
   @Input()
   bool disabled = false;
 

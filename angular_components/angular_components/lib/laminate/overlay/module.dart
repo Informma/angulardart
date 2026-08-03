@@ -5,7 +5,6 @@
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:meta/meta.dart';
 import 'package:angulardart_components/laminate/overlay/constants.dart';
 import 'package:angulardart_components/src/laminate/overlay/overlay_service.dart';
 import 'package:angulardart_components/src/laminate/overlay/render/overlay_dom_render_service.dart';
@@ -58,7 +57,7 @@ HtmlElement getDefaultContainer(
 
 @Injectable()
 String getDefaultContainerName(
-    @Optional() @SkipSelf() @Inject(overlayContainerName) containerName) {
+    @Optional() @SkipSelf() @Inject(overlayContainerName) String? containerName) {
   return containerName ?? 'default';
 }
 

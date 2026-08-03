@@ -5,10 +5,14 @@ import 'package:angulardart/angulardart.dart';
 import 'control_value_accessor.dart'
     show ChangeHandler, ControlValueAccessor, ngValueAccessor, TouchHandler;
 
-const CHECKBOX_VALUE_ACCESSOR = ExistingProvider.forToken(
+const checkboxValueAccessor = ExistingProvider.forToken(
   ngValueAccessor,
   CheckboxControlValueAccessor,
 );
+
+@Deprecated('Use checkboxValueAccessor instead')
+// ignore: constant_identifier_names
+const CHECKBOX_VALUE_ACCESSOR = checkboxValueAccessor;
 
 /// The accessor for writing a value and listening to changes on a checkbox input element.
 ///
@@ -21,7 +25,7 @@ const CHECKBOX_VALUE_ACCESSOR = ExistingProvider.forToken(
   selector: 'input[type=checkbox][ngControl],'
       'input[type=checkbox][ngFormControl],'
       'input[type=checkbox][ngModel]',
-  providers: [CHECKBOX_VALUE_ACCESSOR],
+  providers: [checkboxValueAccessor],
 )
 class CheckboxControlValueAccessor extends Object
     with TouchHandler, ChangeHandler<bool>

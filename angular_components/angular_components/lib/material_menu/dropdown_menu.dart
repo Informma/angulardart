@@ -41,12 +41,12 @@ class DropdownMenuComponent extends Object
   final HtmlElement _root;
   final _disposer = Disposer.oneShot();
 
-  DropdownMenuComponent(ChangeDetectorRef _changeDetector, this._root) {
+  DropdownMenuComponent(ChangeDetectorRef changeDetector, this._root) {
     // Let Angular pick up changes to [isExpanded] in [MenuPopupWrapper] when
     // it's toggled programmatically, e.g. TabMenuComponent.
     _disposer.addStreamSubscription(isExpandedChange.listen((_) {
       focusable = _focusTarget;
-      _changeDetector.markForCheck();
+      changeDetector.markForCheck();
     }));
   }
 
@@ -66,8 +66,10 @@ class DropdownMenuComponent extends Object
 
   bool _disabled = false;
 
+  @override
   bool get disabled => _disabled;
 
+  @override
   @Input()
   set disabled(bool d) {
     _disabled = d;

@@ -53,8 +53,8 @@ class CalendarYear extends _HasHighlights {
   void update(CalendarState state) {
     // TODO(google): Disable CSS transitions here somehow
     _state = state;
-    if (months != null) {
-      months.forEach((m) => m.update(state));
+    for (var m in months) {
+      m.update(state);
     }
     _updateHighlights();
   }
@@ -145,7 +145,7 @@ class CalendarYear extends _HasHighlights {
   }
 
   @override
-  bool operator ==(o) => o is CalendarYear && o._start == _start;
+  bool operator ==(Object other) => other is CalendarYear && other._start == _start;
 
   @override
   int get hashCode => _start.hashCode;
@@ -182,12 +182,6 @@ class YearRange {
       {final CalendarYear? tryToStartAt}) {
     if (length < 1) {
       throw ArgumentError.value(length, 'length', 'must be at least 1');
-    }
-    if (min == null) {
-      throw ArgumentError.notNull('min');
-    }
-    if (max == null) {
-      throw ArgumentError.notNull('max');
     }
 
     int years = min.deltaYears(max) + 1;

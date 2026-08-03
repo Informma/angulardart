@@ -9,18 +9,31 @@ import 'package:angulardart_components/laminate/enums/alignment.dart';
 import 'package:angulardart_components/src/laminate/popup/popup_size_provider.dart';
 
 class PopupPosition {
-  static const String AUTO = '';
-  static const String ABOVE = 'above';
-  static const String BELOW = 'below';
+  static const String auto = '';
+  static const String above = 'above';
+  static const String below = 'below';
+  @Deprecated('Use auto instead')
+  // ignore: constant_identifier_names
+  static const String AUTO = auto;
+  @Deprecated('Use above instead')
+  // ignore: constant_identifier_names
+  static const String ABOVE = above;
+  @Deprecated('Use below instead')
+  // ignore: constant_identifier_names
+  static const String BELOW = below;
 }
 
 /// Assistant for supporting custom preferred popup positions.
 class PopupPositionMixin implements PopupSizeProvider {
-  /// Space to leave between the popup and the edge of the viewport.
-  static const _EDGE_SPACE_PX = 4;
+  static const _edgeSpacePx = 4;
+  @Deprecated('Use _edgeSpacePx instead')
+  // ignore: constant_identifier_names, unused_field
+  static const _EDGE_SPACE_PX = _edgeSpacePx;
 
-  /// Minimum height for the popup.
-  static const _MIN_HEIGHT_PX = 40;
+  static const _minHeightPx = 40;
+  @Deprecated('Use _minHeightPx instead')
+  // ignore: constant_identifier_names, unused_field
+  static const _MIN_HEIGHT_PX = _minHeightPx;
 
   PopupSizeProvider delegatePopupSizeProvider = PercentagePopupSizeProvider();
 
@@ -40,39 +53,39 @@ class PopupPositionMixin implements PopupSizeProvider {
   num? getMaxHeight(num positionY, num viewportHeight) {
     var maxHeight =
         delegatePopupSizeProvider.getMaxHeight(positionY, viewportHeight);
-    if (_popupPosition == PopupPosition.BELOW) {
-      return max(_MIN_HEIGHT_PX,
-          min(viewportHeight - positionY - _EDGE_SPACE_PX, maxHeight!));
+    if (_popupPosition == PopupPosition.below) {
+      return max(_minHeightPx,
+          min(viewportHeight - positionY - _edgeSpacePx, maxHeight!));
     } else {
       return maxHeight;
     }
   }
 
-  String _popupPosition = PopupPosition.AUTO;
+  String _popupPosition = PopupPosition.auto;
 
   List<RelativePosition> _popupPositions = const [];
 
   List<RelativePosition> get popupPositions => _popupPositions;
 
   /// Position relative to popup source.
-  /// Optional, defaults to PopupPosition.AUTO.
+  /// Optional, defaults to PopupPosition.auto.
   @Input()
   set popupPosition(String position) {
     _popupPosition = position;
     switch (_popupPosition) {
-      case PopupPosition.ABOVE:
+      case PopupPosition.above:
         _popupPositions = const [
           RelativePosition.AdjacentTopLeft,
           RelativePosition.AdjacentTopRight
         ];
         break;
-      case PopupPosition.BELOW:
+      case PopupPosition.below:
         _popupPositions = const [
           RelativePosition.AdjacentBottomLeft,
           RelativePosition.AdjacentBottomRight
         ];
         break;
-      case PopupPosition.AUTO:
+      case PopupPosition.auto:
       default:
         _popupPositions = const [];
     }

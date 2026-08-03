@@ -83,8 +83,7 @@ class StepDirective extends TemplatePortal {
   /// Optional summary directive associated with this step.
   SummaryDirective? summaryDirective;
 
-  StepDirective(TemplateRef ref, ViewContainerRef viewContainerRef)
-      : super(ref, viewContainerRef);
+  StepDirective(super.ref, super.viewContainerRef);
 
   /// The selection state of the step.
   bool active = false;
@@ -144,10 +143,10 @@ class StepDirective extends TemplatePortal {
 ///
 /// __Example usage:__
 ///
-/// <material-stepper orientation="vertical">
-///   <template step name="A" #stepA="step">Step</template>
-///   <template [summary]="stepA"><h3>Summary A</h3></template>
-/// </material-stepper>
+/// `<material-stepper orientation="vertical">`
+///   `<template step name="A" #stepA="step">Step</template>`
+///   `<template [summary]="stepA"><h3>Summary A</h3></template>`
+/// `</material-stepper>`
 ///
 ///
 /// Warning: content is reparented to the stepper component itself so any
@@ -161,10 +160,8 @@ class SummaryDirective extends TemplatePortal {
   /// The [StepDirective] associated with this summary.
   @Input()
   set summary(StepDirective step) {
-    assert(step != null, 'Should pass in a valid step for a summary.');
     step.summaryDirective = this;
   }
 
-  SummaryDirective(TemplateRef ref, ViewContainerRef viewContainerRef)
-      : super(ref, viewContainerRef);
+  SummaryDirective(super.ref, super.viewContainerRef);
 }

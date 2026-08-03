@@ -8,14 +8,19 @@ export 'package:angulardart_components/src/laminate/enums/base.dart';
 
 /// Enum for browser visibility options.
 class Visibility implements ElementStyleEnum {
-  /// Equivalent to "display: none". Does not render.
-  static const None = Visibility._('None', 'display', 'none');
+  static const none = Visibility._('None', 'display', 'none');
+  static const hidden = Visibility._('Hidden', 'visibility', 'hidden');
+  static const visible = Visibility._('Visible');
 
-  /// Equivalent to "visibility: hidden". Renders, but not visible to user.
-  static const Hidden = Visibility._('Hidden', 'visibility', 'hidden');
-
-  /// Equivalent to "display: inherit". Renders in most cases.
-  static const Visible = Visibility._('Visible');
+  @Deprecated('Use none instead')
+  // ignore: constant_identifier_names
+  static const None = none;
+  @Deprecated('Use hidden instead')
+  // ignore: constant_identifier_names
+  static const Hidden = hidden;
+  @Deprecated('Use visible instead')
+  // ignore: constant_identifier_names
+  static const Visible = visible;
 
   /// The enum name of the instance.
   final String displayName;

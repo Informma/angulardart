@@ -69,7 +69,7 @@ class GlyphComponent {
   }
 
   dynamic get icon => _icon;
-  var _icon;
+  dynamic _icon;
 
   bool get _isIconModel => icon is Icon;
 
@@ -85,7 +85,7 @@ class GlyphComponent {
   ///
   @Input()
   set iconSet(String value) {
-    assert(value == null || value == _materialIconsExtended);
+    assert(value == _materialIconsExtended);
     _iconSet = value;
   }
 
@@ -100,11 +100,30 @@ class GlyphComponent {
 
 /// Size names which can be used on the glyph icon.
 class GlyphSize {
+  static const xSmall = 'x-small';
+  static const small = 'small';
+  static const medium = 'medium';
+  static const large = 'large';
+  static const xLarge = 'x-large';
+  // ignore: constant_identifier_names
+  @Deprecated('Use xSmall instead')
+  // ignore: constant_identifier_names
+  static const X_SMALL = xSmall;
+  @Deprecated('Use small instead')
+  // ignore: constant_identifier_names
+  static const SMALL = small;
+  @Deprecated('Use medium instead')
+  // ignore: constant_identifier_names
+  static const MEDIUM = medium;
+  @Deprecated('Use large instead')
+  // ignore: constant_identifier_names
+  static const LARGE = large;
+  @Deprecated('Use xLarge instead')
+  // ignore: constant_identifier_names
+  static const X_LARGE = xLarge;
+  // ignore: constant_identifier_names
+  @Deprecated('Use empty string directly')
+  // ignore: constant_identifier_names
   static const DEFAULT = '';
-  static const X_SMALL = 'x-small';
-  static const SMALL = 'small';
-  static const MEDIUM = 'medium';
-  static const LARGE = 'large';
-  static const X_LARGE = 'x-large';
-  List<String> get values => [DEFAULT, X_SMALL, SMALL, MEDIUM, LARGE, X_LARGE];
+  List<String> get values => ['', xSmall, small, medium, large, xLarge];
 }

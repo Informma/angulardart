@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @JS()
-library angular_components.framework_stabilizers.testability;
+library;
 
 import 'dart:async';
 
@@ -85,7 +85,7 @@ abstract class AbstractTestability implements Testability {
   ///
   /// Subclasses should redefine this. runtimeType is obsfucated when compiled.
   @override
-  String get name => this.toString();
+  String get name => toString();
 }
 
 /// A placeholder testability that does not perform any action. Can be injected

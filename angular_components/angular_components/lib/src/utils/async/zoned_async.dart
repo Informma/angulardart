@@ -11,7 +11,7 @@ typedef RunInZoneFn = Function(Function() fn);
 abstract mixin class _ZoneRunner {
   RunInZoneFn get _runInZoneFn;
 
-  S _runInZone<S>(S fn()) => _runInZoneFn(fn) as S;
+  S _runInZone<S>(S Function() fn) => _runInZoneFn(fn) as S;
 }
 
 /// A wrapper around an existing [Future] that processes all events received
@@ -54,7 +54,7 @@ class ZonedFuture<T> extends _ZoneRunner implements Future<T> {
   }
 
   @override
-  Future<S> then<S>(FutureOr<S> onValue(T value), {Function? onError}) {
+  Future<S> then<S>(FutureOr<S> Function(T value) onValue, {Function? onError}) {
     return _runInZone(() => _innerFuture.then<S>(onValue, onError: onError));
   }
 
@@ -66,7 +66,7 @@ class ZonedFuture<T> extends _ZoneRunner implements Future<T> {
   }
 
   @override
-  Future<T> whenComplete(action()) {
+  Future<T> whenComplete(Function() action) {
     return _runInZone(() => _innerFuture.whenComplete(action));
   }
 }

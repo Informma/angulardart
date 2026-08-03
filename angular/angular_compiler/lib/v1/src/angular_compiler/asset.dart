@@ -1,4 +1,5 @@
 import 'package:build/build.dart';
+// ignore: implementation_imports
 import 'package:source_gen/src/utils.dart';
 
 /// Wraps an [AssetReader] to provide an ergonomic API for finding input files.

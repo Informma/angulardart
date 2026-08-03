@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
 import 'package:angulardart_components/content/deferred_content.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -83,7 +82,7 @@ class MenuItemGroupsComponent
   set menu(MenuModel menu) {
     _menu = menu;
     _updateItemsAriaCheckedState(menu);
-    menu?.itemGroups?.forEach(_listenForSelectionChanges);
+    menu.itemGroups.forEach(_listenForSelectionChanges);
   }
 
   MenuModel get menu => _menu;
@@ -97,7 +96,7 @@ class MenuItemGroupsComponent
 
   List<RelativePosition> get tooltipPositions => _tooltipPositions;
 
-  int get width => menu?.width ?? 0;
+  int get width => menu.width ?? 0;
 
   /// Whether the popup should be closed on left key press.
   ///
@@ -274,8 +273,8 @@ class MenuItemGroupsComponent
     // If the item is in a multi-select group, keep the menu open so the user
     // can select multiple items.
     if (group is! MenuItemGroupWithSelection ||
-        (group as MenuItemGroupWithSelection).shouldCloseMenuOnSelection) {
-      _menuRoot?.closeHierarchy();
+        (group).shouldCloseMenuOnSelection) {
+      _menuRoot.closeHierarchy();
     }
   }
 
@@ -300,7 +299,7 @@ class MenuItemGroupsComponent
         _focusActiveItem();
         break;
       case KeyCode.RIGHT:
-        if (activeMenuItem?.hasSubMenu == true) {
+        if (activeMenuItem.hasSubMenu == true) {
           _openSubMenu(activeModel.activeItem as MenuItem,
               isOpenedByKeyboard: true);
         }
@@ -340,11 +339,11 @@ class MenuItemGroupsComponent
 
   MenuItem? _itemForTarget(EventTarget? target) {
     if (target is! Element) return null;
-    Element? element = target as Element;
+    Element? element = target;
     while (element != null) {
       if (element.attributes['role'] == 'menuitem') {
         MenuItemGroup group =
-            menu!.itemGroups![int.parse(element.attributes['data-group-index']!)];
+            menu.itemGroups[int.parse(element.attributes['data-group-index']!)];
         MenuItem item = group[int.parse(element.attributes['data-item-index']!)];
         return item;
       }
@@ -358,14 +357,14 @@ class MenuItemGroupsComponent
     MenuItem? item = _itemForTarget(event.target);
     if (item == null) return;
 
-    activeModel?.activate(item);
+    activeModel.activate(item);
   }
 
   /// Called when a material select item is triggered, whether through keypress
   /// or through click.
   void handleSelectItemTrigger(
       MenuItem item, MenuItemGroup group, UIEvent event) {
-    if (item == null || !item.enabled) return;
+    if (!item.enabled) return;
 
     if (item.hasSubMenu) {
       _openSubMenu(item, isOpenedByKeyboard: event is KeyboardEvent);
@@ -428,10 +427,10 @@ class MenuItemGroupsComponent
       item is SelectableMenuItem && item.shouldSelectOnItemClick;
 
   bool isItemVisible(MenuItem item) => item is SelectableMenuItem
-      ? item.selectableState != SelectableOption.Hidden
+      ? item.selectableState != SelectableOption.hidden
       : true;
 
-  bool isItemActive(MenuItem item) => activeModel?.activeItem == item;
+  bool isItemActive(MenuItem item) => activeModel.activeItem == item;
 
   /// Returns true if the current item with ID [itemId] should be auto-focused
   /// on menu open.
@@ -454,7 +453,7 @@ class MenuItemGroupsComponent
   /// multiple shortcut keys match the given [keyCode], then all matching
   /// shortcut actions are triggered.
   bool _triggerAffixShortcutActions(MenuItem item, int keyCode) {
-    if (item == null || !item.enabled) return false;
+    if (!item.enabled) return false;
 
     final matching = item.itemSuffixes
         .where((suffix) => suffix.hasShortcutKeyCode(keyCode))
@@ -472,18 +471,16 @@ class MenuItemGroupsComponent
   }
 
   void _createActiveMenuModelIfNone() {
-    if ((menu != null) && (activeModel == null)) {
-      activeModel = ActiveMenuItemModel(_idGenerator,
-          menu: menu, filterOutUnselectableItems: true);
-      if (activateLastItemOnInit) {
-        activeModel.activateLast();
-        _autoFocusActiveItem();
-      } else if (activateFirstItemOnInit) {
-        _autoFocusActiveItem();
-      } else {
-        // Don't activate any item.
-        activeModel.activate(null);
-      }
+    activeModel = ActiveMenuItemModel(_idGenerator,
+        menu: menu, filterOutUnselectableItems: true);
+    if (activateLastItemOnInit) {
+      activeModel.activateLast();
+      _autoFocusActiveItem();
+    } else if (activateFirstItemOnInit) {
+      _autoFocusActiveItem();
+    } else {
+      // Don't activate any item.
+      activeModel.activate(null);
     }
   }
 
@@ -521,7 +518,7 @@ class MenuItemGroupsComponent
   bool _isSelected(SelectionModel selectionModel, MenuItem item) {
     final itemValue = getItemValue(item);
     return itemValue != null &&
-        (selectionModel?.isSelected(itemValue) ?? false);
+        selectionModel.isSelected(itemValue);
   }
 
   @override
@@ -537,7 +534,7 @@ class MenuItemGroupsComponent
   void _listenForSelectionChanges(MenuItemGroup group) {
     if (group is MenuItemGroupWithSelection) {
       _disposer.addStreamSubscription(
-          group.selectionModel!.selectionChanges.listen((_) {
+          group.selectionModel.selectionChanges.listen((_) {
         _updateItemsAriaCheckedState(_menu);
       }));
     }
@@ -554,7 +551,7 @@ class MenuItemGroupsComponent
   /// menu of other menu items that have a mixture of checked and unchecked
   /// values (mixed)." - https://www.w3.org/TR/wai-aria-1.1/#menuitemcheckbox
   void _updateItemsAriaCheckedState(MenuModel menu) {
-    if (menu?.itemGroups?.isEmpty ?? true) return;
+    if (menu.itemGroups.isEmpty) return;
 
     for (final group in menu.itemGroups) {
       if (group is MenuItemGroupWithSelection) {
@@ -586,26 +583,26 @@ class MenuItemGroupsComponent
 
   /// Whether any children in an item's submenu are selected.
   bool _anyChildrenSelected(MenuItemGroup group, MenuItem item) =>
-      item.subMenu!.itemGroups!.any((g) =>
+      item.subMenu!.itemGroups.any((g) =>
           g is MenuItemGroupWithSelection &&
           g.any((i) => _isSelected(g.selectionModel, i)));
 
   bool _everyChildrenSelected(MenuItemGroup group, MenuItem item) =>
-      item.subMenu!.itemGroups!.every((g) =>
+      item.subMenu!.itemGroups.every((g) =>
           g is MenuItemGroupWithSelection &&
           g.every((i) => _isSelected(g.selectionModel, i)));
 }
 
 const _preferredSubMenuPositions = [
-  RelativePosition.AdjacentRightTop,
-  RelativePosition.AdjacentRight,
-  RelativePosition.AdjacentRightBottom,
-  RelativePosition.AdjacentLeftTop,
-  RelativePosition.AdjacentLeft,
-  RelativePosition.AdjacentLeftBottom,
+  RelativePosition.adjacentRightTop,
+  RelativePosition.adjacentRight,
+  RelativePosition.adjacentRightBottom,
+  RelativePosition.adjacentLeftTop,
+  RelativePosition.adjacentLeft,
+  RelativePosition.adjacentLeftBottom,
 ];
 
 const _tooltipPositions = [
-  RelativePosition.AdjacentRight,
-  RelativePosition.AdjacentLeft,
+  RelativePosition.adjacentRight,
+  RelativePosition.adjacentLeft,
 ];

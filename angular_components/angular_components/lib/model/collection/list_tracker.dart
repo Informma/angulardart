@@ -14,23 +14,23 @@ class LazyListTracker<S, T> extends Object
   List<S> _source;
   List<T?>? _target;
 
-  _MapFunction<S, T> _mapSource;
-  _MapFunction<T, S> _lookupSource;
-  Function? _onRemove;
-  Function? _onInsert;
-  Function? _onChange;
+  final _MapFunction<S, T> _mapSource;
+  final _MapFunction<T, S> _lookupSource;
+  final Function? _onRemove;
+  final Function? _onInsert;
+  final Function? _onChange;
 
   /// A callback function for performing a backward pass over inserted ranges
   /// of items.
   ///
   /// For an example on how this callback can be used to implement grouping,
   /// see the "LazyListTracker grouping" test group.
-  Function? _onInsertBackpass;
+  final Function? _onInsertBackpass;
 
   StreamSubscription? _subscription;
 
-  LazyListTracker(List<S> source, T mapSource(int index, S object),
-      S lookupSource(int index, T object),
+  LazyListTracker(List<S> source, T Function(int index, S object) mapSource,
+      S Function(int index, T object) lookupSource,
       {List<T>? target,
       void Function(int index, S source, T target)? onRemove,
       T Function(int index, S source, T target)? onInsert,
@@ -146,7 +146,7 @@ class LazyListTracker<S, T> extends Object
             .listChanges
             .listen((event) => _onSourceChanges(event));
       }
-      _target!.length = _source?.length ?? 0;
+      _target!.length = _source.length;
     }
   }
 

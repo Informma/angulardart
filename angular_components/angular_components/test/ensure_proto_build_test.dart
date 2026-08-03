@@ -4,6 +4,8 @@
 
 @TestOn('vm')
 @Tags(['presubmit-only'])
+library;
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -30,7 +32,7 @@ void main() {
       protocPath = (result.stdout as String).trim();
     }
 
-    final datepickerProtoPath = '${currentDir}/lib/material_datepicker/proto';
+    final datepickerProtoPath = '$currentDir/lib/material_datepicker/proto';
 
     // 1 - get a list of modified `.pb.dart` files - should be empty
     expect(_changedGeneratedFiles(), isEmpty);

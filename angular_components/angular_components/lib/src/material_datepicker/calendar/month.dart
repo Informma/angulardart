@@ -46,9 +46,11 @@ class CalendarMonth {
 
   void update(CalendarState? state) {
     // TODO(google): Disable CSS transitions here somehow
-    this.calendarState = state;
-    if (weeks != null && state != null) {
-      weeks.forEach((w) => w.update(state));
+    calendarState = state;
+    if (state != null) {
+      for (var w in weeks) {
+        w.update(state);
+      }
     }
     if (state == null || state.resolution != CalendarResolution.months) {
       _classes = [];
@@ -119,7 +121,7 @@ class CalendarMonth {
   }
 
   @override
-  bool operator ==(o) => o is CalendarMonth && o._start == _start;
+  bool operator ==(Object other) => other is CalendarMonth && other._start == _start;
 
   @override
   int get hashCode => _start.hashCode;
@@ -156,12 +158,6 @@ class MonthRange {
       {final CalendarMonth? tryToStartAt}) {
     if (length < 1) {
       throw ArgumentError.value(length, 'length', 'must be at least 1');
-    }
-    if (min == null) {
-      throw ArgumentError.notNull('min');
-    }
-    if (max == null) {
-      throw ArgumentError.notNull('max');
     }
 
     int months = min.deltaMonths(max) + 1;

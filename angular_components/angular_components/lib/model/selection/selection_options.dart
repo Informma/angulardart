@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library angular_components.model.selection.selection_options;
+library;
 
 import 'dart:async';
 
@@ -27,25 +27,25 @@ class OptionGroup<T> extends LabeledList<T> {
 
   bool get hasEmptyLabel => _emptyLabelFcn != null;
 
-  OptionGroup(List<T> items, [LabelFunction? labelFcn]) : super(items, labelFcn);
+  OptionGroup(super.items, [super.labelFcn]);
 
-  OptionGroup.withLabelFunction(List<T> items,
-      [LabelFunction? labelFcn, this._emptyLabelFcn])
-      : super.withLabelFunction(items, labelFcn);
+  OptionGroup.withLabelFunction(super.items,
+      [super.labelFcn, this._emptyLabelFcn])
+      : super.withLabelFunction();
 
   /// An option group with a label is recommended when multiple option groups
   /// exist in a selection list.
-  OptionGroup.withLabel(List<T> items, [String? label, String? emptyLabel])
+  OptionGroup.withLabel(super.items, [super.label, String? emptyLabel])
       : _emptyLabelFcn = emptyLabel != null ? (() => emptyLabel) : null,
-        super.withLabel(items, label);
+        super.withLabel();
 
   /// Creates a new option group with options from [start] inclusive to [end]
   /// exclusive, other properties stay the same.
   OptionGroup<T> slicedOptionGroup(int start, int end) {
-    List<T> subListItems = this.sublist(start, end);
+    List<T> subListItems = sublist(start, end);
 
     return OptionGroup.withLabelFunction(
-        subListItems, hasLabel ? null : () => uiDisplayName!, _emptyLabelFcn);
+        subListItems, hasLabel ? null : () => uiDisplayName, _emptyLabelFcn);
   }
 }
 
@@ -127,9 +127,7 @@ class SelectionOptions<T> extends GroupedOptions<T>
     var oldValue = _optionGroups;
     if (oldValue != value) {
       _optionGroups = value;
-      _flattenedList = _optionGroups != null
-          ? _optionGroups.expand((i) => i).toList()
-          : <T>[];
+      _flattenedList = _optionGroups.expand((i) => i).toList();
       _controller.add(_optionGroups);
     }
   }

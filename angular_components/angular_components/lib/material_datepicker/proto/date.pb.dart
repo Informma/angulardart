@@ -3,6 +3,7 @@
 //  source: date.proto
 //
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
+library;
 
 import 'dart:core' as $core;
 
@@ -26,12 +27,16 @@ class Date extends $pb.GeneratedMessage {
   factory Date.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+  @$core.override
   Date clone() => Date()..mergeFromMessage(this);
+  @$core.override
   Date copyWith(void Function(Date) updates) =>
       super.copyWith((message) => updates(message as Date));
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static Date create() => Date._();
+  @$core.override
   Date createEmptyInstance() => create();
   static $pb.PbList<Date> createRepeated() => $pb.PbList<Date>();
   @$core.pragma('dart2js:noInline')

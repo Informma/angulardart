@@ -38,7 +38,7 @@ class ActiveItemModel<T> {
   /// Auto-activating the first result may slightly speed up keyboard nav for
   /// users. It can also be detremental to a11y in others. For example, to
   /// avoid screen reader issues, multi-select comboboxes toggle list item
-  /// selection via <Space> not <Enter>. To allow a space in their search query,
+  /// selection via `<Space>` not `<Enter>`. To allow a space in their search query,
   /// no items can be active or else their selection will be toggled. Setting
   /// this value to false will prevent items from auto-activating when the
   /// search query changes.
@@ -71,11 +71,11 @@ class ActiveItemModel<T> {
     if (const ListEquality().equals(itemList, _items)) return;
 
     _ids.clear();
-    var _lastActive = activeItem;
+    var lastActive = activeItem;
     // Ensure [_items] can't change.
     _items = List.unmodifiable(itemList);
-    if (_lastActive != null) {
-      var last = _items.indexOf(_lastActive);
+    if (lastActive != null) {
+      var last = _items.indexOf(lastActive);
       if (last != -1) {
         _activeIndex = last;
         return;
@@ -162,7 +162,7 @@ class ActiveItemModel<T> {
   /// Auto-activating the first result may slightly speed up keyboard nav for
   /// users. It can also be detremental to a11y in others. For example, to
   /// avoid screen reader issues, multi-select comboboxes toggle list item
-  /// selection via <Space> not <Enter>. If as the results list changes the
+  /// selection via `<Space>` not `<Enter>`. If as the results list changes the
   /// first item is auto-activated, that would block the user from including a
   /// space in their search query.
   bool activateFirstItemByDefault = true;

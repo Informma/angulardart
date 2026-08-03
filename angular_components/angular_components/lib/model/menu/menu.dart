@@ -96,17 +96,13 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
   int? _width;
 
   MenuModel(List<MenuItemGroup<T>> itemGroups,
-      {Icon? icon, int? width, String? tooltipText})
-      : itemGroups = List<MenuItemGroup<T>>.unmodifiable(itemGroups),
-        icon = icon,
-        tooltipText = tooltipText {
+      {this.icon, int? width, this.tooltipText})
+      : itemGroups = List<MenuItemGroup<T>>.unmodifiable(itemGroups) {
     this.width = width;
   }
 
-  MenuModel.flat(List<T> items, {Icon? icon, int? width, String? tooltipText})
-      : itemGroups = [MenuItemGroup<T>(items)],
-        icon = icon,
-        tooltipText = tooltipText {
+  MenuModel.flat(List<T> items, {this.icon, int? width, this.tooltipText})
+      : itemGroups = [MenuItemGroup<T>(items)] {
     this.width = width;
   }
 
@@ -139,16 +135,21 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
 ///     new MenuItem(label, tooltip: tooltip,
 ///                  action:action, icon:icon, subMenu:subMenu);
 class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
+  @override
   final String label;
+  @override
   final String? secondaryLabel;
+  @override
   final String tooltip;
   final String? ariaLabel;
 
   final String labelAnnotation;
+  @override
   final MenuModel<T>? subMenu;
 
   ActionWithContext? _actionWithContext;
 
+  @override
   ActionWithContext? get actionWithContext => _actionWithContext;
   @Deprecated('This should be final.')
   set actionWithContext(ActionWithContext? value) {
@@ -165,6 +166,7 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
     _actionWithContext = (_) => value!();
   }
 
+  @override
   final Icon? icon;
 
   final ObservableList<MenuItemAffix> itemSuffixes;
@@ -195,13 +197,13 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
       String? tooltip,
       @Deprecated('Use ActionWithContext') MenuAction? action,
       ActionWithContext? actionWithContext,
-      Icon? icon,
+      this.icon,
       String? labelAnnotation,
       Iterable<String>? cssClasses,
       MenuItemAffix? itemSuffix,
       ObservableList<MenuItemAffix>? itemSuffixes,
-      MenuModel<T>? subMenu,
-      String? secondaryLabel,
+      this.subMenu,
+      this.secondaryLabel,
       String? ariaLabel})
       : tooltip = tooltip ?? '',
         labelAnnotation = labelAnnotation ?? '',
@@ -209,10 +211,7 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
             ObservableList<MenuItemAffix>.from(
                 Optional.fromNullable(itemSuffix)),
         cssClasses = BuiltList<String>(cssClasses ?? <String>[]),
-        ariaLabel = ariaLabel ?? label,
-        icon = icon,
-        subMenu = subMenu,
-        secondaryLabel = secondaryLabel {
+        ariaLabel = ariaLabel ?? label {
     assert(itemSuffix == null || itemSuffixes == null,
         'Only one of itemSuffix or itemSuffixes should be provided');
     assert(action == null || actionWithContext == null,
@@ -285,17 +284,16 @@ class ActiveMenuItemModel<T> extends ActiveItemModel<T> {
   /// This means the active item model will skip over any non-enabled items.
   final bool _filterOutUnselectableItems;
 
-  ActiveMenuItemModel(IdGenerator idGenerator,
+  ActiveMenuItemModel(IdGenerator super.idGenerator,
       {MenuModel<T>? menu, bool filterOutUnselectableItems = false})
       : _filterOutUnselectableItems = filterOutUnselectableItems,
-        super(idGenerator,
-            items: _createEnabledItemGroupList(
+        super(items: _createEnabledItemGroupList(
                 menu?.itemGroups, filterOutUnselectableItems),
             loop: true);
 
   set menu(MenuModel<T> menu) {
     super.items = _createEnabledItemGroupList(
-        menu?.itemGroups, _filterOutUnselectableItems);
+        menu.itemGroups, _filterOutUnselectableItems);
   }
 
   @override
@@ -314,6 +312,6 @@ class ActiveMenuItemModel<T> extends ActiveItemModel<T> {
         .map((group) => group
             .where((item) => item is MenuItem ? item.enabled : true)
             .toList())
-        .toList() as List<List<T>>);
+        .toList());
   }
 }

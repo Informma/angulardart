@@ -16,6 +16,7 @@ void main() {
     fakeRouter = FakeRouter();
     addInjector = (i) {
       final strategy = MockLocationStrategy();
+      // ignore: experimental_member_use
       return ReflectiveInjector.resolveStaticAndCreate([
         FactoryProvider(Location, () => Location(strategy), deps: []),
         ValueProvider(LocationStrategy, strategy),

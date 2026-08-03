@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/laminate/overlay/constants.dart';
 import 'package:angulardart_components/laminate/popup/popup.dart';
 import 'package:angulardart_components/model/action/delayed_action.dart';
@@ -225,7 +224,6 @@ abstract class TooltipTarget extends PopupSourceDirective {
   set popupId(String id) {
     super.popupId = id;
     _id = id;
-    if (id == null) return;
   }
 
   @override

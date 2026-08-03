@@ -5,7 +5,6 @@
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
 import 'package:angulardart_components/interfaces/has_disabled.dart';
 import 'package:angulardart_components/material_ripple/material_ripple.dart';
@@ -97,7 +96,6 @@ class MaterialButtonComponent extends MaterialButtonBase {
   MaterialButtonComponent(HtmlElement element, AcxDarkTheme darktheme,
       this._changeDetector, @Attribute('role') String role)
       : super(element, role) {
-    if (_changeDetector == null) throw Exception('Expecting change detector');
     darktheme.themeElement(element);
   }
 

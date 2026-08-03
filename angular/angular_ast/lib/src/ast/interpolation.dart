@@ -36,8 +36,8 @@ abstract mixin class InterpolationAst implements StandaloneTemplateAst {
   String get value;
 
   @override
-  bool operator ==(Object o) {
-    return o is InterpolationAst && o.value == value;
+  bool operator ==(Object other) {
+    return other is InterpolationAst && other.value == value;
   }
 
   @override
@@ -66,9 +66,9 @@ class _SyntheticInterpolationAst extends SyntheticTemplateAst
   _SyntheticInterpolationAst(this.value);
 
   _SyntheticInterpolationAst.from(
-    TemplateAst origin,
+    TemplateAst super.origin,
     this.value,
-  ) : super.from(origin);
+  ) : super.from();
 
   @override
   final String value;

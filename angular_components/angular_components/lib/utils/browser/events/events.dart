@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @JS()
-library events;
+library;
 
 import 'dart:async';
 import 'dart:html';
@@ -113,7 +113,7 @@ Stream<Event> triggersOutsideAny(Predicate<Node> checkNodeInside) {
         document.removeEventListener('focus', listener!, true);
         document.removeEventListener('touchend', listener!);
       });
-  return controller!.stream;
+  return controller.stream;
 }
 
 /// A stream of contect rects fired when [element] changes size.
@@ -140,7 +140,7 @@ Stream<Rectangle> onResize(Element element) {
       onCancel: () {
         observer?.disconnect();
       });
-  return controller!.stream;
+  return controller.stream;
 }
 
 /// Return true if the element or any of its ancestors have an attribute.

@@ -147,10 +147,8 @@ abstract class ScrollHostBase implements ScrollHost {
   /// The stream of ScrollHostEvents before they have been handled to scroll the
   /// content of the ScrollHost.
   Stream<ScrollHostEvent> get nativeOnScroll {
-    if (_nativeOnScrollController == null) {
-      _nativeOnScrollController = StreamController<ScrollHostEvent>.broadcast(
+    _nativeOnScrollController ??= StreamController<ScrollHostEvent>.broadcast(
           onListen: _startElementListeners, onCancel: _stopElementListeners);
-    }
 
     return _nativeOnScrollController!.stream;
   }
@@ -182,15 +180,11 @@ abstract class ScrollHostBase implements ScrollHost {
     if (!usePositionSticky) {
       _elementListenersDisposer!.addStreamSubscription(
           anchorElement.onWheel.listen((WheelEvent event) {
-        if (event is! WheelEvent) return;
-        // Ignore mouse wheel event if the CTRL key, SHIFT key or META key
-        // (i.e. WIN key for Windows and CMD key for Mac) is pressed.
-        // This is consistent with other Google sites and ensures compatibility
-        // with embedded APIs (e.g. Maps zooms the map when
-        // CTRL/CMD is pressed).
-        if ((event?.ctrlKey ?? false) ||
-            (event?.metaKey ?? false) ||
-            (event?.shiftKey ?? false)) return;
+        if (event.ctrlKey ||
+            event.metaKey ||
+            event.shiftKey) {
+          return;
+        }
 
         // Use default values from WheelEvent if deltaX/deltaY not supported by
         // the browser (currently occurred in Firefox). Vertical scrolling still
@@ -200,13 +194,13 @@ abstract class ScrollHostBase implements ScrollHost {
         num deltaY = 0;
 
         try {
-          deltaX = event.deltaX ?? 0;
+          deltaX = event.deltaX;
         } on UnsupportedError catch (error) {
           _logger.severe('deltaX is not supported in event: $event', error);
         }
 
         try {
-          deltaY = event.deltaY ?? 0;
+          deltaY = event.deltaY;
         } on UnsupportedError catch (error) {
           _logger.severe('deltaY is not supported in event: $event', error);
         }
@@ -252,7 +246,7 @@ abstract class ScrollHostBase implements ScrollHost {
   int _scrollFrameDelta = 0;
 
   void _onNativeScroll(ScrollHostEvent event) {
-    _scrollFrameDelta += event.deltaY ?? 0;
+    _scrollFrameDelta += event.deltaY;
     if (_scrollFrameScheduled && throttleScrollEvents) return;
     _scrollFrameScheduled = true;
     window.requestAnimationFrame((_) {
@@ -274,7 +268,7 @@ abstract class ScrollHostBase implements ScrollHost {
     }
   }
 
-  void _onIntersection(Iterable entries, IntersectionObserver _observer) {
+  void _onIntersection(Iterable entries, IntersectionObserver observer) {
     for (IntersectionObserverEntry entry in entries) {
       _intersectionStreams[entry.target]?.add(entry);
     }
@@ -296,9 +290,8 @@ abstract class ScrollHostBase implements ScrollHost {
 class WindowScrollHostBase extends ScrollHostBase {
   final Window _window;
 
-  WindowScrollHostBase(DomService domService, NgZone managedZone,
-      GestureListenerFactory gestureListenerFactory, this._window)
-      : super(domService, managedZone, gestureListenerFactory);
+  WindowScrollHostBase(super.domService, super.managedZone,
+      super.gestureListenerFactory, this._window);
 
   @override
   GlobalEventHandlers get scrollbarHost => _window;
@@ -346,12 +339,10 @@ class WindowScrollHostBase extends ScrollHostBase {
 class ElementScrollHostBase extends ScrollHostBase {
   final Element element;
 
-  ElementScrollHostBase(DomService domService, NgZone managedZone,
-      GestureListenerFactory gestureListenerFactory, this.element,
-      {bool usePositionSticky = false, useTouchGestureListener = true})
-      : super(domService, managedZone, gestureListenerFactory,
-            usePositionSticky: usePositionSticky,
-            useTouchGestureListener: useTouchGestureListener) {
+  ElementScrollHostBase(super.domService, super.managedZone,
+      super.gestureListenerFactory, this.element,
+      {bool usePositionSticky = false, super.useTouchGestureListener})
+      : super(usePositionSticky: usePositionSticky) {
     element.style.overflowY = 'auto';
 
     // Allows scroll host which contains huge iframe be able to scroll on iOS.

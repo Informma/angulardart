@@ -23,7 +23,7 @@ class HighlightAssistant {
       TextHighlighter(matchFromStartOfWord: _matchFromStartOfWord);
 
   /// Whether matches should only highlight at the start of words.
-  bool _matchFromStartOfWord;
+  final bool _matchFromStartOfWord;
 
   /// Creates new HighlightAssistant, using provided [optionHighlighter] or
   /// TextHighlighter if no value is provided.
@@ -33,15 +33,15 @@ class HighlightAssistant {
         _matchFromStartOfWord = matchFromStartOfWord;
 
   List<HighlightedTextSegment> highlightOption<T>(
-      String _lastQuery, dynamic item, ItemRenderer<T> itemRenderer) {
-    var _queryHighlightCache = _highlightCache[_lastQuery] ??= {};
-    var value = _queryHighlightCache[item];
+      String lastQuery, dynamic item, ItemRenderer<T> itemRenderer) {
+    var queryHighlightCache = _highlightCache[lastQuery] ??= {};
+    var value = queryHighlightCache[item];
     if (value == null) {
       value = (_optionHighlighter != null
-          ? _optionHighlighter!(_lastQuery, item)
+          ? _optionHighlighter!(lastQuery, item)
           : _textHighlighter.highlight(
-              itemRenderer(item), _lastQuery.split(_separatorRegex)));
-      _queryHighlightCache[item] = value;
+              itemRenderer(item), lastQuery.split(_separatorRegex)));
+      queryHighlightCache[item] = value;
     }
     return value;
   }

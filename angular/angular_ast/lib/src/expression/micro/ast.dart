@@ -21,10 +21,10 @@ class NgMicroAst {
   });
 
   @override
-  bool operator ==(Object o) {
-    if (o is NgMicroAst) {
-      return _listEquals.equals(letBindings, o.letBindings) &&
-          _listEquals.equals(properties, o.properties);
+  bool operator ==(Object other) {
+    if (other is NgMicroAst) {
+      return _listEquals.equals(letBindings, other.letBindings) &&
+          _listEquals.equals(properties, other.properties);
     }
     return false;
   }

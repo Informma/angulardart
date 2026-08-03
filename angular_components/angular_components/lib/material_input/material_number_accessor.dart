@@ -61,7 +61,6 @@ abstract class BaseMaterialNumberValueAccessor<T>
     }
     if (blurFormat) {
       disposer.addStreamSubscription(input.onBlur.listen((_) {
-        if (input == null) return; // Input is no longer valid
         final parsedNumber = parseNumber(input.inputText);
         // If the value parses, it's a number so format it as such.
         if (parsedNumber != null) {
@@ -85,7 +84,6 @@ abstract class BaseMaterialNumberValueAccessor<T>
   @override
   void registerOnChange(callback) {
     disposer.addStreamSubscription(_updateStream.listen((_) {
-      if (input == null) return;
       final rawValue = input.inputText;
       final value = parseNumber(rawValue);
       if (value != null) {
@@ -157,7 +155,7 @@ class MaterialInt64ValueAccessor
 
   @override
   Int64? parseNumber(String input) {
-    if (input == null || input.isEmpty) {
+    if (input.isEmpty) {
       return null;
     }
 
@@ -199,7 +197,7 @@ class MaterialNumberValueAccessor extends BaseMaterialNumberValueAccessor<num> {
       @Attribute('checkInteger') String checkInteger,
       @Attribute('blurFormat') String blurFormat,
       @Optional() NumberFormat? numberFormat)
-      : this._checkInteger = attributeToBool(checkInteger, defaultValue: false),
+      : _checkInteger = attributeToBool(checkInteger, defaultValue: false),
         super(
             input,
             control,
@@ -212,7 +210,7 @@ class MaterialNumberValueAccessor extends BaseMaterialNumberValueAccessor<num> {
   num? parseNumber(String input) {
     // NaN is a valid parsable entity for NumberFormat, but not a value a user
     // is expected to be able to input.
-    if (input == null || input == 'NaN') return null;
+    if (input == 'NaN') return null;
 
     try {
       if (_checkInteger && input.contains(_numberFormat!.symbols.DECIMAL_SEP)) {

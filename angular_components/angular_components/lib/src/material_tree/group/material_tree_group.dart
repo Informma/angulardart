@@ -24,7 +24,7 @@ const materialTreeLeftPaddingToken =
 /// It must be rendered as a child of a [MaterialTreeRoot] implementation.
 ///
 /// __Example use__:
-///     <material-tree-group [group]="group"></material-tree-group>
+///     `<material-tree-group [group]="group"></material-tree-group>`
 @Component(
   selector: 'material-tree-group',
   directives: [
@@ -59,12 +59,6 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T>
   int level = 0;
   @Input()
   bool parentHasCheckbox = false;
-  @Input()
-  @override
-  bool allowParentSingleSelection = false;
-  @Input()
-  @override
-  bool allowParentMultiSelection = true;
   @Input()
   bool deselectOnTrigger = true;
   final MaterialTreeRoot<T> _root;
@@ -114,14 +108,14 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T>
   @HostBinding('class.material-tree-group')
   final bool isMaterialTreeGroup = true;
 
-  bool showCheckbox(option) =>
+  bool showCheckbox(dynamic option) =>
       showSelectionState &&
       (isSelectable(option) || showDisabledCheckbox(option));
 
   // This returns the item indentation based on it's level.
   // Level 0 means it's the higher parent in the hierarchy, and it gets
   // a constant definition.
-  String getIndent(option) {
+  String getIndent(dynamic option) {
     int padding = 0;
     if (level > 0) {
       padding += (level - 1) * rowIndentationStep;
@@ -177,8 +171,8 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T>
   /// specified.
   @Input()
   @override
-  set group(OptionGroup<T> _group) {
-    super.group = _group;
+  set group(OptionGroup<T> group) {
+    super.group = group;
 
     if (_maxInitialOptionsShown == null) {
       _visibleGroup = group;

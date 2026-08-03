@@ -62,7 +62,7 @@ class MaterialChipsComponent<T> implements HasRenderer<T>, OnDestroy {
   Iterable<T> get selectedItems => selectionModel.selectedValues;
 
   /// Default item renderer if none is provided by the user of this widget.
-  static String? _defaultItemRenderer(Object value) => value?.toString();
+  static String? _defaultItemRenderer(Object value) => value.toString();
 
   MaterialChipsComponent(this._changeDetector);
 

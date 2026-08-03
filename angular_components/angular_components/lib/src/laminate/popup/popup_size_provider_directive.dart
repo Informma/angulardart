@@ -8,8 +8,8 @@ import 'package:angulardart_components/src/laminate/popup/popup_size_provider.da
 /// Directive to provide maximum and minimum sizes to a popup from html.
 ///
 /// Example usage (somefile.html):
-/// <my-popup-using-component popupMaxHeight="400px" popupMaxWidth="40%">
-/// </my-popup-using-component>
+/// `<my-popup-using-component popupMaxHeight="400px" popupMaxWidth="40%">`
+/// `</my-popup-using-component>`
 ///
 /// If a maximum or minimum size is not specified, it delegates to parent popup
 /// size provider.
@@ -33,11 +33,11 @@ class PopupSizeProviderDirective implements PopupSizeProvider {
       @Attribute('popupMaxWidth') String maxWidth,
       @Optional() @SkipSelf() this._parentPopupSizeProvider) {
     _minHeight =
-        minHeight == null ? null : _SizeDefinition.fromString(minHeight);
-    _minWidth = minWidth == null ? null : _SizeDefinition.fromString(minWidth);
+        _SizeDefinition.fromString(minHeight);
+    _minWidth = _SizeDefinition.fromString(minWidth);
     _maxHeight =
-        maxHeight == null ? null : _SizeDefinition.fromString(maxHeight);
-    _maxWidth = maxWidth == null ? null : _SizeDefinition.fromString(maxWidth);
+        _SizeDefinition.fromString(maxHeight);
+    _maxWidth = _SizeDefinition.fromString(maxWidth);
 
     // Define a reasonable default if for some reason a parent
     // PopupSizeProvider is not injected.
@@ -77,7 +77,7 @@ abstract class _SizeDefinition {
 
   /// Create from an attribute string.
   ///
-  /// [attribute] should be in the format <num><unit>.  i.e: "100px" or "70%".
+  /// [attribute] should be in the format `<num><unit>`.  i.e: "100px" or "70%".
   factory _SizeDefinition.fromString(String attribute) {
     var match = _parseAttribute.firstMatch(attribute);
     if (match == null) throw StateError('Invalid size string: $attribute');

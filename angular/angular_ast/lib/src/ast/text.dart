@@ -24,7 +24,7 @@ abstract mixin class TextAst implements StandaloneTemplateAst {
   ) = _ParsedTextAst;
 
   @override
-  bool operator ==(Object o) => o is TextAst && value == o.value;
+  bool operator ==(Object other) => other is TextAst && value == other.value;
 
   @override
   int get hashCode => value.hashCode;
@@ -57,5 +57,5 @@ class _SyntheticTextAst extends SyntheticTemplateAst with TextAst {
 
   _SyntheticTextAst(this.value);
 
-  _SyntheticTextAst.from(TemplateAst origin, this.value) : super.from(origin);
+  _SyntheticTextAst.from(TemplateAst super.origin, this.value) : super.from();
 }

@@ -37,20 +37,14 @@ class PopupHierarchy {
   }
 
   void _attach(PopupHierarchyElement child) {
-    assert(child != null);
     if (_visiblePopupStack.isEmpty) {
       _rootPane =
           events.closestWithClass(child.elementRef!.nativeElement, 'pane');
     }
     _visiblePopupStack.add(child);
 
-    if (_triggerListener == null) {
-      // Passing null to triggersOutside listens to triggers on any elements.
-      _triggerListener = events.triggersOutside(null).listen(_onTrigger);
-    }
-    if (_keyUpListener == null) {
-      _keyUpListener = document.onKeyUp.listen(_onKeyUp);
-    }
+    _triggerListener ??= events.triggersOutside(null).listen(_onTrigger);
+    _keyUpListener ??= document.onKeyUp.listen(_onKeyUp);
   }
 
   void _disposeListeners() {
@@ -90,7 +84,7 @@ class PopupHierarchy {
 
   void _onTrigger(Event event) {
     // Some weird event, ignore it.
-    if (event?.target == null) return;
+    if (event.target == null) return;
 
     _lastTriggerEvent = event;
 
@@ -98,7 +92,6 @@ class PopupHierarchy {
 
     for (int i = _visiblePopupStack.length - 1; i >= 0; i--) {
       final current = _visiblePopupStack[i];
-      if (current?.container == null) continue;
 
       if (events.isParentOf(current.container, event.target! as Node)) return;
 
@@ -112,7 +105,7 @@ class PopupHierarchy {
 
   void _onKeyUp(KeyboardEvent event) {
     // Some weird event, ignore it.
-    if (event?.target == null) return;
+    if (event.target == null) return;
 
     _lastTriggerEvent = event;
 
@@ -121,7 +114,6 @@ class PopupHierarchy {
     if (event.keyCode == KeyCode.ESC) {
       for (int i = _visiblePopupStack.length - 1; i >= 0; i--) {
         final current = _visiblePopupStack[i];
-        if (current?.container == null) continue;
 
         if (events.isParentOf(current.container, event.target! as Node)) {
           event.stopPropagation();

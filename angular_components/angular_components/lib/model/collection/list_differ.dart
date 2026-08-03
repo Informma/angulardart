@@ -2,24 +2,26 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:collection';
 
 import 'package:observable/observable.dart';
 
 /// Describes an entity and its previous location (or marking it as a new one).
 class DiffEntry<T> {
-  static const _DEFAULT_NEW_ENTRY_INDEX = -1;
+  static const _defaultNewEntryIndex = -1;
+  @Deprecated('Use _defaultNewEntryIndex instead')
+  // ignore: constant_identifier_names, unused_field
+  static const _DEFAULT_NEW_ENTRY_INDEX = _defaultNewEntryIndex;
 
   final T entity;
   final int prevIndex;
-  bool get isNew => (prevIndex == _DEFAULT_NEW_ENTRY_INDEX);
+  bool get isNew => (prevIndex == _defaultNewEntryIndex);
   bool get isOld => !isNew;
 
   DiffEntry.oldEntry(this.entity, this.prevIndex) {
     assert(prevIndex >= 0);
   }
 
-  DiffEntry.newEntry(this.entity) : prevIndex = _DEFAULT_NEW_ENTRY_INDEX;
+  DiffEntry.newEntry(this.entity) : prevIndex = _defaultNewEntryIndex;
 }
 
 /// Describes the difference of two lists.
@@ -38,7 +40,9 @@ abstract class ListDiff<T> {
 }
 
 class _ComparingListDiff<T> implements ListDiff<T> {
+  @override
   List<DiffEntry<T>> entries = [];
+  @override
   List<DiffEntry<T>> deleted = [];
 
   _ComparingListDiff(List<T> prev, List<T> curr) {
@@ -48,7 +52,7 @@ class _ComparingListDiff<T> implements ListDiff<T> {
   // TODO(google): make calculation of [entries] or the sorting of [deleted]
   // deferred to the time of the getter call
   void _calculateEntries(List<T> prev, List<T> curr) {
-    var map = LinkedHashMap<T, DiffEntry<T>>();
+    var map = <T, DiffEntry<T>>{};
     for (int i = 0; i < prev.length; i++) {
       T entity = prev[i];
       assert(!map.containsKey(entity));
@@ -57,9 +61,7 @@ class _ComparingListDiff<T> implements ListDiff<T> {
     for (int i = 0; i < curr.length; i++) {
       T entity = curr[i];
       var entry = map.remove(entity);
-      if (entry == null) {
-        entry = DiffEntry<T>.newEntry(entity);
-      }
+      entry ??= DiffEntry<T>.newEntry(entity);
       entries.add(entry);
     }
     deleted.addAll(map.values);
@@ -67,7 +69,9 @@ class _ComparingListDiff<T> implements ListDiff<T> {
 }
 
 class _ObservedListDiff<T> implements ListDiff<T> {
+  @override
   late List<DiffEntry<T>> entries;
+  @override
   late List<DiffEntry<T>> deleted;
 
   _ObservedListDiff(List<ListChangeRecord> event) {
@@ -94,9 +98,7 @@ class _ObservedListDiff<T> implements ListDiff<T> {
       for (int i = 0; i < record.addedCount; i++) {
         var entity = record.object[record.index + i] as T;
         var entry = removed.remove(entity);
-        if (entry == null) {
-          entry = DiffEntry<T>.newEntry(entity);
-        }
+        entry ??= DiffEntry<T>.newEntry(entity);
         entries.add(entry);
       }
       offset -= record.addedCount;

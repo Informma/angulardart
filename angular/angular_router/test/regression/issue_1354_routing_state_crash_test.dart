@@ -6,7 +6,7 @@ import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_router/angulardart_router.dart';
 import 'package:angulardart_router/testing.dart';
 
-import '1354_routing_state_crash_test.template.dart' as ng;
+import 'issue_1354_routing_state_crash_test.template.dart' as ng;
 
 void main() {
   test('should not crash entire app when a routed component throws', () async {

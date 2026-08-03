@@ -9,7 +9,6 @@ import 'package:angulardart_components/material_checkbox/material_checkbox.dart'
 import 'package:angulardart_components/material_radio/material_radio.dart';
 import 'package:angulardart_components/material_radio/material_radio_group.dart';
 import 'package:angulardart_components/src/material_tree/material_tree_node.dart';
-import 'package:angulardart_components/src/material_tree/material_tree_root.dart';
 import 'package:angulardart_components/mixins/material_dropdown_base.dart';
 import 'package:angulardart_components/model/selection/selection_model.dart';
 
@@ -25,8 +24,7 @@ import 'package:angulardart_components/model/selection/selection_model.dart';
 )
 class MaterialTreeGroupFlatListComponent<T> extends MaterialTreeNode<T> {
   MaterialTreeGroupFlatListComponent(
-      MaterialTreeRoot<T> root, ChangeDetectorRef changeDetector)
-      : super(root, changeDetector);
+      super.root, super.changeDetector);
 
   // This is only used to standardize all the different group components.
   @HostBinding('class.material-tree-group')
@@ -57,11 +55,10 @@ class MaterialTreeGroupFlatRadioComponent<T> extends MaterialTreeNode<T> {
   final SelectionModel selectionModel;
 
   MaterialTreeGroupFlatRadioComponent(
-      MaterialTreeRoot<T> root, ChangeDetectorRef changeDetector,
+      super.root, super.changeDetector,
       [@Optional() DropdownHandle? dropdownHandle])
-      : this._dropdownHandle = dropdownHandle,
-        this.selectionModel = root.selection,
-        super(root, changeDetector);
+      : _dropdownHandle = dropdownHandle,
+        selectionModel = root.selection;
 
   // This is only used to standardize all the different group components.
   @HostBinding('class.material-tree-group')
@@ -92,13 +89,9 @@ class MaterialTreeGroupFlatRadioComponent<T> extends MaterialTreeNode<T> {
   styleUrls: ['material_tree_group_flat_check.scss.css'],
 )
 class MaterialTreeGroupFlatCheckComponent<T> extends MaterialTreeNode<T> {
-  final DropdownHandle? _dropdownHandle;
-
   MaterialTreeGroupFlatCheckComponent(
-      MaterialTreeRoot<T> root, ChangeDetectorRef changeDetector,
-      [@Optional() DropdownHandle? dropdownHandle])
-      : _dropdownHandle = dropdownHandle,
-        super(root, changeDetector);
+      super.root, super.changeDetector,
+      [@Optional() DropdownHandle? dropdownHandle]);
 
   // This is only used to standardize all the different group components.
   @HostBinding('class.material-tree-group')

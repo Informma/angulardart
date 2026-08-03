@@ -9,14 +9,14 @@ import 'bootstrap_test.template.dart' as ng_generated;
 void main() {
   ng_generated.initReflector();
 
-  Injector _noopInjector(Injector i) => i;
+  Injector noopInjector(Injector i) => i;
 
   test('should create a new component in the DOM', () async {
     final host = Element.div();
     final test = await bootstrapForTest(
       ng_generated.createNewComponentInDomFactory(),
       host,
-      _noopInjector,
+      noopInjector,
     );
     expect(host.text, contains('Hello World'));
     test.destroy();
@@ -27,7 +27,7 @@ void main() {
     final test = await bootstrapForTest<BeforeChangeDetection>(
       ng_generated.createBeforeChangeDetectionFactory(),
       host,
-      _noopInjector,
+      noopInjector,
       beforeChangeDetection: (comp) => comp.users.add('Mati'),
     );
     expect(host.text, contains('Hello Mati!'));
@@ -39,7 +39,7 @@ void main() {
     final test = await bootstrapForTest<BeforeChangeDetection>(
       ng_generated.createBeforeChangeDetectionFactory(),
       host,
-      _noopInjector,
+      noopInjector,
       beforeChangeDetection: (comp) async => comp.users.add('Mati'),
     );
     expect(host.text, contains('Hello Mati!'));

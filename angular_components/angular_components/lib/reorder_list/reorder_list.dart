@@ -15,7 +15,7 @@ import 'package:angulardart_components/utils/keyboard/keyboard.dart';
 export 'reorder_events.dart';
 
 /// Provides a list that can reorder it's children using html5 drag&drop.
-/// A vertical reorder-list will use any component in its <ng-content>
+/// A vertical reorder-list will use any component in its `<ng-content>`
 /// marked with `reorderPlaceholder` attribute as a placeholder when moving
 /// items.
 ///
@@ -96,8 +96,8 @@ class ReorderListComponent implements OnDestroy {
 
   // Reorderable items in the list; keys are the handles, values are the items
   late Map<HtmlElement, HtmlElement> _items;
-  Map<HtmlElement, List<StreamSubscription>> _subscriptions = <HtmlElement, List<StreamSubscription>>{};
-  Map<HtmlElement, StreamSubscription> _dragSubscriptions = <HtmlElement, StreamSubscription>{};
+  final Map<HtmlElement, List<StreamSubscription>> _subscriptions = <HtmlElement, List<StreamSubscription>>{};
+  final Map<HtmlElement, StreamSubscription> _dragSubscriptions = <HtmlElement, StreamSubscription>{};
   late List<int> _curTransformY;
   late List<int> _itemSizes;
   // Flag to ensure that drop index is not updated when drop area is outside
@@ -117,8 +117,7 @@ class ReorderListComponent implements OnDestroy {
 
   @ContentChildren(ReorderItemDirective)
   set items(List<ReorderItemDirective> value) {
-    _items = Map.fromIterable(value,
-        key: (e) => e.handleElement, value: (e) => e.element);
+    _items = { for (var e in value) e.handleElement : e.element };
     _refreshItems();
   }
 
@@ -467,9 +466,7 @@ class ReorderListComponent implements OnDestroy {
 
   // Handles shift key selection when onClick event is fired.
   void _handleShift(int index) {
-    if (_pivotItemIndex == null) {
-      _pivotItemIndex = index;
-    }
+    _pivotItemIndex ??= index;
 
     var indexes = List<int>.from(
         range(min(_pivotItemIndex!, index), max(_pivotItemIndex!, index)));
@@ -621,7 +618,7 @@ class ReorderItemDirective {
   HtmlElement? _handleElement;
 
   HtmlElement? get _reorderHandle =>
-      _handleElement ?? _handleProvider?.reorderHandle?.element;
+      _handleElement ?? _handleProvider?.reorderHandle.element;
 
   /// The [HtmlElement] to be used as the drag handle.
   ///

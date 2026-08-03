@@ -40,9 +40,9 @@ abstract mixin class StarAst implements TemplateAst {
   }
 
   @override
-  bool operator ==(Object o) {
-    if (o is PropertyAst) {
-      return value == o.value && name == o.name;
+  bool operator ==(Object other) {
+    if (other is PropertyAst) {
+      return value == other.value && name == other.name;
     }
     return false;
   }
@@ -141,10 +141,10 @@ class _SyntheticStarAst extends SyntheticTemplateAst with StarAst {
   ]);
 
   _SyntheticStarAst.from(
-    TemplateAst origin,
+    TemplateAst super.origin,
     this.name, [
     this.value,
-  ]) : super.from(origin);
+  ]) : super.from();
 
   @override
   final String name;

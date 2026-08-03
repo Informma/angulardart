@@ -4,7 +4,7 @@ import 'package:angulardart_router/angulardart_router.dart';
 import 'package:angulardart_router/testing.dart';
 import 'package:angulardart_test/angulardart_test.dart';
 
-import '1348_empty_active_link_test.template.dart' as ng;
+import 'issue_1348_empty_active_link_test.template.dart' as ng;
 
 @GenerateInjector(routerProvidersTest)
 final injector = ng.injector$Injector;

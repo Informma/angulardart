@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/annotations/rtl_annotation.dart';
 import 'package:angulardart_components/focus/focus_item.dart';
 import 'package:angulardart_components/focus/focus_list.dart';
@@ -41,7 +40,7 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
   int _activeTabIndex = 0;
   late String _tabIndicatorTransform;
   late List<String> _tabLabels;
-  late NgZone _ngZone;
+  late final NgZone _ngZone;
 
   /// Stream of [TabChangeEvent] instances, published before the tab has
   /// changed.
@@ -118,10 +117,10 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
     return '${activeTabIndex == index}';
   }
 
-  String? tabId(int index) => tabIds?.elementAt(index);
+  String? tabId(int index) => tabIds.elementAt(index);
 
   void _updateTabIndicatorTransform() {
-    var width = _tabLabels != null ? 1 / _tabLabels.length : 0;
+    var width = 1 / _tabLabels.length;
     var location = _activeTabIndex * width * _transitionAmount;
     _tabIndicatorTransform = 'translateX($location%) scaleX($width)';
   }
@@ -136,7 +135,7 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
 
   @HostListener('focusout')
   void focusOutHandler(FocusEvent e) {
-    if (naviBar != null && !naviBar.contains(e.relatedTarget as Node?)) {
+    if (!naviBar.contains(e.relatedTarget as Node?)) {
       focusController.setTabbable(_activeTabIndex);
     }
   }

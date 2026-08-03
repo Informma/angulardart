@@ -16,7 +16,10 @@ typedef DisposeFunction = void Function();
 /// A class with a [dispose] method for cleaning up resources or subscriptions.
 abstract class Disposable {
   /// A disposable that does nothing.
-  static const Disposable Noop = _NoopDisposable();
+  static const Disposable noop = _NoopDisposable();
+  @Deprecated('Use noop instead')
+  // ignore: constant_identifier_names
+  static const Disposable Noop = noop;
 
   /// Creates a simple disposable that just executes [disposeFn].
   factory Disposable(DisposeFunction disposeFn) = _SingleFunctionDisposable;
@@ -87,6 +90,7 @@ class Disposer implements Disposable {
   /// Pass [oneShot] as true if no disposables are meant to be added after
   /// the dispose method is called.
   @Deprecated("Please use oneShot or multi instead")
+  // ignore: constant_identifier_names
   Disposer({bool oneShot = false}) : _oneShot = oneShot;
 
   /// Convenience constructor for one shot mode or single dispose mode.
@@ -141,7 +145,6 @@ class Disposer implements Disposable {
 
   /// Registers [disposable].
   DisposeFunction addFunction(DisposeFunction disposable) {
-    assert(disposable != null);
     _disposeFunctions ??= [];
     _disposeFunctions!.add(disposable);
     _checkIfAlreadyDisposed();

@@ -57,7 +57,7 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
   void ngOnInit() {
     _disposer.addDisposable(_domService.scheduleRead(_readElement));
     _disposer.addDisposable(_domService.trackLayoutChange(
-        () => currentClientSize.toString() + ' ' + currentScrollSize.toString(),
+        () => '$currentClientSize $currentScrollSize',
         (_) {
       _readElement(windowResize: true);
       _refreshController.add(true);
@@ -80,7 +80,7 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
 
   /// Whether the scrollbar is aligned vertically.
   @Input()
-  set isVertical(value) {
+  set isVertical(bool value) {
     _isVertical = value;
   }
 
@@ -195,7 +195,7 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
     }));
   }
 
-  void _readElement({windowResize = false}) {
+  void _readElement({bool windowResize = false}) {
     assert(_domService.isReadingDom);
     _clientSize = currentClientSize;
     _scrollSize = currentScrollSize;

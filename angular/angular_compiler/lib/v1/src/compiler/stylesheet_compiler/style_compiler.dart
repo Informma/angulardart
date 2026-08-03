@@ -88,7 +88,7 @@ class StyleCompiler {
               listShouldBeConst ? [o.TypeModifier.Const] : const [],
             )))
         .toDeclStmt(
-      o.ArrayType(o.OBJECT_TYPE),
+      o.ArrayType(o.objectType),
       [o.StmtModifier.Final],
     );
     return StylesCompileResult([statement], stylesVar);

@@ -36,7 +36,6 @@ class MaterialMonthPickerComponent
   @Input()
   set state(CalendarState state) {
     _model.value = state;
-    if (_calendarStream == null) _onCalendarChange(state);
   }
 
   CalendarState get state => _model.value;
@@ -88,7 +87,7 @@ class MaterialMonthPickerComponent
 
   /// What sort of interaction this calendar supports.
   CalendarSelectionMode get mode => _mode;
-  CalendarSelectionMode _mode = CalendarSelectionMode.NONE;
+  CalendarSelectionMode _mode = CalendarSelectionMode.none;
 
   static const int _monthHeight = 36;
   static const int _yearHeight = 4 * _monthHeight;
@@ -145,8 +144,8 @@ class MaterialMonthPickerComponent
     if (currentSelection == null) return;
 
     scrollToYear(state.previewAnchoredAtStart
-        ? currentSelection!.end!.year
-        : currentSelection!.start!.year);
+        ? currentSelection.end!.year
+        : currentSelection.start!.year);
   }
 
   void _onCalendarChange(CalendarState state) {
@@ -261,7 +260,7 @@ class MaterialMonthPickerComponent
 
     _today = Date.today(clock);
 
-    if (mode != null && mode.isNotEmpty) {
+    if (mode.isNotEmpty) {
       _mode = fuzzyParseEnum(CalendarSelectionMode.values, mode);
     }
   }
@@ -276,9 +275,9 @@ class MaterialMonthPickerComponent
   void ngOnInit() {
     _calendarStream = _model.stream.listen(_onCalendarChange);
 
-    if (_mode == CalendarSelectionMode.SINGLE_DATE) {
+    if (_mode == CalendarSelectionMode.singleDate) {
       _inputListener = CalendarListener.singleDate(_model);
-    } else if (_mode == CalendarSelectionMode.DATE_RANGE) {
+    } else if (_mode == CalendarSelectionMode.dateRange) {
       // TODO(google): Add support for movingStartMaintainsLength==false if
       // we see use cases for month range picking.
       _inputListener =
@@ -301,7 +300,7 @@ class MaterialMonthPickerComponent
 
   @override
   void ngOnDestroy() {
-    _calendarStream?.cancel();
+    _calendarStream.cancel();
     _removeEventListeners();
   }
 

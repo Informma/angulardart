@@ -513,8 +513,8 @@ class FirstReusableChildComponent extends RouterLifecycleLogger {
   ) : super('$FirstReusableChildComponent', instanceIds, lifecycleLog);
 
   @override
-  Future<bool> canReuse(_, __) async {
-    await super.canReuse(_, __);
+  Future<bool> canReuse(current, next) async {
+    await super.canReuse(current, next);
     return true;
   }
 }
@@ -588,8 +588,8 @@ class ReusableParentComponent extends RouterLifecycleLogger {
   ) : super('$ReusableParentComponent', instanceIds, lifecycleLog);
 
   @override
-  Future<bool> canReuse(_, __) async {
-    await super.canReuse(_, __);
+  Future<bool> canReuse(current, next) async {
+    await super.canReuse(current, next);
     return true;
   }
 }
@@ -659,8 +659,8 @@ class FirstReusableParentComponent extends RouterLifecycleLogger {
   ) : super('$FirstReusableParentComponent', instanceIds, lifecycleLog);
 
   @override
-  Future<bool> canReuse(_, __) async {
-    await super.canReuse(_, __);
+  Future<bool> canReuse(current, next) async {
+    await super.canReuse(current, next);
     return true;
   }
 }

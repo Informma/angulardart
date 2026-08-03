@@ -64,12 +64,15 @@ class ComparisonOption {
       desc: 'Setting to compare the selected date range with another '
           'arbitrary user-selected date range.');
 
-  bool operator ==(o) =>
-      o is ComparisonOption &&
-      this.displayName == o.displayName &&
-      this.computeComparisonRange == o.computeComparisonRange;
+  @override
+  bool operator ==(Object other) =>
+      other is ComparisonOption &&
+      displayName == other.displayName &&
+      computeComparisonRange == other.computeComparisonRange;
 
+  @override
   int get hashCode => displayName.hashCode ^ computeComparisonRange.hashCode;
 
+  @override
   String toString() => displayName;
 }

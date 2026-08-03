@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
 import 'package:angulardart/src/utilities.dart';
 
 import '../lifecycle.dart';

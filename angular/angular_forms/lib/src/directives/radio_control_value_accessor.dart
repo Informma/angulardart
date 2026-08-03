@@ -9,10 +9,14 @@ import 'control_value_accessor.dart'
     show ChangeHandler, ControlValueAccessor, ngValueAccessor, TouchHandler;
 import 'ng_control.dart' show NgControl;
 
-const RADIO_VALUE_ACCESSOR = ExistingProvider.forToken(
+const radioValueAccessor = ExistingProvider.forToken(
   ngValueAccessor,
   RadioControlValueAccessor,
 );
+
+@Deprecated('Use radioValueAccessor instead')
+// ignore: constant_identifier_names
+const RADIO_VALUE_ACCESSOR = radioValueAccessor;
 
 /// Internal class used by Angular to uncheck radio buttons with the matching
 /// name.
@@ -72,7 +76,7 @@ class RadioButtonState {
   selector: 'input[type=radio][ngControl],'
       'input[type=radio][ngFormControl],'
       'input[type=radio][ngModel]',
-  providers: [RADIO_VALUE_ACCESSOR],
+  providers: [radioValueAccessor],
 )
 class RadioControlValueAccessor extends Object
     with TouchHandler, ChangeHandler<RadioButtonState>

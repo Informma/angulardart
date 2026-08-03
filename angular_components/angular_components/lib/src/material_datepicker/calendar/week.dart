@@ -20,7 +20,7 @@ class CalendarWeek extends _HasHighlights {
       _end = _endOfMonth;
     }
 
-    if (state?._resolutionAtLeast(CalendarResolution.weeks) ?? false) {
+    if (state._resolutionAtLeast(CalendarResolution.weeks)) {
       _days = [];
     } else {
       _days = _generateDays().toList();
@@ -48,7 +48,9 @@ class CalendarWeek extends _HasHighlights {
 
   void update(CalendarState state) {
     _state = state;
-    days.forEach((d) => d.updateClasses(state));
+    for (var d in days) {
+      d.updateClasses(state);
+    }
     _updateHighlights();
   }
 

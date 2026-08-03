@@ -97,10 +97,10 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
   ///
   /// Defaults to:
   ///
-  /// `[RelativePosition.OffsetBottomRight,
-  /// RelativePosition.OffsetTopLeft,
-  /// RelativePosition.OffsetBottomLeft,
-  /// RelativePosition.OffsetTopRight]`
+  /// `[RelativePosition.offsetBottomRight,
+  /// RelativePosition.offsetTopLeft,
+  /// RelativePosition.offsetBottomLeft,
+  /// RelativePosition.offsetTopRight]`
   @Input()
   List<RelativePosition> preferredPositions = _defaultPositions;
 
@@ -131,7 +131,6 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
 
   @ViewChild(MaterialPopupComponent)
   set popupChild(MaterialPopupComponent popup) {
-    if (popup == null) return;
     _visibleCtrl.addStream(popup.contentVisible);
   }
 
@@ -163,7 +162,6 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
   /// The element at which this tooltip is targeted.
   @Input('for')
   set tooltipRef(TooltipTarget target) {
-    if (target == null) return;
     _tooltipSource = target;
     target.setTooltip(tooltipHandle);
   }
@@ -177,8 +175,8 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
 
 /// [RelativePosition] list for the ink tooltip.
 const _defaultPositions = [
-  RelativePosition.OffsetBottomRight,
-  RelativePosition.OffsetTopLeft,
-  RelativePosition.OffsetBottomLeft,
-  RelativePosition.OffsetTopRight,
+  RelativePosition.offsetBottomRight,
+  RelativePosition.offsetTopLeft,
+  RelativePosition.offsetBottomLeft,
+  RelativePosition.offsetTopRight,
 ];

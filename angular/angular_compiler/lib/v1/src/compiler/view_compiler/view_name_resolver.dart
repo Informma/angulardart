@@ -52,7 +52,7 @@ class ViewNameResolver implements NameResolver {
       if (result == null) return null; // No local for `name`.
       var expression = getPropertyInView(result, _state.view!, currView);
       final type = currView.nameResolver._state.localTypes[name];
-      if (type != null && type != o.DYNAMIC_TYPE) {
+      if (type != null && type != o.dynamicType) {
         expression = unsafeCast(expression, type);
       }
       final modifiers = [o.StmtModifier.Final];

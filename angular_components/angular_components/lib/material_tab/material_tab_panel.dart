@@ -52,7 +52,7 @@ class MaterialTabPanelComponent implements AfterContentInit {
   ///
   /// Default is 0.
   @Input()
-  set activeTabIndex(index) {
+  set activeTabIndex(int index) {
     // Tabs are already initialized; this is a programmatic tab change.
     if (_tabs != null) {
       _setActiveTab(index, true);
@@ -117,7 +117,7 @@ class MaterialTabPanelComponent implements AfterContentInit {
 
   void _setActiveTab(int i, bool focusTab) {
     assert(i >= 0 && i < _tabs!.length);
-    _activeTab?.deactivate();
+    _activeTab.deactivate();
     _activeTabIndex = i;
     _activeTab.activate();
     _changeDetector.markForCheck();

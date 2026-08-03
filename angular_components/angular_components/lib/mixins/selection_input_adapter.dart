@@ -17,7 +17,7 @@ abstract mixin class SelectionInputAdapter<T> implements SelectionContainer<T> {
   StreamController? _selectionChangeController;
 
   void _initSelectionModel() {
-    selection ??= SelectionModel.single();
+    selection = SelectionModel.single();
   }
 
   /// Emits the selected value(s) whenever selection changes.
@@ -26,9 +26,7 @@ abstract mixin class SelectionInputAdapter<T> implements SelectionContainer<T> {
   /// For multi select, it will a list of selected values or an empty list.
   @Output()
   Stream get selectionChange {
-    if (_selectionChangeController == null) {
-      _selectionChangeController = StreamController();
-    }
+    _selectionChangeController ??= StreamController();
     _initSelectionModel();
     return _selectionChangeController!.stream;
   }

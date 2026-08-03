@@ -31,7 +31,7 @@ abstract mixin class CommentAst implements StandaloneTemplateAst {
   }
 
   @override
-  bool operator ==(Object o) => o is CommentAst && value == o.value;
+  bool operator ==(Object other) => other is CommentAst && value == other.value;
 
   @override
   int get hashCode => value.hashCode;
@@ -68,7 +68,7 @@ class _SyntheticCommentAst extends SyntheticTemplateAst with CommentAst {
   _SyntheticCommentAst(this.value);
 
   _SyntheticCommentAst.from(
-    TemplateAst origin,
+    TemplateAst super.origin,
     this.value,
-  ) : super.from(origin);
+  ) : super.from();
 }

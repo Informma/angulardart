@@ -78,8 +78,7 @@ Map<GestureDirection, bool> innerScrollableDirections(
 class GestureEvent extends ScrollHostEventImpl {
   final EventTarget startingTarget;
 
-  GestureEvent(int deltaX, int deltaY, this.startingTarget)
-      : super(deltaX, deltaY);
+  GestureEvent(super.deltaX, super.deltaY, this.startingTarget);
 }
 
 /// Listens to touch events on an element and exposes a [scrollStream] of
@@ -105,10 +104,8 @@ class GestureListener implements Disposable {
   _Gesture? _gesture;
 
   Stream<GestureEvent> get scrollStream {
-    if (_scrollController == null) {
-      _scrollController = StreamController<GestureEvent>.broadcast(
+    _scrollController ??= StreamController<GestureEvent>.broadcast(
           onListen: _startListeners, onCancel: _onCancel);
-    }
 
     return _scrollController!.stream;
   }
@@ -154,7 +151,7 @@ class GestureListener implements Disposable {
     if (_gesture!.finished) return _onTouchStart(touchMove);
 
     if (!_capturing) {
-      Point delta = touchMove.touches!.first.screen! - _startPoint!;
+      Point delta = touchMove.touches!.first.screen - _startPoint!;
 
       if ((delta.y > 0 && _directions![GestureDirection.up]!) ||
           (delta.y < 0 && _directions![GestureDirection.down]!) ||

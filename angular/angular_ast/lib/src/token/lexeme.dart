@@ -1,4 +1,4 @@
-part of angular_ast.src.token.tokens;
+part of 'tokens.dart';
 
 /// A [NgSimpleToken] that has a custom lexeme, i.e. not predefined by type.
 ///
@@ -9,9 +9,9 @@ class _LexemeNgSimpleToken extends NgSimpleToken {
       : super._(type, offset);
 
   @override
-  bool operator ==(Object o) {
-    if (o is _LexemeNgSimpleToken) {
-      return super == o && lexeme == o.lexeme;
+  bool operator ==(Object other) {
+    if (other is _LexemeNgSimpleToken) {
+      return super == other && lexeme == other.lexeme;
     }
     return false;
   }
@@ -42,9 +42,9 @@ class _LexemeNgToken extends NgToken {
         );
 
   @override
-  bool operator ==(Object o) {
-    if (o is _LexemeNgToken) {
-      return super == o && lexeme == o.lexeme;
+  bool operator ==(Object other) {
+    if (other is _LexemeNgToken) {
+      return super == other && lexeme == other.lexeme;
     }
     return false;
   }

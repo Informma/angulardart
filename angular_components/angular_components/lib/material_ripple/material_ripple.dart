@@ -190,7 +190,7 @@ class MaterialRippleComponent implements OnDestroy {
       // This is inlined by dart2js so we aren't incurring an additional
       // function call here.
       final clientX = (e as MouseEvent).client.x.toInt();
-      final clientY = (e as MouseEvent).client.y.toInt();
+      final clientY = (e).client.y.toInt();
       _createRipple(clientX, clientY, _element, center);
     };
     _onKeyDown = (e) {
@@ -217,10 +217,10 @@ class MaterialRippleComponent implements OnDestroy {
   void ngOnDestroy() {
     _element.removeEventListener('mousedown', _onMouseDown);
     _element.removeEventListener('keydown', _onKeyDown);
-    _ripplePool!.forEach((ripple) {
+    for (var ripple in _ripplePool!) {
       if (ripple?.parent == _element) {
         ripple!.remove();
       }
-    });
+    }
   }
 }

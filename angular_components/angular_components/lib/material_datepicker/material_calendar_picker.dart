@@ -83,8 +83,14 @@ int _dayOfWeek(int year, int month, int day) {
 class MaterialCalendarPickerComponent
     implements OnInit, AfterChanges, AfterViewInit, OnDestroy {
   /// The height of the each calendar date, in pixels.
-  static const DATE_HEIGHT_PX = 48; // DUPLICATED in _constants.scss
-  static const DATE_COMPACT_HEIGHT_PX = 36; // DUPLICATED in _constants.scss
+  static const dateHeightPx = 48; // DUPLICATED in _constants.scss
+  static const dateCompactHeightPx = 36; // DUPLICATED in _constants.scss
+  @Deprecated('Use dateHeightPx instead')
+  // ignore: constant_identifier_names, unused_field
+  static const DATE_HEIGHT_PX = dateHeightPx;
+  @Deprecated('Use dateCompactHeightPx instead')
+  // ignore: constant_identifier_names, unused_field
+  static const DATE_COMPACT_HEIGHT_PX = dateCompactHeightPx;
 
   /// Months can have up to 6 partial weeks. We also may need space for a
   /// title, but a 6-week month will always have an inline title.
@@ -92,7 +98,10 @@ class MaterialCalendarPickerComponent
   /// middle 4 weeks, leaving 3 days. To reach 6 weeks, there must be at least
   /// 1 day before and after the middle 4 weeks. Therefore there can be at
   /// most 2 days in the first week, giving enough space for an inline title.)
-  static const WEEK_ROWS_IN_MONTH = 6; // DUPLICATED in _constants.scss
+  static const weekRowsInMonth = 6; // DUPLICATED in _constants.scss
+  @Deprecated('Use weekRowsInMonth instead')
+  // ignore: constant_identifier_names, unused_field
+  static const WEEK_ROWS_IN_MONTH = weekRowsInMonth;
 
   /// How many extra months to draw in either direction.
   static const _overdraw = 2;
@@ -145,7 +154,7 @@ class MaterialCalendarPickerComponent
       ..className = 'day-slot'
       ..appendText('');
     DivElement slot;
-    for (var i = 0; i < WEEK_ROWS_IN_MONTH * 7; i++) {
+    for (var i = 0; i < weekRowsInMonth * 7; i++) {
       slot = slotTemplate.clone(true) as DivElement;
       container.append(slot);
     }
@@ -255,22 +264,20 @@ class MaterialCalendarPickerComponent
 
     // Must recreate the input listener when this changes. If it wasn't already
     // created, we must be executing before [ngOnInit], so defer to later.
-    if (_inputListener != null) {
-      _initInputListener();
-    }
+    _initInputListener();
   }
 
   bool _movingStartMaintainsLength = true;
 
   /// What sort of interaction this calendar supports.
   CalendarSelectionMode get mode => _mode;
-  CalendarSelectionMode _mode = CalendarSelectionMode.NONE;
+  CalendarSelectionMode _mode = CalendarSelectionMode.none;
 
   /// Names of each day of the week.
   List<String> get dayNames => _dayNames;
 
   /// The height of each calendar row, in pixels.
-  int get _rowHeightPx => compact ? DATE_COMPACT_HEIGHT_PX : DATE_HEIGHT_PX;
+  int get _rowHeightPx => compact ? dateCompactHeightPx : dateHeightPx;
 
   int _monthHeight(_Month month) {
     int startOffset = _dayOfWeekIndex(month.startDay);
@@ -315,7 +322,7 @@ class MaterialCalendarPickerComponent
     final slot = event.target;
     if (slot is! HtmlElement) return null;
 
-    final dateText = (slot as HtmlElement).getAttribute(_dateAttribute);
+    final dateText = (slot).getAttribute(_dateAttribute);
     if (dateText == null) return null;
 
     final parts = dateText.split(_dateSeparator);
@@ -378,7 +385,7 @@ class MaterialCalendarPickerComponent
     bool isFirstMonth = month == _minMonth;
     bool isLastMonth = month == _maxMonth;
     HtmlElement slot = title.nextElementSibling as HtmlElement;
-    for (var i = 1; i <= 7 * WEEK_ROWS_IN_MONTH; i++) {
+    for (var i = 1; i <= 7 * weekRowsInMonth; i++) {
       final day = i - startIndex;
       if (day <= 0 || day > daysInMonth) {
         slot.className = 'day-slot invisible';
@@ -426,14 +433,14 @@ class MaterialCalendarPickerComponent
 
       // Iterate until we find the middle month.
       for (baseline ??= _renderedMonths[_overdraw].copy();
-          offset < _scrollTop && baseline! < _maxMonth;
+          offset < _scrollTop && baseline < _maxMonth;
           baseline.next()) {
         offset += _monthHeight(baseline);
       }
 
       // Use the previous month if it's mostly in view.
       int previousMonthVisiblePx = offset - _scrollTop;
-      int previousMonthHeight = _monthHeight(baseline!.add(-1));
+      int previousMonthHeight = _monthHeight(baseline.add(-1));
       if (previousMonthVisiblePx / previousMonthHeight > _inViewThreshold) {
         offset -= previousMonthHeight;
         baseline.prev();
@@ -441,9 +448,9 @@ class MaterialCalendarPickerComponent
 
       // Subtract the distance between the middle month and the first month to
       // get the y-offset of the first month.
-      offset += _rangeHeight(baseline!, baseline!.add(-_overdraw));
+      offset += _rangeHeight(baseline, baseline.add(-_overdraw));
     }
-    final visibleMonths = _monthsSurrounding(baseline!);
+    final visibleMonths = _monthsSurrounding(baseline);
     final neededMonths =
         visibleMonths.where((m) => !_renderedMonths.contains(m));
     if (neededMonths.isEmpty) return;
@@ -478,7 +485,7 @@ class MaterialCalendarPickerComponent
     _renderToday();
     _renderHover();
 
-    _visibleMonthController.add(baseline!.start);
+    _visibleMonthController.add(baseline.start);
   }
 
   String _slotSelector(Date date) {
@@ -543,7 +550,7 @@ class MaterialCalendarPickerComponent
       ..setEndAfter(end!);
 
     // Fill in the range in the starting month.
-    _highlightElements(start, end!.nextElementSibling as HtmlElement?, highlightClass);
+    _highlightElements(start, end.nextElementSibling as HtmlElement?, highlightClass);
 
     // Fill in any remaining months.
     HtmlElement startContainer = range.startContainer as HtmlElement;
@@ -552,7 +559,7 @@ class MaterialCalendarPickerComponent
         month != null && month != endContainer.nextElementSibling;
         month = month.nextElementSibling as HtmlElement?) {
       _highlightElements(
-          month.firstChild as HtmlElement?, end!.nextElementSibling as HtmlElement?, highlightClass);
+          month.firstChild as HtmlElement?, end.nextElementSibling as HtmlElement?, highlightClass);
     }
   }
 
@@ -747,10 +754,10 @@ class MaterialCalendarPickerComponent
   }
 
   void _initInputListener() {
-    if (_mode == CalendarSelectionMode.SINGLE_DATE) {
+    if (_mode == CalendarSelectionMode.singleDate) {
       _inputListener = CalendarListener.singleDate(_model);
     }
-    if (_mode == CalendarSelectionMode.DATE_RANGE) {
+    if (_mode == CalendarSelectionMode.dateRange) {
       _inputListener = CalendarListener.dateRange(_model,
           movingStartMaintainsLength: _movingStartMaintainsLength);
     }
@@ -889,8 +896,8 @@ class _Month {
   _Month(this.year, this.month);
 
   _Month.fromDate(Date date)
-      : this.year = date.year,
-        this.month = date.month;
+      : year = date.year,
+        month = date.month;
 
   void next() {
     if (++month > 12) {
@@ -946,7 +953,11 @@ class _Month {
   /// The [Date] corresponding to the last day of this month.
   Date get end => Date(year, month, days);
 
+  @override
   bool operator ==(Object o) => o is _Month && year == o.year && month == o.month;
+
+  @override
+  int get hashCode => Object.hash(year, month);
 
   bool operator <(_Month o) => year < o.year || (year == o.year && month < o.month);
 
@@ -956,5 +967,6 @@ class _Month {
 
   bool operator >=(Object o) => this == o || this > (o as _Month);
 
+  @override
   String toString() => '$year-$month';
 }

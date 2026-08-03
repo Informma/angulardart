@@ -66,7 +66,7 @@ class MaterialInkTooltipComponent implements Tooltip {
 
   /// Positions at which the tooltip should try to show.
   @Input()
-  List<RelativePosition> positions = RelativePosition.AdjacentBottomEdge;
+  List<RelativePosition> positions = RelativePosition.adjacentBottomEdge;
 
   // Proxy control of this tooltip via the tooltip controller.
   Tooltip? _controllerProxy;
@@ -117,7 +117,6 @@ class MaterialInkTooltipComponent implements Tooltip {
   /// ```
   @Input('for')
   set tooltipRef(TooltipTarget target) {
-    if (target == null) return;
     _tooltipSource = target;
     target.setTooltip(tooltipHandle);
   }

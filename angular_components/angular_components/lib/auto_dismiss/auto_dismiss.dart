@@ -64,5 +64,5 @@ class AutoDismissDirective {
   Stream get dismiss =>
       _dismissEvents.where((_) => _autoDismissable && !_ignoreEvents);
 
-  void _listenForEvents([_]) => _ignoreEvents = false;
+  void _listenForEvents([dynamic _]) => _ignoreEvents = false;
 }

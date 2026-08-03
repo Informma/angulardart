@@ -5,7 +5,7 @@
     <img src="https://img.shields.io/badge/website-angulardartreborn.com-blue" alt="Website" />
   </a>
   <a href="https://pub.dev/packages/angulardart">
-    <img src="https://img.shields.io/pub/v/angulardart.svg" alt="pub package" />
+    <img src="https://img.shields.io/pub/v/angulardart.svg?cache=20260803" alt="pub package" />
   </a>
   <a href="https://github.com/flutterdocteur/angulardart">
     <img src="https://img.shields.io/github/stars/flutterdocteur/angulardart.svg?style=social&label=Star" alt="GitHub stars" />

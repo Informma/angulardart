@@ -1,3 +1,8 @@
+## 2.0.10
+
+- fix: release.sh now looks for commits touching the package directory
+- chore: add release.sh scripts to all packages
+
 ## 2.0.9
 
 - Updated dependency versions: `web` ^1.0.0, `build` ^4.0.0, `intl` ^0.20.0, `lints` ^6.0.0

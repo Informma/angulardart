@@ -1,3 +1,7 @@
+## 5.2.0
+
+- fix: resolve all dart analyze warnings and info messages
+
 ## 5.1.8
 
 - chore: release v5.1.7

@@ -1,3 +1,8 @@
+## 1.0.11
+
+- fix: release.sh now looks for commits touching the package directory
+- chore: add release.sh scripts to all packages
+
 ## 1.0.10
 
 - Updated generated project dependencies to latest versions

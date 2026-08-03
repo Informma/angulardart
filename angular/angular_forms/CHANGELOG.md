@@ -1,3 +1,8 @@
+## 5.1.2
+
+- Re-added `build_web_compilers ^4.8.1` to dev_dependencies (requires Dart SDK >= 3.13.0)
+- Enables web compilation for browser testing
+
 ## 5.1.1
 
 - Removed build_web_compilers from dev_dependencies (incompatible with build 4.x)

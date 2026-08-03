@@ -1,3 +1,8 @@
+## 8.1.2
+
+- Re-added `build_web_compilers ^4.8.1` to dev_dependencies (requires Dart SDK >= 3.13.0)
+- Enables web compilation for browser testing
+
 ## 8.1.1
 
 - Removed `dependency_overrides` for `analyzer` (no longer needed)

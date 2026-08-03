@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/focus/focus.dart';
 import 'package:angulardart_components/forms/error_renderer.dart' show ErrorFn;
 import 'package:angulardart_components/interfaces/has_disabled.dart';
@@ -134,7 +133,7 @@ class BaseMaterialInput extends FocusableMixin
   ///
   /// This text will not be displayed if there is an error message on the input.
   @Input()
-  set hintText(value) {
+  set hintText(dynamic value) {
     _hintText = value;
     updateBottomPanelState();
   }
@@ -210,13 +209,9 @@ class BaseMaterialInput extends FocusableMixin
   }
 
   void updateInputTextLength() {
-    if (_inputText == null) {
-      _inputTextLength = 0;
-    } else {
-      _inputTextLength = _characterCounter != null
-          ? _characterCounter!(_inputText)
-          : _inputText.length;
-    }
+    _inputTextLength = _characterCounter != null
+        ? _characterCounter!(_inputText)
+        : _inputText.length;
   }
 
   /// Display character count even if maxCount is null.
@@ -270,9 +265,9 @@ class BaseMaterialInput extends FocusableMixin
       return {materialInputErrorKey: _localValidationMessage};
     }
     if (checkValid != null) {
-      var _checkValidMessage = checkValid!(inputText);
-      if (_checkValidMessage != null) {
-        _localValidationMessage = _checkValidMessage;
+      var checkValidMessage = checkValid!(inputText);
+      if (checkValidMessage != null) {
+        _localValidationMessage = checkValidMessage;
         return {materialInputErrorKey: _localValidationMessage};
       } // fallthrough
     }
@@ -292,9 +287,11 @@ class BaseMaterialInput extends FocusableMixin
   @Input()
   bool floatingLabel = false;
 
+  @override
   bool get disabled => _disabled;
 
   /// Whether or not this input is disabled (readonly input.)
+  @override
   @Input()
   set disabled(bool disabled) {
     _disabled = disabled;
@@ -378,7 +375,7 @@ class BaseMaterialInput extends FocusableMixin
     return _isLocallyValid(false) != null;
   }
 
-  bool get hasVisibleText => inputText?.isNotEmpty ?? false;
+  bool get hasVisibleText => inputText.isNotEmpty;
 
   bool get labelVisible => floatingLabelVisible || !hasVisibleText;
 
@@ -430,13 +427,13 @@ class BaseMaterialInput extends FocusableMixin
     _disposer.dispose();
   }
 
-  void inputFocusAction(event) {
+  void inputFocusAction(dynamic event) {
     focused = true;
     handleFocus(event);
     updateBottomPanelState();
   }
 
-  void inputBlurAction(event, valid, validationMessage) {
+  void inputBlurAction(dynamic event, dynamic valid, dynamic validationMessage) {
     _validate(valid, validationMessage);
     _pristine = false;
     focused = false;
@@ -444,7 +441,7 @@ class BaseMaterialInput extends FocusableMixin
     updateBottomPanelState();
   }
 
-  void inputChange(newValue, valid, validationMessage) {
+  void inputChange(dynamic newValue, dynamic valid, dynamic validationMessage) {
     _validate(valid, validationMessage);
     _pristine = false;
     inputText = newValue;
@@ -452,7 +449,7 @@ class BaseMaterialInput extends FocusableMixin
     updateBottomPanelState();
   }
 
-  void inputKeypress(newValue, valid, validationMessage) {
+  void inputKeypress(dynamic newValue, dynamic valid, dynamic validationMessage) {
     _validate(valid, validationMessage);
     _pristine = false;
     inputText = newValue;
@@ -462,7 +459,7 @@ class BaseMaterialInput extends FocusableMixin
     updateBottomPanelState();
   }
 
-  void _validate(valid, validationMessage) {
+  void _validate(dynamic valid, dynamic validationMessage) {
     _invalid = !valid;
     _validationMessage = validationMessage;
   }
@@ -502,9 +499,7 @@ class BaseMaterialInput extends FocusableMixin
   ///
   /// The character count in the form "[currentCount] / [maxCount]", such as
   /// `12 / 25`, when [maxCount] is non-null; otherwise simply "[currentCount]".
-  String msgCharacterCounter(int currentCount, int maxCount) => maxCount == null
-      ? '$currentCount'
-      : _msgCharacterCounter(currentCount, maxCount);
+  String msgCharacterCounter(int currentCount, int maxCount) => _msgCharacterCounter(currentCount, maxCount);
 
   /// The aria label to use for the character limit label.
   ///
@@ -512,9 +507,7 @@ class BaseMaterialInput extends FocusableMixin
   /// [maxCount]", such as `12 characters out of  25`, when [maxCount] is
   /// non-null; otherwise simply "Text is [currentCount] characters".
   String msgCharacterCounterAriaLabel(int currentCount, int maxCount) =>
-      maxCount == null
-          ? _msgCharacterCounterAriaLabelNoLimitation(currentCount)
-          : _msgCharacterCounterAriaLabelNoLimitation(currentCount) +
+      _msgCharacterCounterAriaLabelNoLimitation(currentCount) +
               _msgCharacterCounterAriaLabelWithLimitation(maxCount);
 
   static String _msgCharacterCounterAriaLabelNoLimitation(int currentCount) =>
@@ -550,8 +543,6 @@ class BaseMaterialInput extends FocusableMixin
 // This is for GM migration so that the code can be shared. !g3-only
 class BaseSingleLineInputComponent extends BaseMaterialInput
     implements Focusable, ReferenceDirective, AfterViewInit, OnDestroy {
-  final ChangeDetectorRef _changeDetector;
-
   @ViewChild('inputEl')
   ElementRef? inputEl;
 
@@ -702,19 +693,17 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   String? inputAriaControls;
 
   BaseSingleLineInputComponent(String type, String multiple, NgControl cd,
-      this._changeDetector, DeferredValidator validator)
-      : super(cd, _changeDetector, validator) {
-    if (type == null) {
-      this.type = 'text';
-    } else if (const ['number', 'tel'].contains(type)) {
-      // For number and telephone, the browser-default validation has to be
-      // locale-aware and/or format-aware. Using 'text' here, so that we
-      // don't use (broken) browser-default validation. Users can still
-      // provide custom validation for these.
-      this.type = 'text';
-    } else {
-      this.type = type;
-    }
+      ChangeDetectorRef changeDetector, DeferredValidator validator)
+      : super(cd, changeDetector, validator) {
+    if (const ['number', 'tel'].contains(type)) {
+    // For number and telephone, the browser-default validation has to be
+    // locale-aware and/or format-aware. Using 'text' here, so that we
+    // don't use (broken) browser-default validation. Users can still
+    // provide custom validation for these.
+    this.type = 'text';
+  } else {
+    this.type = type;
+  }
     this.multiple = attributeToBool(multiple);
   }
 

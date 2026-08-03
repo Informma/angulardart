@@ -57,7 +57,7 @@ class ScoreboardComponent implements OnInit, OnDestroy {
   late bool _enableUniformWidths;
   bool _initialized = false;
 
-  bool get isScrollable => scrollable && (_scorecardBar?.isScrollable ?? false);
+  bool get isScrollable => scrollable && _scorecardBar.isScrollable;
   bool _atScorecardBarStart = false;
   bool get atScorecardBarStart => _atScorecardBarStart;
   bool _atScorecardBarEnd = false;
@@ -160,8 +160,8 @@ class ScoreboardComponent implements OnInit, OnDestroy {
 
   void _refreshArrows() {
     if (scrollable) {
-      _atScorecardBarStart = _scorecardBar?.atStart ?? false;
-      _atScorecardBarEnd = _scorecardBar?.atEnd ?? false;
+      _atScorecardBarStart = _scorecardBar.atStart;
+      _atScorecardBarEnd = _scorecardBar.atEnd;
       _changeDetector.markForCheck();
       if (scrollable) {
         _resetTabIndex();
@@ -228,7 +228,7 @@ class ScoreboardComponent implements OnInit, OnDestroy {
     _updatedSelected();
 
     // Refresh scoreboard scrolling on card changes.
-    if (scrollable) _scorecardBar?.reset();
+    if (scrollable) _scorecardBar.reset();
 
     if (type == ScoreboardType.selectable) {
       int i = 0;

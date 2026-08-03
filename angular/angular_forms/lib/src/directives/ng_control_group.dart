@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:angulardart/angulardart.dart';
 
 import '../model.dart' show AbstractControlGroup;
-import '../validators.dart' show NG_VALIDATORS;
+import '../validators.dart' show ngValidators;
 import 'control_container.dart' show ControlContainer;
 import 'form_interface.dart' show Form;
 import 'shared.dart' show controlPath, composeValidators;
@@ -70,7 +70,7 @@ class NgControlGroup extends ControlContainer<AbstractControlGroup>
 
   NgControlGroup(
     @Optional() @SkipSelf() this._parent,
-    @Optional() @Self() @Inject(NG_VALIDATORS) List<dynamic>? validators,
+    @Optional() @Self() @Inject(ngValidators) List<dynamic>? validators,
   ) : validator = composeValidators(validators);
 
   @Input('ngControlGroup')

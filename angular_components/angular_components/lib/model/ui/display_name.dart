@@ -33,6 +33,6 @@ class LabeledValue<T> implements HasUIDisplayName {
   int get hashCode => hash2(value.hashCode, uiDisplayName.hashCode);
 
   @override
-  bool operator ==(o) =>
-      o is LabeledValue && o.uiDisplayName == uiDisplayName && o.value == value;
+  bool operator ==(Object other) =>
+      other is LabeledValue && other.uiDisplayName == uiDisplayName && other.value == value;
 }

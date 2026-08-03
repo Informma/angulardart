@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/interfaces/has_disabled.dart';
 import 'package:angulardart_components/material_datepicker/material_datepicker.dart';
 import 'package:angulardart_components/material_datepicker/material_time_picker.dart';
@@ -97,6 +96,7 @@ class MaterialDateTimePickerComponent implements HasDisabled {
   int? increment;
 
   /// Whether changing the selected date and time should be disabled.
+  @override
   @Input()
   bool disabled = false;
 
@@ -220,7 +220,7 @@ class MaterialDateTimePickerComponent implements HasDisabled {
 
   /// Checks whether [toCompare] has the same date as [date] ignoring the time.
   static bool _sameDate(Date? date, DateTime toCompare) {
-    if (date == null || toCompare == null) {
+    if (date == null) {
       return false;
     }
     return (date.year == toCompare.year &&

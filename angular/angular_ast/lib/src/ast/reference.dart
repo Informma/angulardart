@@ -32,9 +32,9 @@ abstract mixin class ReferenceAst implements TemplateAst {
   ]) = ParsedReferenceAst;
 
   @override
-  bool operator ==(Object o) {
-    if (o is ReferenceAst) {
-      return identifier == o.identifier && variable == o.variable;
+  bool operator ==(Object other) {
+    if (other is ReferenceAst) {
+      return identifier == other.identifier && variable == other.variable;
     }
     return false;
   }
@@ -140,10 +140,10 @@ class _SyntheticReferenceAst extends SyntheticTemplateAst with ReferenceAst {
   _SyntheticReferenceAst(this.variable, [this.identifier]);
 
   _SyntheticReferenceAst.from(
-    TemplateAst origin,
+    TemplateAst super.origin,
     this.variable, [
     this.identifier,
-  ]) : super.from(origin);
+  ]) : super.from();
 
   @override
   final String? identifier;

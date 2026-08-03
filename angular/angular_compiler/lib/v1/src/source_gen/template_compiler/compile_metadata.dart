@@ -3,9 +3,13 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/visitor2.dart';
+// ignore: implementation_imports
 import 'package:analyzer/src/dart/constant/value.dart';
+// ignore: implementation_imports
 import 'package:analyzer/src/dart/element/element.dart';
+// ignore: implementation_imports
 import 'package:analyzer/src/generated/utilities_dart.dart';
+// ignore: implementation_imports
 import 'package:angulardart/src/meta.dart';
 import 'package:angulardart_compiler/v1/angular_compiler.dart';
 import 'package:angulardart_compiler/v1/cli.dart';
@@ -494,15 +498,15 @@ class CompileTypeMetadataVisitor
 
   o.Expression _useValueExpression(DartObject? token) {
     if (token == null || token.isNull) {
-      return o.NULL_EXPR;
+      return o.nullExpr;
     } else if (token.toStringValue() != null) {
-      return o.LiteralExpr(token.toStringValue(), o.STRING_TYPE);
+      return o.LiteralExpr(token.toStringValue(), o.stringType);
     } else if (token.toBoolValue() != null) {
-      return o.LiteralExpr(token.toBoolValue(), o.BOOL_TYPE);
+      return o.LiteralExpr(token.toBoolValue(), o.boolType);
     } else if (token.toIntValue() != null) {
-      return o.LiteralExpr(token.toIntValue(), o.INT_TYPE);
+      return o.LiteralExpr(token.toIntValue(), o.intType);
     } else if (token.toDoubleValue() != null) {
-      return o.LiteralExpr(token.toDoubleValue(), o.DOUBLE_TYPE);
+      return o.LiteralExpr(token.toDoubleValue(), o.doubleType);
     } else if (token.toListValue() != null) {
       return o.LiteralArrayExpr(
           token.toListValue()!.map(_useValueExpression).toList(),

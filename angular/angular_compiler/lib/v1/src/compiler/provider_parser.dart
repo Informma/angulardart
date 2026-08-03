@@ -1,4 +1,5 @@
 import 'package:source_span/source_span.dart';
+// ignore: implementation_imports
 import 'package:angulardart/src/meta.dart';
 import 'package:angulardart_compiler/v2/context.dart';
 
@@ -99,7 +100,7 @@ class ProviderElementContext implements ElementProviderUsage {
     }
     // If any content query asks to read ViewContainerRef, mark
     // ProviderElementContext to require view container.
-    if (queriedTokens.get(identifierToken(Identifiers.ViewContainerRef)) !=
+    if (queriedTokens.get(identifierToken(Identifiers.viewContainerRef)) !=
         null) {
       _requiresViewContainer = true;
     }
@@ -280,24 +281,24 @@ class ProviderElementContext implements ElementProviderUsage {
       // access built-ins
       if (requestingProviderType == ProviderAstType.Directive ||
           requestingProviderType == ProviderAstType.Component) {
-        if (token.equalsTo(Identifiers.ElementRefToken) ||
-            token.equalsTo(Identifiers.HtmlElementToken) ||
-            token.equalsTo(Identifiers.ElementToken) ||
-            token.equalsTo(Identifiers.ChangeDetectorRefToken) ||
-            token.equalsTo(Identifiers.NgContentRefToken) ||
-            token.equalsTo(Identifiers.TemplateRefToken)) {
+        if (token.equalsTo(Identifiers.elementRefToken) ||
+            token.equalsTo(Identifiers.htmlElementToken) ||
+            token.equalsTo(Identifiers.elementToken) ||
+            token.equalsTo(Identifiers.changeDetectorRefToken) ||
+            token.equalsTo(Identifiers.ngContentRefToken) ||
+            token.equalsTo(Identifiers.templateRefToken)) {
           return dep;
         }
-        if (token.equalsTo(Identifiers.ViewContainerRefToken)) {
+        if (token.equalsTo(Identifiers.viewContainerRefToken)) {
           _requiresViewContainer = true;
         }
-        if (token.equalsTo(Identifiers.ComponentLoaderToken)) {
+        if (token.equalsTo(Identifiers.componentLoaderToken)) {
           _requiresViewContainer = true;
           return dep;
         }
       }
       // access the injector
-      if (token.equalsTo(Identifiers.InjectorToken)) {
+      if (token.equalsTo(Identifiers.injectorToken)) {
         return dep;
       }
       // access providers
@@ -570,6 +571,6 @@ ProviderAstType _providerAstTypeFromMetadataType(
 }
 
 final CompileTokenMetadata ngIfTokenMetadata =
-    identifierToken(Identifiers.NG_IF_DIRECTIVE);
+    identifierToken(Identifiers.ngIfDirective);
 final CompileTokenMetadata ngForTokenMetadata =
-    identifierToken(Identifiers.NG_FOR_DIRECTIVE);
+    identifierToken(Identifiers.ngForDirective);

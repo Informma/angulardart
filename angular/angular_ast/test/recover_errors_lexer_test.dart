@@ -23,7 +23,7 @@ void unwrapAll(Iterator<NgToken?> it) {
 
 String untokenize(Iterable<NgToken> tokens) => tokens
     .fold(StringBuffer(),
-        (buffer, token) => (buffer as StringBuffer)..write(token.lexeme))
+        (buffer, token) => buffer..write(token.lexeme))
     .toString();
 
 void testRecoverySolution(
@@ -55,7 +55,7 @@ void testRecoverySolution(
     test('should resolve: unexpected $type in $startState', () async {
       var it = tokenizeThrow(errorHtml);
       expect(() {
-        while (it.moveNext() != null) {}
+        while (it.moveNext()) {}
       }, throwsA(TypeMatcher<AngularParserException>()));
 
       var solution = recoveryProtocol.recover(startState, token, reader);

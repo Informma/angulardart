@@ -5,6 +5,7 @@
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
+// ignore: experimental_member_use
 import 'package:angulardart/experimental.dart';
 import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
 import 'package:angulardart_components/utils/browser/dom_service/dom_service_webdriver_testability.dart';
@@ -61,7 +62,9 @@ DomService createDomService(@Optional() @SkipSelf() DomService? service,
 // to send layout change notifications only if dom has been mutated by angular.
 void setupAcxRootDomRenderer(Injector appInjector) {
   appInjector.get(DomService)
+    // ignore: experimental_member_use
     ..isDomMutatedPredicate = isDomRenderDirty
+    // ignore: experimental_member_use
     ..resetIsDomMutated = resetDomRenderDirty
     ..init();
 }

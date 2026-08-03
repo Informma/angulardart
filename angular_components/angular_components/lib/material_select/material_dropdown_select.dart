@@ -218,11 +218,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
 
     if (_ariaActiveDescendant != null) return _ariaActiveDescendant!;
 
-    if (options != null) {
-      return activeModel.activeId ?? '';
-    }
-
-    return '';
+    return activeModel.activeId ?? '';
   }
 
   /// The id of the active element of the dropdown.
@@ -304,7 +300,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
     _setInitialActiveItem();
 
     _optionsListener?.cancel();
-    _optionsListener = options?.stream?.listen((_) {
+    _optionsListener = options.stream.listen((_) {
       _changeDetector.markForCheck();
       _updateActiveModel();
       _setInitialActiveItem();
@@ -338,7 +334,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
     _setInitialActiveItem();
 
     _selectionListener?.cancel();
-    _selectionListener = selection?.selectionChanges?.listen((changes) {
+    _selectionListener = selection.selectionChanges.listen((changes) {
       _changeDetector.markForCheck();
       // Update active item if new items are selected.
       var added =
@@ -351,7 +347,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   void _updateActiveModel() {
-    var items = List<dynamic>.from(options?.optionsList ?? []);
+    var items = List<dynamic>.from(options.optionsList);
     if (showDeselectItem) {
       items.insert(0, deselectLabel);
     }
@@ -359,7 +355,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   void _setInitialActiveItem({bool allowDeactivate = true}) {
-    if (selection == null || selection.selectedValues.isEmpty) {
+    if (selection.selectedValues.isEmpty) {
       if (allowDeactivate) activeModel.activate(null);
     } else if (activeModel.activeItem == null ||
         (showDeselectItem && activeModel.activeItem == deselectLabel) ||
@@ -378,7 +374,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
     event.preventDefault();
     activateFunction();
     // Only select if the popup is not visible.
-    if (!visible && selection != null && isSingleSelect) {
+    if (!visible && isSingleSelect) {
       var item = activeModel.activeItem;
       if (item == deselectLabel) {
         deselectCurrentSelection();
@@ -427,7 +423,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
       open();
     } else {
       var item = activeModel.activeItem;
-      if (item != null && selection != null) {
+      if (item != null) {
         if (item == deselectLabel) {
           deselectCurrentSelection();
         } else if (!selection.isSelected(item)) {
@@ -453,7 +449,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   @override
   void handleSpaceKey(KeyboardEvent event) {
     // Prevent any scrolling.
-    event?.preventDefault();
+    event.preventDefault();
     _handleKeyboardTrigger();
   }
 
@@ -465,8 +461,8 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
 
   @override
   void handleCharCodeKey(KeyboardEvent event) {
-    if (itemRenderer != null && options != null && !disabled) {
-      activateOnKeyPress(activeModel, event.charCode, options, itemRenderer!,
+    if (!disabled) {
+      activateOnKeyPress(activeModel, event.charCode, options, itemRenderer,
           !visible && isSingleSelect ? selection : null);
     }
   }
@@ -556,14 +552,12 @@ mixin class ActivateItemOnKeyPressMixin<T> {
       ItemRenderer<T> itemRenderer,
       SelectionModel? selection) {
     // Guard against being called when not all data is initialized.
-    if (itemRenderer == null || options == null) return;
-
     String key = _charCodeToString(charCode);
     var optionsList = options.optionsList;
     // Cached map of options to search strings.
     var searchMap = <dynamic, String>{};
 
-    var startsWith = (option, String keys) {
+    bool startsWith(option, String keys) {
       if (option == null) return false;
       var searchString = searchMap[option];
       if (searchString == null) {
@@ -571,8 +565,8 @@ mixin class ActivateItemOnKeyPressMixin<T> {
         searchMap[option] = searchString;
       }
       return searchString.startsWith(keys);
-    };
-    var maybeSelectOption = (option, String keys) {
+    }
+    bool maybeSelectOption(option, String keys) {
       if (Selectable.isSelectableIn(options, option) &&
           startsWith(option, keys)) {
         activeModel.activate(option);
@@ -581,7 +575,7 @@ mixin class ActivateItemOnKeyPressMixin<T> {
         return true;
       }
       return false;
-    };
+    }
 
     // If there's previously entered keys, try to match multiple keys.
     if (_enteredKeys.isNotEmpty) {

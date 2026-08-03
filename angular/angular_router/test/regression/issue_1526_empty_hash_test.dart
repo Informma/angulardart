@@ -29,8 +29,11 @@ void main() {
 }
 
 class _FakePlatformLocation implements PlatformLocation {
+  @override
   String pathname = '';
+  @override
   String search = '';
+  @override
   String hash = '';
   final List<_StateCall> pushStateCalls = [];
   final List<_StateCall> replaceStateCalls = [];

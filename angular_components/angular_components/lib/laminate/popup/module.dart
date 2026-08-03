@@ -7,7 +7,7 @@ import 'package:angulardart_components/laminate/enums/alignment.dart';
 import 'package:angulardart_components/laminate/overlay/module.dart';
 import 'package:angulardart_components/src/laminate/popup/dom_popup_source.dart';
 
-const inlinePositions = RelativePosition.InlinePositions;
+const inlinePositions = RelativePosition.inlinePositions;
 
 /// A token representing a [List] of [RelativePosition]s to use when popup auto
 /// positioning is set (`enforceSpaceConstraints`) but no custom positions

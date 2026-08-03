@@ -5,7 +5,7 @@ import 'package:angulardart_compiler/v1/src/compiler/output/output_ast.dart' as 
 abstract class ViewStorage {
   ViewStorageItem allocate(
     String name, {
-    o.OutputType outputType = o.OBJECT_TYPE,
+    o.OutputType outputType = o.objectType,
     required List<o.StmtModifier> modifiers,
     o.Expression? initializer,
   });

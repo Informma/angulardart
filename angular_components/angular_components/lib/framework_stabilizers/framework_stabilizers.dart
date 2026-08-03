@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @JS()
-library angular_components.framework_stabilizers.framework_stabilizers;
+library;
 
 import 'package:js/js.dart';
 
@@ -33,7 +33,7 @@ class FrameworkStabilizers {
   static int _nextId = 0;
 
   static List get _frameworkStabilizers {
-    return _frameworkStabilizersJs ??= [];
+    return _frameworkStabilizersJs;
   }
 
   /// Add a stabilize function for a framework.

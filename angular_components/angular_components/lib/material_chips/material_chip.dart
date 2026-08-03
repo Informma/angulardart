@@ -34,7 +34,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   @HostBinding('class')
   static const hostClass = 'themeable';
 
-  MaterialChipComponent(Element root) : super(root);
+  MaterialChipComponent(Element super.root);
 
   static final chipDeleteButtonMessage = Intl.message('Delete',
       name: 'chipDeleteButtonMessage',
@@ -86,7 +86,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   /// Provide your own label in the content of the chip, or provide an
   /// [ItemRenderer].
   @Input()
-  set value(val) {
+  set value(dynamic val) {
     _value = val;
     _genLabel();
   }
@@ -111,7 +111,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   Stream get remove => _remove.stream;
   final _remove = StreamController<dynamic>(sync: true);
 
-  void removeChip(/* MouseEvent | KeyboardEvent */ event) {
+  void removeChip(dynamic event) {
     selectionModel?.deselect(value);
     _remove.add(value);
     event.preventDefault();
@@ -120,9 +120,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
 
   String? _uuid;
   String get uuid {
-    if (_uuid == null) {
-      _uuid = _idGenerator.nextId();
-    }
+    _uuid ??= _idGenerator.nextId();
     return _uuid!;
   }
 }

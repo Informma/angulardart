@@ -4,7 +4,7 @@ import 'package:angulardart_router/angulardart_router.dart';
 import 'package:angulardart_router/testing.dart';
 import 'package:angulardart_test/angulardart_test.dart';
 
-import '1374_redirect_test.template.dart' as ng;
+import 'issue_1374_redirect_test.template.dart' as ng;
 
 void main() {
   tearDown(disposeAnyRunningTest);

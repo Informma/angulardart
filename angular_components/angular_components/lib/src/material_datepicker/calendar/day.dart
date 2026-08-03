@@ -15,7 +15,7 @@ class CalendarDay {
   }
 
   void updateClasses(CalendarState state) {
-    _classes = state != null ? _boundaryClasses(state).toList() : [];
+    _classes = _boundaryClasses(state).toList();
   }
 
   int get day => date.day;

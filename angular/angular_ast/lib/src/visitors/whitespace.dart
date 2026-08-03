@@ -40,7 +40,7 @@ class MinimizeWhitespaceVisitor extends RecursiveTemplateAstVisitor<bool> {
           as List<StandaloneTemplateAst>;
 
   @override
-  TemplateAst visitContainer(ContainerAst astNode, [_]) {
+  TemplateAst visitContainer(ContainerAst astNode, [context]) {
     if (_bailOutToPreserveWhitespace(astNode)) {
       return astNode;
     }
@@ -56,7 +56,7 @@ class MinimizeWhitespaceVisitor extends RecursiveTemplateAstVisitor<bool> {
   }
 
   @override
-  TemplateAst visitElement(ElementAst astNode, [_]) {
+  TemplateAst visitElement(ElementAst astNode, [context]) {
     if (_bailOutToPreserveWhitespace(astNode)) {
       return astNode;
     }
@@ -79,7 +79,7 @@ class MinimizeWhitespaceVisitor extends RecursiveTemplateAstVisitor<bool> {
   }
 
   @override
-  TemplateAst visitEmbeddedTemplate(EmbeddedTemplateAst astNode, [_]) {
+  TemplateAst visitEmbeddedTemplate(EmbeddedTemplateAst astNode, [context]) {
     if (_bailOutToPreserveWhitespace(astNode)) {
       return astNode;
     }

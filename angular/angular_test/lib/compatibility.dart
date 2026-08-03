@@ -4,11 +4,13 @@
 /// `angular_test.dart` for any new code or for new users of this package. APIs
 /// may change at _any time_ without adhering strictly to sem-ver.
 @experimental
-library angular_test.compatibility;
+library;
 
 import 'package:meta/meta.dart';
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
 import 'package:angulardart/src/bootstrap/run.dart' show appInjector;
+// ignore: implementation_imports
 import 'package:angulardart/src/core/linker/dynamic_component_loader.dart';
 
 export 'src/frontend/bed.dart' show createDynamicFixture, createDynamicTestBed;

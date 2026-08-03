@@ -247,7 +247,7 @@ class AstTemplateParser {
 /// compiler types, which includes transformation of internationalized nodes.
 class _BindDirectivesVisitor
     implements ast.TemplateAstVisitor<ng.TemplateAst?, _ParseContext> {
-  /// A count of how many <ng-content> elements have been seen so far.
+  /// A count of how many `<ng-content>` elements have been seen so far.
   ///
   /// This is necessary so that we can assign a unique index to each one as we
   /// visit it.
@@ -856,9 +856,9 @@ class _ParseContext {
       }
     }
     if (isTemplate) {
-      return Identifiers.TemplateRefToken;
+      return Identifiers.templateRefToken;
     } else if (hasReferenceInNgContent) {
-      return Identifiers.NgContentRefToken;
+      return Identifiers.ngContentRefToken;
     } else {
       return null;
     }
@@ -1599,8 +1599,8 @@ class _PipeCollector extends RecursiveAstVisitor<void> {
   @override
   void visitPipe(BindingPipe ast, dynamic context) {
     (pipeInvocations[ast.name] ??= []).add(ast.args.length);
-    ast.exp.visit(this);
-    visitAll(ast.args, context);
+    ast.exp.visit(this, context);
+    visitAll(ast.args, null);
   }
 }
 
@@ -1661,12 +1661,12 @@ class _SortInputsVisitor extends RecursiveTemplateVisitor<void> {
   Comparator<ng.BoundDirectivePropertyAst> _orderingOf(
       Map<String, String> inputs) {
     final keys = inputs.keys.toList(growable: false);
-    int _indexOf(ng.BoundDirectivePropertyAst input) {
+    int indexOf(ng.BoundDirectivePropertyAst input) {
       return keys.indexOf(input.memberName);
     }
 
     return (ng.BoundDirectivePropertyAst a, ng.BoundDirectivePropertyAst b) =>
-        Comparable.compare(_indexOf(a), _indexOf(b));
+        Comparable.compare(indexOf(a), indexOf(b));
   }
 }
 

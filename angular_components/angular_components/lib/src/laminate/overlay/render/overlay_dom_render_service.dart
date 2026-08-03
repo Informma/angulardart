@@ -119,7 +119,7 @@ class OverlayDomRenderService {
       cssClasses.add('modal');
     }
 
-    if (state.visibility == Visibility.Visible) cssClasses.add('visible');
+    if (state.visibility == Visibility.visible) cssClasses.add('visible');
 
     // Write to the DOM.
     _domRuler.updateSync(pane,

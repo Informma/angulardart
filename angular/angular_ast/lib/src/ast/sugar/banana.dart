@@ -41,9 +41,9 @@ abstract mixin class BananaAst implements TemplateAst {
   }
 
   @override
-  bool operator ==(Object o) {
-    if (o is BananaAst) {
-      return name == o.name && value == o.value;
+  bool operator ==(Object other) {
+    if (other is BananaAst) {
+      return name == other.name && value == other.value;
     }
     return false;
   }
@@ -146,8 +146,8 @@ class _SyntheticBananaAst extends SyntheticTemplateAst with BananaAst {
   _SyntheticBananaAst(this.name, [this.value]);
 
   _SyntheticBananaAst.from(
-    TemplateAst origin,
+    TemplateAst super.origin,
     this.name, [
     this.value,
-  ]) : super.from(origin);
+  ]) : super.from();
 }

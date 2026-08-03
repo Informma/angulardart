@@ -52,9 +52,8 @@ class MaterialTabComponent extends RootFocusable
   final String _uuid;
   final _visible = StreamController<bool>.broadcast(sync: true);
 
-  MaterialTabComponent(HtmlElement element, @Optional() IdGenerator? idGenerator)
-      : _uuid = (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId(),
-        super(element);
+  MaterialTabComponent(HtmlElement super.element, @Optional() IdGenerator? idGenerator)
+      : _uuid = (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId();
 
   /// The label for this tab.
   @override

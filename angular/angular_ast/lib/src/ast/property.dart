@@ -38,9 +38,9 @@ abstract mixin class PropertyAst implements TemplateAst {
   ]) = ParsedPropertyAst;
 
   @override
-  bool operator ==(Object o) {
-    if (o is PropertyAst) {
-      return name == o.name && postfix == o.postfix && unit == o.unit;
+  bool operator ==(Object other) {
+    if (other is PropertyAst) {
+      return name == other.name && postfix == other.postfix && unit == other.unit;
     }
     return false;
   }
@@ -189,12 +189,12 @@ class _SyntheticPropertyAst extends SyntheticTemplateAst with PropertyAst {
   ]);
 
   _SyntheticPropertyAst.from(
-    TemplateAst? origin,
+    super.origin,
     this.name, [
     this.value,
     this.postfix,
     this.unit,
-  ]) : super.from(origin);
+  ]) : super.from();
 
   @override
   final String name;

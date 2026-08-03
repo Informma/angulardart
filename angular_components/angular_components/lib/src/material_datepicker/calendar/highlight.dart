@@ -38,9 +38,9 @@ class Highlight {
   List<String> get classes => _classes ?? _initClasses();
 
   List<String> _initClasses() {
-    _classes = ['highlight']
-      ..addAll(_positionClasses())
-      ..addAll(_colorClasses());
+    _classes = ['highlight', ..._positionClasses(), ..._colorClasses()]
+      
+      ;
     return _classes!;
   }
 
@@ -80,7 +80,9 @@ abstract class _HasHighlights {
     _highlights = _mergedHighlights().toList();
 
     // Force initialize highlights' classes
-    _highlights.forEach((h) => h.classes);
+    for (var h in _highlights) {
+      h.classes;
+    }
   }
 
   /// Gets the selected ranges which contain both given dates.

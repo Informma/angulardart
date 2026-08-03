@@ -24,7 +24,7 @@ void main() {
     late ClassElement $DependencyA;
     late ClassElement $DependencyB;
     late TopLevelFunctionElement $createExample;
-    late MethodElement $Example_create;
+    late MethodElement $exampleCreate;
 
     setUpAll(() async {
       final testLib = await resolveLibrary(r'''
@@ -102,7 +102,7 @@ void main() {
       $DependencyA = testLib.getClass('DependencyA')!;
       $DependencyB = testLib.getClass('DependencyB')!;
       $createExample = testLib.firstFragment.element.topLevelFunctions.first;
-      $Example_create = $Example.getMethod('create')!;
+      $exampleCreate = $Example.getMethod('create')!;
       providers =
           $Example.metadata.annotations.first.computeConstantValue()!.toListValue()!;
     });
@@ -196,9 +196,9 @@ void main() {
         UseFactoryProviderElement(
           TypeTokenElement(linkTypeOf($Example.thisType)),
           null,
-          urlOf($Example_create),
+          urlOf($exampleCreate),
           dependencies: DependencyInvocation(
-            $Example_create,
+            $exampleCreate,
             [
               DependencyElement(
                 TypeTokenElement(linkTypeOf($DependencyA.thisType)),
@@ -217,9 +217,9 @@ void main() {
         UseFactoryProviderElement(
           TypeTokenElement(linkTypeOf($Example.thisType)),
           null,
-          urlOf($Example_create),
+          urlOf($exampleCreate),
           dependencies: DependencyInvocation(
-            $Example_create,
+            $exampleCreate,
             [
               DependencyElement(
                 TypeTokenElement(linkTypeOf($DependencyB.thisType)),

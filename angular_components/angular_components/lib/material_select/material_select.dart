@@ -109,8 +109,6 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
     _refreshItems();
   }
 
-  @override
-  SelectionModel<T> get selection => super.selection;
 
   /// If selectionOptions implements Selectable, it is called to decided
   /// whether an item is disabled.
@@ -126,6 +124,7 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   /// Whether the select should be shown as disabled.
   ///
   /// Defaults to false.
+  @override
   @Input()
   bool disabled = false;
 
@@ -138,6 +137,7 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
 
   /// A rendering function to render selection options to a String, if given a
   /// `value`.
+  @override
   @Input()
   set itemRenderer(ItemRenderer<T>? renderer) {
     _itemRenderer = renderer;
@@ -158,19 +158,17 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
 
   @ContentChildren(SelectionItem)
   set selectItems(List<SelectionItem<T>> value) {
-    if (value != null) {
-      // ContentChildren call is inside change detection. We can't alter
-      // state inside change detector therefore schedule a microtask.
-      scheduleMicrotask(() {
-        _selectItems = value;
-        _refreshItems();
-      });
-    }
+    // ContentChildren call is inside change detection. We can't alter
+    // state inside change detector therefore schedule a microtask.
+    scheduleMicrotask(() {
+      _selectItems = value;
+      _refreshItems();
+    });
   }
 
   @override
   void ngOnInit() {
-    if (!_listAutoFocus || options == null) return;
+    if (!_listAutoFocus) return;
     _autoFocusIndex = selection.isNotEmpty
         ? options.optionsList.indexOf(selection.selectedValues.first)
         : 0;
@@ -178,15 +176,11 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
 
   void _refreshItems() {
     if (_selectItems == null) return;
-    if (selection != null) {
-      for (SelectionItem<T> item in _selectItems!) {
-        item.selection = selection;
-      }
+    for (SelectionItem<T> item in _selectItems!) {
+      item.selection = selection;
     }
-    if (itemRenderer != null) {
-      for (SelectionItem<T> item in _selectItems!) {
-        item.itemRenderer = itemRenderer!;
-      }
+    for (SelectionItem<T> item in _selectItems!) {
+      item.itemRenderer = itemRenderer;
     }
   }
 }

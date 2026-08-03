@@ -1,15 +1,20 @@
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
 import 'package:angulardart/src/utilities.dart';
 
 import 'control_value_accessor.dart'
     show ChangeHandler, ControlValueAccessor, ngValueAccessor, TouchHandler;
 
-const SELECT_VALUE_ACCESSOR = ExistingProvider.forToken(
+const selectValueAccessor = ExistingProvider.forToken(
   ngValueAccessor,
   SelectControlValueAccessor,
 );
+
+@Deprecated('Use selectValueAccessor instead')
+// ignore: constant_identifier_names
+const SELECT_VALUE_ACCESSOR = selectValueAccessor;
 
 String _buildValueString(String? id, Object? value) {
   if (id == null) return '$value';
@@ -33,7 +38,7 @@ String _extractId(String valueString) => valueString.split(':')[0];
 /// https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/4660045
 @Directive(
   selector: 'select[ngControl],select[ngFormControl],select[ngModel]',
-  providers: [SELECT_VALUE_ACCESSOR],
+  providers: [selectValueAccessor],
   // SelectControlValueAccessor must be visible to NgSelectOption.
   visibility: Visibility.all,
 )

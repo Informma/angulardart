@@ -67,20 +67,18 @@ class NextPrevComponent implements OnDestroy {
   set model(Sequential newModel) {
     _modelListeners.dispose();
     _model = newModel;
-    _hasNext = newModel?.hasNext?.value ?? false;
-    _hasPrev = newModel?.hasPrev?.value ?? false;
+    _hasNext = newModel.hasNext.value;
+    _hasPrev = newModel.hasPrev.value;
 
-    if (newModel != null) {
-      _modelListeners
-        ..addStreamSubscription(newModel.hasNext.stream.listen((newValue) {
-          _hasNext = newValue;
-          _changeDetector.markForCheck();
-        }))
-        ..addStreamSubscription(newModel.hasPrev.stream.listen((newValue) {
-          _hasPrev = newValue;
-          _changeDetector.markForCheck();
-        }));
-    }
+    _modelListeners
+      ..addStreamSubscription(newModel.hasNext.stream.listen((newValue) {
+        _hasNext = newValue;
+        _changeDetector.markForCheck();
+      }))
+      ..addStreamSubscription(newModel.hasPrev.stream.listen((newValue) {
+        _hasPrev = newValue;
+        _changeDetector.markForCheck();
+      }));
   }
 
   /// The aria-label to use on the next button. Defaults to a generic

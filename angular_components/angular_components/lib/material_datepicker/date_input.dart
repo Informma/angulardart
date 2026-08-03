@@ -96,7 +96,7 @@ class DateInputDirective implements OnDestroy {
   /// Defaults to Dec 31, 9999 -- i.e., limited to 4-digit years.
   @Input()
   set maxDate(Date date) {
-    if (date == null || date == _maxDate) return;
+    if (date == _maxDate) return;
     _maxDate = date;
 
     // If we rejected the last parsed date because it was bogus... maybe it's
@@ -111,7 +111,7 @@ class DateInputDirective implements OnDestroy {
   /// Defaults to Jan 1, 1000 -- i.e., limited to 4-digit years.
   @Input()
   set minDate(Date date) {
-    if (date == null || date == _minDate) return;
+    if (date == _minDate) return;
     _minDate = date;
 
     // If we rejected the last parsed date because it was bogus... maybe it's

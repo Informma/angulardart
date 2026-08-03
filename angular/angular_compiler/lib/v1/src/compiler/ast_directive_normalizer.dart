@@ -1,3 +1,4 @@
+// ignore: implementation_imports
 import 'package:angulardart/src/meta.dart';
 import 'package:angulardart_ast/angulardart_ast.dart' as ast;
 import 'package:angulardart_compiler/v1/angular_compiler.dart';
@@ -186,7 +187,7 @@ class AstDirectiveNormalizer {
     ];
   }
 
-  /// Parse the template, and visit to find <ng-content>.
+  /// Parse the template, and visit to find `<ng-content>`.
   List<String> _parseTemplate(
     String template,
     CompileTypeMetadata directiveType,

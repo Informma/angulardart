@@ -23,7 +23,7 @@ const String optedOutValidator = 'If your project uses selector css styling '
 ///   binding for an element, or a matched directive.
 /// * an output is neither a native event or an output binding for an element.
 class MissingDirectiveValidator
-    extends InPlaceRecursiveTemplateVisitor<_MissingDirectiveContext> {
+    extends InPlaceRecursiveTemplateVisitor<MissingDirectiveContext> {
   final ElementSchemaRegistry _registry;
 
   static const _testAttributes = {
@@ -36,7 +36,7 @@ class MissingDirectiveValidator
   MissingDirectiveValidator(this._registry);
 
   @override
-  void visitElement(ng.ElementAst ast, [_]) {
+  void visitElement(ng.ElementAst ast, [context]) {
     final selectorsGroup = _selectorsGroup(ast.directives);
     final skipValidationSelectors =
         CssSelector.parse(ast.skipSchemaValidationForSelector);
@@ -72,7 +72,7 @@ class MissingDirectiveValidator
     }
     super.visitElement(
       ast,
-      _MissingDirectiveContext(
+      MissingDirectiveContext(
         elementName,
         ast.directives,
         selectorsGroup,
@@ -129,11 +129,11 @@ class MissingDirectiveValidator
       selectors.any((selector) => selector.element == name);
 
   @override
-  void visitEmbeddedTemplate(ng.EmbeddedTemplateAst ast, [_]) {
+  void visitEmbeddedTemplate(ng.EmbeddedTemplateAst ast, [context]) {
     final selectorsGroup = _selectorsGroup(ast.directives);
     super.visitEmbeddedTemplate(
       ast,
-      _MissingDirectiveContext(
+      MissingDirectiveContext(
         'template',
         ast.directives,
         selectorsGroup,
@@ -144,7 +144,7 @@ class MissingDirectiveValidator
   }
 
   @override
-  void visitAttr(ng.AttrAst ast, [_MissingDirectiveContext? context]) {
+  void visitAttr(ng.AttrAst ast, [MissingDirectiveContext? context]) {
     if (context!.elementName.startsWith('@svg')) {
       return;
     }
@@ -208,7 +208,7 @@ class MissingDirectiveValidator
       selector.replaceFirst('@xhtml:', '');
 
   @override
-  void visitEvent(ng.BoundEventAst ast, [_MissingDirectiveContext? context]) {
+  void visitEvent(ng.BoundEventAst ast, [MissingDirectiveContext? context]) {
     var name = _extractEventName(ast.name);
     if (!(_matchedSelectorWithAttribute(
             context!.skipValidationSelectors, ast.name) ||
@@ -233,7 +233,7 @@ class MissingDirectiveValidator
   static String _extractEventName(String name) => name.split('.').first;
 }
 
-class _MissingDirectiveContext {
+class MissingDirectiveContext {
   final String elementName;
   final List<ng.DirectiveAst> directives;
   final Iterable<List<CssSelector>> selectorsGroup;
@@ -241,7 +241,7 @@ class _MissingDirectiveContext {
   final List<CssSelector> skipValidationSelectors;
   final Set<String> attributeDeps;
 
-  _MissingDirectiveContext(
+  MissingDirectiveContext(
     this.elementName,
     this.directives,
     this.selectorsGroup,

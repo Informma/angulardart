@@ -42,9 +42,9 @@ class DesugarVisitor extends IdentityTemplateAstVisitor<void>
   void _visitChildren(TemplateAst astNode) {
     if (astNode.childNodes.isEmpty) return;
     var newChildren = <StandaloneTemplateAst>[];
-    astNode.childNodes.forEach((child) {
+    for (var child in astNode.childNodes) {
       newChildren.add(child.accept(this) as StandaloneTemplateAst);
-    });
+    }
     astNode.childNodes.clear();
     astNode.childNodes.addAll(newChildren);
   }

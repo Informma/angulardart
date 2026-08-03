@@ -3,6 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// **NOTE**: This library is currently unused and will replace select.dart.
+library;
+
 
 import 'dart:async';
 
@@ -15,7 +17,10 @@ import 'dart:async';
 /// See [AbstractFilterable] for a base implementation that simplifies usage.
 abstract class Filterable<Q> {
   /// Signifies that results returned should be unbounded in [filter].
-  static const int UNLIMITED = -1;
+  static const int unlimited = -1;
+  @Deprecated('Use unlimited instead')
+  // ignore: constant_identifier_names
+  static const int UNLIMITED = unlimited;
 
   /// The currently active limit from [filter].
   ///
@@ -49,7 +54,7 @@ abstract class Filterable<Q> {
   ///       // The visible list now shows nothing.
   ///     });
   ///   });
-  Stream filter(Q query, {int limit = Filterable.UNLIMITED});
+  Stream filter(Q query, {int limit = Filterable.unlimited});
 
   /// Whether a [currentQuery] is applied.
   bool get isFiltered;
@@ -64,7 +69,7 @@ abstract class Filterable<Q> {
 ///
 /// __Example use__:
 ///     abstract class BaseOptions {
-///       List<String> options;
+///       `List<String>` options;
 ///     }
 ///
 ///     class MyOptions extends BaseOptions with AbstractFilterable<String> {
@@ -80,7 +85,7 @@ abstract class AbstractFilterable<Q> implements Filterable<Q> {
   StreamController? _currentDoFilterController;
   StreamSubscription? _currentDoFilterSubscription;
 
-  int _currentLimit = Filterable.UNLIMITED;
+  int _currentLimit = Filterable.unlimited;
   Q? _currentQuery;
 
   @override
@@ -93,7 +98,7 @@ abstract class AbstractFilterable<Q> implements Filterable<Q> {
   ///
   /// The stream returned should immediately emit an event once the underlying
   /// data structure has been modified based on the returned data.
-  Stream doFilter(Q query, {int limit = Filterable.UNLIMITED});
+  Stream doFilter(Q query, {int limit = Filterable.unlimited});
 
   /// Automatically called when [isFiltered] flips to `false` from `true`.
   ///
@@ -101,7 +106,7 @@ abstract class AbstractFilterable<Q> implements Filterable<Q> {
   void onFilterCancelled();
 
   @override
-  Stream filter(Q query, {int limit = Filterable.UNLIMITED}) {
+  Stream filter(Q query, {int limit = Filterable.unlimited}) {
     StreamController? streamController;
     StreamSubscription? streamSubscription;
     streamController = StreamController.broadcast(onListen: () {
@@ -120,7 +125,7 @@ abstract class AbstractFilterable<Q> implements Filterable<Q> {
       if (_currentDoFilterController == streamController) {
         _currentDoFilterController = null;
         _currentQuery = null;
-        _currentLimit = Filterable.UNLIMITED;
+        _currentLimit = Filterable.unlimited;
         onFilterCancelled();
       }
     });

@@ -10,7 +10,7 @@ import 'output_ast.dart' as o;
 import 'path_util.dart' show getImportModulePath;
 
 var _debugModuleUrl = 'asset://debug/lib';
-var _METADATA_MAP_VAR = '_METADATA';
+var _metadataMapVar = '_METADATA';
 String debugOutputAstAsDart(
   dynamic /* o . Statement | o . Expression | o . Type | List < dynamic > */ ast, {
   bool emitNullSafeSyntax = false,
@@ -255,7 +255,7 @@ class _DartEmitterVisitor extends AbstractEmitterVisitor
       type.visitType(this, context);
       context.print(' ');
     }
-    context.print('${field.name}');
+    context.print(field.name);
     var initializer = field.initializer;
     if (initializer != null) {
       context.print(' = ');
@@ -353,7 +353,7 @@ class _DartEmitterVisitor extends AbstractEmitterVisitor
       var bound = typeParameter.bound;
       // Don't emit an explicit bound for dynamic, since bounds are implicitly
       // dynamic.
-      if (bound != null && bound != o.DYNAMIC_TYPE) {
+      if (bound != null && bound != o.dynamicType) {
         context.print(' extends ');
         bound.visitType(this, context);
       }
@@ -413,7 +413,7 @@ class _DartEmitterVisitor extends AbstractEmitterVisitor
   @override
   void visitReadVarExpr(o.ReadVarExpr ast, EmitterVisitorContext context) {
     if (identical(ast.builtin, o.BuiltinVar.MetadataMap)) {
-      context.print(_METADATA_MAP_VAR);
+      context.print(_metadataMapVar);
     } else {
       super.visitReadVarExpr(ast, context);
     }
@@ -495,14 +495,14 @@ class _DartEmitterVisitor extends AbstractEmitterVisitor
       context.print('const ');
       _inConstContext = true;
     }
-    if (ast.type == o.DYNAMIC_TYPE) {
+    if (ast.type == o.dynamicType) {
       context.print('<dynamic>');
-    } else if (ast.type == o.OBJECT_TYPE) {
+    } else if (ast.type == o.objectType) {
       context.print('<Object>');
     } else {
       // TODO(b/171268745): Remove one-off hack for a const <Object>[].
       final type = ast.type;
-      if (type is o.ArrayType && type.of == o.OBJECT_TYPE) {
+      if (type is o.ArrayType && type.of == o.objectType) {
         context.print('<Object>');
       }
     }

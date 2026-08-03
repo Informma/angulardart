@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/focus/focus.dart';
 import 'package:angulardart_components/interfaces/has_disabled.dart';
 import 'package:angulardart_components/utils/angular/properties/properties.dart';
@@ -83,12 +82,11 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
   int _inputLineHeight = 16;
 
   MaterialMultilineInputComponent(
-      @Self() @Optional() NgControl cd,
-      ChangeDetectorRef changeDetector,
-      DeferredValidator validator,
+      @Self() @Optional() NgControl super.cd,
+      super.changeDetector,
+      super.validator,
       this._domService)
-      : _changeDetector = changeDetector,
-        super(cd, changeDetector, validator);
+      : _changeDetector = changeDetector;
 
   // Overridden to add a HostListener event.
   @HostListener('focus')
@@ -103,7 +101,7 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
   ElementRef get elementRef => popupSourceEl!;
 
   /// Text used to size the multiline textarea.
-  String get mirrorText => (inputText ?? '') + '\n';
+  String get mirrorText => '$inputText\n';
 
   @ViewChild('lineHeightMeasure')
   set lineHeightMeasure(ElementRef value) {
@@ -122,9 +120,8 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
           ..markForCheck()
           // TODO(google): remove after the bug is fixed.
           ..detectChanges();
-      } else if (_subscription == null) {
-        // Listen to dom changes until we can read the line height.
-        _subscription = _domService.onLayoutChanged.listen((_) {
+      } else {
+        _subscription ??= _domService.onLayoutChanged.listen((_) {
           lineHeightMeasure = value;
         });
       }

@@ -59,18 +59,18 @@ abstract mixin class ElementAst implements StandaloneTemplateAst {
   }) = ParsedElementAst;
 
   @override
-  bool operator ==(Object o) {
-    if (o is ElementAst) {
-      return name == o.name &&
-          closeComplement == o.closeComplement &&
-          _listEquals.equals(attributes, o.attributes) &&
-          _listEquals.equals(childNodes, o.childNodes) &&
-          _listEquals.equals(events, o.events) &&
-          _listEquals.equals(properties, o.properties) &&
-          _listEquals.equals(references, o.references) &&
-          _listEquals.equals(bananas, o.bananas) &&
-          _listEquals.equals(stars, o.stars) &&
-          _listEquals.equals(annotations, o.annotations);
+  bool operator ==(Object other) {
+    if (other is ElementAst) {
+      return name == other.name &&
+          closeComplement == other.closeComplement &&
+          _listEquals.equals(attributes, other.attributes) &&
+          _listEquals.equals(childNodes, other.childNodes) &&
+          _listEquals.equals(events, other.events) &&
+          _listEquals.equals(properties, other.properties) &&
+          _listEquals.equals(references, other.references) &&
+          _listEquals.equals(bananas, other.bananas) &&
+          _listEquals.equals(stars, other.stars) &&
+          _listEquals.equals(annotations, other.annotations);
     }
     return false;
   }
@@ -273,7 +273,7 @@ class _SyntheticElementAst extends SyntheticTemplateAst with ElementAst {
   });
 
   _SyntheticElementAst.from(
-    TemplateAst origin,
+    TemplateAst super.origin,
     this.name,
     this.closeComplement, {
     this.attributes = const [],
@@ -284,7 +284,7 @@ class _SyntheticElementAst extends SyntheticTemplateAst with ElementAst {
     this.bananas = const [],
     this.stars = const [],
     this.annotations = const [],
-  }) : super.from(origin);
+  }) : super.from();
 
   @override
   final String name;

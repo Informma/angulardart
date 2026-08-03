@@ -216,8 +216,8 @@ SimpleSelectorSequence _createPseudoClassSelectorSequence(String name) {
 /// TODO(leonsenft): remove if/when csslib supports Selector Level 4 grammar.
 ///
 /// Grammar:
-///   <complex-selector> =
-///     <compound-selector> [ <combinator>? <compound-selector> ]*
+///   `<complex-selector>` =
+///     `<compound-selector>` [ `<combinator>`? `<compound-selector>` ]*
 class _ComplexSelector {
   List<_CompoundSelector> compoundSelectors = [];
 
@@ -258,7 +258,7 @@ class _ComplexSelector {
 /// TODO(leonsenft): remove if/when csslib supports Selector Level 4 grammar.
 ///
 /// Grammar:
-///   <compound-selector> = <simple-selector>+
+///   `<compound-selector>` = `<simple-selector>`+
 ///
 /// The [combinator] precedes the compound selector when included in a
 /// complex selector.
@@ -573,8 +573,7 @@ class _ShadowTransformer extends Visitor {
 }
 
 class _LegacyShadowTransformer extends _ShadowTransformer {
-  _LegacyShadowTransformer(String contentClass, String hostClass)
-      : super(contentClass, hostClass);
+  _LegacyShadowTransformer(super.contentClass, super.hostClass);
 
   final _unscopedSelectorGroups = <SelectorGroup>{};
 

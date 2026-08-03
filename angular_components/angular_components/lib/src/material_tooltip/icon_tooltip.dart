@@ -89,10 +89,10 @@ class MaterialIconTooltipComponent implements DeferredContentAware {
   ///
   /// Defaults to:
   ///
-  /// `[RelativePosition.OffsetBottomRight,
-  /// RelativePosition.OffsetTopLeft,
-  /// RelativePosition.OffsetBottomLeft,
-  /// RelativePosition.OffsetTopRight]`
+  /// `[RelativePosition.offsetBottomRight,
+  /// RelativePosition.offsetTopLeft,
+  /// RelativePosition.offsetBottomLeft,
+  /// RelativePosition.offsetTopRight]`
   @Input()
   List<RelativePosition> preferredPositions = _defaultPositions;
 
@@ -110,9 +110,9 @@ class MaterialIconTooltipComponent implements DeferredContentAware {
       @Attribute('icon') String icon,
       @Attribute('type') String type,
       @Attribute('size') String size)
-      : icon = icon ?? '${type ?? "help"}_outline',
-        iconSize = size ?? 'medium' {
-    assert(type == 'help' || type == 'info' || type == 'error' || type == null);
+      : icon = '${type}_outline',
+        iconSize = size {
+    assert(type == 'help' || type == 'info' || type == 'error');
     assert(iconSize == 'x-small' ||
         iconSize == 'small' ||
         iconSize == 'medium' ||
@@ -143,8 +143,8 @@ class MaterialIconTooltipComponent implements DeferredContentAware {
 
 /// [RelativePosition] list for the ink tooltip.
 const _defaultPositions = [
-  RelativePosition.OffsetBottomRight,
-  RelativePosition.OffsetTopLeft,
-  RelativePosition.OffsetBottomLeft,
-  RelativePosition.OffsetTopRight,
+  RelativePosition.offsetBottomRight,
+  RelativePosition.offsetTopLeft,
+  RelativePosition.offsetBottomLeft,
+  RelativePosition.offsetTopRight,
 ];

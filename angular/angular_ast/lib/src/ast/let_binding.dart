@@ -39,8 +39,8 @@ abstract mixin class LetBindingAst implements TemplateAst {
   ]) = ParsedLetBindingAst;
 
   @override
-  bool operator ==(Object o) =>
-      o is LetBindingAst && name == o.name && value == o.value;
+  bool operator ==(Object other) =>
+      other is LetBindingAst && name == other.name && value == other.value;
 
   @override
   int get hashCode => hash2(name, value);
@@ -143,8 +143,8 @@ class _SyntheticLetBindingAst extends SyntheticTemplateAst with LetBindingAst {
   _SyntheticLetBindingAst(this.name, [this.value]);
 
   _SyntheticLetBindingAst.from(
-    TemplateAst? origin,
+    super.origin,
     this.name, [
     this.value,
-  ]) : super.from(origin);
+  ]) : super.from();
 }

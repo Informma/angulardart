@@ -71,13 +71,13 @@ class I18nBuilder extends TemplateAstVisitor<void, StringBuffer> {
   void visitComment(_, [__]) {}
 
   @override
-  void visitContainer(ContainerAst astNode, [_]) {
+  void visitContainer(ContainerAst astNode, [context]) {
     visitAll(astNode.annotations);
     visitAll(astNode.childNodes);
   }
 
   @override
-  void visitElement(ElementAst astNode, [_]) {
+  void visitElement(ElementAst astNode, [context]) {
     // Visit unpermitted AST nodes to report errors.
     visitAll(astNode.annotations);
     visitAll(astNode.events);
@@ -99,7 +99,7 @@ class I18nBuilder extends TemplateAstVisitor<void, StringBuffer> {
   }
 
   @override
-  void visitEmbeddedTemplate(EmbeddedTemplateAst astNode, [_]) {
+  void visitEmbeddedTemplate(EmbeddedTemplateAst astNode, [context]) {
     _reportUnpermitted(astNode);
   }
 

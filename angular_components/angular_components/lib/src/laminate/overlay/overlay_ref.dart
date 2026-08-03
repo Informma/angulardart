@@ -31,7 +31,7 @@ typedef AsyncMeasureSize<E> = Stream<Rectangle> Function(E element,
 /// A handle to manipulate an existing overlay pane.
 class OverlayRef implements PortalHost {
   /// True if the overlay is not display: none.
-  bool get isVisible => state.visibility != Visibility.None;
+  bool get isVisible => state.visibility != Visibility.none;
 
   /// A stream that fires whenever the pane is pressed.
   ///
@@ -42,14 +42,14 @@ class OverlayRef implements PortalHost {
   /// dimension or position change.
   ///
   /// This allows to measure how big a popup or tooltip will be once made
-  /// visible, as it will silently change visibility from [Visibility.None] to
-  /// [Visibility.Hidden] in order to be able to measure layout.
+  /// visible, as it will silently change visibility from [Visibility.none] to
+  /// [Visibility.hidden] in order to be able to measure layout.
   Stream<Rectangle> measureSizeChanges() async* {
     // Visibility cannot be None to calculate overlay dimensions (display:
     // none; elements have width and height of 0). It must be at least Hidden
     // (i.e. visibility: hidden;).
-    if (state.visibility == Visibility.None) {
-      state.visibility = Visibility.Hidden;
+    if (state.visibility == Visibility.none) {
+      state.visibility = Visibility.hidden;
     }
     await _applyChanges();
     yield* _runOutsideAngular(() {
@@ -145,7 +145,7 @@ class OverlayRef implements PortalHost {
       this.overlayElement,
       this._runOutsideAngular,
       {OverlayState? state})
-      : this.state = state != null ? MutableOverlayState.from(state) : MutableOverlayState() {
+      : state = state != null ? MutableOverlayState.from(state) : MutableOverlayState() {
     _stateUpdateListener = this.state.onUpdate.listen((_) => _applyChanges());
   }
 }

@@ -7,10 +7,14 @@ import 'package:angulardart_forms/src/directives/shared.dart'
 
 import 'control_value_accessor.dart';
 
-const DEFAULT_VALUE_ACCESSOR = ExistingProvider.forToken(
+const defaultValueAccessor = ExistingProvider.forToken(
   ngValueAccessor,
   DefaultValueAccessor,
 );
+
+@Deprecated('Use defaultValueAccessor instead')
+// ignore: constant_identifier_names
+const DEFAULT_VALUE_ACCESSOR = defaultValueAccessor;
 
 /// The default accessor for writing a value and listening to changes that is used by the
 /// [NgModel], [NgFormControl], and [NgControlName] directives.
@@ -24,7 +28,7 @@ const DEFAULT_VALUE_ACCESSOR = ExistingProvider.forToken(
       'textarea[ngFormControl],'
       'input:not([type=checkbox])[ngModel],'
       'textarea[ngModel],[ngDefaultControl]',
-  providers: [DEFAULT_VALUE_ACCESSOR],
+  providers: [defaultValueAccessor],
 )
 class DefaultValueAccessor extends Object
     with TouchHandler, ChangeHandler<String>

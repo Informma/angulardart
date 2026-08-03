@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/focus/focus.dart';
 import 'package:angulardart_components/interfaces/has_disabled.dart';
 import 'package:angulardart_components/material_icon/material_icon.dart';
@@ -68,10 +67,9 @@ class MaterialCheckboxComponent
       this._changeDetector,
       @Self() @Optional() NgControl? cd,
       @Attribute('tabindex') String hostTabIndex,
-      @Attribute('role') String role)
+      @Attribute('role') this.role)
       : _defaultTabIndex =
-            hostTabIndex?.isNotEmpty ?? false ? hostTabIndex : '0',
-        this.role = role ?? 'checkbox' {
+            hostTabIndex.isNotEmpty ? hostTabIndex : '0' {
     // When NgControl is present on the host element, the component
     // participates in the Forms API.
     if (cd != null) {
@@ -83,7 +81,6 @@ class MaterialCheckboxComponent
   @override
   void writeValue(bool isChecked) {
     // Need to ignore the null on init.
-    if (isChecked == null) return;
     _setStates(checked: isChecked, emitEvent: false);
   }
 
@@ -124,6 +121,7 @@ class MaterialCheckboxComponent
 
   /// Whether the checkbox should not respond to events, and have a style that
   /// suggests that interaction is not allowed.
+  @override
   @HostBinding('class.disabled')
   @HostBinding('attr.aria-disabled')
   @Input()
@@ -225,9 +223,8 @@ class MaterialCheckboxComponent
   }
 
   void _syncAriaChecked() {
-    if (_root == null) return;
     _root.attributes['aria-checked'] = _checkedStr;
-    _changeDetector?.markForCheck();
+    _changeDetector.markForCheck();
   }
 
   /// Current icon, depends on the state of [checked] and [indeterminate].
@@ -329,7 +326,7 @@ class MaterialCheckboxComponent
   // Triggered on focus.
   @HostListener('focus')
   @visibleForTemplate
-  void handleFocus(_) {
+  void handleFocus(dynamic _) {
     _focused = true;
   }
 
@@ -344,10 +341,11 @@ class MaterialCheckboxComponent
   @override
   void onDisabledChanged(bool isDisabled) {
     disabled = isDisabled;
-    _changeDetector?.markForCheck();
+    _changeDetector.markForCheck();
   }
 
   /// Unimplemented for M1.
   Future? focusDelegate;
+  @override
   void ngOnDestroy() {}
 }

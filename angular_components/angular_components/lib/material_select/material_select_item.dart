@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
 import 'package:angulardart_components/dynamic_component/dynamic_component.dart';
 import 'package:angulardart_components/glyph/glyph.dart';
@@ -67,7 +66,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
       this._cdRef,
       @Attribute('role') String role,
       {bool addTabIndexWhenNonTabbable = false})
-      : super(element, role ?? 'option',
+      : super(element, role,
             addTabIndexWhenNonTabbable: addTabIndexWhenNonTabbable) {
     _disposer
       ..addStreamSubscription(trigger.listen(handleActivate))
@@ -118,11 +117,12 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   ItemRenderer<T> itemRenderer = nullRenderer;
 
   ComponentRenderer? _componentRenderer;
-  @Input()
   @override
   @Deprecated('Use factoryrenderer instead as it will produce more '
       'tree-shakeable code.')
   ComponentRenderer get componentRenderer => _componentRenderer!;
+  @override
+  @Input()
   set componentRenderer(ComponentRenderer? value) =>
       _componentRenderer = value;
 
@@ -133,9 +133,10 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   /// internal state has changed. Otherwise the item will not know it needs to
   /// update the component.
   FactoryRenderer<RendersValue, T>? _factoryRenderer;
-  @Input()
   @override
   FactoryRenderer<RendersValue, T> get factoryRenderer => _factoryRenderer!;
+  @override
+  @Input()
   set factoryRenderer(FactoryRenderer<RendersValue, T>? value) =>
       _factoryRenderer = value;
 
@@ -173,7 +174,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
     } else if (_componentRenderer == null &&
         _factoryRenderer == null &&
         !identical(itemRenderer, nullRenderer)) {
-      return itemRenderer(value as T);
+      return itemRenderer(value);
     }
     return null;
   }
@@ -210,10 +211,10 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
 
   // TODO(google): Remove after migration from ComponentRenderer is complete
   Type? get componentType =>
-      _componentRenderer != null ? _componentRenderer!(value as T) : null;
+      _componentRenderer != null ? _componentRenderer!(value) : null;
 
   ComponentFactory? get componentFactory =>
-      _factoryRenderer != null ? _factoryRenderer!(value as T) : null;
+      _factoryRenderer != null ? _factoryRenderer!(value) : null;
 
   @HostBinding('attr.aria-checked')
   bool? get isAriaChecked =>
@@ -223,9 +224,9 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   @HostBinding('class.selected')
   bool get isSelected => _isMarkedSelected || _isSelectedInSelectionModel;
 
-  bool get _isMarkedSelected => selected != null && selected;
+  bool get _isMarkedSelected => selected;
   bool get _isSelectedInSelectionModel =>
-      value != null && (_selection?.isSelected(value as T) ?? false);
+      value != null && (_selection?.isSelected(value) ?? false);
 
   void handleActivate(UIEvent e) {
     var hasCheckbox = supportsMultiSelect && !hideCheckbox;
@@ -236,12 +237,12 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
       }
     }
 
-    if (_activationHandler?.handle(e, value as T) ?? false) return;
+    if (_activationHandler?.handle(e, value) ?? false) return;
     if (_selectOnActivate && _selection != null && value != null) {
-      if (!_selection!.isSelected(value as T)) {
-        _selection!.select(value as T);
+      if (!_selection!.isSelected(value)) {
+        _selection!.select(value);
       } else if (_deselectOnActivate) {
-        _selection!.deselect(value as T);
+        _selection!.deselect(value);
       }
     }
   }

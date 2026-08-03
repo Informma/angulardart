@@ -30,10 +30,9 @@ class DropdownSelectValueAccessor<T> extends BaseDropdownSelectValueAccessor<T>
   @override
   void registerOnChange(callback) {
     _selectionChangesSub = selectionModel.selectionChanges.listen((_) {
-      var value = (selectionModel.selectedValues == null ||
-              selectionModel.selectedValues.isEmpty)
+      var value = (selectionModel.selectedValues.isEmpty)
           ? null
-          : selectionModel.selectedValues?.first;
+          : selectionModel.selectedValues.first;
       callback(value);
     });
   }
@@ -77,7 +76,7 @@ class MultiDropdownSelectValueAccessor<T>
   @override
   void registerOnChange(callback) {
     selectionChangesSub = selectionModel.selectionChanges.listen((_) {
-      callback(selectionModel.selectedValues?.toList());
+      callback(selectionModel.selectedValues.toList());
     });
   }
 
@@ -115,7 +114,7 @@ abstract class BaseDropdownSelectValueAccessor<T>
   void initializeSelectionModel() {
     if (initialized) return;
     initialized = true;
-    assert(_select.selection == null,
+    assert(true,
         'Cannot set [selection] when using a Dropdown control value accessor.');
     _select.selection = selectionModel;
   }

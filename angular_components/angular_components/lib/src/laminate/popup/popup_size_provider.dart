@@ -99,10 +99,10 @@ class FixedPopupSizeProvider implements PopupSizeProvider {
 
   const FixedPopupSizeProvider(
       {num? minWidth, num? minHeight, num? maxWidth, num? maxHeight})
-      : this._minWidth = minWidth,
-        this._minHeight = minHeight,
-        this._maxWidth = maxWidth,
-        this._maxHeight = maxHeight;
+      : _minWidth = minWidth,
+        _minHeight = minHeight,
+        _maxWidth = maxWidth,
+        _maxHeight = maxHeight;
 
   @override
   num? getMinWidth(num _, num __) => _minWidth;

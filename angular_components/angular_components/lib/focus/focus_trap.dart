@@ -79,10 +79,9 @@ class FocusTrapComponent implements OnDestroy {
   selector: '[focusContentWrapper]',
 )
 class FocusContentWrapper extends FocusableDirective {
-  Element _element;
-  FocusContentWrapper(HtmlElement element)
-      : _element = element,
-        super(element);
+  final Element _element;
+  FocusContentWrapper(super.element)
+      : _element = element;
 
   Element get element => _element;
 }

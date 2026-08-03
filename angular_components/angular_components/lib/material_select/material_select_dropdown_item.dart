@@ -64,8 +64,8 @@ class MaterialSelectDropdownItemComponent<T>
       ChangeDetectorRef cdRef)
       : _generatedId =
             (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId(),
-        super(element, dropdown, activationHandler, cdRef, role ?? 'option') {
-    this.itemRenderer = defaultItemRenderer;
+        super(element, dropdown, activationHandler, cdRef, role) {
+    itemRenderer = defaultItemRenderer;
   }
 
   @HostBinding('attr.aria-selected')
@@ -79,7 +79,7 @@ class MaterialSelectDropdownItemComponent<T>
 
   @override
   void onLoadCustomComponent(ComponentRef ref) {
-    _customAriaHandling = ref?.instance is HandlesAria;
+    _customAriaHandling = ref.instance is HandlesAria;
     if (_customAriaHandling) role = null;
   }
 }

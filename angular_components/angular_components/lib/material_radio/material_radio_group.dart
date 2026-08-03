@@ -110,8 +110,6 @@ class MaterialRadioGroupComponent
     // Since this is updating children that were already dirty-checked,
     // need to delay this change until next angular cycle.
     _ngZone.runAfterChangesObserved(() {
-      if (_radioComponents == null) return; // Component was destroyed.
-      // Disable everything first.
       for (var radioComponent in _radioComponents) {
         radioComponent.tabbable = false;
       }
@@ -145,7 +143,7 @@ class MaterialRadioGroupComponent
     if (_valueSelection == value) return;
     _selectionSubscription?.cancel();
     _valueSelection = value;
-    _selectionSubscription = _valueSelection?.selectionChanges?.listen((_) {
+    _selectionSubscription = _valueSelection?.selectionChanges.listen((_) {
       selected = _valueSelection!.selectedValues
           .firstWhere((_) => true, orElse: () => null);
     });
@@ -173,7 +171,7 @@ class MaterialRadioGroupComponent
   /// Value of currently selected radio. Prefer `[ngModel]`.
   @Input()
   set selected(dynamic selectedValue) {
-    if (_radioComponents != null && _isContentInit) {
+    if (_isContentInit) {
       for (var radioComponent in _radioComponents) {
         radioComponent.checked = (radioComponent.value == selectedValue);
       }

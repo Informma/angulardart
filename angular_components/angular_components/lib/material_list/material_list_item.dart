@@ -41,8 +41,8 @@ class MaterialListItemComponent extends ButtonDirective implements OnDestroy {
 
   MaterialListItemComponent(this.element, @Optional() this._dropdown,
       @Attribute('tabindex') String tabIndex, @Attribute('role') String role)
-      : hostTabIndex = tabIndex ?? '0',
-        super(element, role ?? 'listitem') {
+      : hostTabIndex = tabIndex,
+        super(element, role) {
     if (_dropdown != null) {
       _disposer.addDisposable(trigger.listen(handleActivate));
     }

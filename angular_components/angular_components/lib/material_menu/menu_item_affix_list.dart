@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/dynamic_component/dynamic_component.dart';
 import 'package:angulardart_components/interfaces/has_disabled.dart';
 import 'package:angulardart_components/material_menu/affix/base_affix.dart';
@@ -48,6 +47,7 @@ class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
 
   MenuItemAffixListComponent(this._cdRef);
 
+  @override
   @Input()
   set disabled(bool disabled) {
     _disabled = disabled;
@@ -55,6 +55,7 @@ class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
     _updateItemProperties();
   }
 
+  @override
   bool get disabled => _disabled;
 
   /// Observable list of affix items.
@@ -62,7 +63,7 @@ class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
   set items(ObservableList<MenuItemAffix> items) {
     _itemChangeStreamSub?.cancel();
 
-    _itemChangeStreamSub = items?.listChanges?.listen((change) {
+    _itemChangeStreamSub = items.listChanges.listen((change) {
       _updateVisibleItems(change);
       _cdRef.markForCheck();
     });

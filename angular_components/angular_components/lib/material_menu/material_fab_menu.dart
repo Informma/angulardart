@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/content/deferred_content.dart';
 import 'package:angulardart_components/focus/focus.dart';
 import 'package:angulardart_components/focus/focus_trap.dart';
@@ -84,8 +83,6 @@ class MaterialFabMenuComponent extends Object
   /// Sets the view model for this component.
   @Input()
   set viewModel(MaterialFabMenuModel value) {
-    if (value == null) return;
-
     _viewModel = value;
     _viewModelStreamSub?.cancel();
     _viewModelStreamSub = _viewModel!.onShowPopupChange.listen((_) {
@@ -168,7 +165,7 @@ class MaterialFabMenuComponent extends Object
 
   void hideMenu() {
     _hideMenuContent();
-    Future.delayed(MaterialPopupComponent.SLIDE_DELAY, () {
+    Future.delayed(MaterialPopupComponent.slideDelay, () {
       _viewModel!.closePopup();
     });
   }
@@ -196,8 +193,8 @@ class MaterialFabMenuComponent extends Object
   }
 
   final tooltipPositions = const <RelativePosition>[
-    RelativePosition.AdjacentRight,
-    RelativePosition.AdjacentLeft,
+    RelativePosition.adjacentRight,
+    RelativePosition.adjacentLeft,
   ];
 }
 
@@ -219,26 +216,26 @@ class MaterialFabMenuModel {
   Stream<Change<bool>> get onShowPopupChange => _showPopup.changes;
 
   /// True if the [menuItem] exists and has at least one item.
-  bool get hasMenu => menuItem.subMenu?.itemGroups?.isNotEmpty ?? false;
+  bool get hasMenu => menuItem.subMenu?.itemGroups.isNotEmpty ?? false;
 
   /// True if the FAB has a menu and at least one menu item has an icon.
   bool get hasIcons =>
       hasMenu &&
-      menuItem.subMenu!.itemGroups!
+      menuItem.subMenu!.itemGroups
           .any((itemGroup) => itemGroup.any((item) => item.hasIcon));
 
   /// True if the FAB menu should be shown.
   bool get showPopup => _showPopup.value;
 
   /// True if FAB is in an enabled state - can be clicked and triggered.
-  bool get isFabEnabled => menuItem.enabled ?? false;
+  bool get isFabEnabled => menuItem.enabled;
 
   /// Name of glyph displayed within FAB circle.
   String? get glyph => menuItem.icon?.name;
 
   String get ariaLabel => menuItem.label;
 
-  String get tooltip => menuItem.tooltip ?? menuItem.label;
+  String get tooltip => menuItem.tooltip;
 
   bool get isFabHidden => hasMenu ? _showPopup.value : false;
 

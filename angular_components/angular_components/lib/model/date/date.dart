@@ -3,6 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Contains date-related models.
+library;
+
 
 import 'dart:async';
 
@@ -110,6 +112,9 @@ class Date extends Comparators<Date> {
   int get hashCode => asUtcTime().hashCode;
 
   @override
+  bool operator ==(Object other) => other is Date && asUtcTime() == other.asUtcTime();
+
+  @override
   String toString() =>
       '${asUtcTime().year}-${asUtcTime().month}-${asUtcTime().day}';
 }
@@ -169,7 +174,7 @@ class DateRange {
   }
 
   @override
-  bool operator ==(o) => o is DateRange && start == o.start && end == o.end;
+  bool operator ==(Object other) => other is DateRange && start == other.start && end == other.end;
 
   @override
   int get hashCode => hash2(start, end);
@@ -215,9 +220,6 @@ Iterable<Date> enumerateDates(Date start, Date end) sync* {
 /// Throws [ArgumentError] when [range] is unbounded on either side.
 /// See [enumerateDates] for more details.
 Iterable<Date> enumerateRange(DateRange range) {
-  if (range == null) {
-    return [];
-  }
   if (range.start == null || range.end == null) {
     throw ArgumentError(
         'Cannot call enumerateRange with a range with a null start or end.');

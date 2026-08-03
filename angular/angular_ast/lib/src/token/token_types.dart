@@ -1,4 +1,4 @@
-part of angular_ast.src.token.tokens;
+part of 'tokens.dart';
 
 /// The types of tokens that can be returned by the NgStringTokenizer
 enum NgSimpleTokenType {
@@ -17,7 +17,7 @@ enum NgSimpleTokenType {
   openTagStart,
   tagEnd,
   equalSign,
-  EOF,
+  eof,
   forwardSlash,
   hash,
   identifier,
@@ -34,7 +34,10 @@ enum NgSimpleTokenType {
   text,
   unexpectedChar,
   voidCloseTag,
-  whitespace,
+  whitespace;
+
+  @Deprecated('Use eof instead')
+  static const EOF = eof; // ignore: constant_identifier_names
 }
 
 /// The types of tokens that can be returned by the NgScanner.

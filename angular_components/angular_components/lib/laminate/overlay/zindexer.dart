@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @JS()
-library angular_components.css.acux.zindexer;
+library;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:js/js.dart';
@@ -26,9 +26,7 @@ class ZIndexer {
   static ZIndexer? _currentInstance;
 
   static void _initZIndex() {
-    if (_currentZIndex == null) {
-      _currentZIndex = hoverableAutoIncrement;
-    }
+    _currentZIndex = hoverableAutoIncrement;
   }
 
   factory ZIndexer() {

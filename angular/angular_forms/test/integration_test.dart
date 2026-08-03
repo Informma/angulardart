@@ -814,7 +814,7 @@ class WrappedAccessor implements ControlValueAccessor<dynamic> {
   void registerOnTouched(fn) {}
 
   @HostListener('input', [r'$event.target.value'])
-  void handleOnInput(value) {
+  void handleOnInput(dynamic value) {
     onChange(value.substring(1, value.length - 1));
   }
 

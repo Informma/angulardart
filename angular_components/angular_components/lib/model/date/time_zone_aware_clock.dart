@@ -82,10 +82,6 @@ class SettableTimeZone {
   /// case, [Clock.now()] will print an error and return system time.
   Duration? get offsetFromUtc => _offsetFromUtc;
   set offsetFromUtc(Duration? newOffset) {
-    if (newOffset != null && newOffset.inMicroseconds == null) {
-      throw ArgumentError.value(
-          newOffset, 'newOffset' 'holds a null or undefined value');
-    }
     if (newOffset != null && newOffset.inMicroseconds.isNaN) {
       throw ArgumentError.value(newOffset, 'newOffset' 'is NaN!');
     }
@@ -131,20 +127,13 @@ class SettableTimeZone {
         _logger.severe('not initialized with time zone data');
         return systemTime;
       }
-    } else if (systemTime.timeZoneOffset.inMicroseconds == null) {
-      throw StateError(
-          'System time has a null or undefined timezone offset! $systemTime');
     } else if (systemTime.timeZoneOffset.inMicroseconds.isNaN) {
-      throw StateError('System time has a NaN timezone offset! $systemTime');
-    }
+    throw StateError('System time has a NaN timezone offset! $systemTime');
+  }
 
     // To convert system time to UTC, subtract systemTime.timeZoneOffset.
     // To convert UTC to the Custom's local time, add [offsetFromUtc].
     var offset = offsetFromUtc! - systemTime.timeZoneOffset;
-    if (offset.inMicroseconds == null) {
-      throw StateError('Computed time offset is null or undefined! '
-          '$offsetFromUtc - ${systemTime.timeZoneOffset} = $offset');
-    }
     if (offset.inMicroseconds.isNaN) {
       throw StateError('Computed time offset is NaN! '
           '$offsetFromUtc - ${systemTime.timeZoneOffset} = $offset');

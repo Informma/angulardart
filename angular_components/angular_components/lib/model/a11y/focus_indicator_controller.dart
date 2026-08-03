@@ -114,7 +114,7 @@ class FocusIndicatorController {
     }
   }
 
-  void _reposition(_) {
+  void _reposition(dynamic _) {
     var rect = _activeElement!.getBoundingClientRect();
     _focusIndicator!.style.top = '${rect.top}px';
     _focusIndicator!.style.left = '${rect.left}px';

@@ -8,7 +8,17 @@
 /// - Disabled - the item is not selectable, checkbox is visible but disabled
 ///              (ideally with explanation in the tooltip).
 /// - Hidden - the item is not selectable, and no checkbox is present.
-enum SelectableOption { Selectable, Disabled, Hidden }
+enum SelectableOption { selectable, disabled, hidden;
+  @Deprecated('Use selectable instead')
+  // ignore: constant_identifier_names
+  static const Selectable = selectable;
+  @Deprecated('Use disabled instead')
+  // ignore: constant_identifier_names
+  static const Disabled = disabled;
+  @Deprecated('Use hidden instead')
+  // ignore: constant_identifier_names
+  static const Hidden = hidden;
+}
 
 typedef SelectableGetter<T> = SelectableOption Function(T entity);
 
@@ -44,7 +54,7 @@ abstract class Selectable<T> {
   static SelectableOption getOptionIn<T>(
     Object isMaybeModel,
     T item, [
-    SelectableOption defaultIfMissingInterface = SelectableOption.Selectable,
+    SelectableOption defaultIfMissingInterface = SelectableOption.selectable,
   ]) {
     if (isMaybeModel is Selectable<T>) {
       return isMaybeModel.getSelectable(item);
@@ -62,14 +72,14 @@ abstract class Selectable<T> {
       isSelectable = (option) {
         return identical(
           isMaybeModel.getSelectable(option),
-          SelectableOption.Selectable,
+          SelectableOption.selectable,
         );
       };
     }
     return isSelectable;
   }
 
-  /// Returns whether [model] has [item] as a [SelectableOption.Selectable].
+  /// Returns whether [model] has [item] as a [SelectableOption.selectable].
   static bool isSelectableIn<T>(
     Object model,
     T item, [
@@ -78,12 +88,12 @@ abstract class Selectable<T> {
     return _isOptionCheck(
       model,
       item,
-      SelectableOption.Selectable,
+      SelectableOption.selectable,
       defaultIfMissingInterface,
     );
   }
 
-  /// Returns whether [model] has [item] as a [SelectableOption.Disabled].
+  /// Returns whether [model] has [item] as a [SelectableOption.disabled].
   static bool isDisabledIn<T>(
     Object model,
     T item, [
@@ -92,12 +102,12 @@ abstract class Selectable<T> {
     return _isOptionCheck(
       model,
       item,
-      SelectableOption.Disabled,
+      SelectableOption.disabled,
       defaultIfMissingInterface,
     );
   }
 
-  /// Returns whether [model] has [item] as a [SelectableOption.Hidden].
+  /// Returns whether [model] has [item] as a [SelectableOption.hidden].
   static bool isHiddenIn<T>(
     Object model,
     T item, [
@@ -106,13 +116,13 @@ abstract class Selectable<T> {
     return _isOptionCheck(
       model,
       item,
-      SelectableOption.Hidden,
+      SelectableOption.hidden,
       defaultIfMissingInterface,
     );
   }
 
   /// Whether [item] should be shown as selectable.
-  SelectableOption getSelectable(T item) => SelectableOption.Selectable;
+  SelectableOption getSelectable(T item) => SelectableOption.selectable;
 }
 
 /// An optional interface for describing why an item is/is not selectable.

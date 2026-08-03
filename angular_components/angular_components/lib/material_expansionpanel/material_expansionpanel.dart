@@ -7,7 +7,6 @@ import 'dart:html';
 import 'dart:math';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
 import 'package:angulardart_components/content/deferred_content.dart';
 import 'package:angulardart_components/content/deferred_content_aware.dart';
@@ -101,14 +100,14 @@ class MaterialExpansionPanel
       this._domService,
       @Attribute('shouldExpandOnLeft') String expandOnLeft,
       @Attribute('forceContentWhenClosed') String forceContent)
-      : shouldExpandOnLeft = expandOnLeft != null,
-        forceContentWhenClosed = forceContent != null;
+      : shouldExpandOnLeft = true,
+        forceContentWhenClosed = true;
 
   /// Set the auto focus child so that we can focus on it when the panel opens.
   ///
   /// Unfortunately, this only selects the first [AutoFocusDirective] in the
   /// contents of the expansion panel, which means that if there is another
-  /// [AutoFocusDirective] in an <ng-content> that is not the .content, that
+  /// [AutoFocusDirective] in an `<ng-content>` that is not the .content, that
   /// will get focused instead of the [AutoFocusDirective] inside the .content.
   @visibleForTemplate
   @ContentChild(AutoFocusDirective)
@@ -161,7 +160,7 @@ class MaterialExpansionPanel
         }));
       }
     });
-    _domService.scheduleRead(transitionCheck);
+    _domService.scheduleRead(transitionCheck.call);
     _disposer.addDisposable(transitionCheck);
   }
 
@@ -259,10 +258,12 @@ class MaterialExpansionPanel
   }
 
   bool _disabled = false;
+  @override
   bool get disabled => _disabled;
 
   /// If true, the panel will remain in the collapsed state with no way to
   /// expand it, or if expanded by default, it will stay in expanded state.
+  @override
   @Input()
   set disabled(bool value) {
     _disabled = value;
@@ -303,7 +304,7 @@ class MaterialExpansionPanel
     _groupAriaLabel = groupAriaLabel;
   }
 
-  String? get groupAriaLabel => _groupAriaLabel == null ? name : _groupAriaLabel;
+  String? get groupAriaLabel => _groupAriaLabel ?? name;
 
   /// Level of the heading.
   ///
@@ -546,7 +547,7 @@ class MaterialExpansionPanel
   }
 
   /// Changes the state of the panel either to expanded or not. Returns a
-  /// Future<bool> that indicates whether the operation was successful. For
+  /// `<Future<bool>>` that indicates whether the operation was successful. For
   /// example, trying to close a panel with unsaved changes may fail because
   /// the user has cancelled the operation.
   Future<bool> changeState(
@@ -645,7 +646,7 @@ class MaterialExpansionPanel
       // If the content-wrapper has a top margin, it is not reflected in the
       // scroll height.
       final topMargin = _contentWrapper!.getComputedStyle().marginTop;
-      expandedPanelHeight = 'calc(${contentHeight}px + ${topMargin})';
+      expandedPanelHeight = 'calc(${contentHeight}px + $topMargin)';
     }
     return expandedPanelHeight;
   }

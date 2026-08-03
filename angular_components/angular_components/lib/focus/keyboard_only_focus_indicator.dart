@@ -5,7 +5,6 @@
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
 import 'package:meta/meta.dart';
 
@@ -74,12 +73,12 @@ class KeyboardOnlyFocusIndicatorDirective {
   /// visibility depending on the type of `event`. The intended use case follows
   /// this general pattern:
   ///
-  /// <some-focusable-element
-  ///     keyboardOnlyFocusIndicator
-  ///     #focusTarget="keyboardOnlyFocusIndicator">
-  /// </some-focusable-element>
+  /// `<some-focusable-element`
+  ///     `keyboardOnlyFocusIndicator`
+  ///     `#focusTarget="keyboardOnlyFocusIndicator">`
+  /// `</some-focusable-element>`
   /// ...
-  /// <button (trigger)="focusTarget.focus($event)">Focus!</button>
+  /// `<button (trigger)="focusTarget.focus($event)">Focus!</button>`
   ///
   /// Calling focus() on the element directly would cause its outline to show in
   /// response to clicks on the button, which is undesirable. Using this

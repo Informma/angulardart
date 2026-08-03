@@ -76,7 +76,7 @@ class MaterialStepperComponent {
     if (_stepDirectiveList == value) return;
     _stepAriaLabel.clear();
     _stepDirectiveList = value;
-    activeStepIndex ??= 0;
+    activeStepIndex = 0;
     scheduleMicrotask(() {
       _onStepsChange(_stepDirectiveList!);
     });
@@ -124,7 +124,7 @@ class MaterialStepperComponent {
         stepperDone = true;
         return true;
       }
-      return _stepTo(activeStepIndex! + 1);
+      return _stepTo(activeStepIndex + 1);
     });
   }
 
@@ -140,7 +140,7 @@ class MaterialStepperComponent {
     step.requestStepCancel(ctrl.action);
     ctrl.execute(() {
       activeStep!.complete = false;
-      return _stepTo(activeStepIndex! - 1);
+      return _stepTo(activeStepIndex - 1);
     });
   }
 
@@ -187,7 +187,7 @@ class MaterialStepperComponent {
   /// Get the step directive that is currently active.  The stepper will
   /// only have 1 step active at a time.
   StepDirective? get activeStep =>
-      steps.isNotEmpty ? steps[activeStepIndex!] : null;
+      steps.isNotEmpty ? steps[activeStepIndex] : null;
 
   /// Jumps (defined as step-switches not triggered by the Continue/Cancel
   /// buttons) that are legal.
@@ -275,7 +275,7 @@ class MaterialStepperComponent {
           s.isSelectable = false;
           break;
         case backwards:
-          s.isSelectable = i < activeStepIndex!;
+          s.isSelectable = i < activeStepIndex;
       }
       i++;
     }

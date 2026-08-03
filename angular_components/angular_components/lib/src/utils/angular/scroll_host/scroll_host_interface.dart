@@ -92,7 +92,17 @@ abstract class ScrollHost implements Disposable {
 }
 
 /// The position  of the sticky row.
-enum StickyPosition { NONE, TOP, BOTTOM }
+enum StickyPosition { none, top, bottom;
+  @Deprecated('Use none instead')
+  // ignore: constant_identifier_names
+  static const NONE = none;
+  @Deprecated('Use top instead')
+  // ignore: constant_identifier_names
+  static const TOP = top;
+  @Deprecated('Use bottom instead')
+  // ignore: constant_identifier_names
+  static const BOTTOM = bottom;
+}
 
 /// Coordinates sticky headers and footers, handles their appearance and their
 /// in- and out animation.

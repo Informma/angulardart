@@ -9,10 +9,10 @@ import 'package:angulardart/angulardart.dart';
 // component instance or the element ref. Today, using # on an HTML element will
 // be an elementRef, but # on a component will be a component instance.
 
-/// Place on an element or component to expose the [ElementRef] as 'ref'.
+/// Place on an element or component to expose the `[ElementRef]` as 'ref'.
 ///
 /// Example usage:
-///     <material-button ref #button="ref"></materialButton>
+///     `<material-button ref #button="ref"></materialButton>`
 ///     <!-- You can now use 'button' in this template as a property -->
 @Directive(
   selector: '[ref]',

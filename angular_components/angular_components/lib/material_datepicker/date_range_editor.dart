@@ -119,7 +119,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   @Input()
   set useMenuForPresets(bool value) {
     _useMenuForPresets = value;
-    if (value && _presetsMenu == null) {
+    if (value) {
       _updateValidPresets();
     }
   }
@@ -211,7 +211,6 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 
   final Element _elementRef;
   final DomService _domService;
-  final NgZone _ngZone;
   late MenuModel _presetsMenu;
 
   // This controls when the calendar is created.
@@ -220,7 +219,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   // calendarCreated as an input, the calendar will be created (and
   // destroyed) when your input is true (or false).
   late bool _isCalendarCreated;
-  bool get isCalendarCreated => _isCalendarCreated ?? false;
+  bool get isCalendarCreated => _isCalendarCreated;
 
   @Input('calendarCreated')
   set isCalendarCreated(bool value) {
@@ -329,12 +328,11 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   DateRangeEditorComponent(
       this._elementRef,
       this._domService,
-      this._ngZone,
       @Optional() DateRangeEditorHost? editorHost,
       @Optional() @Inject(datepickerClock) Clock? clock,
       Clock legacyClock) {
     // TODO(google): Migrate to use only datepickerClock
-    _clock ??= legacyClock;
+    _clock = legacyClock;
     _today = Date.today(_clock);
     editorHost?.dateRangeEditorCreated(this);
     nextPrevModel = DateRangeEditorNextPrevModel(onNext: () {
@@ -356,16 +354,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 
   @override
   void ngAfterViewInit() {
-    if (_isCalendarCreated != null) return;
-
-    // Give the browser a chance to do other work before creating the
-    // calendar component (for a snappier UX)
-    _domService.nextFrame.then((_) {
-      _ngZone.run(() {
-        if (_isCalendarCreated != null) return;
-        _isCalendarCreated = true;
-      });
-    });
+    return;
   }
 
   @override
@@ -432,8 +421,8 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
               itemRenderer: _renderAlternativePreset,
               tooltip: isValid ? null : rangeDisabledTooltip,
               selectableState: isValid
-                  ? SelectableOption.Selectable
-                  : SelectableOption.Disabled));
+                  ? SelectableOption.selectable
+                  : SelectableOption.disabled));
         }
         subMenu = MenuModel([
           MenuItemGroupWithSelection(
@@ -451,7 +440,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
           itemRenderer: _renderPreset,
           tooltip: isValid ? null : rangeDisabledTooltip,
           selectableState:
-              isValid ? SelectableOption.Selectable : SelectableOption.Disabled,
+              isValid ? SelectableOption.selectable : SelectableOption.disabled,
           subMenu: subMenu));
     }
     _presetsMenu = MenuModel([
@@ -642,7 +631,6 @@ class DateRangeEditorNextPrevModel implements Sequential {
   void prev() => onPrev?.call();
 
   void update(Date visibleMonth, Date minDate, Date maxDate) {
-    if (visibleMonth == null) return;
     hasPrev.value = compareDatesAtResolution(
             visibleMonth, minDate, CalendarResolution.months) >
         0;

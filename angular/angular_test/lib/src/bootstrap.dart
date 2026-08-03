@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
 import 'package:angulardart/src/bootstrap/run.dart';
+// ignore: implementation_imports
 import 'package:angulardart/src/core/application_ref.dart';
 
 /// Returns an application injector factory for [providers], if any.

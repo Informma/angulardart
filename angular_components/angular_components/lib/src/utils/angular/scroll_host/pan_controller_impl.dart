@@ -228,7 +228,7 @@ class PanEventImpl implements PanEvent {
 
   /// Whether the event is a subset of [other], e.g. pan to top is a subset of
   /// pan to top-left.
-  bool isSubsetOf(other) =>
+  bool isSubsetOf(dynamic other) =>
       (other is PanEventImpl) &&
       (!isTop || other.isTop) &&
       (!isRight || other.isRight) &&
@@ -237,12 +237,15 @@ class PanEventImpl implements PanEvent {
       isPanning;
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(Object other) =>
       (other is PanEventImpl) &&
       (isTop == other.isTop) &&
       (isRight == other.isRight) &&
       (isBottom == other.isBottom) &&
       (isLeft == other.isLeft);
+
+  @override
+  int get hashCode => Object.hash(isTop, isRight, isBottom, isLeft);
 
   @override
   String toString() => '$isPanning ${isTop ? "t" : ""}'

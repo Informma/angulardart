@@ -4,7 +4,6 @@
 
 import 'dart:html';
 
-import 'package:meta/meta.dart';
 import 'package:angulardart_components/material_datepicker/calendar.dart';
 import 'package:angulardart_components/model/date/date.dart';
 import 'package:angulardart_components/model/observable/observable.dart';

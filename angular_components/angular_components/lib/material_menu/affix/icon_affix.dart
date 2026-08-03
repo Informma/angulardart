@@ -5,7 +5,6 @@
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
 import 'package:angulardart_components/material_icon/material_icon.dart';
 import 'package:angulardart_components/material_menu/affix/base_affix.dart';
@@ -91,7 +90,7 @@ class IconAffixComponent implements BaseAffixComponent<IconAffix> {
       _viewModel.triggerShortcutAction();
       event.stopPropagation();
 
-      if (_viewModel.shouldCloseMenuOnTrigger) _menuRoot?.closeHierarchy();
+      if (_viewModel.shouldCloseMenuOnTrigger) _menuRoot.closeHierarchy();
     }
   }
 }

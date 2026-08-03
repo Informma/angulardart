@@ -254,7 +254,7 @@ class ElementAst implements TemplateAst {
       visitor.visitElement(this, context);
 }
 
-/// A <ng-container> element which serves as a logical container for grouping.
+/// A `<ng-container>` element which serves as a logical container for grouping.
 class NgContainerAst implements TemplateAst {
   final List<TemplateAst> children;
   @override
@@ -483,23 +483,28 @@ class ProviderAst implements TemplateAst {
 
 enum ProviderAstType {
   /// Public providers (Directive.providers) that can be reached across views.
+  // ignore: constant_identifier_names
   PublicService,
 
   /// Provide providers (Directive.viewProviders) that are visible within
   /// template only.
+  // ignore: constant_identifier_names
   PrivateService,
 
   /// A provider that represents the Component type.
+  // ignore: constant_identifier_names
   Component,
 
   /// A provider that represents a Directive type.
+  // ignore: constant_identifier_names
   Directive,
 
   /// Provider that is used by compiled code itself such as TemplateRef.
+  // ignore: constant_identifier_names
   Builtin
 }
 
-/// Position where content is to be projected (instance of <ng-content> in
+/// Position where content is to be projected (instance of `<ng-content>` in
 /// a template).
 class NgContentAst implements TemplateAst {
   final int index;

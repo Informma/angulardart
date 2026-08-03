@@ -2,7 +2,7 @@
 // see https://html.spec.whatwg.org/multipage/entities.json
 // This list is not exhaustive to keep the compiler footprint low.
 // The `&#123;` / `&#x1ab;` syntax should be used when the named character reference does not exist.
-const NAMED_ENTITIES = {
+const namedEntities = {
   'Aacute': 'Á',
   'aacute': 'á',
   'Acirc': 'Â',
@@ -182,7 +182,7 @@ const NAMED_ENTITIES = {
   'prop': '∝',
   'Psi': 'Ψ',
   'psi': 'ψ',
-  'quot': '\"',
+  'quot': '"',
   'radic': '√',
   'rang': '⟩',
   'raquo': '»',
@@ -258,3 +258,7 @@ const NAMED_ENTITIES = {
   'zwj': '‍',
   'zwnj': '‌'
 };
+
+@Deprecated('Use namedEntities instead')
+// ignore: constant_identifier_names
+const NAMED_ENTITIES = namedEntities;

@@ -10,7 +10,7 @@ import 'dart:async';
 /// all previous items have completed.
 ///
 /// Example: familyBlackSheep = asyncWhere(children, growsUpRotten);
-Stream<T> asyncWhere<T>(List<T> items, Future<bool> filter(T item)) async* {
+Stream<T> asyncWhere<T>(List<T> items, Future<bool> Function(T item) filter) async* {
   for (var item in items) {
     if (await filter(item)) {
       yield item;
@@ -28,7 +28,7 @@ Stream<T> asyncWhere<T>(List<T> items, Future<bool> filter(T item)) async* {
 /// completes with the return value of [orElse].
 ///
 /// Example: newKing = asyncFirst(sons, survivesToMaturity);
-Future<T> asyncFirst<T>(List<T> items, Future<bool> filter(T item),
+Future<T> asyncFirst<T>(List<T> items, Future<bool> Function(T item) filter,
         {T Function()? orElse}) =>
     asyncWhere<T>(items, filter)
         .firstWhere((_) => true, orElse: orElse)
@@ -42,5 +42,5 @@ Future<T> asyncFirst<T>(List<T> items, Future<bool> filter(T item),
 /// and all the ones before them complete), then it completes with an error.
 ///
 /// Example: prisonersDilemmaWinner = asyncSingle(prisoners, defects);
-Future<T> asyncSingle<T>(List<T> items, Future<bool> filter(T item)) =>
+Future<T> asyncSingle<T>(List<T> items, Future<bool> Function(T item) filter) =>
     asyncWhere<T>(items, filter).single;

@@ -12,8 +12,7 @@ import 'package:angulardart_components/laminate/portal/portal.dart';
 )
 class ModalControllerDirective extends TemplatePortal implements OnDestroy {
   ModalControllerDirective(
-      TemplateRef templateRef, ViewContainerRef viewContainerRef)
-      : super(templateRef, viewContainerRef);
+      super.templateRef, super.viewContainerRef);
 
   @override
   void ngOnDestroy() {
@@ -25,12 +24,6 @@ class ModalControllerDirective extends TemplatePortal implements OnDestroy {
   /// Attaches content to the provided [overlayRef].
   @Input('modalController')
   set overlay(OverlayRef overlayRef) {
-    if (overlayRef == null) {
-      if (isAttached) {
-        this.detach();
-      }
-    } else {
-      overlayRef.attach(this);
-    }
+    overlayRef.attach(this);
   }
 }

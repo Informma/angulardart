@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 
 /// A function that can be throttled or debounced.
 typedef UnaryFunction<T> = Function(T argument);
@@ -40,7 +39,7 @@ DebouncedFunction<T> debounce<T>(UnaryFunction<T> delegate, Duration delay) {
 }
 
 /// Wraps [debounce] so that it can be called without any arguments
-DebouncedNullaryFunction debounceNullary(void callback(), Duration delay) {
+DebouncedNullaryFunction debounceNullary(void Function() callback, Duration delay) {
   var function = debounce((_) => callback(), delay);
   return () => function(null);
 }

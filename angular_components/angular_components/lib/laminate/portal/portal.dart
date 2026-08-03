@@ -20,7 +20,6 @@ abstract class Portal<T> {
   /// Throws [StateError] if a portal is already attached.
   Future<dynamic /*ComponentRef<Object> | Map<String, dynamic>*/ > attach(
       PortalHost host) {
-    assert(host != null);
     if (isAttached) {
       throw StateError('Already attached to host!');
     } else {
@@ -88,12 +87,9 @@ class TemplatePortal extends Portal<Map<String, dynamic>> {
   final ViewContainerRef viewContainer;
 
   // TODO(google): Add optional locals map initialization.
-  TemplatePortal(this.template, this.viewContainer) {
-    assert(template != null);
-    assert(viewContainer != null);
-  }
+  TemplatePortal(this.template, this.viewContainer);
 
-  get origin => viewContainer;
+  ViewContainerRef get origin => viewContainer;
 
   @override
   TemplatePortal clone() => TemplatePortal(template, viewContainer);
@@ -152,7 +148,6 @@ abstract class BasePortalHost implements PortalHost {
   @override
   Future<dynamic /*ComponentRef<Object> | Map<String, dynamic>*/ > attach(
       Portal<Object> portal) {
-    assert(portal != null);
     if (_isDisposed) {
       throw StateError('Already disposed.');
     }
@@ -167,11 +162,10 @@ abstract class BasePortalHost implements PortalHost {
       _attachedPortal = portal;
       portal.setAttachedHost(this);
       return attachTemplatePortal(portal);
-    } else if (portal == null) {
-      throw ArgumentError.notNull('portal');
     } else {
       throw ArgumentError.value(portal, 'portal');
     }
+
   }
 
   Future<ComponentRef<Object>> attachComponentPortal(
@@ -274,15 +268,11 @@ class PortalHostDirective extends BasePortalHost {
   set portal(Portal<Object> portal) {
     if (hasAttached) {
       detach().then((_) {
-        if (portal != null) {
-          attach(portal);
-        }
+        attach(portal);
       });
     } else {
       // Null signifies just detach any existing portal, do not attach anything.
-      if (portal != null) {
-        attach(portal);
-      }
+      attach(portal);
     }
   }
 }
@@ -340,8 +330,7 @@ class TemplatePortalDirective extends TemplatePortal {
   final _ready = StreamController<TemplatePortalDirective>.broadcast();
 
   TemplatePortalDirective(
-      TemplateRef templateRef, ViewContainerRef viewContainerRef)
-      : super(templateRef, viewContainerRef) {
+      super.templateRef, super.viewContainerRef) {
     // TODO(google): Consider a better or standard pattern for this.
     scheduleMicrotask(() {
       _ready.add(this);

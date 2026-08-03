@@ -16,7 +16,7 @@ String fullyFixedFilename = 'ast_fixed.html';
 
 String untokenize(Iterable<NgToken> tokens) => tokens
     .fold(StringBuffer(),
-        (buffer, token) => (buffer as StringBuffer)..write(token.lexeme))
+        (buffer, token) => buffer..write(token.lexeme))
     .toString();
 
 enum State {
@@ -81,8 +81,6 @@ NgSimpleTokenType generateRandomSimple(State state) {
     case State.text:
       var i = rng.nextInt(textMap.length);
       return textMap[i];
-    default:
-      return NgSimpleTokenType.unexpectedChar;
   }
 }
 
@@ -145,8 +143,6 @@ String generateHtmlString() {
           sb.write('lorem ipsum');
         }
         break;
-      default:
-        sb.write('');
     }
   }
   return sb.toString();

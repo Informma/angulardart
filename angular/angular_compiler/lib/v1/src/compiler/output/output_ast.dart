@@ -3,7 +3,12 @@ import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart';
 import '../compile_metadata.dart' show CompileIdentifierMetadata;
 
 /// Supported modifiers for [OutputType].
-enum TypeModifier { Const, Nullable }
+enum TypeModifier {
+  // ignore: constant_identifier_names
+  Const,
+  // ignore: constant_identifier_names
+  Nullable
+}
 
 abstract class OutputType {
   final List<TypeModifier> modifiers;
@@ -21,16 +26,27 @@ abstract class OutputType {
 }
 
 enum BuiltinTypeName {
+  // ignore: constant_identifier_names
   Dynamic,
+  // ignore: constant_identifier_names
   Object,
+  // ignore: constant_identifier_names
   Bool,
+  // ignore: constant_identifier_names
   String,
+  // ignore: constant_identifier_names
   Int,
+  // ignore: constant_identifier_names
   Double,
+  // ignore: constant_identifier_names
   Number,
+  // ignore: constant_identifier_names
   Function,
+  // ignore: constant_identifier_names
   Void,
+  // ignore: constant_identifier_names
   Never,
+  // ignore: constant_identifier_names
   Null,
 }
 
@@ -125,17 +141,50 @@ class MapType extends OutputType {
       : MapType(valueType, [...modifiers, TypeModifier.Nullable]);
 }
 
-const DYNAMIC_TYPE = BuiltinType(BuiltinTypeName.Dynamic);
-const OBJECT_TYPE = BuiltinType(BuiltinTypeName.Object);
-const VOID_TYPE = BuiltinType(BuiltinTypeName.Void);
-const NEVER_TYPE = BuiltinType(BuiltinTypeName.Never);
-const NULL_TYPE = BuiltinType(BuiltinTypeName.Null);
-const BOOL_TYPE = BuiltinType(BuiltinTypeName.Bool);
-const INT_TYPE = BuiltinType(BuiltinTypeName.Int);
-const DOUBLE_TYPE = BuiltinType(BuiltinTypeName.Double);
-const NUMBER_TYPE = BuiltinType(BuiltinTypeName.Number);
-const STRING_TYPE = BuiltinType(BuiltinTypeName.String);
-const FUNCTION_TYPE = BuiltinType(BuiltinTypeName.Function);
+const dynamicType = BuiltinType(BuiltinTypeName.Dynamic);
+@Deprecated('Use dynamicType instead')
+// ignore: constant_identifier_names
+const DYNAMIC_TYPE = dynamicType;
+const objectType = BuiltinType(BuiltinTypeName.Object);
+@Deprecated('Use objectType instead')
+// ignore: constant_identifier_names
+const OBJECT_TYPE = objectType;
+const voidType = BuiltinType(BuiltinTypeName.Void);
+@Deprecated('Use voidType instead')
+// ignore: constant_identifier_names
+const VOID_TYPE = voidType;
+const neverType = BuiltinType(BuiltinTypeName.Never);
+@Deprecated('Use neverType instead')
+// ignore: constant_identifier_names
+const NEVER_TYPE = neverType;
+const nullType = BuiltinType(BuiltinTypeName.Null);
+@Deprecated('Use nullType instead')
+// ignore: constant_identifier_names
+const NULL_TYPE = nullType;
+const boolType = BuiltinType(BuiltinTypeName.Bool);
+@Deprecated('Use boolType instead')
+// ignore: constant_identifier_names
+const BOOL_TYPE = boolType;
+const intType = BuiltinType(BuiltinTypeName.Int);
+@Deprecated('Use intType instead')
+// ignore: constant_identifier_names
+const INT_TYPE = intType;
+const doubleType = BuiltinType(BuiltinTypeName.Double);
+@Deprecated('Use doubleType instead')
+// ignore: constant_identifier_names
+const DOUBLE_TYPE = doubleType;
+const numberType = BuiltinType(BuiltinTypeName.Number);
+@Deprecated('Use numberType instead')
+// ignore: constant_identifier_names
+const NUMBER_TYPE = numberType;
+const stringType = BuiltinType(BuiltinTypeName.String);
+@Deprecated('Use stringType instead')
+// ignore: constant_identifier_names
+const STRING_TYPE = stringType;
+const functionType = BuiltinType(BuiltinTypeName.Function);
+@Deprecated('Use functionType instead')
+// ignore: constant_identifier_names
+const FUNCTION_TYPE = functionType;
 
 abstract class TypeVisitor<R, C> {
   R visitBuiltinType(BuiltinType type, C context);
@@ -147,20 +196,35 @@ abstract class TypeVisitor<R, C> {
 
 ///// Expressions
 enum BinaryOperator {
+  // ignore: constant_identifier_names
   Equals,
+  // ignore: constant_identifier_names
   NotEquals,
+  // ignore: constant_identifier_names
   Identical,
+  // ignore: constant_identifier_names
   NotIdentical,
+  // ignore: constant_identifier_names
   Minus,
+  // ignore: constant_identifier_names
   Plus,
+  // ignore: constant_identifier_names
   Divide,
+  // ignore: constant_identifier_names
   Multiply,
+  // ignore: constant_identifier_names
   Modulo,
+  // ignore: constant_identifier_names
   And,
+  // ignore: constant_identifier_names
   Or,
+  // ignore: constant_identifier_names
   Lower,
+  // ignore: constant_identifier_names
   LowerEquals,
+  // ignore: constant_identifier_names
   Bigger,
+  // ignore: constant_identifier_names
   BiggerEquals
 }
 
@@ -299,7 +363,7 @@ abstract class Expression {
 
   Expression isBlank() {
     // Note: We use equals by purpose here to compare to null and undefined in JS.
-    return equals(NULL_EXPR);
+    return equals(nullExpr);
   }
 
   Expression cast(OutputType type) {
@@ -323,7 +387,18 @@ class NamedExpr extends Expression {
   }
 }
 
-enum BuiltinVar { This, Super, CatchError, CatchStack, MetadataMap }
+enum BuiltinVar {
+  // ignore: constant_identifier_names
+  This,
+  // ignore: constant_identifier_names
+  Super,
+  // ignore: constant_identifier_names
+  CatchError,
+  // ignore: constant_identifier_names
+  CatchStack,
+  // ignore: constant_identifier_names
+  MetadataMap
+}
 
 class ReadVarExpr extends Expression {
   String? name;
@@ -453,7 +528,12 @@ class WritePropExpr extends Expression {
   }
 }
 
-enum BuiltinMethod { ConcatArray, SubscribeObservable }
+enum BuiltinMethod {
+  // ignore: constant_identifier_names
+  ConcatArray,
+  // ignore: constant_identifier_names
+  SubscribeObservable
+}
 
 class InvokeMethodExpr extends Expression {
   final Expression receiver;
@@ -601,7 +681,7 @@ class IfNullExpr extends Expression {
 
 class NotExpr extends Expression {
   final Expression condition;
-  NotExpr(this.condition) : super(BOOL_TYPE);
+  NotExpr(this.condition) : super(boolType);
 
   @override
   R visitExpression<R, C>(ExpressionVisitor<R, C> visitor, C context) {
@@ -805,14 +885,25 @@ abstract class ExpressionVisitor<R, C> {
   R visitNamedExpr(NamedExpr ast, C context);
 }
 
-var THIS_EXPR = ReadVarExpr(BuiltinVar.This);
-var SUPER_EXPR = ReadVarExpr(BuiltinVar.Super);
-var CATCH_ERROR_VAR = ReadVarExpr(BuiltinVar.CatchError);
-var CATCH_STACK_VAR = ReadVarExpr(BuiltinVar.CatchStack);
-var NULL_EXPR = LiteralExpr(null, null);
+var thisExpr = ReadVarExpr(BuiltinVar.This);
+var superExpr = ReadVarExpr(BuiltinVar.Super);
+var catchErrorVarExpr = ReadVarExpr(BuiltinVar.CatchError);
+var catchStackVarExpr = ReadVarExpr(BuiltinVar.CatchStack);
+var nullExpr = LiteralExpr(null, null);
 
 /// Modifiers applied to declarations (not truly statements).
-enum StmtModifier { Const, Final, Late, Private, Static }
+enum StmtModifier {
+  // ignore: constant_identifier_names
+  Const,
+  // ignore: constant_identifier_names
+  Final,
+  // ignore: constant_identifier_names
+  Late,
+  // ignore: constant_identifier_names
+  Private,
+  // ignore: constant_identifier_names
+  Static
+}
 
 abstract class Statement {
   SourceReference? sourceReference;
@@ -1370,7 +1461,7 @@ class RecursiveExpressionVisitor<C>
 
   @override
   Expression visitWriteClassMemberExpr(WriteClassMemberExpr expr, C context) {
-    THIS_EXPR.visitExpression(this, context);
+    thisExpr.visitExpression(this, context);
     expr.value.visitExpression(this, context);
     return expr;
   }
@@ -1644,7 +1735,7 @@ class EscapedString {
 }
 
 LiteralExpr escapedString(String value) {
-  return literal(EscapedString(value), STRING_TYPE);
+  return literal(EscapedString(value), stringType);
 }
 
 LiteralExpr literal(dynamic value, [OutputType? type]) {

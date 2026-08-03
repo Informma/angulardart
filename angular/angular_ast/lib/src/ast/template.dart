@@ -89,16 +89,16 @@ abstract mixin class EmbeddedTemplateAst implements StandaloneTemplateAst {
   set closeComplement(CloseElementAst? closeComplement);
 
   @override
-  bool operator ==(Object o) {
-    if (o is EmbeddedTemplateAst) {
-      return closeComplement == o.closeComplement &&
-          _listEquals.equals(annotations, o.annotations) &&
-          _listEquals.equals(attributes, o.attributes) &&
-          _listEquals.equals(events, o.events) &&
-          _listEquals.equals(properties, o.properties) &&
-          _listEquals.equals(childNodes, o.childNodes) &&
-          _listEquals.equals(references, o.references) &&
-          _listEquals.equals(letBindings, o.letBindings);
+  bool operator ==(Object other) {
+    if (other is EmbeddedTemplateAst) {
+      return closeComplement == other.closeComplement &&
+          _listEquals.equals(annotations, other.annotations) &&
+          _listEquals.equals(attributes, other.attributes) &&
+          _listEquals.equals(events, other.events) &&
+          _listEquals.equals(properties, other.properties) &&
+          _listEquals.equals(childNodes, other.childNodes) &&
+          _listEquals.equals(references, other.references) &&
+          _listEquals.equals(letBindings, other.letBindings);
     }
     return false;
   }
@@ -225,7 +225,7 @@ class _SyntheticEmbeddedTemplateAst extends SyntheticTemplateAst
   }) : closeComplement = CloseElementAst('template');
 
   _SyntheticEmbeddedTemplateAst.from(
-    TemplateAst origin, {
+    TemplateAst super.origin, {
     this.annotations = const [],
     this.attributes = const [],
     this.childNodes = const [],
@@ -234,7 +234,7 @@ class _SyntheticEmbeddedTemplateAst extends SyntheticTemplateAst
     this.references = const [],
     this.letBindings = const [],
   })  : closeComplement = CloseElementAst('template'),
-        super.from(origin);
+        super.from();
 
   @override
   final List<AnnotationAst> annotations;

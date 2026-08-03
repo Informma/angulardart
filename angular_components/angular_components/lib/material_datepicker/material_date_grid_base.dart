@@ -18,7 +18,17 @@ import 'package:angulardart_components/utils/browser/dom_service/dom_service.dar
 import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// What sort of selections a calendar supports.
-enum CalendarSelectionMode { NONE, SINGLE_DATE, DATE_RANGE }
+enum CalendarSelectionMode { none, singleDate, dateRange;
+  @Deprecated('Use none instead')
+  // ignore: constant_identifier_names
+  static const NONE = none;
+  @Deprecated('Use singleDate instead')
+  // ignore: constant_identifier_names
+  static const SINGLE_DATE = singleDate;
+  @Deprecated('Use dateRange instead')
+  // ignore: constant_identifier_names
+  static const DATE_RANGE = dateRange;
+}
 
 @Deprecated('No longer used due to poor performance')
 abstract class MaterialDateGridBase
@@ -26,7 +36,7 @@ abstract class MaterialDateGridBase
   /// The minimum amount of padding to keep around the content, to accommodate
   /// fast scrolling. (This makes sure that there is always something for larger
   /// scroll events to scroll into.)
-  static final int MIN_BUFFER_SIZE_PX = 3000;
+  static final int minBufferSizePx = 3000;
 
   /// The maximum height to give to the entire calendar scroller. If adding
   /// padding due to scrolling would cause the calendar to get taller than this,
@@ -34,7 +44,7 @@ abstract class MaterialDateGridBase
   ///
   /// This is an attempt to keep the scrollbar even a little bit useful... let's
   /// see if it helps any.
-  static final int MAX_CALENDAR_SIZE_PX = 20000;
+  static final int maxCalendarSizePx = 20000;
 
   /// How many calendar row groups to keep in the DOM at any time.
   int get rowsToRender;
@@ -70,9 +80,9 @@ abstract class MaterialDateGridBase
   /// a known point in the data set (in this case, `0`).
   int? startTop;
 
-  CalendarSelectionMode _mode = CalendarSelectionMode.NONE;
+  CalendarSelectionMode _mode = CalendarSelectionMode.none;
   CalendarSelectionMode get mode => _mode;
-  bool get canGrabRangeBoundaries => _mode == CalendarSelectionMode.DATE_RANGE;
+  bool get canGrabRangeBoundaries => _mode == CalendarSelectionMode.dateRange;
 
   /// Set this to false to temporarily suppress updates to the calendar's range
   /// highlights. Defaults to true.
@@ -129,15 +139,15 @@ abstract class MaterialDateGridBase
 
   MaterialDateGridBase(Clock clock, CalendarState initialState,
       this.changeDetector, this._domService, String mode)
-      : paddingTop = MIN_BUFFER_SIZE_PX,
-        paddingBottom = MIN_BUFFER_SIZE_PX,
+      : paddingTop = minBufferSizePx,
+        paddingBottom = minBufferSizePx,
         today = Date.today(clock),
         model =
             ObservableReference<CalendarState>(initialState, coalesce: true) {
     // Get the 1-indexed starting weekday for the current locale, and use that.
     startingWeekday = DateFormat().dateSymbols.FIRSTDAYOFWEEK + 1;
 
-    if (mode != null && mode.isNotEmpty) {
+    if (mode.isNotEmpty) {
       _mode = fuzzyParseEnum(CalendarSelectionMode.values, mode);
     }
   }
@@ -147,10 +157,10 @@ abstract class MaterialDateGridBase
     _disposer.addStreamSubscription(
         _calendarStream = model.stream.listen(onCalendarChange));
 
-    if (mode == CalendarSelectionMode.SINGLE_DATE) {
+    if (mode == CalendarSelectionMode.singleDate) {
       _inputListener = CalendarListener.singleDate(model);
     }
-    if (mode == CalendarSelectionMode.DATE_RANGE) {
+    if (mode == CalendarSelectionMode.dateRange) {
       _inputListener =
           CalendarListener.dateRange(model, movingStartMaintainsLength: true);
     }
@@ -214,8 +224,8 @@ abstract class MaterialDateGridBase
     var newPaddingTop = paddingTop + diffPx;
     var newPaddingBottom = paddingBottom - diffPx;
 
-    int minPaddingTop = min(MIN_BUFFER_SIZE_PX, maxPaddingTop);
-    int minPaddingBottom = min(MIN_BUFFER_SIZE_PX, maxPaddingBottom);
+    int minPaddingTop = min(minBufferSizePx, maxPaddingTop);
+    int minPaddingBottom = min(minBufferSizePx, maxPaddingBottom);
 
     // If we're approaching the top of the div, we need to add more padding
     // there, and adjust scrollTop / startTop to compensate.
@@ -225,7 +235,7 @@ abstract class MaterialDateGridBase
       newPaddingTop = minPaddingTop;
 
       var excessHeightPx =
-          _totalHeight(newPaddingTop, newPaddingBottom) - MAX_CALENDAR_SIZE_PX;
+          _totalHeight(newPaddingTop, newPaddingBottom) - maxCalendarSizePx;
       if (excessHeightPx > 0) {
         newPaddingBottom -= excessHeightPx;
       }
@@ -236,7 +246,7 @@ abstract class MaterialDateGridBase
       newPaddingBottom = minPaddingBottom;
 
       var excessHeightPx =
-          _totalHeight(newPaddingTop, newPaddingBottom) - MAX_CALENDAR_SIZE_PX;
+          _totalHeight(newPaddingTop, newPaddingBottom) - maxCalendarSizePx;
       if (excessHeightPx > 0) {
         startTop = startTop! + excessHeightPx;
         scrollTop -= excessHeightPx;
@@ -269,7 +279,7 @@ abstract class MaterialDateGridBase
   int _totalHeight(int paddingTop, int paddingBottom) =>
       paddingTop + paddingBottom + (rowsToRender * rowHeightPx);
 
-  int rowFromPos(heightPx) => (heightPx / rowHeightPx).floor();
+  int rowFromPos(num heightPx) => (heightPx / rowHeightPx).floor();
 }
 
 abstract class ForcedScrollDirectiveHost {

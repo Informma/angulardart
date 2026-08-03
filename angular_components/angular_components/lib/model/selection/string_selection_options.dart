@@ -38,7 +38,10 @@ typedef StringSuggestionFilter<T> = bool Function(
 class StringSelectionOptions<T> extends SelectionOptions<T>
     implements Filterable {
   /// Unlimited large value to support no limit for filtering.
-  static const int UNLIMITED = 9007199254740992;
+  static const int unlimited = 9007199254740992;
+  @Deprecated('Use unlimited instead')
+  // ignore: constant_identifier_names, unused_field
+  static const int UNLIMITED = unlimited;
 
   /// The last query passed to [filter].
   String? _currentQuery;
@@ -103,7 +106,7 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
         super(optionGroups) {
     _optionGroups = optionGroups;
     _suggestionFilter =
-        suggestionFilter != null ? suggestionFilter : filterOption;
+        suggestionFilter ?? filterOption;
   }
 
   /// Accepts a string query and limit and applies the filter to the options.
@@ -115,14 +118,14 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
   /// into a generic filter.
   @override
   DisposableFuture<bool> filter(Object query, {int? limit}) {
-    _currentLimit = (limit == null || limit < 1) ? UNLIMITED : limit;
+    _currentLimit = (limit == null || limit < 1) ? unlimited : limit;
     _currentQuery = query as String;
     refilter();
     return DisposableFuture.fromValue(true);
   }
 
   @protected
-  bool get filterApplied => currentQuery != null;
+  bool get filterApplied => true;
 
   @protected
   void refilter() {
@@ -158,7 +161,7 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
     }
     var filteredGroup = OptionGroup<T>.withLabelFunction(
         list.toList(growable: false),
-        () => group.uiDisplayName ?? '',
+        () => group.uiDisplayName,
         () => group.emptyLabel ?? '');
 
     return filteredGroup;
@@ -183,9 +186,9 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
   set optionGroups(List<OptionGroup<T>> value) {
     // This mutates value...
     if (_shouldSort) {
-      value.forEach((optionGroup) {
+      for (var optionGroup in value) {
         optionGroup.sort(_sortFn);
-      });
+      }
     }
     // Cache the data so original is kept during filtering.
     _optionGroups = value;

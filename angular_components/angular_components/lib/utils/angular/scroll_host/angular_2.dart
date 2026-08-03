@@ -43,6 +43,7 @@ const scrollHostNewModule = Module(
 class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   final DomService _domService;
   final NgZone _ngZone;
+  @override
   final HtmlElement element;
   final GestureListenerFactory _gestureListenerFactory;
 
@@ -72,10 +73,10 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
         _domService, _ngZone, _gestureListenerFactory, element,
         usePositionSticky: _usePositionSticky,
         useTouchGestureListener: _useTouchGestureListener);
-    stickyController?.enableSmoothPushing = _enableSmoothPushing;
+    stickyController.enableSmoothPushing = _enableSmoothPushing;
 
     if (!_usePositionSticky) {
-      _onUpdate.addStream(stickyController!.onUpdate);
+      _onUpdate.addStream(stickyController.onUpdate);
     }
   }
 
@@ -109,7 +110,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   @Input()
   set enableSmoothPushing(bool value) {
     _enableSmoothPushing = value;
-    stickyController?.enableSmoothPushing = value;
+    stickyController.enableSmoothPushing = value;
   }
 
   /// Whether to use the position: sticky [StickyController] for improved
@@ -238,9 +239,8 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
 /// Provides a scroll host that uses the browser window content area.
 @Injectable()
 class WindowScrollHost extends WindowScrollHostBase implements OnDestroy {
-  WindowScrollHost(DomService domService, NgZone ngZone,
-      GestureListenerFactory gestureListenerFactory, Window window)
-      : super(domService, ngZone, gestureListenerFactory, window);
+  WindowScrollHost(super.domService, super.ngZone,
+      super.gestureListenerFactory, super.window);
 
   @override
   ngOnDestroy() {
@@ -289,8 +289,7 @@ class StickyFloatingTracker implements OnInit, OnDestroy {
 class AcxPanClassDirective extends BasePanClassDirective
     implements OnInit, OnDestroy {
   AcxPanClassDirective(
-      DomService domService, ScrollHost scrollHost, HtmlElement element)
-      : super(domService, scrollHost, element);
+      super.domService, super.scrollHost, HtmlElement super.element);
 
   @override
   void ngOnInit() => startPanListener();
@@ -329,7 +328,7 @@ class StickyElementDirective implements AfterViewInit, OnDestroy {
   String? _stickyClass;
   String? _stickyKey;
   bool _sticky = true;
-  StickyPosition _position = StickyPosition.TOP;
+  StickyPosition _position = StickyPosition.top;
 
   StickyElementDirective(this._scrollHost, this._stickyElement);
 
@@ -369,7 +368,7 @@ class StickyElementDirective implements AfterViewInit, OnDestroy {
 
   /// Whether element should stick to top or bottom of sticky range.
   ///
-  /// Default is [StickyPosition.TOP].
+  /// Default is [StickyPosition.top].
   @Input('stickyPosition')
   set position(StickyPosition position) {
     _position = position;
@@ -386,12 +385,12 @@ class StickyElementDirective implements AfterViewInit, OnDestroy {
   }
 
   void _stick() {
-    _stickyController?.stick(_stickyElement, _position, _endElement!,
+    _stickyController.stick(_stickyElement, _position, _endElement!,
         stickyClass: _stickyClass, stickyKey: _stickyKey);
   }
 
   void _unstick() {
-    _stickyController?.unstick(_stickyElement);
+    _stickyController.unstick(_stickyElement);
   }
 
   StickyController get _stickyController => _scrollHost.stickyController;

@@ -11,7 +11,7 @@ Iterable<NgToken> tokenize(String html) {
 
 String untokenize(Iterable<NgToken> tokens) => tokens
     .fold(StringBuffer(),
-        (buffer, token) => (buffer as StringBuffer)..write(token.lexeme))
+        (buffer, token) => buffer..write(token.lexeme))
     .toString();
 
 void main() {
@@ -30,10 +30,10 @@ void main() {
         print('ORGNL: $input');
         print('FIXED: $fixed');
         print('ERRORS:');
-        exceptionHandler.exceptions.forEach((e) {
+        for (var e in exceptionHandler.exceptions) {
           var context = input.substring(e.offset!, e.offset! + e.length!);
           print('${e.errorCode.message} :: $context at ${e.offset}');
-        });
+        }
       }
     } catch (e) {
       print(e);

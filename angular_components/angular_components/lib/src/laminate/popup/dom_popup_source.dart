@@ -27,8 +27,8 @@ class DomPopupSourceFactory {
 
   /// Returns a new [DomPopupSource] from [sourceElement].
   DomPopupSource createPopupSource(HtmlElement sourceElement,
-      {Alignment alignOriginX = Alignment.Start,
-      Alignment alignOriginY = Alignment.Start,
+      {Alignment alignOriginX = Alignment.start,
+      Alignment alignOriginY = Alignment.start,
       bool initAriaAttributes = true}) {
     return DomPopupSource(_asyncMeasureSize, sourceElement,
         alignOriginX: alignOriginX,
@@ -56,6 +56,7 @@ class DomPopupSource implements ElementPopupSource {
   static final bool _isRtl = determineRtl(document);
 
   final AsyncMeasureSize<HtmlElement> _asyncMeasureSize;
+  @override
   final HtmlElement sourceElement;
   final bool _initAriaAttributes;
 
@@ -68,8 +69,8 @@ class DomPopupSource implements ElementPopupSource {
   /// attributes. This defaults to true and can be set to false for cases where
   /// the popup source isn't the focus target.
   DomPopupSource(this._asyncMeasureSize, this.sourceElement,
-      {Alignment alignOriginX = Alignment.Start,
-      Alignment alignOriginY = Alignment.Start,
+      {Alignment alignOriginX = Alignment.start,
+      Alignment alignOriginY = Alignment.start,
       Point transform = const Point(0, 0),
       bool initAriaAttributes = true})
       : _initAriaAttributes = initAriaAttributes {
@@ -101,7 +102,7 @@ class DomPopupSource implements ElementPopupSource {
   @override
   set popupId(String id) {
     _id = id;
-    if (_id == null || !_initAriaAttributes) return;
+    if (!_initAriaAttributes) return;
     sourceElement.setAttribute('aria-haspopup', 'true');
   }
 
@@ -112,18 +113,17 @@ class DomPopupSource implements ElementPopupSource {
 
   @override
   String toString() =>
-      'DomPopupSource ' +
-      {'alignOriginX': alignOriginX, 'alignOriginY': alignOriginY}.toString();
+      'DomPopupSource ${{'alignOriginX': alignOriginX, 'alignOriginY': alignOriginY}}';
 
   @override
   void onOpen() {
-    if (_id == null || !_initAriaAttributes) return;
+    if (!_initAriaAttributes) return;
     sourceElement.setAttribute('aria-owns', _id);
   }
 
   @override
   void onClose() {
-    if (_id == null || !_initAriaAttributes) return;
+    if (!_initAriaAttributes) return;
     sourceElement.attributes.remove('aria-owns');
   }
 }

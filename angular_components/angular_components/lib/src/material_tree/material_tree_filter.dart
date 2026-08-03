@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 // TODO(google): Make this generic and shareable at first opportunity.
-library angular_components.material_tree.src.material_tree_filter;
+library;
 
 import 'dart:async';
 
@@ -61,9 +61,7 @@ class MaterialTreeFilterComponent {
     if (_filterable != filterable) {
       _filterable = filterable;
       var query = filterable.currentQuery;
-      if (query != null) {
-        _inputText = query.toString();
-      }
+      _inputText = query.toString();
       _updateVisibleItems();
     }
   }

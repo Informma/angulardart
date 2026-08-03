@@ -5,10 +5,14 @@ import 'package:angulardart/angulardart.dart';
 import 'control_value_accessor.dart'
     show ChangeHandler, ControlValueAccessor, ngValueAccessor, TouchHandler;
 
-const NUMBER_VALUE_ACCESSOR = ExistingProvider.forToken(
+const numberValueAccessor = ExistingProvider.forToken(
   ngValueAccessor,
   NumberValueAccessor,
 );
+
+@Deprecated('Use numberValueAccessor instead')
+// ignore: constant_identifier_names
+const NUMBER_VALUE_ACCESSOR = numberValueAccessor;
 
 /// The accessor for writing a number value and listening to changes that is used by the
 /// [NgModel], [NgFormControl], and [NgControlName] directives.
@@ -20,7 +24,7 @@ const NUMBER_VALUE_ACCESSOR = ExistingProvider.forToken(
   selector: 'input[type=number][ngControl],'
       'input[type=number][ngFormControl],'
       'input[type=number][ngModel]',
-  providers: [NUMBER_VALUE_ACCESSOR],
+  providers: [numberValueAccessor],
 )
 class NumberValueAccessor extends Object
     with TouchHandler, ChangeHandler<double?>

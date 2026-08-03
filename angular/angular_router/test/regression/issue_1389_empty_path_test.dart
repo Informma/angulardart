@@ -5,7 +5,7 @@ import 'package:angulardart_router/testing.dart';
 import 'package:angulardart_test/angulardart_test.dart';
 
 // ignore: uri_has_not_been_generated
-import '1389_empty_path_test.template.dart' as ng;
+import 'issue_1389_empty_path_test.template.dart' as ng;
 
 void main() {
   tearDown(disposeAnyRunningTest);

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:angulardart/angulardart.dart';
 
 import '../model.dart' show AbstractControlGroup, Control, ControlGroup;
-import '../validators.dart' show NG_VALIDATORS;
+import '../validators.dart' show ngValidators;
 import 'control_container.dart' show ControlContainer;
 import 'ng_control.dart' show NgControl;
 import 'ng_control_group.dart' show NgControlGroup;
@@ -22,9 +22,9 @@ import 'shared.dart' show setUpControl, setUpControlGroup;
 )
 class MemorizedForm extends NgForm {
   MemorizedForm(
-    @Optional() @Self() @Inject(NG_VALIDATORS) List<dynamic>? validators,
-    @Optional() ChangeDetectorRef? changeDetectorRef,
-  ) : super(validators, changeDetectorRef);
+    @Optional() @Self() @Inject(ngValidators) super.validators,
+    @Optional() super.changeDetectorRef,
+  );
 
   /// Add a control if it isn't already found in the container.
   @override
@@ -65,16 +65,16 @@ class MemorizedForm extends NgForm {
   }
 
   @override
-  void removeControl(NgControl? ctrl) {
+  void removeControl(NgControl? dir) {
     // We will not remove the control if it is dropped, but we need to cleanup
     // any validators that may have been added.
-    ctrl?.control?.validator = null;
+    dir?.control?.validator = null;
   }
 
   @override
-  void removeControlGroup(NgControlGroup? ctrl) {
+  void removeControlGroup(NgControlGroup? dir) {
     // We will not remove the control group if it is dropped, but we need to cleanup
     // any validators that may have been added.
-    ctrl?.control?.validator = null;
+    dir?.control?.validator = null;
   }
 }

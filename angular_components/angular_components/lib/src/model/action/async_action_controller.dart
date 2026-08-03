@@ -12,7 +12,7 @@ import 'async_action.dart';
 /// The AsyncAction implementation defers to the controller for its state, and
 /// the sequencing of futures to resolve the execution.
 ///
-/// <V> Is the value type returned/resolved by the execution closure.
+/// `<V>` Is the value type returned/resolved by the execution closure.
 class AsyncActionController<V> {
   // The controller uses the indirection of a [Completer] in order to coalesce
   // subscribers to [AsyncAction#onDone] and to provide a [Future] for

@@ -17,10 +17,8 @@ import 'package:angulardart_components/model/ui/highlighted_text_model.dart';
 abstract mixin class HighlightAssistantMixin<T>
     implements SelectionContainer<T>, HighlightProvider {
   @Deprecated('Use highlightFactoryRenderer instead as it allows tree-shaking.')
-  final ComponentRenderer highlightComponentRenderer =
-      (_) => HighlightedValueComponent;
-  final FactoryRenderer highlightFactoryRenderer =
-      (_) => highlight.HighlightedValueComponentNgFactory;
+  Type highlightComponentRenderer(Object? _) => HighlightedValueComponent;
+  ComponentFactory<Object> highlightFactoryRenderer(Object? _) => highlight.HighlightedValueComponentNgFactory;
 
   HighlightAssistant? _highlightAssistant;
 
@@ -49,14 +47,12 @@ abstract mixin class HighlightAssistantMixin<T>
 
   /// The query to highlight.
   String get highlightQuery =>
-      options is Filterable ? ((options as Filterable).currentQuery ?? '') as String : '';
+      options is Filterable ? ((options as Filterable).currentQuery) as String : '';
 
   ItemRenderer<T> get _highlightRenderer {
-    if ((componentRenderer == null ||
-            componentRenderer == highlightComponentRenderer) &&
-        (factoryRenderer == null ||
-            factoryRenderer == highlightFactoryRenderer)) {
-      return itemRenderer ?? defaultItemRenderer;
+    if ((componentRenderer == highlightComponentRenderer) &&
+        (factoryRenderer == highlightFactoryRenderer)) {
+      return itemRenderer;
     }
     return defaultItemRenderer;
   }

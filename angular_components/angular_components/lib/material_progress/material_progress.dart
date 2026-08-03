@@ -10,7 +10,10 @@ import 'package:intl/intl.dart';
 import 'package:angulardart_components/utils/browser/feature_detector/feature_detector.dart'
     show supportsAnimationApi;
 
-const String ARIA_VALUENOW_ATTR = "aria-valuenow";
+const String ariaValuenowAttr = "aria-valuenow";
+@Deprecated('Use ariaValuenowAttr instead')
+// ignore: constant_identifier_names
+const String ARIA_VALUENOW_ATTR = ariaValuenowAttr;
 const Map<String, double> _indeterminateTiming = {
   'duration': 2000.0,
   'iterations': double.infinity
@@ -76,7 +79,7 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
   bool get useFallbackAnimation =>
       indeterminate && (!_useFancyAnimation || !supportsAnimationApi);
 
-  String? get ariaValueNow => indeterminate == true ? null : '${activeProgress}';
+  String? get ariaValueNow => indeterminate == true ? null : '$activeProgress';
 
   String get ariaValue =>
       indeterminate ? _loadingValue : _activeProgressValue(activeProgress);
@@ -129,7 +132,7 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
       @Attribute('disable-fancy-animation') String disableFancyAnimation,
       this._changeDetector,
       this._element)
-      : _useFancyAnimation = disableFancyAnimation == null;
+      : _useFancyAnimation = true;
 
   @override
   void ngAfterViewInit() {
@@ -152,7 +155,9 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
     if (!indeterminate ||
         !_useFancyAnimation ||
         !_isInitialized ||
-        !supportsAnimationApi) return;
+        !supportsAnimationApi) {
+      return;
+    }
 
     final width = _element.getBoundingClientRect().width;
     if (width == 0) {

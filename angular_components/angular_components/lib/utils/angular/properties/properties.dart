@@ -11,7 +11,7 @@
 ///
 /// **NOTE**: If [strValue] is an empty string (''), it is always true. This is
 /// because when you declare something like:
-///     <material-button disabled></material-button>
+///     `<material-button disabled></material-button>`
 ///
 /// ... The value of "disabled" is ''.
 bool _parseBool(String strValue) {
@@ -41,7 +41,7 @@ bool _parseBool(String strValue) {
 /// **NOTE**: inputValue must be non-null.
 @Deprecated('Angular now supports boolean properties natively, for @Attribute'
     ' use [attributeToBool].')
-bool getBool(inputValue) {
+bool getBool(dynamic inputValue) {
   if (inputValue == null) throw ArgumentError.notNull('inputValue');
 
   if (inputValue is String) return _parseBool(inputValue);
@@ -63,11 +63,10 @@ bool getBool(inputValue) {
 ///
 /// NOTE: no attribute is not the same as no value for attribute:
 ///
-/// * <my-component foo> - foo attribute is present but has no value, which
+/// * `<my-component foo>` - foo attribute is present but has no value, which
 ///                        is parsed to *true*.
-/// * <my-component> - no attribute is present, parsed to [defaultValue].
+/// * `<my-component>` - no attribute is present, parsed to [defaultValue].
 bool attributeToBool(String inputValue, {bool defaultValue = false}) {
-  if (inputValue == null) return defaultValue;
   return _parseBool(inputValue);
 }
 
@@ -75,7 +74,7 @@ bool attributeToBool(String inputValue, {bool defaultValue = false}) {
 ///
 /// If [inputValue] is an [int], returns it.
 /// If [inputValue] is a `null`, returns [defaultValue].
-int getInt(inputValue, {int defaultValue = 0}) {
+int getInt(dynamic inputValue, {int defaultValue = 0}) {
   if (inputValue == null) {
     return defaultValue;
   } else if (inputValue is String) {

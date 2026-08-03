@@ -177,17 +177,15 @@ class StickyControllerImpl implements StickyController {
   }
 
   void _observeRowPositions() {
-    if (_orderedRows == null) {
-      _orderedRows = _rowMap.values.toList();
-    }
+    _orderedRows ??= _rowMap.values.toList();
     final orderedRows = _orderedRows!;
     for (int i = 0; i < orderedRows.length; i++) {
       orderedRows[i].readRowPositions();
     }
-    // For rows that have StickyPosition.TOP, they are sorted from top down.
-    // For rows that have StickyPosition.BOTTOM, they are sorted from bottom up.
-    // Rows that have StickyPosition.TOP are stored before those have
-    // StickyPosition.BOTTOM.
+    // For rows that have StickyPosition.top, they are sorted from top down.
+    // For rows that have StickyPosition.bottom, they are sorted from bottom up.
+    // Rows that have StickyPosition.top are stored before those have
+    // StickyPosition.bottom.
     orderedRows.sort((a, b) {
       if (a.isTop != b.isTop) {
         return a.isTop ? -1 : 1;
@@ -267,19 +265,17 @@ class _StickyRow implements StickyRowPosition {
   String? get stickyKey => _stickyKey;
 
   @override
-  bool get isTop => (position == StickyPosition.TOP);
+  bool get isTop => (position == StickyPosition.top);
 
   @override
-  bool get isBottom => (position == StickyPosition.BOTTOM);
+  bool get isBottom => (position == StickyPosition.bottom);
 
   /// Observes the position of the row's Element and its range.
   void readRowPositions() {
     rowPosition = element.getBoundingClientRect();
-    if (translateY != null) {
-      rowPosition = Rectangle(rowPosition.left, rowPosition.top - translateY,
-          rowPosition.width, rowPosition.height);
-    }
-    rangePosition = range?.getBoundingClientRect();
+    rowPosition = Rectangle(rowPosition.left, rowPosition.top - translateY,
+        rowPosition.width, rowPosition.height);
+    rangePosition = range.getBoundingClientRect();
   }
 
   /// Sets the row back to its starting position and styling, but without
@@ -312,7 +308,7 @@ class _StickyRow implements StickyRowPosition {
     if (translateY != newY) {
       translateY = newY;
       String newTransform = 'translate3d(0px, ${translateY}px, 0px)';
-      String newZIndex = '${stickyControllerZIndex}';
+      String newZIndex = '$stickyControllerZIndex';
       if (_currentPosition != 'relative' ||
           _currentTransform != newTransform ||
           _currentZIndex != newZIndex) {
@@ -330,28 +326,27 @@ class _StickyRow implements StickyRowPosition {
 
   @override
   String toString() =>
-      '_StickyRow ' +
-      {
+      '_StickyRow ${{
         'isBottom': isBottom,
         'isTop': isTop,
         'rowPosition': rowPosition,
         'rangePosition': rangePosition,
         'translateY': translateY,
         'stickyClass': stickyClass,
-      }.toString();
+      }}';
 }
 
 /// Wraps a row of arbitrary type with additional data needed by the algorithm.
-class _RowData<T> {
+class RowData<T> {
   T row;
   num offsetY;
 
-  _RowData(this.row, {this.offsetY = 0});
+  RowData(this.row, {this.offsetY = 0});
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is _RowData &&
+      other is RowData &&
           runtimeType == other.runtimeType &&
           row == other.row &&
           offsetY == other.offsetY;
@@ -360,7 +355,7 @@ class _RowData<T> {
   int get hashCode => row.hashCode ^ offsetY.hashCode;
 
   @override
-  String toString() => '_RowData{row: $row, offsetY: $offsetY}';
+  String toString() => 'RowData{row: $row, offsetY: $offsetY}';
 }
 
 /// The collection of rows the sticky container should put on the top, on the
@@ -370,10 +365,10 @@ class StickyContainerLayout<T> {
   late Rectangle hostPosition;
 
   /// Rows that should stick to the top.
-  List<_RowData<T>>? topRows;
+  List<RowData<T>>? topRows;
 
   /// Rows that should stick to the bottom.
-  List<_RowData<T>>? bottomRows;
+  List<RowData<T>>? bottomRows;
 
   /// Rows that should not stick.
   List<T>? hiddenRows;
@@ -384,13 +379,16 @@ class StickyContainerLayout<T> {
   late List<num> _translateYs;
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(Object other) =>
       (other is StickyContainerLayout) &&
       (hostPosition == other.hostPosition) &&
       _listEquals(topRows, other.topRows) &&
       _listEquals(bottomRows, other.bottomRows) &&
       _listEquals(hiddenRows, other.hiddenRows) &&
       _listEquals(_translateYs, other._translateYs);
+
+  @override
+  int get hashCode => Object.hash(hostPosition, topRows, bottomRows, hiddenRows);
 
   bool _listEquals(List? aList, List? bList) {
     if ((aList == null) && (bList == null)) return true;
@@ -418,21 +416,20 @@ class StickyContainerLayout<T> {
 
   @override
   String toString() =>
-      'StickyContainerLayout ' +
-      {
+      'StickyContainerLayout ${{
         'hostPosition': hostPosition,
         'topRows': topRows,
         'bottomRows': bottomRows,
         'hiddenRows': hiddenRows,
         '_translateYs': _translateYs
-      }.toString();
+      }}';
 }
 
 /// Helper methods, separated for simpler testing.
 abstract class StickyRowUtils {
   /// Arbitrary limit in order to prevent the sticky rows to cover too many
   /// content rows.
-  static final int MIN_CONTENT_HEIGHT_PX = 100;
+  static final int minContentHeightPx = 100;
 
   /// Whether the row should stick or not, given the surrounding.
   static bool shouldStick(bool isTop, num hostTop, num hostBottom,
@@ -450,7 +447,7 @@ abstract class StickyRowUtils {
               rangeVisible &&
               // arbitrary limit to prevent too thin display area
               ((hostBottom - hostTop - rowPosition.height) >
-                  MIN_CONTENT_HEIGHT_PX);
+                  minContentHeightPx);
     } else {
       // the range, if it exists, is still visible or above the top
       bool rangeVisible = rangePosition == null ||
@@ -461,7 +458,7 @@ abstract class StickyRowUtils {
               rangeVisible &&
               // arbitrary limit to prevent too thin display area
               ((hostBottom - hostTop - rowPosition.height) >
-                  MIN_CONTENT_HEIGHT_PX);
+                  minContentHeightPx);
     }
   }
 
@@ -520,26 +517,26 @@ abstract class StickyRowUtils {
           if (layout.topRows == null) {
             layout.topRows = [];
           }
-          layout.topRows!.add(_RowData(row, offsetY: 0));
+          layout.topRows!.add(RowData(row, offsetY: 0));
           layout._translateYs.add(hostTop - row.rowPosition.top);
           hostTop += row.rowPosition.height;
 
           if (row.stickyKey != null) {
             stickyKeyToRowIndex ??= <String, int>{};
-            stickyKeyToRowIndex![row.stickyKey!] = layout.topRows!.length - 1;
+            stickyKeyToRowIndex[row.stickyKey!] = layout.topRows!.length - 1;
           }
         } else {
           assert(row.isBottom);
           if (layout.bottomRows == null) {
             layout.bottomRows = [];
           }
-          layout.bottomRows!.add(_RowData(row, offsetY: 0));
+          layout.bottomRows!.add(RowData(row, offsetY: 0));
           layout._translateYs.add(hostBottom - row.rowPosition.bottom);
           hostBottom -= row.rowPosition.height;
 
           if (row.stickyKey != null) {
             stickyKeyToRowIndex ??= <String, int>{};
-            stickyKeyToRowIndex![row.stickyKey!] = layout.bottomRows!.length - 1;
+            stickyKeyToRowIndex[row.stickyKey!] = layout.bottomRows!.length - 1;
           }
         }
       } else {
@@ -552,8 +549,8 @@ abstract class StickyRowUtils {
           final duplicateRow =
               layout.topRows![stickyKeyToRowIndex![row.stickyKey]!].row;
           layout.hiddenRows!.add(duplicateRow);
-          layout.topRows![stickyKeyToRowIndex![row.stickyKey]!] =
-              _RowData(row, offsetY: 0);
+          layout.topRows![stickyKeyToRowIndex[row.stickyKey]!] =
+              RowData(row, offsetY: 0);
 
           // Partial support for replacing rows of different heights.
           // This still doesn't work correctly when interleaving elements with

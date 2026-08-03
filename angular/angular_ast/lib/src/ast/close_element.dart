@@ -29,9 +29,9 @@ abstract mixin class CloseElementAst implements TemplateAst {
   }) = ParsedCloseElementAst;
 
   @override
-  bool operator ==(Object o) {
-    if (o is CloseElementAst) {
-      return name == o.name;
+  bool operator ==(Object other) {
+    if (other is CloseElementAst) {
+      return name == other.name;
     }
     return false;
   }
@@ -81,9 +81,9 @@ class _SyntheticCloseElementAst extends SyntheticTemplateAst
   );
 
   _SyntheticCloseElementAst.from(
-    TemplateAst origin,
+    TemplateAst super.origin,
     this.name,
-  ) : super.from(origin);
+  ) : super.from();
 
   @override
   final String name;

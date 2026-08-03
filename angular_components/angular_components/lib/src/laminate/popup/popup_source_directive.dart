@@ -28,8 +28,8 @@ class PopupSourceDirective
   ReferenceDirective? _referenceDirective;
   Focusable? _focusable;
 
-  Alignment _alignOriginX = Alignment.Start;
-  Alignment _alignOriginY = Alignment.Start;
+  Alignment _alignOriginX = Alignment.start;
+  Alignment _alignOriginY = Alignment.start;
 
   PopupSource? _popupSource;
   String? _popupId;
@@ -57,7 +57,7 @@ class PopupSourceDirective
   @override
   void ngAfterViewInit() {
     // We have to wait until the view is inited to have elementRef
-    _element = _referenceDirective?.elementRef?.nativeElement ?? _element;
+    _element = _referenceDirective?.elementRef.nativeElement ?? _element;
     _updateSource();
   }
 

@@ -15,7 +15,7 @@ class NgSimpleTokenizer {
     var scanner = NgSimpleScanner(template);
     scanner.resetState();
     var token = scanner.scan();
-    while (token.type != NgSimpleTokenType.EOF) {
+    while (token.type != NgSimpleTokenType.eof) {
       yield token;
       token = scanner.scan();
     }
@@ -368,7 +368,7 @@ class NgSimpleScanner {
       }
       // named
       if (matchesGroup(match, 3)) {
-        return NAMED_ENTITIES[match.group(3)] ?? match.group(3)!;
+        return namedEntities[match.group(3)] ?? match.group(3)!;
       }
 
       return '';

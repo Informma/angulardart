@@ -1,3 +1,4 @@
+// ignore: implementation_imports
 import 'package:angulardart/src/meta.dart';
 import 'package:angulardart_compiler/v1/src/compiler/identifiers.dart';
 import 'package:angulardart_compiler/v1/src/compiler/output/output_ast.dart' as o;
@@ -56,7 +57,7 @@ class _ViewStyleLinker {
             o.ConditionalExpr(
               o.importExpr(Runtime.isDevMode),
               o.literal(_view.component.type!.moduleUrl),
-              o.NULL_EXPR,
+              o.nullExpr,
             ),
           ),
         ],
@@ -85,7 +86,7 @@ class _ViewStyleLinker {
   void _implementDebugClearComponentStyles() {
     // Static._componentStyles = null
     final nullifyStaticComponentStyles =
-        o.WriteStaticMemberExpr(_componentStylesStatic, o.NULL_EXPR).toStmt();
+        o.WriteStaticMemberExpr(_componentStylesStatic, o.nullExpr).toStmt();
     _class.methods.add(
       o.ClassMethod(
         _debugClearComponentStyles,
@@ -93,7 +94,7 @@ class _ViewStyleLinker {
         [
           nullifyStaticComponentStyles,
         ],
-        o.VOID_TYPE,
+        o.voidType,
         const [o.StmtModifier.Static],
       ),
     );
@@ -118,7 +119,7 @@ class _ViewStyleLinker {
     //   }
     // }
     final ifStylesNullInit = o.IfStmt(
-      readStyles.equals(o.NULL_EXPR),
+      readStyles.equals(o.nullExpr),
       [
         o.WriteStaticMemberExpr(
           _componentStylesStatic,

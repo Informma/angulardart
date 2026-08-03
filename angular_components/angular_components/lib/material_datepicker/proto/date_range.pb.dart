@@ -2,7 +2,8 @@
 //  Generated code. Do not modify.
 //  source: date_range.proto
 //
-// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
+// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,constant_identifier_names
+library;
 
 import 'dart:core' as $core;
 
@@ -66,12 +67,16 @@ class DatepickerDateRange extends $pb.GeneratedMessage {
   factory DatepickerDateRange.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+  @$core.override
   DatepickerDateRange clone() => DatepickerDateRange()..mergeFromMessage(this);
+  @$core.override
   DatepickerDateRange copyWith(void Function(DatepickerDateRange) updates) =>
       super.copyWith((message) => updates(message as DatepickerDateRange));
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static DatepickerDateRange create() => DatepickerDateRange._();
+  @$core.override
   DatepickerDateRange createEmptyInstance() => create();
   static $pb.PbList<DatepickerDateRange> createRepeated() =>
       $pb.PbList<DatepickerDateRange>();
@@ -248,12 +253,16 @@ class DateRange extends $pb.GeneratedMessage {
   factory DateRange.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+  @$core.override
   DateRange clone() => DateRange()..mergeFromMessage(this);
+  @$core.override
   DateRange copyWith(void Function(DateRange) updates) =>
       super.copyWith((message) => updates(message as DateRange));
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static DateRange create() => DateRange._();
+  @$core.override
   DateRange createEmptyInstance() => create();
   static $pb.PbList<DateRange> createRepeated() => $pb.PbList<DateRange>();
   @$core.pragma('dart2js:noInline')

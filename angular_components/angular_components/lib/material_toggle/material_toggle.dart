@@ -44,6 +44,7 @@ class MaterialToggleComponent
   /// Enables/disables the toggle button.
   ///
   /// `true` is disabled and `false` is enabled.
+  @override
   @Input()
   bool disabled = false;
 
@@ -79,7 +80,7 @@ class MaterialToggleComponent
   String? _ariaLabel;
 
   /// Sets the depth of the shadow
-  int shadow_z = 1;
+  int shadowZ = 1;
 
   bool _hasFocus = false;
   bool get hasFocus => _hasFocus;
@@ -103,7 +104,7 @@ class MaterialToggleComponent
   bool get hasLabel => label != null && label!.isNotEmpty;
 
   void _updateShadowZ() {
-    shadow_z = isHovered
+    shadowZ = isHovered
         ? 3
         : hasFocus
             ? 2
@@ -144,7 +145,7 @@ class MaterialToggleComponent
   @override
   void writeValue(bool isChecked) {
     checked = isChecked;
-    _changeDetector?.markForCheck();
+    _changeDetector.markForCheck();
   }
 
   @override
@@ -160,7 +161,7 @@ class MaterialToggleComponent
   @override
   void onDisabledChanged(bool isDisabled) {
     disabled = isDisabled;
-    _changeDetector?.markForCheck();
+    _changeDetector.markForCheck();
   }
 
   // M2 interfaces that are unneeded for M1.

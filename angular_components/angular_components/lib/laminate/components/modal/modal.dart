@@ -119,9 +119,9 @@ abstract class Modal {
 ///
 /// __Example usage:__
 ///     <!-- With aggressive content -->
-///     <modal [preventInteraction]="isModal" ([visible])="showDialog">
+///     `<modal [preventInteraction]="isModal" ([visible])="showDialog">`
 ///       Hello World!
-///     </modal>
+///     `</modal>`
 ///
 ///     <!-- Or, with deferred content -->
 ///     <modal ([visible])="showDialog">
@@ -199,7 +199,7 @@ class ModalComponent
   ModalComponent(OverlayService overlayService, this._element, this._domService,
       @Optional() @SkipSelf() this._parentModal, @Optional() this._stack)
       : _resolvedOverlayRef =
-            overlayService.createOverlayRefSync(OverlayState.Dialog) {
+            overlayService.createOverlayRefSync(OverlayState.dialog) {
     _disposer
       ..addDisposable(_resolvedOverlayRef)
       ..addStreamSubscription(_resolvedOverlayRef.onVisibleChanged
@@ -244,7 +244,7 @@ class ModalComponent
   OverlayRef get resolvedOverlayRef => _resolvedOverlayRef;
 
   @HostBinding('attr.pane-id')
-  String? get uniquePaneId => _resolvedOverlayRef?.uniqueId;
+  String? get uniquePaneId => _resolvedOverlayRef.uniqueId;
 
   // Make the overlay hosting this modal visible.
   //

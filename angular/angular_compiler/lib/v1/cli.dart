@@ -3,7 +3,7 @@
 /// Utilities and classes here are not directly related to the compilation
 /// pipeline, but instead are used to manage the process, logging, exception
 /// handling, and other related functionality.
-library angular_compiler.cli;
+library;
 
 export 'src/angular_compiler/cli/builder.dart';
 export 'src/angular_compiler/cli/flags.dart';

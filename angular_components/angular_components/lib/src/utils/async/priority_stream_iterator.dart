@@ -18,8 +18,8 @@ class PriorityStreamIterator<T extends Comparable<Object>>
   late Future<bool> _next;
 
   /// Create a [PriorityStreamIterator] on [stream] with an optional
-  /// [comparison] function. If [comparison] is not provided, [T] must implement
-  /// Comparable<T>.
+  /// `<comparison>` function. If [comparison] is not provided, [T] must implement
+  /// `Comparable<T>`.
   PriorityStreamIterator(Stream<T> stream, [Comparator<T>? comparison])
       : _iterator = StreamIterator(stream),
         _queue = _StablePriorityQueue<T>(comparison) {
@@ -35,11 +35,11 @@ class PriorityStreamIterator<T extends Comparable<Object>>
       return Future.value(true);
     }
     _current = null;
-    return _next.then((_) {
-      if (_) {
+    return _next.then((hasValue) {
+      if (hasValue) {
         _current = _queue.removeFirst();
       }
-      return _;
+      return hasValue;
     });
   }
 
@@ -55,8 +55,8 @@ class PriorityStreamIterator<T extends Comparable<Object>>
   // This function is not async to be synchronous for a synchronous
   // StreamIterator.
   void _accumulateValues() {
-    (_next = _getNextValue()).then((_) {
-      if (_) {
+    (_next = _getNextValue()).then((hasValue) {
+      if (hasValue) {
         _accumulateValues();
       }
     });
@@ -64,11 +64,11 @@ class PriorityStreamIterator<T extends Comparable<Object>>
 
   // This function is not async to be synchronous for a synchronous
   // StreamIterator.
-  Future<bool> _getNextValue() => _iterator.moveNext().then((_) {
-        if (_) {
+  Future<bool> _getNextValue() => _iterator.moveNext().then((hasValue) {
+        if (hasValue) {
           _queue.add(_iterator.current);
         }
-        return _;
+        return hasValue;
       });
 
   void _clear() {
@@ -87,7 +87,7 @@ class _StablePriorityQueue<T extends Comparable<Object>>
   _StablePriorityQueue([Comparator<T>? comparison])
       : this._(_OrderedComparator(comparison ?? _defaultComparator<T>()));
 
-  _StablePriorityQueue._(this.comparator) : super(comparator);
+  _StablePriorityQueue._(this.comparator) : super(comparator.call);
 
   final _OrderedComparator<T> comparator;
 
@@ -137,7 +137,10 @@ Comparator<T> _defaultComparator<T extends Comparable<Object>>() =>
 /// A [Comparator] that allows registering elements and uses the order of
 /// registration to resolve the cases when elements compare as equal.
 class _OrderedComparator<T extends Comparable<Object>> {
-  static const RENUMERATE_THRESHOLD = 1000000;
+  static const renumerateThreshold = 1000000;
+  @Deprecated('Use renumerateThreshold instead')
+  // ignore: constant_identifier_names, unused_field
+  static const RENUMERATE_THRESHOLD = renumerateThreshold;
 
   final Comparator<T> _comparison;
   final Map<T, int> _ordinalByElement = {};
@@ -184,7 +187,7 @@ class _OrderedComparator<T extends Comparable<Object>> {
     if (_ordinalByElement.isEmpty) {
       _nextOrdinal = 0;
     }
-    if (_nextOrdinal > _ordinalByElement.length + RENUMERATE_THRESHOLD) {
+    if (_nextOrdinal > _ordinalByElement.length + renumerateThreshold) {
       var orderedElements = _ordinalByElement.keys.toList(growable: false)
         ..sort(_compareOrder);
       clear();

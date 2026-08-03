@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:angulardart/meta.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
 import 'package:angulardart_components/content/deferred_content.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -240,6 +239,7 @@ class MaterialDateRangePickerComponent
   String? dropdownButtonAriaLabel;
 
   /// Whether changing the selected date range should be disabled.
+  @override
   @Input()
   set disabled(bool value) {
     _disabled = value;
@@ -249,6 +249,7 @@ class MaterialDateRangePickerComponent
 
   bool _disabled = false;
 
+  @override
   @HostBinding('class.disabled')
   bool get disabled => _disabled;
 
@@ -316,7 +317,6 @@ class MaterialDateRangePickerComponent
   /// A placeholder message to display if no date range is selected.
   @Input()
   set placeHolderMsg(String msg) {
-    if (msg == null) return;
     _customPlaceHolderMsg = msg;
   }
 
@@ -329,7 +329,7 @@ class MaterialDateRangePickerComponent
   /// This can only be set once. Null or empty values are ignored.
   @Input()
   set comparisonOptions(List<ComparisonOption> options) {
-    if (options != null && options.isNotEmpty) {
+    if (options.isNotEmpty) {
       // User cannot change this value after setting it.
       assert(_comparisonOptions == null || _comparisonOptions == options);
       _comparisonOptions = options;
@@ -433,7 +433,7 @@ class MaterialDateRangePickerComponent
     }
     _disposer.addFunction(model.dispose);
 
-    bool _needsApply(DatepickerComparison? modelValue) =>
+    bool needsApply(DatepickerComparison? modelValue) =>
         modelValue != selection.value || (modelValue != null && !_isPreset(modelValue));
 
     // Wire the internal model and the external value up to each other.
@@ -447,7 +447,7 @@ class MaterialDateRangePickerComponent
       }))
       ..addDisposable(model.changes
           .map((v) => v.date)
-          .map(_needsApply)
+          .map(needsApply)
           .listen(_showApplyBar))
       ..addDisposable(model.changes
           .where((_) => !_popupVisible) // handle next/prev buttons while closed
@@ -626,6 +626,7 @@ class MaterialDateRangePickerComponent
     _formattedComparison = _getFormattedComparison(value);
   }
 
+  @override
   void dateRangeEditorCreated(Focusable editor) {
     _dateRangeEditor = editor;
     if (_dateRangeEditor != null && _focusOnDateRangeEditorInit) {

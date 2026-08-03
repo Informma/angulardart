@@ -114,7 +114,7 @@ class PositionStickyController implements StickyController {
       num zIndex, num offset) {
     stickyElement.element.style
       ..position = 'sticky'
-      ..zIndex = '${zIndex}';
+      ..zIndex = '$zIndex';
     stickyElement.element.style.setProperty(positionProperty, '${offset}px');
 
     if (stickyElement.stickyClass != null) {
@@ -182,9 +182,9 @@ class PositionStickyController implements StickyController {
 
   void _update() {
     var topElements =
-        _stickyElements.where((e) => e.position == StickyPosition.TOP).toList();
+        _stickyElements.where((e) => e.position == StickyPosition.top).toList();
     var bottomElements = _stickyElements
-        .where((e) => e.position == StickyPosition.BOTTOM)
+        .where((e) => e.position == StickyPosition.bottom)
         .toList();
     int zIndex = _updateLayout(topElements, 1, 'top', stickyControllerZIndex);
     // The elements stuck to the bottom should be positioned above the ones
@@ -247,11 +247,11 @@ class _StickyElement {
   bool operator ==(Object other) {
     if (other is! _StickyElement) return false;
     _StickyElement o = other;
-    return this.element == o.element &&
-        this.position == o.position &&
-        this.range == o.range &&
-        this.stickyClass == o.stickyClass &&
-        this.stickyKey == o.stickyKey;
+    return element == o.element &&
+        position == o.position &&
+        range == o.range &&
+        stickyClass == o.stickyClass &&
+        stickyKey == o.stickyKey;
   }
 
   @override

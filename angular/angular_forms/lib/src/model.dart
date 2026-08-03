@@ -22,18 +22,22 @@ AbstractControl? _find(AbstractControl control, List<String?>? path) {
 abstract class AbstractControl<T> {
   /// Indicates that a Control is valid, i.e. that no errors exist in the input
   /// value.
+  // ignore: constant_identifier_names
   static const VALID = 'VALID';
 
   /// Indicates that a Control is invalid, i.e. that an error exists in the
   /// input value.
+  // ignore: constant_identifier_names
   static const INVALID = 'INVALID';
 
   /// Indicates that a Control is pending, i.e. that async validation is
   /// occurring and errors are not yet available for the input value.
+  // ignore: constant_identifier_names
   static const PENDING = 'PENDING';
 
   /// Indicates that a FormControl is disabled, i.e. that the control is exempt
   /// from ancestor calculations of validity or value.
+  // ignore: constant_identifier_names
   static const DISABLED = 'DISABLED';
 
   ValidatorFn? validator;
@@ -341,21 +345,21 @@ abstract class AbstractControl<T> {
   }
 
   void _updateTouched(bool? updateParent) {
-    var _updateParent = updateParent ?? false;
+    var updateParent0 = updateParent ?? false;
     _touched = _anyControlsTouched();
 
     var parent = _parent;
-    if (parent != null && _updateParent) {
-      parent._updateTouched(_updateParent);
+    if (parent != null && updateParent0) {
+      parent._updateTouched(updateParent0);
     }
   }
 
   void _updatePristine({bool? updateParent}) {
-    var _updateParent = updateParent ?? false;
+    var updateParent0 = updateParent ?? false;
     _pristine = !_anyControlsDirty();
 
     var parent = _parent;
-    if (parent != null && _updateParent) {
+    if (parent != null && updateParent0) {
       parent._updatePristine(updateParent: updateParent);
     }
   }
@@ -414,8 +418,8 @@ class Control<T> extends AbstractControl<T> {
   Function? _onChange;
   String? _rawValue;
 
-  Control([dynamic value, ValidatorFn? validator])
-      : super(validator, value: value);
+  Control([dynamic value, super.validator])
+      : super(value: value);
 
   /// Set the value of the control to `value`.
   ///
@@ -482,8 +486,7 @@ class Control<T> extends AbstractControl<T> {
 /// define forms in Angular, along with [Control] and [ControlArray].
 /// [ControlArray] can also contain other controls, but is of variable length.
 class ControlGroup extends AbstractControlGroup<Map<String?, dynamic>> {
-  ControlGroup(Map<String?, AbstractControl> controls, [ValidatorFn? validator])
-      : super(controls, validator);
+  ControlGroup(super.controls, [super.validator]);
 
   @override
   void updateValue(Map<String?, dynamic>? value,

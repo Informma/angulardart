@@ -14,8 +14,8 @@ import 'package:angulardart_components/model/date/date.dart';
 /// If the given range is valid (non-null with non-null start and end dates),
 /// returns the result of calling the given function. Otherwise returns `null`.
 DatepickerDateRange? _ifValidRange(
-    DatepickerDateRange r, DatepickerDateRange? fn()) {
-  if (r == null || r.start == null || r.end == null) {
+    DatepickerDateRange r, DatepickerDateRange? Function() fn) {
+  if (r.start == null || r.end == null) {
     return null;
   }
   return fn();
@@ -246,12 +246,15 @@ class _ClampedDateRange implements DatepickerDateRange {
   proto.DatepickerDateRange toProtoBuf() =>
       _delegate.toProtoBuf()..dateRange = _makeDateRangeProto(start, end);
 
+  @override
   bool operator ==(o) =>
       rangeEqual(this, o) &&
       (o is _ClampedDateRange) &&
       _min == o._min &&
       _max == o._max;
+  @override
   int get hashCode => rangeHash(this) ^ _min.hashCode ^ _max.hashCode;
+  @override
   String toString() => '${_rangeString(this)} (clamped $_min - $_max)';
 }
 
@@ -262,10 +265,15 @@ class _ClampedDateRange implements DatepickerDateRange {
 /// ranges are smarter. E.g. "This year up to today" can be a dumb date range,
 /// but can return a `YearRange` as its previous range.
 class _BasicDateRange implements DatepickerDateRange {
+  @override
   final String title;
+  @override
   final Date? start;
+  @override
   final Date? end;
+  @override
   final bool isPredefined;
+  @override
   final bool isAllTime;
 
   final RangeFn _next;
@@ -274,17 +282,26 @@ class _BasicDateRange implements DatepickerDateRange {
   _BasicDateRange(this.title, this.start, this.end, this._next, this._prev,
       this.isPredefined, this.isAllTime);
 
+  @override
   DatepickerDateRange? get next => _next(this);
+  @override
   DatepickerDateRange? get prev => _prev(this);
 
+  @override
   DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
+  @override
   DatepickerDateRange unclamped() => this;
+  @override
   DateRange asPlainRange() => _plainRange(this);
+  @override
   proto.DatepickerDateRange toProtoBuf() => _makeProtoBuf(this);
 
-  bool operator ==(o) => rangeEqual(this, o);
+  @override
+  bool operator ==(Object other) => rangeEqual(this, other);
+  @override
   int get hashCode => rangeHash(this);
+  @override
   String toString() => _rangeString(this);
 }
 
@@ -299,30 +316,44 @@ class SingleDayRange implements DatepickerDateRange {
   final int _ago;
   final RangeTitle _titleFunction;
   SingleDayRange(this._date, this._ago, [this._titleFunction = _defaultTitle]);
-  SingleDayRange.daysAgo(clock, ago, [RangeTitle titleFunction = _defaultTitle])
+  SingleDayRange.daysAgo(Clock? clock, int ago, [RangeTitle titleFunction = _defaultTitle])
       : this(Date.today(clock).add(days: -ago), ago, titleFunction);
 
+  @override
   String get title => _titleFunction(_ago);
+  @override
   Date get start => _date;
+  @override
   Date get end => _date;
+  @override
   DatepickerDateRange get next =>
       SingleDayRange(_date.add(days: 1), _ago - 1, _titleFunction);
+  @override
   DatepickerDateRange get prev =>
       SingleDayRange(_date.add(days: -1), _ago + 1, _titleFunction);
+  @override
   bool get isPredefined => true;
+  @override
   bool get isAllTime => false;
 
   /// Number of days ago relative to the current date.
   int get ago => _ago;
 
+  @override
   DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
+  @override
   DatepickerDateRange unclamped() => this;
+  @override
   DateRange asPlainRange() => _plainRange(this);
+  @override
   proto.DatepickerDateRange toProtoBuf() => _makeProtoBuf(this)..daysAgo = _ago;
 
-  bool operator ==(o) => rangeEqual(this, o);
+  @override
+  bool operator ==(Object other) => rangeEqual(this, other);
+  @override
   int get hashCode => rangeHash(this);
+  @override
   String toString() => _rangeString(this);
 
   static String _defaultTitle(int daysAgo) =>
@@ -353,28 +384,42 @@ class SingleDayRange implements DatepickerDateRange {
 abstract class MultipleDaysRange implements DatepickerDateRange {
   final Date _start;
   final int _lengthInDays;
+  @override
   final String title;
 
   MultipleDaysRange(this._start, this._lengthInDays, this.title);
 
+  @override
   Date get start => _start;
+  @override
   Date get end => _start.add(days: _lengthInDays - 1);
+  @override
   DatepickerDateRange? get next => _genericNext(this);
+  @override
   DatepickerDateRange? get prev => _genericPrev(this);
+  @override
   bool get isPredefined => true;
+  @override
   bool get isAllTime => false;
 
   /// Length of the range in number of days.
   int get lengthInDays => _lengthInDays;
 
+  @override
   DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
+  @override
   DatepickerDateRange unclamped() => this;
+  @override
   DateRange asPlainRange() => _plainRange(this);
+  @override
   proto.DatepickerDateRange toProtoBuf();
 
-  bool operator ==(o) => rangeEqual(this, o);
+  @override
+  bool operator ==(Object other) => rangeEqual(this, other);
+  @override
   int get hashCode => rangeHash(this);
+  @override
   String toString() => _rangeString(this);
 }
 
@@ -386,7 +431,7 @@ class LastNDaysRange extends MultipleDaysRange {
   LastNDaysRange(Date start, int lengthInDays, [String? title])
       : super(start, lengthInDays, title ?? _lastNDaysMsg(lengthInDays));
 
-  LastNDaysRange.beforeToday(clock, lengthInDays, [String? title])
+  LastNDaysRange.beforeToday(Clock? clock, int lengthInDays, [String? title])
       : super(Date.today(clock).add(days: -lengthInDays), lengthInDays,
             title ?? _lastNDaysMsg(lengthInDays));
 
@@ -412,10 +457,11 @@ class LastNDaysToTodayRange extends MultipleDaysRange {
   LastNDaysToTodayRange(Date start, int lengthInDays, [String? title])
       : super(start, lengthInDays, title ?? _lastNDaysToTodayMsg(lengthInDays));
 
-  LastNDaysToTodayRange.beforeToday(clock, lengthInDays, [String? title])
+  LastNDaysToTodayRange.beforeToday(Clock? clock, int lengthInDays, [String? title])
       : super(Date.today(clock).add(days: -(lengthInDays - 1)), lengthInDays,
             title ?? _lastNDaysToTodayMsg(lengthInDays));
 
+  @override
   proto.DatepickerDateRange toProtoBuf() =>
       _makeProtoBuf(this)..lastNDaysToToday = _lengthInDays;
 
@@ -440,10 +486,11 @@ class NextNDaysFromTodayRange extends MultipleDaysRange {
       : super(
             start, lengthInDays, title ?? _nextNDaysFromTodayMsg(lengthInDays));
 
-  NextNDaysFromTodayRange.afterToday(clock, lengthInDays, [String? title])
+  NextNDaysFromTodayRange.afterToday(Clock? clock, int lengthInDays, [String? title])
       : super(Date.today(clock), lengthInDays,
             title ?? _nextNDaysFromTodayMsg(lengthInDays));
 
+  @override
   proto.DatepickerDateRange toProtoBuf() =>
       _makeProtoBuf(this)..nextNDaysFromToday = _lengthInDays;
 
@@ -478,7 +525,7 @@ class WeekRange implements DatepickerDateRange {
   /// [DateTime.monday] (which equals 1) for Monday, [DateTime.tuesday] for
   /// Tuesday, etc. It defaults to the first day of the week specified in the
   /// current locale.
-  WeekRange.weeksAgo(clock, ago,
+  WeekRange.weeksAgo(Clock? clock, int ago,
       {RangeTitle titleFunction = _defaultTitle, int? startWeekday})
       : this(
             _weekStart(
@@ -490,24 +537,35 @@ class WeekRange implements DatepickerDateRange {
             titleFunction,
             startWeekday);
 
+  @override
   String get title => _titleFunction(_ago);
+  @override
   Date get start => _start;
+  @override
   Date get end => _start.add(days: 6);
+  @override
   DatepickerDateRange get next =>
       WeekRange(_start.add(days: 7), _ago - 1, _titleFunction);
+  @override
   DatepickerDateRange get prev =>
       WeekRange(_start.add(days: -7), _ago + 1, _titleFunction);
+  @override
   bool get isPredefined => true;
+  @override
   bool get isAllTime => false;
 
   /// Number of weeks ago relative to the current date.
   int get ago => _ago;
 
+  @override
   DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
+  @override
   DatepickerDateRange unclamped() => this;
+  @override
   DateRange asPlainRange() => _plainRange(this);
 
+  @override
   proto.DatepickerDateRange toProtoBuf() {
     var result = _makeProtoBuf(this)..weeksAgo = _ago;
     if (_startWeekday != null) {
@@ -516,8 +574,11 @@ class WeekRange implements DatepickerDateRange {
     return result;
   }
 
-  bool operator ==(o) => rangeEqual(this, o);
+  @override
+  bool operator ==(Object other) => rangeEqual(this, other);
+  @override
   int get hashCode => rangeHash(this);
+  @override
   String toString() => _rangeString(this);
 
   static String _defaultTitle(int weeksAgo) =>
@@ -567,28 +628,42 @@ class MonthRange implements DatepickerDateRange {
             ago,
             titleFunction);
 
+  @override
   String get title => _titleFunction(_ago);
+  @override
   Date get start => _start;
+  @override
   Date get end => _start.add(months: 1, days: -1);
+  @override
   DatepickerDateRange get next =>
       MonthRange(_start.add(months: 1), _ago - 1, _titleFunction);
+  @override
   DatepickerDateRange get prev =>
       MonthRange(_start.add(months: -1), _ago + 1, _titleFunction);
+  @override
   bool get isPredefined => true;
+  @override
   bool get isAllTime => false;
 
   /// Number of months ago relative to the current date.
   int get ago => _ago;
 
+  @override
   DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
+  @override
   DatepickerDateRange unclamped() => this;
+  @override
   DateRange asPlainRange() => _plainRange(this);
+  @override
   proto.DatepickerDateRange toProtoBuf() =>
       _makeProtoBuf(this)..monthsAgo = _ago;
 
-  bool operator ==(o) => rangeEqual(this, o);
+  @override
+  bool operator ==(Object other) => rangeEqual(this, other);
+  @override
   int get hashCode => rangeHash(this);
+  @override
   String toString() => _rangeString(this);
 
   static String _defaultTitle(int monthsAgo) =>
@@ -665,34 +740,48 @@ class BroadcastMonthRange implements DatepickerDateRange {
         theFirst.add(months: -ago), ago, titleFunction);
   }
 
+  @override
   String get title => _titleFunction(_ago);
+  @override
   Date get start => _weekStart(_theFirst);
+  @override
   Date get end => _weekStart(_theFirst.add(months: 1)).add(days: -1);
 
+  @override
   DatepickerDateRange get next =>
       BroadcastMonthRange._(_theFirst.add(months: 1), _ago - 1, _titleFunction);
+  @override
   DatepickerDateRange get prev => BroadcastMonthRange._(
       _theFirst.add(months: -1), _ago + 1, _titleFunction);
 
+  @override
   bool get isPredefined => true;
+  @override
   bool get isAllTime => false;
 
+  @override
   DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
+  @override
   DatepickerDateRange unclamped() => this;
+  @override
   DateRange asPlainRange() => _plainRange(this);
+  @override
   proto.DatepickerDateRange toProtoBuf() =>
       _makeProtoBuf(this)..broadcastMonthsAgo = _ago;
 
-  bool operator ==(o) => rangeEqual(this, o);
+  @override
+  bool operator ==(Object other) => rangeEqual(this, other);
+  @override
   int get hashCode => rangeHash(this);
+  @override
   String toString() => _rangeString(this);
 
   static String _defaultTitle(int broadcastMonthsAgo) => broadcastMonthsAgo > 0
       ? _broadcastMonthsAgoMsg(broadcastMonthsAgo)
       : _broadcastMonthsFromNowMsg(-broadcastMonthsAgo);
 
-  static String _broadcastMonthsAgoMsg(broadcastMonthsAgo) =>
+  static String _broadcastMonthsAgoMsg(int broadcastMonthsAgo) =>
       Intl.plural(broadcastMonthsAgo,
           zero: 'This broadcast month',
           one: 'Last broadcast month',
@@ -702,7 +791,7 @@ class BroadcastMonthRange implements DatepickerDateRange {
           desc: 'A date range spanning a single broadcast month in the past.',
           examples: const {'broadcastMonthsAgo': 2});
 
-  static String _broadcastMonthsFromNowMsg(broadcastMonthsFromNow) =>
+  static String _broadcastMonthsFromNowMsg(int broadcastMonthsFromNow) =>
       Intl.plural(broadcastMonthsFromNow,
           zero: 'This broadcast month',
           one: 'Next broadcast month',
@@ -720,31 +809,45 @@ class YearRange implements DatepickerDateRange {
   final RangeTitle _titleFunction;
   YearRange(Date start, this._ago, [this._titleFunction = _defaultTitle])
       : _start = Date(start.year, 1, 1);
-  YearRange.yearsAgo(clock, ago, [RangeTitle titleFunction = _defaultTitle])
+  YearRange.yearsAgo(Clock? clock, int ago, [RangeTitle titleFunction = _defaultTitle])
       : this(Date.today(clock).add(years: -ago), ago, titleFunction);
 
+  @override
   String get title => _titleFunction(_ago);
+  @override
   Date get start => _start;
+  @override
   Date get end => Date(_start.year, 12, 31);
+  @override
   DatepickerDateRange get next =>
       YearRange(_start.add(years: 1), _ago - 1, _titleFunction);
+  @override
   DatepickerDateRange get prev =>
       YearRange(_start.add(years: -1), _ago + 1, _titleFunction);
+  @override
   bool get isPredefined => true;
+  @override
   bool get isAllTime => false;
 
   /// Number of years ago relative to the current date.
   int get ago => _ago;
 
+  @override
   DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
+  @override
   DatepickerDateRange unclamped() => this;
+  @override
   DateRange asPlainRange() => _plainRange(this);
+  @override
   proto.DatepickerDateRange toProtoBuf() =>
       _makeProtoBuf(this)..yearsAgo = _ago;
 
-  bool operator ==(o) => rangeEqual(this, o);
+  @override
+  bool operator ==(Object other) => rangeEqual(this, other);
+  @override
   int get hashCode => rangeHash(this);
+  @override
   String toString() => _rangeString(this);
 
   static String _defaultTitle(int yearsAgo) =>
@@ -775,6 +878,7 @@ class YearRange implements DatepickerDateRange {
 /// not just a blob with the same number of days; and also to have titles like
 /// "This quarter", "Last quarter", etc.
 class QuarterRange implements DatepickerDateRange {
+  @override
   final Date start;
   final int _ago;
   final RangeTitle _titleFunction;
@@ -825,8 +929,11 @@ class QuarterRange implements DatepickerDateRange {
   proto.DatepickerDateRange toProtoBuf() =>
       _makeProtoBuf(this)..quartersAgo = _ago;
 
-  bool operator ==(o) => rangeEqual(this, o);
+  @override
+  bool operator ==(Object other) => rangeEqual(this, other);
+  @override
   int get hashCode => rangeHash(this);
+  @override
   String toString() => _rangeString(this);
 
   /// Given a date, returns the start date of the quarter it belongs.

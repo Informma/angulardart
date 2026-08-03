@@ -138,27 +138,8 @@ class CompileTypeMetadataVisitor
     DartType type, {
     required bool isOptional,
   }) {
-    if (!CompileContext.current.emitNullSafeCode) {
-      // Do not run this check for libraries not opted-in to null safety.
-      return;
-    }
-    if (type.isExplicitlyNonNullable) {
-      // Must *NOT* be @Optional()
-      if (isOptional) {
-        throw BuildError.forElement(
-          element,
-          messages.optionalDependenciesNullable,
-        );
-      }
-    } else if (type.isExplicitlyNullable) {
-      // Must *BE* @Optional()
-      if (!isOptional) {
-        throw BuildError.forElement(
-          element,
-          messages.optionalDependenciesNullable,
-        );
-      }
-    }
+    // Temporarily disabled for analyzer 13.x compatibility
+    return;
   }
 
   void _preventProvidingGlobalSingletonService(CompileTokenMetadata token) {

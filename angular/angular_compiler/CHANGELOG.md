@@ -1,3 +1,22 @@
+## 4.0.5
+
+- Add release.sh scripts to all packages
+- Fix null safety DI checks and generic type resolution
+- Remove dependency_overrides after publication
+- Add dependency_overrides for publication
+- Disable null safety check for analyzer 13.x compatibility, bump versions
+- Remove dependency_overrides after publication
+- Add dependency_overrides for publication
+- Bump versions for analyzer 13.x legacy type fix
+- Fix legacy type handling in analyzer 13.x
+- Remove dependency_overrides after publication
+- Add dependency_overrides for local development
+- Relax angulardart_compiler constraint to >=4.0.1 <5.0.0
+- Fix circular dependency: angulardart_compiler -> angulardart ^8.1.2
+- Fix angulardart_compiler dependency: angulardart ^9.0.0 -> ^8.1.3
+- Downgrade analyzer to ^13.0.0, bump versions, add build_web_compilers ^4.8.0
+- Remove build_web_compilers (incompatible with SDK 3.12.2)
+
 ## 3.0.14
 
 - Fixed 13 failing tests (159/159 now passing)

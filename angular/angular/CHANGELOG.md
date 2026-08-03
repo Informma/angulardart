@@ -1,3 +1,7 @@
+## 8.2.0
+
+- fix: resolve all dart analyze warnings and info messages
+
 ## 8.1.7
 
 - fix: release.sh now looks for commits touching the package directory

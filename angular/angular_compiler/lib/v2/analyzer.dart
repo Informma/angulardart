@@ -10,6 +10,9 @@ extension NullableDartType on DartType? {
     if (_isFutureOrWithExplicitlyNullableValue) {
       return false;
     }
+    if (type.nullabilitySuffix == NullabilitySuffix.star) {
+      return true;
+    }
     return type.nullabilitySuffix == NullabilitySuffix.none;
   }
 
@@ -20,6 +23,9 @@ extension NullableDartType on DartType? {
     }
     if (_isFutureOrWithExplicitlyNullableValue) {
       return true;
+    }
+    if (type.nullabilitySuffix == NullabilitySuffix.star) {
+      return false;
     }
     return type.nullabilitySuffix == NullabilitySuffix.question;
   }

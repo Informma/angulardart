@@ -1,3 +1,8 @@
+## 8.1.6
+
+- Fix null safety DI checks and generic type resolution
+- Add @Optional() to nullable DI parameters in directives
+
 ## 8.1.2
 
 - Re-added `build_web_compilers ^4.8.1` to dev_dependencies (requires Dart SDK >= 3.13.0)

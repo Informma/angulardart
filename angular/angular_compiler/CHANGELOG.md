@@ -1,3 +1,7 @@
+## 4.0.6
+
+- fix: release.sh now looks for commits touching the package directory
+
 ## 4.0.5
 
 - Add release.sh scripts to all packages

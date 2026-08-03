@@ -1,3 +1,10 @@
+## 8.1.1
+
+- Removed `dependency_overrides` for `analyzer` (no longer needed)
+- Removed `built_value_generator` from dev_dependencies (conflict with analyzer 14.x)
+- Removed `build_web_compilers` from dev_dependencies (incompatible with build 4.x)
+- Generated file `model.g.dart` is now committed to the repository
+
 ## 8.1.0
 
 - Updated analyzer from ^6.0.0 to ^14.0.0

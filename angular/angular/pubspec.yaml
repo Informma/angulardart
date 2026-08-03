@@ -37,8 +37,8 @@ dependencies:
 
   analyzer: ^13.0.0
 
-  angulardart_ast: ^3.0.12
-  angulardart_compiler: '>=4.0.4 <5.0.0'
+  angulardart_ast: '>=3.0.0 <4.0.0'
+  angulardart_compiler: '>=4.0.0 <5.0.0'
 
   build: ^4.0.0
   build_config: ^1.1.0

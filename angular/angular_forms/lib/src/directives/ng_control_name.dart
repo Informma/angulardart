@@ -71,7 +71,7 @@ import 'shared.dart' show controlPath;
   exportAs: 'ngForm',
 )
 class NgControlName extends NgControl implements AfterChanges, OnDestroy {
-  final ControlContainer _parent;
+  final ControlContainer? _parent;
   final _update = StreamController.broadcast();
 
   bool _modelChanged = false;
@@ -90,7 +90,7 @@ class NgControlName extends NgControl implements AfterChanges, OnDestroy {
   bool _disabledChanged = false;
 
   NgControlName(
-    @SkipSelf() this._parent,
+    @Optional() @SkipSelf() this._parent,
     @Optional() @Self() @Inject(NG_VALIDATORS) List<dynamic>? validators,
     @Optional()
     @Self()
@@ -149,9 +149,9 @@ class NgControlName extends NgControl implements AfterChanges, OnDestroy {
   }
 
   @override
-  List<String?> get path => controlPath(name, _parent);
+  List<String?> get path => controlPath(name, _parent!);
 
-  Form get formDirective => _parent.formDirective;
+  Form get formDirective => _parent!.formDirective;
 
   @override
   Control? get control => formDirective.getControl(this);

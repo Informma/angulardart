@@ -138,8 +138,24 @@ class CompileTypeMetadataVisitor
     DartType type, {
     required bool isOptional,
   }) {
-    // Temporarily disabled for analyzer 13.x compatibility
-    return;
+    if (!CompileContext.current.emitNullSafeCode) {
+      return;
+    }
+    if (type.isExplicitlyNonNullable) {
+      if (isOptional) {
+        throw BuildError.forElement(
+          element,
+          messages.optionalDependenciesNullable,
+        );
+      }
+    } else if (type.isExplicitlyNullable) {
+      if (!isOptional) {
+        throw BuildError.forElement(
+          element,
+          messages.optionalDependenciesNullable,
+        );
+      }
+    }
   }
 
   void _preventProvidingGlobalSingletonService(CompileTokenMetadata token) {
@@ -295,11 +311,9 @@ class CompileTypeMetadataVisitor
   ) {
     final parameterInfo = ParameterInfo(p, _exceptionHandler);
     try {
-      // TODO(b/170257539): Resolve inconsistencies with other compiler parts.
-      final isOptional = parameterInfo.isOptional || parameterInfo.isPositional;
       final isAttribute = parameterInfo.isAttribute;
       if (!isAttribute) {
-        _checkForOptionalAndNullable(p, p.type, isOptional: isOptional);
+        _checkForOptionalAndNullable(p, p.type, isOptional: parameterInfo.isOptional);
       }
       return CompileDiDependencyMetadata(
         token: _getToken(parameterInfo),
@@ -307,7 +321,7 @@ class CompileTypeMetadataVisitor
         isSelf: parameterInfo.isSelf,
         isHost: parameterInfo.isHost,
         isSkipSelf: parameterInfo.isSkipSelf,
-        isOptional: parameterInfo.isOptional || parameterInfo.isPositional,
+        isOptional: parameterInfo.isOptional,
       );
     } on ArgumentError catch (_) {
       // Handle cases where something is annotated with @Injectable() but does

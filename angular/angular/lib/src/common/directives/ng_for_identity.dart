@@ -22,25 +22,25 @@ import 'package:angulardart/src/meta.dart';
 )
 @experimental
 class NgForIdentity<T> {
-  final TemplateRef _template;
-  final ViewContainerRef _container;
+  final TemplateRef? _template;
+  final ViewContainerRef? _container;
 
   const NgForIdentity(
-    this._template,
-    this._container,
+    @Optional() this._template,
+    @Optional() this._container,
   );
 
   @Input()
   set ngForIdentityOf(Iterable<T>? elements) {
-    _container.clear();
+    _container?.clear();
     if (elements == null || elements.isEmpty) {
       return;
     }
     var i = 0;
     for (final element in elements) {
-      final view = _container.createEmbeddedView(_template);
-      view.setLocal(r'$implicit', element);
-      view.setLocal(r'index', i++);
+      final view = _container?.createEmbeddedView(_template!);
+      view?.setLocal(r'$implicit', element);
+      view?.setLocal(r'index', i++);
       // TODO: Consider if we want all of the NgFor local variables available.
     }
   }

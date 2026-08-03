@@ -44,12 +44,12 @@ import 'package:angulardart/src/meta.dart';
   selector: '[ngTemplateOutlet]',
 )
 class NgTemplateOutlet implements DoCheck {
-  final ViewContainerRef _viewContainerRef;
+  final ViewContainerRef? _viewContainerRef;
 
   Map<String, Object?>? _context;
   EmbeddedViewRef? _insertedViewRef;
 
-  NgTemplateOutlet(this._viewContainerRef);
+  NgTemplateOutlet(@Optional() this._viewContainerRef);
 
   /// The [TemplateRef] used to create the embedded view.
   ///
@@ -59,10 +59,10 @@ class NgTemplateOutlet implements DoCheck {
   set ngTemplateOutlet(TemplateRef? templateRef) {
     final insertedViewRef = _insertedViewRef;
     if (insertedViewRef != null) {
-      _viewContainerRef.remove(_viewContainerRef.indexOf(insertedViewRef));
+      _viewContainerRef?.remove(_viewContainerRef!.indexOf(insertedViewRef));
     }
     if (templateRef != null) {
-      _insertedViewRef = _viewContainerRef.createEmbeddedView(templateRef);
+      _insertedViewRef = _viewContainerRef?.createEmbeddedView(templateRef);
     } else {
       _insertedViewRef = null;
     }

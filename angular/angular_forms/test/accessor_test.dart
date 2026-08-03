@@ -66,7 +66,7 @@ typedef ChangeFunctionSimple = dynamic Function(dynamic value);
   ],
 )
 class IntValueAccessor implements ControlValueAccessor<dynamic>, Validator {
-  final HtmlElement _elementRef;
+  final HtmlElement? _elementRef;
 
   @HostListener('input')
   void onChangeBinding() => onChange(null);
@@ -82,12 +82,12 @@ class IntValueAccessor implements ControlValueAccessor<dynamic>, Validator {
   // ignore: prefer_function_declarations_over_variables
   TouchFunction onTouched = () {};
 
-  IntValueAccessor(this._elementRef);
+  IntValueAccessor(@Optional() this._elementRef);
 
   @override
   void writeValue(dynamic value) {
     var normalizedValue = value!.toString();
-    js_util.setProperty(_elementRef, 'value', normalizedValue);
+    js_util.setProperty(_elementRef!, 'value', normalizedValue);
   }
 
   @override

@@ -57,14 +57,14 @@ class NgClass implements DoCheck, OnDestroy {
   // Separator used to split string to parts - can be any number of
   // whitespaces, new lines or tabs.
   static final _separator = RegExp(r'\s+');
-  final Element _ngEl;
+  final Element? _ngEl;
 
   DefaultIterableDiffer? _iterableDiffer;
   DefaultKeyValueDiffer? _keyValueDiffer;
 
   List<String> _initialClasses = [];
   Object? _rawClass;
-  NgClass(this._ngEl);
+  NgClass(@Optional() this._ngEl);
 
   @Input('class')
   set initialClasses(String? v) {
@@ -175,7 +175,7 @@ class NgClass implements DoCheck, OnDestroy {
     className = className.trim();
     if (className.isEmpty) return;
     var el = _ngEl;
-    var classList = el.classes;
+    var classList = el!.classes;
     if (className.contains(' ')) {
       var classes = className.split(_separator);
       for (var i = 0, len = classes.length; i < len; i++) {

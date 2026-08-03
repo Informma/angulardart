@@ -23,7 +23,7 @@ import 'shared.dart' show setUpControl, setUpControlGroup;
 class MemorizedForm extends NgForm {
   MemorizedForm(
     @Optional() @Self() @Inject(NG_VALIDATORS) List<dynamic>? validators,
-    ChangeDetectorRef changeDetectorRef,
+    @Optional() ChangeDetectorRef? changeDetectorRef,
   ) : super(validators, changeDetectorRef);
 
   /// Add a control if it isn't already found in the container.
@@ -41,7 +41,7 @@ class MemorizedForm extends NgForm {
     scheduleMicrotask(() {
       setUpControl(ctrl as Control, dir);
       ctrl.updateValueAndValidity(emitEvent: false);
-      changeDetectorRef.markForCheck();
+      changeDetectorRef?.markForCheck();
     });
   }
 
@@ -60,7 +60,7 @@ class MemorizedForm extends NgForm {
     scheduleMicrotask(() {
       setUpControlGroup(group as AbstractControlGroup, dir);
       group.updateValueAndValidity(emitEvent: false);
-      changeDetectorRef.markForCheck();
+      changeDetectorRef?.markForCheck();
     });
   }
 

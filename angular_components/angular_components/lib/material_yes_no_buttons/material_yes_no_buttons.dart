@@ -223,14 +223,14 @@ abstract class BoundaryAwareKeyDirective implements OnDestroy {
   StreamSubscription? _subscription;
 
   BoundaryAwareKeyDirective.keypress(
-      Element element, @Optional() KeyUpBoundaryDirective boundary) {
+      Element element, @Optional() KeyUpBoundaryDirective? boundary) {
     final stream =
         boundary?.keyPressStream ?? Element.keyPressEvent.forElement(element);
     _subscription = stream.where(_isKeyMatching).listen(_onMatchingKey);
   }
 
   BoundaryAwareKeyDirective.keyup(
-      Element element, @Optional() KeyUpBoundaryDirective boundary) {
+      Element element, @Optional() KeyUpBoundaryDirective? boundary) {
     final stream =
         boundary?.keyUpStream ?? Element.keyUpEvent.forElement(element);
     _subscription = stream.where(_isKeyMatching).listen(_onMatchingKey);
@@ -291,7 +291,7 @@ class EscapeCancelsDirective extends BoundaryAwareKeyDirective
   MaterialButtonComponent? get noButton => _yesNo.noButton;
 
   EscapeCancelsDirective(
-      this._yesNo, Element element, @Optional() KeyUpBoundaryDirective boundary)
+      this._yesNo, Element element, @Optional() KeyUpBoundaryDirective? boundary)
       : super.keyup(element, boundary);
 
   @override
@@ -322,7 +322,7 @@ class EnterAcceptsDirective extends BoundaryAwareKeyDirective
   MaterialButtonComponent? get noButton => _yesNo.noButton;
 
   EnterAcceptsDirective(
-      this._yesNo, Element element, @Optional() KeyUpBoundaryDirective boundary)
+      this._yesNo, Element element, @Optional() KeyUpBoundaryDirective? boundary)
       : super.keypress(element, boundary);
 
   /// Enables the directive to be conditionally applied.

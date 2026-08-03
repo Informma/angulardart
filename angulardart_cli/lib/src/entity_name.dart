@@ -7,7 +7,10 @@ class EntityName {
     final parts = raw.split(RegExp(r'[_\-\s]+'));
     if (parts.isEmpty) return raw;
     return parts.first.toLowerCase() +
-        parts.skip(1).map((p) => p[0].toUpperCase() + p.substring(1)).join();
+        parts.skip(1).map((p) {
+          if (p.isEmpty) return p;
+          return p[0].toUpperCase() + p.substring(1);
+        }).join();
   }
 
   String get className {

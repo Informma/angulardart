@@ -36,11 +36,14 @@ class NgForIdentity<T> {
     if (elements == null || elements.isEmpty) {
       return;
     }
+    if (_template == null || _container == null) return;
+    final template = _template!;
+    final container = _container!;
     var i = 0;
     for (final element in elements) {
-      final view = _container?.createEmbeddedView(_template!);
-      view?.setLocal(r'$implicit', element);
-      view?.setLocal(r'index', i++);
+      final view = container.createEmbeddedView(template);
+      view.setLocal(r'$implicit', element);
+      view.setLocal(r'index', i++);
       // TODO: Consider if we want all of the NgFor local variables available.
     }
   }

@@ -131,7 +131,7 @@ class MaterialInt64ValueAccessor
       @Attribute('keypressUpdate') String keypressUpdateAttr,
       @Attribute('checkInteger') String checkInteger,
       @Attribute('blurFormat') String blurFormat,
-      @Optional() NumberFormat numberFormat)
+      @Optional() NumberFormat? numberFormat)
       : super(
             input,
             control,
@@ -145,7 +145,7 @@ class MaterialInt64ValueAccessor
         'You must supply a NumberFormat if using blurFormat');
   }
 
-  bool _checkValues(NumberFormat numberFormat, bool blurFormat) {
+  bool _checkValues(NumberFormat? numberFormat, bool blurFormat) {
     if (numberFormat != null) {
       print('Warning: numberFormat only works with num and will overflow '
           'if the number is larger than a native int, even when using '
@@ -198,7 +198,7 @@ class MaterialNumberValueAccessor extends BaseMaterialNumberValueAccessor<num> {
       @Attribute('keypressUpdate') String keypressUpdateAttr,
       @Attribute('checkInteger') String checkInteger,
       @Attribute('blurFormat') String blurFormat,
-      @Optional() NumberFormat numberFormat)
+      @Optional() NumberFormat? numberFormat)
       : this._checkInteger = attributeToBool(checkInteger, defaultValue: false),
         super(
             input,

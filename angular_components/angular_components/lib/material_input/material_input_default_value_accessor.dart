@@ -25,7 +25,7 @@ import 'base_material_input.dart';
 class MaterialInputDefaultValueAccessor
     extends BaseMaterialInputValueAccessor<String> {
   MaterialInputDefaultValueAccessor(
-      BaseMaterialInput input, @Self() @Optional() NgControl control)
+      BaseMaterialInput input, @Self() @Optional() NgControl? control)
       : super(input, control);
 
   @override
@@ -44,7 +44,7 @@ class MaterialInputDefaultValueAccessor
 class MaterialInputBlurValueAccessor
     extends BaseMaterialInputValueAccessor<String> {
   MaterialInputBlurValueAccessor(
-      BaseMaterialInput input, @Self() @Optional() NgControl control)
+      BaseMaterialInput input, @Self() @Optional() NgControl? control)
       : super(input, control);
 
   @override
@@ -63,7 +63,7 @@ class MaterialInputBlurValueAccessor
 class MaterialInputChangeValueAccessor
     extends BaseMaterialInputValueAccessor<String> {
   MaterialInputChangeValueAccessor(
-      BaseMaterialInput input, @Self() @Optional() NgControl control)
+      BaseMaterialInput input, @Self() @Optional() NgControl? control)
       : super(input, control);
 
   @override
@@ -82,7 +82,7 @@ abstract class BaseMaterialInputValueAccessor<T>
   final disposer = Disposer.oneShot();
   @protected
   final BaseMaterialInput input;
-  final NgControl _cd;
+  final NgControl? _cd;
 
   BaseMaterialInputValueAccessor(this.input, @Self() @Optional() this._cd) {
     // To get around a circular dependency injection assign the valueAccessor

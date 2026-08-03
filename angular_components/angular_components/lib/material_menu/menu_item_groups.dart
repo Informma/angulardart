@@ -158,7 +158,7 @@ class MenuItemGroupsComponent
   final MenuRoot _menuRoot;
 
   /// The parent popup handle if any.
-  DropdownHandle _dropdownHandle;
+  DropdownHandle? _dropdownHandle;
 
   /// The delayed action to open the [_hoveredItem] submenu on mouse hover.
   late final DelayedAction _subMenuOpener = DelayedAction(_menuDelay, _openSubMenuOnHover);
@@ -211,8 +211,8 @@ class MenuItemGroupsComponent
   factory MenuItemGroupsComponent(
           MenuRoot menuRoot,
           ChangeDetectorRef changeDetector,
-          @Optional() DropdownHandle dropdownHandle,
-          @Optional() IdGenerator idGenerator) =>
+          @Optional() DropdownHandle? dropdownHandle,
+          @Optional() IdGenerator? idGenerator) =>
       MenuItemGroupsComponent._(dropdownHandle, menuRoot, changeDetector,
           idGenerator ?? SequentialIdGenerator.fromUUID());
 
@@ -307,7 +307,7 @@ class MenuItemGroupsComponent
         break;
       case KeyCode.LEFT:
         if (_closeOnPressLeft) {
-          _dropdownHandle.close();
+          _dropdownHandle?.close();
         }
         break;
       default:

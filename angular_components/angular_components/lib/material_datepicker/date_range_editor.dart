@@ -330,8 +330,8 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
       this._elementRef,
       this._domService,
       this._ngZone,
-      @Optional() DateRangeEditorHost editorHost,
-      @Optional() @Inject(datepickerClock) Clock clock,
+      @Optional() DateRangeEditorHost? editorHost,
+      @Optional() @Inject(datepickerClock) Clock? clock,
       Clock legacyClock) {
     // TODO(google): Migrate to use only datepickerClock
     _clock ??= legacyClock;

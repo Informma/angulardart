@@ -52,9 +52,9 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   static const hostClass = 'item';
 
   final _disposer = Disposer.oneShot();
-  final ActivationHandler _activationHandler;
+  final ActivationHandler? _activationHandler;
   final ChangeDetectorRef _cdRef;
-  final DropdownHandle _dropdown;
+  final DropdownHandle? _dropdown;
 
   final HtmlElement element;
 
@@ -230,7 +230,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   void handleActivate(UIEvent e) {
     var hasCheckbox = supportsMultiSelect && !hideCheckbox;
     if (_dropdown != null && closeOnActivate && !hasCheckbox) {
-      _dropdown.close();
+      _dropdown!.close();
       if (e is KeyboardEvent) {
         e.stopPropagation();
       }

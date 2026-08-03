@@ -24,7 +24,7 @@ class PopupSizeProviderDirective implements PopupSizeProvider {
   _SizeDefinition? _minWidth;
   _SizeDefinition? _maxHeight;
   _SizeDefinition? _maxWidth;
-  PopupSizeProvider _parentPopupSizeProvider;
+  PopupSizeProvider? _parentPopupSizeProvider;
 
   PopupSizeProviderDirective(
       @Attribute('popupMinHeight') String minHeight,
@@ -52,22 +52,22 @@ class PopupSizeProviderDirective implements PopupSizeProvider {
 
   @override
   num? getMinWidth(num positionX, num viewportWidth) => _minWidth == null
-      ? _parentPopupSizeProvider.getMinWidth(positionX, viewportWidth)
+      ? _parentPopupSizeProvider!.getMinWidth(positionX, viewportWidth)
       : _minWidth!.getPixels(viewportWidth);
 
   @override
   num? getMinHeight(num positionY, num viewportHeight) => _minHeight == null
-      ? _parentPopupSizeProvider.getMinHeight(positionY, viewportHeight)
+      ? _parentPopupSizeProvider!.getMinHeight(positionY, viewportHeight)
       : _minHeight!.getPixels(viewportHeight);
 
   @override
   num? getMaxWidth(num positionX, num viewportWidth) => _maxWidth == null
-      ? _parentPopupSizeProvider.getMaxWidth(positionX, viewportWidth)
+      ? _parentPopupSizeProvider!.getMaxWidth(positionX, viewportWidth)
       : _maxWidth!.getPixels(viewportWidth);
 
   @override
   num? getMaxHeight(num positionY, num viewportHeight) => _maxHeight == null
-      ? _parentPopupSizeProvider.getMaxHeight(positionY, viewportHeight)
+      ? _parentPopupSizeProvider!.getMaxHeight(positionY, viewportHeight)
       : _maxHeight!.getPixels(viewportHeight);
 }
 

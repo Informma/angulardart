@@ -44,7 +44,7 @@ class MaterialRadioGroupComponent
 
   List<MaterialRadioComponent> _radioComponents = <MaterialRadioComponent>[];
 
-  MaterialRadioGroupComponent(this._ngZone, @Self() @Optional() NgControl cd) {
+  MaterialRadioGroupComponent(this._ngZone, @Self() @Optional() NgControl? cd) {
     // When NgControl is present on the host element, the component participates
     // in the Forms API.
     cd?.valueAccessor = this;

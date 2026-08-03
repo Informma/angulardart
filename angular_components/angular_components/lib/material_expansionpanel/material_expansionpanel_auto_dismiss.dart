@@ -29,7 +29,7 @@ class MaterialExpansionPanelAutoDismiss implements OnDestroy {
   /// The root node that all spawned elements will belong to.
   ///
   /// E.g. modal, dialog, popups.
-  final Element _overlayContainerToken;
+  final Element? _overlayContainerToken;
   final HtmlElement _element;
 
   StreamController<Event>? _clicksOutsideController;

@@ -162,8 +162,8 @@ abstract class Modal {
 class ModalComponent
     implements DeferredContentAware, Modal, AfterViewInit, OnDestroy {
   final Element _element;
-  final Modal _parentModal;
-  final GlobalModalStack _stack;
+  final Modal? _parentModal;
+  final GlobalModalStack? _stack;
   final DomService _domService;
 
   @override
@@ -253,9 +253,9 @@ class ModalComponent
     if (!temporary) {
       _saveFocus();
       if (_stack != null) {
-        _stack.onModalOpened(this);
+        _stack!.onModalOpened(this);
       } else if (_parentModal != null) {
-        _parentModal.hidden = true;
+        _parentModal!.hidden = true;
       }
     }
     _resolvedOverlayRef.setVisible(true);
@@ -268,9 +268,9 @@ class ModalComponent
     if (!temporary) {
       _restoreFocus();
       if (_stack != null) {
-        _stack.onModalClosed(this);
+        _stack!.onModalClosed(this);
       } else if (_parentModal != null) {
-        _parentModal.hidden = false;
+        _parentModal!.hidden = false;
       }
     }
     _resolvedOverlayRef.setVisible(false);
@@ -282,7 +282,7 @@ class ModalComponent
 
   void _restoreFocus() {
     if (_lastFocusedElement == null) return;
-    if (_stack != null && _stack.length > 1 || _parentModal != null) return;
+    if (_stack != null && _stack!.length > 1 || _parentModal != null) return;
     final elementToFocus = _lastFocusedElement;
     _domService.scheduleWrite(() {
       // Only restore focus if the current active element is inside this overlay

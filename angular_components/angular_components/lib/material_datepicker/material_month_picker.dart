@@ -250,7 +250,7 @@ class MaterialMonthPickerComponent
   CalendarListener _inputListener = CalendarListener.noop();
   late StreamSubscription _calendarStream;
 
-  MaterialMonthPickerComponent(@Optional() @Inject(datepickerClock) Clock clock,
+  MaterialMonthPickerComponent(@Optional() @Inject(datepickerClock) Clock? clock,
       @Attribute('mode') String mode) {
     clock ??= Clock();
 

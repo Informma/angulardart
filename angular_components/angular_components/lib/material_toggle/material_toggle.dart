@@ -96,7 +96,7 @@ class MaterialToggleComponent
   }
 
   MaterialToggleComponent(
-      this._changeDetector, @Self() @Optional() NgControl cd) {
+      this._changeDetector, @Self() @Optional() NgControl? cd) {
     cd?.valueAccessor = this;
   }
 

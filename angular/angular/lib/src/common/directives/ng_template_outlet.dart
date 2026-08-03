@@ -58,11 +58,12 @@ class NgTemplateOutlet implements DoCheck {
   @Input()
   set ngTemplateOutlet(TemplateRef? templateRef) {
     final insertedViewRef = _insertedViewRef;
-    if (insertedViewRef != null) {
-      _viewContainerRef?.remove(_viewContainerRef!.indexOf(insertedViewRef));
+    final viewContainerRef = _viewContainerRef;
+    if (insertedViewRef != null && viewContainerRef != null) {
+      viewContainerRef.remove(viewContainerRef.indexOf(insertedViewRef));
     }
-    if (templateRef != null) {
-      _insertedViewRef = _viewContainerRef?.createEmbeddedView(templateRef);
+    if (templateRef != null && viewContainerRef != null) {
+      _insertedViewRef = viewContainerRef.createEmbeddedView(templateRef);
     } else {
       _insertedViewRef = null;
     }

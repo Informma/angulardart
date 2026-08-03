@@ -1,7 +1,7 @@
 name: _tests
 description: Tests for AngularDart.
 environment:
-  sdk: '>=2.14.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   # No strict dependencies, we always use dependency_overrides.
@@ -19,14 +19,14 @@ dev_dependencies:
   angulardart_forms:
 
   # Actual valid dependencies required.
-  analyzer: ^2.0.0
-  build_runner: ^2.0.0
-  build_test: ^2.0.0
-  build_web_compilers: #^2.0.0
+  analyzer: ^13.0.0
+  build_runner: ^2.16.0
+  build_test: ^3.0.0
+  build_web_compilers: ^4.8.0
   mockito: ^5.0.0
   package_config: ^2.0.0
-  pedantic: ^1.10.0
-  source_span: ^1.8.0
+  lints: ^6.0.0
+  source_span: ^1.10.0
   term_glyph: ^1.2.0
 
 # DO NOT REMOVE. We don't publish this package, it is just for testing.

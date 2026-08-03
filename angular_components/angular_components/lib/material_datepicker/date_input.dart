@@ -172,7 +172,7 @@ class DateInputDirective implements OnDestroy {
   Date? _cachedMaxDate;
   Date? _lastParse;
 
-  DateInputDirective(@Optional() @Inject(datepickerClock) Clock clock,
+  DateInputDirective(@Optional() @Inject(datepickerClock) Clock? clock,
       Clock legacyClock, this._input)
       : _clock = clock ?? legacyClock {
     // TODO(google): Migrate to use only datepickerClock

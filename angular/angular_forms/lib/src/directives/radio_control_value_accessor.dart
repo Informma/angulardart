@@ -96,7 +96,7 @@ class RadioControlValueAccessor extends Object
 
   @override
   void ngOnInit() {
-    _control = _injector!.provideType(NgControl);
+    _control = _injector?.provideType(NgControl) as NgControl;
     _registry?.add(_control, this);
   }
 
@@ -109,7 +109,7 @@ class RadioControlValueAccessor extends Object
   void writeValue(RadioButtonState? value) {
     _state = value;
     if (value?.checked ?? false) {
-      js_util.setProperty(_element!, 'checked', true);
+      js_util.setProperty(_element as Object, 'checked', true);
     }
   }
 
@@ -119,6 +119,6 @@ class RadioControlValueAccessor extends Object
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    setElementDisabled(_element!, isDisabled);
+    setElementDisabled(_element as HtmlElement, isDisabled);
   }
 }

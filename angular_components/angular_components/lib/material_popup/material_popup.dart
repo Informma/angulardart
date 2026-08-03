@@ -104,7 +104,7 @@ class MaterialPopupComponent extends Object
   final NgZone _ngZone;
   final OverlayService _overlayService;
   final DomService _domService;
-  PopupHierarchy _hierarchy;
+  PopupHierarchy? _hierarchy;
 
   final List<RelativePosition> _defaultPreferredPositions;
   RelativePosition? _alignmentPosition;
@@ -192,7 +192,7 @@ class MaterialPopupComponent extends Object
   }
 
   /// Optional handler for calculating popup sizes.
-  PopupSizeProvider _popupSizeProvider;
+  PopupSizeProvider? _popupSizeProvider;
 
   /// Sets a provider for the popup size.
   ///
@@ -281,7 +281,7 @@ class MaterialPopupComponent extends Object
   /// The popup visible hierarchy.
   PopupHierarchy get hierarchy {
     _hierarchy = _hierarchy ?? PopupHierarchy();
-    return _hierarchy;
+    return _hierarchy!;
   }
 
   @override
@@ -678,13 +678,13 @@ class MaterialPopupComponent extends Object
     if (_popupSizeProvider == null) return;
     var boundedViewportRect =
         _boundRectangle(_viewportRect, _viewportBoundaries);
-    minHeight = _popupSizeProvider.getMinHeight(
+    minHeight = _popupSizeProvider!.getMinHeight(
         _overlayRef!.state.top ?? 0, boundedViewportRect.height);
-    minWidth = _popupSizeProvider.getMinWidth(
+    minWidth = _popupSizeProvider!.getMinWidth(
         _overlayRef!.state.left ?? 0, boundedViewportRect.width);
-    maxHeight = _popupSizeProvider.getMaxHeight(
+    maxHeight = _popupSizeProvider!.getMaxHeight(
         _overlayRef!.state.top ?? 0, boundedViewportRect.height);
-    maxWidth = _popupSizeProvider.getMaxWidth(
+    maxWidth = _popupSizeProvider!.getMaxWidth(
         _overlayRef!.state.left ?? 0, boundedViewportRect.width);
   }
 

@@ -8,14 +8,14 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  angulardart: ^8.0.2
+  angulardart: ^8.1.6
 
 dev_dependencies:
-  build_runner: ^2.4.0
-  build_web_compilers: ^4.0.0
-  angulardart_test: ^5.0.0
-  lints: ^4.0.0
-  test: ^1.25.0
+  build_runner: ^2.16.0
+  build_web_compilers: ^4.8.0
+  angulardart_test: ^5.1.6
+  lints: ^6.0.0
+  test: ^1.31.0
 ''';
 
   static const projectAnalysisOptions = '''
@@ -111,7 +111,7 @@ class {{className}} {
 import 'package:angulardart/angulardart.dart';
 
 @Pipe('{{className}}')
-class {{className}} extends PipeTransform {
+class {{className}} implements PipeTransform {
   @override
   dynamic transform(dynamic value, [List<dynamic>? args]) {
     return value;

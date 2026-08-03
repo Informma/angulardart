@@ -1,3 +1,12 @@
+## 5.2.0
+
+- fix: resolve all dart analyze warnings and info messages
+- Applied dart fix --apply (use_super_parameters, unnecessary_library_name, no_leading_underscores_for_local_identifiers)
+- Fixed avoid_renaming_method_parameters in memorized_form.dart
+- Fixed strict_top_level_inference in abstract_control_directive.dart
+- Added @Deprecated aliases for constant_identifier_names (FORM_PROVIDERS, NG_VALIDATORS, etc.)
+- All internal usages updated to use new lowerCamelCase names
+
 ## 5.1.7
 
 - fix: release.sh now looks for commits touching the package directory

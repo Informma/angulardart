@@ -1,3 +1,7 @@
+## 4.1.7
+
+- fix: release.sh now looks for commits touching the package directory
+
 ## 4.1.6
 
 - Fix null safety DI checks and generic type resolution

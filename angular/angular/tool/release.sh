@@ -34,12 +34,16 @@ case "$BUMP_TYPE" in
 esac
 
 NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
-LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+LAST_TAG="v${CURRENT_VERSION}"
+
+if ! git rev-parse "$LAST_TAG" >/dev/null 2>&1; then
+  LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+fi
 
 if [ -z "$LAST_TAG" ]; then
-  COMMITS=$(git log --pretty=format:"- %s" --no-merges)
+  COMMITS=$(git log --pretty=format:"- %s" --no-merges -- "$PACKAGE_DIR")
 else
-  COMMITS=$(git log --pretty=format:"- %s" --no-merges "${LAST_TAG}..HEAD")
+  COMMITS=$(git log --pretty=format:"- %s" --no-merges "${LAST_TAG}..HEAD" -- "$PACKAGE_DIR")
 fi
 
 if [ -z "$COMMITS" ]; then

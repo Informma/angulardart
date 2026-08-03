@@ -1,3 +1,9 @@
+## 3.0.13
+
+- chore: add release.sh scripts to all packages
+- docs: add prompt for fixing warnings and info
+- Fix null safety, SDK constraints, dependencies, and CHANGELOGs across all packages
+
 ## 3.0.12
 
 - Fixed null safety in `desugar.dart` visitor

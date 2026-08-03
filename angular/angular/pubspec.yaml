@@ -1,5 +1,5 @@
 name: angulardart
-version: 8.1.1
+version: 8.1.2
 description: >-
   Fast and productive web framework by Google.
   Separate, but similar to the JavaScript framework with a similar name.
@@ -52,3 +52,4 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.16.0
+  build_web_compilers: ^4.8.1

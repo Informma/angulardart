@@ -65,13 +65,22 @@ mv "$TMPFILE" "$CHANGELOG"
 
 sed -i "s/^version: .*/version: ${NEW_VERSION}/" "$PUBSPEC"
 
+# Update badge cache-buster in README.md
+README="$PACKAGE_DIR/README.md"
+if [ -f "$README" ]; then
+  PACKAGE_NAME=$(grep '^name:' "$PUBSPEC" | sed 's/name: *//')
+  sed -i "s|badgen.net/pub/v/${PACKAGE_NAME}?v=[0-9.]*|badgen.net/pub/v/${PACKAGE_NAME}?v=${NEW_VERSION}|g" "$README"
+  sed -i "s|badgen.net/pub/v/${PACKAGE_NAME})|badgen.net/pub/v/${PACKAGE_NAME}?v=${NEW_VERSION})|g" "$README"
+  sed -i "s|badgen.net/pub/v/${PACKAGE_NAME}\"|badgen.net/pub/v/${PACKAGE_NAME}?v=${NEW_VERSION}\"|g" "$README"
+fi
+
 echo "=== Release Summary ==="
 echo "Version: ${CURRENT_VERSION} -> ${NEW_VERSION}"
 echo "Commits:"
 echo "$COMMITS"
 echo ""
 echo "This will:"
-echo "  1. Commit CHANGELOG.md and pubspec.yaml"
+echo "  1. Commit CHANGELOG.md, pubspec.yaml, and README.md"
 echo "  2. Create tag v${NEW_VERSION}"
 echo "  3. Publish to pub.dev"
 echo ""
@@ -80,11 +89,11 @@ echo ""
 
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
   echo "Aborted. Reverting changes..."
-  git checkout -- "$CHANGELOG" "$PUBSPEC"
+  git checkout -- "$CHANGELOG" "$PUBSPEC" "$README"
   exit 0
 fi
 
-git add "$CHANGELOG" "$PUBSPEC"
+git add "$CHANGELOG" "$PUBSPEC" "$README"
 git commit -m "chore: release v${NEW_VERSION}"
 git tag "v${NEW_VERSION}"
 

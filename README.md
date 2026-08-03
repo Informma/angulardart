@@ -7,7 +7,7 @@
     <img src="https://img.shields.io/badge/website-angulardartreborn.com-blue" alt="Website" />
   </a>
   <a href="https://pub.dev/packages/angulardart">
-    <img src="https://badgen.net/pub/v/angulardart" alt="pub package" />
+    <img src="https://badgen.net/pub/v/angulardart?v=8.2.0" alt="pub package" />
   </a>
   <a href="https://github.com/flutterdocteur/angulardart">
     <img src="https://img.shields.io/github/stars/flutterdocteur/angulardart.svg?style=social&label=Star" alt="GitHub stars" />
@@ -54,14 +54,14 @@ This monorepo contains the following packages, all published on [pub.dev](https:
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [angulardart](https://pub.dev/packages/angulardart) | [![pub package](https://badgen.net/pub/v/angulardart)](https://pub.dev/packages/angulardart) | Core framework |
-| [angulardart_cli](https://pub.dev/packages/angulardart_cli) | [![pub package](https://badgen.net/pub/v/angulardart_cli)](https://pub.dev/packages/angulardart_cli) | CLI tools for scaffolding |
-| [angulardart_forms](https://pub.dev/packages/angulardart_forms) | [![pub package](https://badgen.net/pub/v/angulardart_forms)](https://pub.dev/packages/angulardart_forms) | Forms framework |
-| [angulardart_router](https://pub.dev/packages/angulardart_router) | [![pub package](https://badgen.net/pub/v/angulardart_router)](https://pub.dev/packages/angulardart_router) | Routing library |
-| [angulardart_components](https://pub.dev/packages/angulardart_components) | [![pub package](https://badgen.net/pub/v/angulardart_components)](https://pub.dev/packages/angulardart_components) | Material Design components |
-| [angulardart_test](https://pub.dev/packages/angulardart_test) | [![pub package](https://badgen.net/pub/v/angulardart_test)](https://pub.dev/packages/angulardart_test) | Testing utilities |
-| [angulardart_ast](https://pub.dev/packages/angulardart_ast) | [![pub package](https://badgen.net/pub/v/angulardart_ast)](https://pub.dev/packages/angulardart_ast) | Template parser |
-| [angulardart_compiler](https://pub.dev/packages/angulardart_compiler) | [![pub package](https://badgen.net/pub/v/angulardart_compiler)](https://pub.dev/packages/angulardart_compiler) | Template compiler |
+| [angulardart](https://pub.dev/packages/angulardart) | [![pub package](https://badgen.net/pub/v/angulardart?v=8.2.0)](https://pub.dev/packages/angulardart) | Core framework |
+| [angulardart_cli](https://pub.dev/packages/angulardart_cli) | [![pub package](https://badgen.net/pub/v/angulardart_cli?v=1.0.11)](https://pub.dev/packages/angulardart_cli) | CLI tools for scaffolding |
+| [angulardart_forms](https://pub.dev/packages/angulardart_forms) | [![pub package](https://badgen.net/pub/v/angulardart_forms?v=5.2.0)](https://pub.dev/packages/angulardart_forms) | Forms framework |
+| [angulardart_router](https://pub.dev/packages/angulardart_router) | [![pub package](https://badgen.net/pub/v/angulardart_router?v=4.2.0)](https://pub.dev/packages/angulardart_router) | Routing library |
+| [angulardart_components](https://pub.dev/packages/angulardart_components) | [![pub package](https://badgen.net/pub/v/angulardart_components?v=2.1.0)](https://pub.dev/packages/angulardart_components) | Material Design components |
+| [angulardart_test](https://pub.dev/packages/angulardart_test) | [![pub package](https://badgen.net/pub/v/angulardart_test?v=5.2.0)](https://pub.dev/packages/angulardart_test) | Testing utilities |
+| [angulardart_ast](https://pub.dev/packages/angulardart_ast) | [![pub package](https://badgen.net/pub/v/angulardart_ast?v=3.1.0)](https://pub.dev/packages/angulardart_ast) | Template parser |
+| [angulardart_compiler](https://pub.dev/packages/angulardart_compiler) | [![pub package](https://badgen.net/pub/v/angulardart_compiler?v=4.1.0)](https://pub.dev/packages/angulardart_compiler) | Template compiler |
 
 ## Key Features
 

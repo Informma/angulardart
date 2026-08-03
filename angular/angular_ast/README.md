@@ -5,7 +5,7 @@
     <img src="https://img.shields.io/badge/website-angulardartreborn.com-blue" alt="Website" />
   </a>
   <a href="https://pub.dev/packages/angulardart_ast">
-    <img src="https://badgen.net/pub/v/angulardart_ast" alt="pub package" />
+    <img src="https://badgen.net/pub/v/angulardart_ast?v=3.1.0" alt="pub package" />
   </a>
 </p>
 

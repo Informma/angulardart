@@ -1,3 +1,7 @@
+## 5.1.8
+
+- chore: release v5.1.7
+
 ## 5.1.7
 
 - fix: release.sh now looks for commits touching the package directory

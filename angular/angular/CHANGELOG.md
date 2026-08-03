@@ -1,3 +1,8 @@
+## 8.1.7
+
+- fix: release.sh now looks for commits touching the package directory
+- Fix null safety, SDK constraints, dependencies, and CHANGELOGs across all packages
+
 ## 8.1.6
 
 - Fix null safety DI checks and generic type resolution

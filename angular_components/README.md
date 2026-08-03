@@ -16,7 +16,7 @@ testing policies make these widgets an excellent fit for projects using
 The following packages provide the components as well as code generation for the
 AngularDart Components gallery.
 
-## [angular_components]&nbsp;[![Pub Package](https://img.shields.io/pub/v/angular_components.svg)](https://pub.dev/packages/angular_components)
+## [angular_components]&nbsp;[![Pub Package](https://badgen.net/pub/v/angular_components)](https://pub.dev/packages/angular_components)
 
 The actual components package that is published to pub.
 

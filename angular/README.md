@@ -4,13 +4,13 @@ See https://github.com/angulardart for current updates on this project.
 
 | Source code                  | Published Version                                                                                                  |
 |------------------------------|:------------------------------------------------------------------------------------------------------------------:|
-| [angular]                    | [![Pub Package](https://img.shields.io/pub/v/angular.svg)](https://pub.dev/packages/angular)                       |
-| [angular_forms]              | [![Pub Package](https://img.shields.io/pub/v/angular_forms.svg)](https://pub.dev/packages/angular_forms)           |
-| [angular_router]             | [![Pub Package](https://img.shields.io/pub/v/angular_router.svg)](https://pub.dev/packages/angular_router)         |
-| [angular_test]               | [![Pub Package](https://img.shields.io/pub/v/angular_test.svg)](https://pub.dev/packages/angular_test)             |
-| [angular_components]&dagger; | [![Pub Package](https://img.shields.io/pub/v/angular_components.svg)](https://pub.dev/packages/angular_components) |
-| [angular_ast]&ddagger;       | [![Pub Package](https://img.shields.io/pub/v/angular_ast.svg)](https://pub.dev/packages/angular_ast)               |
-| [angular_compiler]&ddagger;  | [![Pub Package](https://img.shields.io/pub/v/angular_compiler.svg)](https://pub.dev/packages/angular_compiler)     |
+| [angular]                    | [![Pub Package](https://badgen.net/pub/v/angular)](https://pub.dev/packages/angular)                       |
+| [angular_forms]              | [![Pub Package](https://badgen.net/pub/v/angular_forms)](https://pub.dev/packages/angular_forms)           |
+| [angular_router]             | [![Pub Package](https://badgen.net/pub/v/angular_router)](https://pub.dev/packages/angular_router)         |
+| [angular_test]               | [![Pub Package](https://badgen.net/pub/v/angular_test)](https://pub.dev/packages/angular_test)             |
+| [angular_components]&dagger; | [![Pub Package](https://badgen.net/pub/v/angular_components)](https://pub.dev/packages/angular_components) |
+| [angular_ast]&ddagger;       | [![Pub Package](https://badgen.net/pub/v/angular_ast)](https://pub.dev/packages/angular_ast)               |
+| [angular_compiler]&ddagger;  | [![Pub Package](https://badgen.net/pub/v/angular_compiler)](https://pub.dev/packages/angular_compiler)     |
 
 &dagger; _`angular_components` source is in another [repository](https://github.com/angulardart/angular_components)._
 

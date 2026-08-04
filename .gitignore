@@ -55,5 +55,5 @@ doc/api/
 .opencode/
 /*.md
 !/README.md
-!/AGENTS.md
 !/CHANGELOG.md
+AGENTS.md

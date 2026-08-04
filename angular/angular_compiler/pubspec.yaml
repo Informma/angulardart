@@ -23,7 +23,7 @@ platforms:
 
 dependencies:
   analyzer: ^13.0.0
-  angulardart: ^9.0.0
+  angulardart: '>=8.0.0 <10.0.0'
   angulardart_ast: ^3.0.0
   args: ^2.5.0
   build: ^4.0.0

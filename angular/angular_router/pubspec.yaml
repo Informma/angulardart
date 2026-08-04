@@ -22,7 +22,7 @@ platforms:
   web:
 
 dependencies:
-  angulardart: ^9.0.0
+  angulardart: '>=8.0.0 <10.0.0'
   collection: ^1.18.0
   web: ^1.1.1
   meta: ^1.15.0

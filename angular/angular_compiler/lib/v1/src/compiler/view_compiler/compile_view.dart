@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart' hide unsafeCast;
 import 'package:angulardart_compiler/v1/cli.dart';
 import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart' as ir;
 import 'package:angulardart_compiler/v1/src/compiler/view_type.dart';

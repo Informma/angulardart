@@ -3,7 +3,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/src/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart';
 import 'package:angulardart_compiler/v1/angular_compiler.dart';
 import 'package:angulardart_compiler/v1/cli.dart';
 

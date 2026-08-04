@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart' show IterableExtension;
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart' hide unsafeCast;
 import 'package:angulardart_compiler/v1/cli.dart';
 import 'package:angulardart_compiler/v1/src/compiler/analyzed_class.dart';
 import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart'

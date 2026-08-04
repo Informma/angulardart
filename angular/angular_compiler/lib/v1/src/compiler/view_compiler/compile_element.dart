@@ -1,5 +1,5 @@
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart';
 
 import '../compile_metadata.dart'
     show

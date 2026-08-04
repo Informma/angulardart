@@ -1,5 +1,5 @@
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart';
 import 'package:angulardart_ast/angulardart_ast.dart' as ast;
 import 'package:angulardart_compiler/v1/angular_compiler.dart';
 import 'package:angulardart_compiler/v1/cli.dart';

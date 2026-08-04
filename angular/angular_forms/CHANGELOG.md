@@ -1,3 +1,8 @@
+## 6.0.1
+
+- Fix: Update tests for package:web API (innerHtml → innerHTML, NodeList[] → .item())
+- Widen version constraints
+
 ## 6.0.0
 
 - **BREAKING**: Migrate from `dart:html` to `package:web`

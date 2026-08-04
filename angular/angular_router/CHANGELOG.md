@@ -1,3 +1,8 @@
+## 5.0.1
+
+- Fix: Update tests for package:web API (classes → classList)
+- Widen version constraints
+
 ## 5.0.0
 
 - **BREAKING**: Migrate from `dart:html` to `package:web`

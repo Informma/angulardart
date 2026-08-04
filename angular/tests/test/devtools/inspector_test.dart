@@ -1,4 +1,4 @@
-import 'dart:html' as html;
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -260,7 +260,7 @@ void main() {
     });
 
     group('external content root', () {
-      late html.Element container;
+      late web.Element container;
       late NgTestFixture<TestExternalContentRoots> testFixture;
 
       setUp(() async {
@@ -270,7 +270,7 @@ void main() {
       });
 
       tearDown(() {
-        container.remove();
+        container.parentNode?.removeChild(container);
       });
 
       test('with no components', () async {
@@ -351,8 +351,8 @@ void main() {
     test('coalesces existing content roots', () async {
       final testBed = NgTestBed(ng.createTestExternalContentRootsFactory());
       final testFixture = await testBed.create();
-      final childContainer = html.DivElement();
-      final parentContainer = testFixture.rootElement.parent!
+      final childContainer = web.HTMLDivElement();
+      final parentContainer = testFixture.rootElement.parentElement!
         ..append(childContainer);
       registerContentRoot(childContainer);
       registerContentRoot(parentContainer);
@@ -618,7 +618,7 @@ void main() {
     });
 
     group('external content root', () {
-      late html.Element container;
+      late web.Element container;
       late NgTestFixture<TestExternalContentRoots> testFixture;
 
       setUp(() async {
@@ -628,7 +628,7 @@ void main() {
       });
 
       tearDown(() {
-        container.remove();
+        container.parentNode?.removeChild(container);
       });
 
       test('with no components', () async {
@@ -709,8 +709,8 @@ void main() {
     test('coalesces existing content roots', () async {
       final testBed = NgTestBed(ng.createTestExternalContentRootsFactory());
       final testFixture = await testBed.create();
-      final childContainer = html.DivElement();
-      final parentContainer = testFixture.rootElement.parent!
+      final childContainer = web.HTMLDivElement();
+      final parentContainer = testFixture.rootElement.parentElement!
         ..append(childContainer);
       registerContentRoot(childContainer);
       registerContentRoot(parentContainer);
@@ -938,9 +938,9 @@ void main() {
   });
 }
 
-html.Element createContentRoot({html.Element? parent}) {
-  final root = html.DivElement();
-  (parent ?? html.document.body!).append(root);
+web.Element createContentRoot({web.Element? parent}) {
+  final root = web.HTMLDivElement();
+  (parent ?? web.document.body!).append(root);
   registerContentRoot(root);
   return root;
 }
@@ -1163,7 +1163,7 @@ class TestExternalContentRoots {
   @ViewChild('multiple')
   TemplateRef? multipleComponentTemplateRef;
 
-  void initExternalContent(html.Element container, TemplateRef content) {
+  void initExternalContent(web.Element container, TemplateRef content) {
     final viewRef = _viewContainerRef.createEmbeddedView(content);
     for (final node in viewRef.rootNodes) {
       container.append(node);

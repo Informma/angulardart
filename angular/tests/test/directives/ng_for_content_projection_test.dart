@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -26,12 +26,12 @@ void main() {
       );
 
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         ['1', '2', '3'],
       );
       await forceReorder132();
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         ['1', '3', '2'],
       );
     });
@@ -44,12 +44,12 @@ void main() {
       );
 
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         ['1', '2', '3'],
       );
       await forceReorder132();
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         ['1', '3', '2'],
       );
     });
@@ -62,12 +62,12 @@ void main() {
       );
 
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         ['1', '2', '3'],
       );
       await forceReorder132();
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         // TODO(b/129297484): Should be "['1', '3', '2']".
         ['1', '2', '3'],
       );
@@ -81,12 +81,12 @@ void main() {
       );
 
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         ['1', '2', '3'],
       );
       await forceReorder132();
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         ['1', '3', '2'],
       );
     });
@@ -99,12 +99,12 @@ void main() {
       );
 
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         ['1', '2', '3'],
       );
       await forceReorder132();
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         ['1', '3', '2'],
       );
     });
@@ -117,12 +117,12 @@ void main() {
       );
 
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         ['1', '2', '3'],
       );
       await forceReorder132();
       expect(
-        fixture.assertOnlyInstance.children!.map((h) => h.text),
+        fixture.assertOnlyInstance.children!.map((h) => h.textContent),
         // TODO(b/129297484): Should be "['1', '3', '2']".
         ['1', '2', '3'],
       );
@@ -134,7 +134,7 @@ abstract class TestNgForBase {
   @Input()
   List<int>? items;
 
-  List<HtmlElement>? get children;
+  List<web.HTMLElement>? get children;
 }
 
 @Component(
@@ -156,7 +156,7 @@ class TestNgForReorderContentChildren extends TestNgForBase {
   ContentProjectedChild? child;
 
   @override
-  List<HtmlElement>? get children => child!.children;
+  List<web.HTMLElement>? get children => child!.children;
 }
 
 @Component(
@@ -181,7 +181,7 @@ class TestNestedNgForReorderContentChildren extends TestNgForBase {
   ContentProjectedChild? child;
 
   @override
-  List<HtmlElement>? get children => child!.children;
+  List<web.HTMLElement>? get children => child!.children;
 }
 
 @Component(
@@ -207,7 +207,7 @@ class TestReferencedNgForReorderContentChildren extends TestNgForBase {
   ContentProjectedChild? child;
 
   @override
-  List<HtmlElement>? get children => child!.children;
+  List<web.HTMLElement>? get children => child!.children;
 }
 
 @Component(
@@ -216,7 +216,7 @@ class TestReferencedNgForReorderContentChildren extends TestNgForBase {
 )
 class ContentProjectedChild {
   @ContentChildren('listItem')
-  List<HtmlElement>? children;
+  List<web.HTMLElement>? children;
 }
 
 @Component(
@@ -233,7 +233,7 @@ class ContentProjectedChild {
 class TestNgForReorderViewChildren extends TestNgForBase {
   @ViewChildren('listItem')
   @override
-  List<HtmlElement>? children;
+  List<web.HTMLElement>? children;
 }
 
 @Component(
@@ -253,7 +253,7 @@ class TestNgForReorderViewChildren extends TestNgForBase {
 class TestNestedNgForReorderViewChildren extends TestNgForBase {
   @ViewChildren('listItem')
   @override
-  List<HtmlElement>? children;
+  List<web.HTMLElement>? children;
 }
 
 @Component(
@@ -273,5 +273,5 @@ class TestNestedNgForReorderViewChildren extends TestNgForBase {
 class TestReferencedNgForReorderViewChildren extends TestNgForBase {
   @ViewChildren('listItem')
   @override
-  List<HtmlElement>? children;
+  List<web.HTMLElement>? children;
 }

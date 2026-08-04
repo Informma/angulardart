@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 // ignore: implementation_imports
@@ -37,7 +37,8 @@ class NgTestFixture<T> {
   Future<void> dispose() async {
     await update();
     // Remove the test bed's host element.
-    _rootComponentRef.location.parent!.remove();
+    final locationParent = _rootComponentRef.location.parentNode;
+    locationParent?.parentNode?.removeChild(locationParent);
     _applicationRef.dispose();
     if (isDevMode) {
       debugClearComponentStyles();
@@ -46,7 +47,7 @@ class NgTestFixture<T> {
   }
 
   /// Root element.
-  Element get rootElement => _rootComponentRef.location;
+  web.Element get rootElement => _rootComponentRef.location;
 
   /// Returns a future that completes after the DOM is reported stable.
   ///
@@ -77,7 +78,7 @@ class NgTestFixture<T> {
   /// All text nodes within the fixture.
   ///
   /// Provided as a convenience to do simple `expect` matchers.
-  String? get text => rootElement.text;
+  String? get text => rootElement.textContent;
 
   /// A component instance to use for read-only operations (expect, assert)
   /// ONLY.

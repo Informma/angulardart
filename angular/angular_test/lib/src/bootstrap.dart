@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 // ignore: implementation_imports
@@ -29,7 +29,7 @@ NgZone _createNgZone() => NgZone();
 /// setting up properties or state.
 Future<ComponentRef<E>> bootstrapForTest<E extends Object>(
   ComponentFactory<E> componentFactory,
-  Element hostElement,
+  web.Element hostElement,
   InjectorFactory userInjector, {
   FutureOr<void> Function(Injector)? beforeComponentCreated,
   FutureOr<void> Function(E)? beforeChangeDetection,
@@ -84,7 +84,7 @@ Future<ComponentRef<E>> bootstrapForTest<E extends Object>(
 Future<ComponentRef<E>> _runAndLoadComponent<E extends Object>(
   ApplicationRef appRef,
   ComponentFactory<E> componentFactory,
-  Element hostElement,
+  web.Element hostElement,
   Injector injector, {
   FutureOr<void> Function(E)? beforeChangeDetection,
 }) {

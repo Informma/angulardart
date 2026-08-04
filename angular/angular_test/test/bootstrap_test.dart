@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -12,42 +12,42 @@ void main() {
   Injector noopInjector(Injector i) => i;
 
   test('should create a new component in the DOM', () async {
-    final host = Element.div();
+    final host = web.document.createElement('div');
     final test = await bootstrapForTest(
       ng_generated.createNewComponentInDomFactory(),
       host,
       noopInjector,
     );
-    expect(host.text, contains('Hello World'));
+    expect(host.textContent, contains('Hello World'));
     test.destroy();
   });
 
   test('should call a synchronous handler before initial load', () async {
-    final host = Element.div();
+    final host = web.document.createElement('div');
     final test = await bootstrapForTest<BeforeChangeDetection>(
       ng_generated.createBeforeChangeDetectionFactory(),
       host,
       noopInjector,
       beforeChangeDetection: (comp) => comp.users.add('Mati'),
     );
-    expect(host.text, contains('Hello Mati!'));
+    expect(host.textContent, contains('Hello Mati!'));
     test.destroy();
   });
 
   test('should call an asynchronous handler before initial load', () async {
-    final host = Element.div();
+    final host = web.document.createElement('div');
     final test = await bootstrapForTest<BeforeChangeDetection>(
       ng_generated.createBeforeChangeDetectionFactory(),
       host,
       noopInjector,
       beforeChangeDetection: (comp) async => comp.users.add('Mati'),
     );
-    expect(host.text, contains('Hello Mati!'));
+    expect(host.textContent, contains('Hello Mati!'));
     test.destroy();
   });
 
   test('should include user-specified providers', () async {
-    final host = Element.div();
+    final host = web.document.createElement('div');
     final test = await bootstrapForTest<AddProviders>(
       ng_generated.createAddProvidersFactory(),
       host,
@@ -59,7 +59,7 @@ void main() {
   });
 
   test('should be able to call injector before component creation', () async {
-    final host = Element.div();
+    final host = web.document.createElement('div');
     TestService? testService;
     final test = await bootstrapForTest<AddProviders>(
         ng_generated.createAddProvidersFactory(),
@@ -82,7 +82,7 @@ void main() {
 
   test('should be able to call asynchronous injector before component creation',
       () async {
-    final host = Element.div();
+    final host = web.document.createElement('div');
     TestService? testService;
     final test = await bootstrapForTest<AddProviders>(
       ng_generated.createAddProvidersFactory(),

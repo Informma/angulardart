@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:web/web.dart' as web;
+
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_test/angulardart_test.dart';
@@ -131,7 +133,7 @@ class CatchNativeEventSynchronousErrors {
     ).create();
     expect(
       fixture.update((_) {
-        fixture.rootElement.querySelector('button')!.click();
+        (fixture.rootElement.querySelector('button') as web.HTMLElement).click();
       }),
       throwsA(isStateError),
     );
@@ -153,7 +155,7 @@ class CatchNativeEventAsynchronousErrors {
     ).create();
     expect(
       fixture.update((_) {
-        fixture.rootElement.querySelector('button')!.click();
+        (fixture.rootElement.querySelector('button') as web.HTMLElement).click();
       }),
       throwsA(isStateError),
     );
@@ -235,7 +237,7 @@ class NoExceptionsSwallowedTest {
     expect(fixture.text, 'Hello Angular');
     await fixture.update((c) => c.name = 'World');
     expect(fixture.text, 'Hello World');
-    final html = fixture.rootElement.innerHtml;
+    final html = fixture.rootElement.innerHTML;
     expect(html, '<h1>Hello World</h1>');
     await fixture.dispose();
 

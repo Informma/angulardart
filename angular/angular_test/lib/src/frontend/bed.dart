@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 // ignore: experimental_member_use
@@ -46,7 +46,7 @@ Future<NgTestFixture<T>> createDynamicFixture<T extends Object>(
 ///
 /// This is for compatibility reasons only and should not be used otherwise.
 NgTestBed<T> createDynamicTestBed<T extends Object>({
-  Element? host,
+  web.Element? host,
   InjectorFactory? rootInjector,
   bool watchAngularLifecycle = true,
 }) {
@@ -99,9 +99,9 @@ NgTestBed<T> createDynamicTestBed<T extends Object>({
 /// });
 /// ```
 class NgTestBed<T extends Object> {
-  static Element _defaultHost() {
-    final host = Element.tag('ng-test-bed');
-    document.body!.append(host);
+  static web.Element _defaultHost() {
+    final host = web.document.createElement('ng-test-bed');
+    web.document.body!.append(host);
     return host;
   }
 
@@ -128,7 +128,7 @@ class NgTestBed<T extends Object> {
     return RealTimeNgZoneStabilizer(timerZone!, injector.provideType(NgZone));
   }
 
-  final Element? _host;
+  final web.Element? _host;
   final List<Object> _providers;
   final NgTestStabilizerFactory _createStabilizer;
 
@@ -157,7 +157,7 @@ class NgTestBed<T extends Object> {
   /// ```
   factory NgTestBed(
     ComponentFactory<T> component, {
-    Element? host,
+    web.Element? host,
     InjectorFactory rootInjector = _defaultRootInjector,
     bool watchAngularLifecycle = true,
   }) {
@@ -182,7 +182,7 @@ class NgTestBed<T extends Object> {
   ///
   /// **WARNING**: Path not recommended. See [NgTestBed] instead.
   factory NgTestBed.useInitReflector({
-    Element? host,
+    web.Element? host,
     InjectorFactory? rootInjector,
     bool watchAngularLifecycle = true,
   }) {
@@ -198,7 +198,7 @@ class NgTestBed<T extends Object> {
 
   // Used for compatibility only.
   factory NgTestBed._allowDynamicType({
-    Element? host,
+    web.Element? host,
     InjectorFactory? rootInjector,
     bool watchAngularLifecycle = true,
   }) {
@@ -211,7 +211,7 @@ class NgTestBed<T extends Object> {
   }
 
   NgTestBed._({
-    Element? host,
+    web.Element? host,
     required Iterable<Object> providers,
     required NgTestStabilizerFactory stabilizer,
     InjectorFactory? rootInjector,
@@ -223,7 +223,7 @@ class NgTestBed<T extends Object> {
         _componentFactory = component;
 
   NgTestBed._useComponentFactory({
-    Element? host,
+    web.Element? host,
     required ComponentFactory<T> component,
     required InjectorFactory rootInjector,
     required bool watchAngularLifecycle,
@@ -387,7 +387,7 @@ class NgTestBed<T extends Object> {
   ///
   /// Any non-null value overrides the existing properties.
   NgTestBed<E> fork<E extends T>({
-    Element? host,
+    web.Element? host,
     ComponentFactory<E>? component,
     Iterable<Object>? providers,
     InjectorFactory? rootInjector,
@@ -408,5 +408,5 @@ class NgTestBed<T extends Object> {
   }
 
   /// Returns a new instance of [NgTestBed] with [host] overrode.
-  NgTestBed<T> setHost(Element host) => fork(host: host);
+  NgTestBed<T> setHost(web.Element host) => fork(host: host);
 }

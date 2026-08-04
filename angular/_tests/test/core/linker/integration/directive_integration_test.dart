@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -196,8 +196,8 @@ class UnboundDirectiveInputComponent {}
   selector: '[no-duplicate]',
 )
 class DuplicateDir {
-  DuplicateDir(HtmlElement element) {
-    element.text = '${element.text}noduplicate';
+  DuplicateDir(web.HTMLElement element) {
+    element.textContent = '${element.textContent}noduplicate';
   }
 }
 

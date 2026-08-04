@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -29,7 +29,7 @@ void main() {
     final testFixture = await testBed.create();
     expect(
       testFixture.assertOnlyInstance.captured!.reference,
-      const TypeMatcher<DivElement>(),
+      const TypeMatcher<web.HTMLDivElement>(),
     );
   });
 

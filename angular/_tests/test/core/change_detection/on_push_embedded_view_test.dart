@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -38,25 +38,25 @@ void main() {
     test('when embedded within the OnPush component of origin', () async {
       final component = fixture.assertOnlyInstance;
 
-      expect(component.templateProducer!.text, isEmpty);
+      expect(component.templateProducer!.textContent, isEmpty);
 
       await fixture.update((component) {
         component.templateText = 'Hello template!';
       });
 
-      expect(component.templateProducer!.text, contains('Hello template!'));
+      expect(component.templateProducer!.textContent, contains('Hello template!'));
 
       await fixture.update((component) {
         component.templateText = 'Goodbye template!';
       });
 
-      expect(component.templateProducer!.text, contains('Goodbye template!'));
+      expect(component.templateProducer!.textContent, contains('Goodbye template!'));
     });
 
     test('when embedded within a separate OnPush component', () async {
       final component = fixture.assertOnlyInstance;
 
-      expect(component.templateConsumer!.text, isEmpty);
+      expect(component.templateConsumer!.textContent, isEmpty);
 
       await fixture.update((component) {
         component.templateText = 'Hello template!';
@@ -66,7 +66,7 @@ void main() {
       // views to be updated. Any templates that originated within its view that
       // are embedded in a foreign OnPush view don't receive these changes.
       expect(
-        component.templateConsumer!.text,
+        component.templateConsumer!.textContent,
         contains('Hello template!'),
         skip: 'b/130433627',
       );
@@ -78,13 +78,13 @@ void main() {
       // The above change that was previously expected is now observed in the
       // template embedded in a foreign view container with an OnPush parent.
       expect(
-        component.templateConsumer!.text,
+        component.templateConsumer!.textContent,
         contains('Hello template!'),
         reason: 'Unrelated change to view container parent triggers change '
             'detection of nested views which delivers an old change from the '
             'template parent to the embedded view.',
       );
-      expect(component.templateConsumer!.text, contains('Hello consumer!'));
+      expect(component.templateConsumer!.textContent, contains('Hello consumer!'));
     });
   });
 }
@@ -108,11 +108,11 @@ void main() {
   ''',
 )
 class TestComponent {
-  @ViewChild('templateConsumer', read: Element)
-  Element? templateConsumer;
+  @ViewChild('templateConsumer', read: web.Element)
+  web.Element? templateConsumer;
 
-  @ViewChild('templateProducer', read: Element)
-  Element? templateProducer;
+  @ViewChild('templateProducer', read: web.Element)
+  web.Element? templateProducer;
 
   var templateText = '';
   var consumerText = '';

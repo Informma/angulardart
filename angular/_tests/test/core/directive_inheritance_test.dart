@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -63,7 +63,7 @@ void main() {
       final testFixture = await testBed.create()
         ..rootElement
             .querySelector('derived')!
-            .dispatchEvent(MouseEvent('click'));
+            .dispatchEvent(web.MouseEvent('click'));
       await testFixture.update((component) {
         expect(component.derivedComponent!.clickMessage, 'Original message');
       });
@@ -74,7 +74,7 @@ void main() {
       final testFixture = await testBed.create()
         ..rootElement
             .querySelector('override')!
-            .dispatchEvent(MouseEvent('click'));
+            .dispatchEvent(web.MouseEvent('click'));
       await testFixture.update((component) {
         expect(component.derivedComponent!.clickMessage, 'Overridden message');
       });

@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -11,24 +11,24 @@ void main() {
 
   test('should support @ViewChild with Element', () async {
     final fixture = await NgTestBed(ng.createUsesElementFactory()).create();
-    expect(fixture.assertOnlyInstance.element!.text, '1');
+    expect(fixture.assertOnlyInstance.element!.textContent, '1');
   });
 
   test('should support @ViewChild with HtmlElement', () async {
     final fixture = await NgTestBed(ng.createUsesHtmlElementFactory()).create();
-    expect(fixture.assertOnlyInstance.element!.text, '2');
+    expect(fixture.assertOnlyInstance.element!.textContent, '2');
   });
 
   test('should support @ViewChildren with Element', () async {
     final fixture =
         await NgTestBed(ng.createUsesListOfElementFactory()).create();
-    expect(fixture.assertOnlyInstance.elements!.map((e) => e.text), ['1', '2']);
+    expect(fixture.assertOnlyInstance.elements!.map((e) => e.textContent), ['1', '2']);
   });
 
   test('should support @ViewChildren with HtmlElement', () async {
     final fixture =
         await NgTestBed(ng.createUsesListOfHtmlElementFactory()).create();
-    expect(fixture.assertOnlyInstance.elements!.map((e) => e.text), ['1', '2']);
+    expect(fixture.assertOnlyInstance.elements!.map((e) => e.textContent), ['1', '2']);
   });
 }
 
@@ -38,7 +38,7 @@ void main() {
 )
 class UsesElement {
   @ViewChild('div')
-  Element? element;
+  web.Element? element;
 }
 
 @Component(
@@ -47,7 +47,7 @@ class UsesElement {
 )
 class UsesHtmlElement {
   @ViewChild('div')
-  HtmlElement? element;
+  web.HTMLElement? element;
 }
 
 @Component(
@@ -56,7 +56,7 @@ class UsesHtmlElement {
 )
 class UsesListOfElement {
   @ViewChildren('div')
-  List<Element>? elements;
+  List<web.Element>? elements;
 }
 
 @Component(
@@ -65,5 +65,5 @@ class UsesListOfElement {
 )
 class UsesListOfHtmlElement {
   @ViewChildren('div')
-  List<HtmlElement>? elements;
+  List<web.HTMLElement>? elements;
 }

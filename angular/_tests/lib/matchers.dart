@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -37,24 +37,34 @@ class _HasTextContent extends Matcher {
 String? _elementText(Object? n) {
   if (n is Iterable) {
     return n.map(_elementText).join('');
-  } else if (n is Node) {
-    if (n is Comment) {
+  } else if (n is web.Node) {
+    if (n is web.Comment) {
       return '';
     }
 
-    if (n is ContentElement) {
-      return _elementText(n.getDistributedNodes());
+    if (n is web.HTMLSlotElement) {
+      return _elementText(n.assignedNodes());
     }
 
-    if (n is Element && n.shadowRoot != null) {
-      return _elementText(n.shadowRoot!.nodes);
+    if (n is web.Element && n.shadowRoot != null) {
+      final nodes = <web.Node>[];
+      final childNodes = n.shadowRoot!.childNodes;
+      for (var i = 0; i < childNodes.length; i++) {
+        nodes.add(childNodes.item(i)!);
+      }
+      return _elementText(nodes);
     }
 
-    if (n.nodes.isNotEmpty) {
-      return _elementText(n.nodes);
+    final childNodes = n.childNodes;
+    if (childNodes.length > 0) {
+      final nodes = <web.Node>[];
+      for (var i = 0; i < childNodes.length; i++) {
+        nodes.add(childNodes.item(i)!);
+      }
+      return _elementText(nodes);
     }
 
-    return n.text;
+    return n.textContent;
   } else {
     return '$n';
   }

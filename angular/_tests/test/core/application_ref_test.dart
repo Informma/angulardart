@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -55,21 +55,21 @@ void main() {
 
   group('bootstrap should', () {
     test('replace an existing element if in the DOM', () {
-      final existing = Element.tag('hello-component')..text = 'Loading...';
-      document.body!.append(existing);
+      final existing = web.document.createElement('hello-component')..textContent = 'Loading...';
+      web.document.body!.append(existing);
       final comp = appRef.bootstrap(ng.createHelloComponentFactory());
-      expect(comp.location.text, 'Hello World');
+      expect(comp.location.textContent, 'Hello World');
       expect(
-        document.body!.querySelector('hello-component'),
+        web.document.body!.querySelector('hello-component'),
         same(comp.location),
       );
     });
 
     test('create a new element if missing from the DOM', () {
       final comp = appRef.bootstrap(ng.createHelloComponentFactory());
-      expect(comp.location.text, 'Hello World');
+      expect(comp.location.textContent, 'Hello World');
       expect(
-        document.body!.querySelector('hello-component'),
+        web.document.body!.querySelector('hello-component'),
         same(comp.location),
       );
     });

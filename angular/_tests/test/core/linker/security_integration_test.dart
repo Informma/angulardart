@@ -1,4 +1,5 @@
-import 'dart:html';
+import 'dart:js_interop';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -12,7 +13,7 @@ void main() {
   test('should escape unsafe attributes', () async {
     final testBed = NgTestBed(ng.createUnsafeAttributeComponentFactory());
     final testFixture = await testBed.create();
-    final a = testFixture.rootElement.querySelector('a') as AnchorElement;
+    final a = testFixture.rootElement.querySelector('a') as web.HTMLAnchorElement;
     expect(a.href, matches(r'.*/hello$'));
     await testFixture.update((component) {
       component.href = 'javascript:alert(1)';
@@ -24,32 +25,32 @@ void main() {
     final testBed = NgTestBed(ng.createUnsafeStyleComponentFactory());
     final testFixture = await testBed.create();
     final div = testFixture.rootElement.querySelector('div')!;
-    expect(div.style.background, matches('red'));
+    expect((div as web.HTMLElement).style.background, matches('red'));
     await testFixture.update((component) {
       component.backgroundStyle = 'url(javascript:evil())';
     });
-    expect(div.style.background, isNot(contains('javascript')));
+    expect((div as web.HTMLElement).style.background, isNot(contains('javascript')));
   });
 
   test('should escape unsafe HTML', () async {
     final testBed = NgTestBed(ng.createUnsafeHtmlComponentFactory());
     final testFixture = await testBed.create();
     final div = testFixture.rootElement.querySelector('div')!;
-    expect(div.innerHtml, 'some <p>text</p>');
+    expect((div.innerHTML as JSString).toDart, 'some <p>text</p>');
     await testFixture.update((component) {
       component.html = 'ha <script>evil()</script>';
     });
-    expect(div.innerHtml, 'ha ');
+    expect((div.innerHTML as JSString).toDart, 'ha ');
     await testFixture.update((component) {
       component.html = 'also <img src="x" onerror="evil()"> evil';
     });
-    expect(div.innerHtml, 'also <img src="x"> evil');
+    expect((div.innerHTML as JSString).toDart, 'also <img src="x"> evil');
     await testFixture.update((component) {
       final srcdoc = '<div></div><script></script>';
       component.html = 'also <iframe srcdoc="$srcdoc"> content</iframe>';
     });
     expect(
-      div.innerHtml,
+      (div.innerHTML as JSString).toDart,
       'also ',
     );
   }, tags: 'fails-on-ci');

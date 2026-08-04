@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_test/angulardart_test.dart';
@@ -6,15 +6,25 @@ import 'package:test/test.dart';
 
 import 'host_annotation_test.template.dart' as ng;
 
+Map<String, String> _attrs(web.Element el) {
+  final result = <String, String>{};
+  final attrs = el.attributes;
+  for (var i = 0; i < attrs.length; i++) {
+    final attr = attrs.item(i)!;
+    result[attr.name] = attr.value;
+  }
+  return result;
+}
+
 void main() {
   tearDown(disposeAnyRunningTest);
 
   /// Returns the root [Element] created by initializing [component].
-  Future<Element> rootElementOf<T extends Object>(
+  Future<web.HTMLElement> rootElementOf<T extends Object>(
     ComponentFactory<T> component,
   ) {
     final testBed = NgTestBed(component);
-    return testBed.create().then((fixture) => fixture.rootElement);
+    return testBed.create().then((fixture) => fixture.rootElement as web.HTMLElement);
   }
 
   group('@HostBinding', () {
@@ -88,16 +98,16 @@ void main() {
       );
       final fixture = await testBed.create();
       final element = fixture.rootElement;
-      expect(element.attributes, isNot(contains('disabled')));
-      expect(element.attributes, isNot(contains('aria-disabled')));
+      expect(_attrs(element), isNot(contains('disabled')));
+      expect(_attrs(element), isNot(contains('aria-disabled')));
 
       await fixture.update((c) => c.disabledBackingValue = true);
-      expect(element.attributes, contains('disabled'));
-      expect(element.attributes, contains('aria-disabled'));
+      expect(_attrs(element), contains('disabled'));
+      expect(_attrs(element), contains('aria-disabled'));
 
       await fixture.update((c) => c.disabledBackingValue = false);
-      expect(element.attributes, isNot(contains('disabled')));
-      expect(element.attributes, isNot(contains('aria-disabled')));
+      expect(_attrs(element), isNot(contains('disabled')));
+      expect(_attrs(element), isNot(contains('aria-disabled')));
     });
 
     test('should support conditional attributes on static members', () async {
@@ -106,8 +116,8 @@ void main() {
       );
       final fixture = await testBed.create();
       final element = fixture.rootElement;
-      expect(element.attributes, contains('disabled'));
-      expect(element.attributes, contains('aria-disabled'));
+      expect(_attrs(element), contains('disabled'));
+      expect(_attrs(element), contains('aria-disabled'));
     });
 
     test('should support conditional classes', () async {
@@ -116,13 +126,13 @@ void main() {
       );
       final fixture = await testBed.create();
       final element = fixture.rootElement;
-      expect(element.classes, isNot(contains('fancy')));
+      expect(element.classList.contains('fancy'), false);
 
       await fixture.update((c) => c.fancy = true);
-      expect(element.classes, contains('fancy'));
+      expect(element.classList.contains('fancy'), true);
 
       await fixture.update((c) => c.fancy = false);
-      expect(element.classes, isNot(contains('fancy')));
+      expect(element.classList.contains('fancy'), false);
     });
 
     test('should support multiple annotations on a single field', () async {
@@ -139,7 +149,7 @@ void main() {
       );
       final fixture = await testBed.create();
       fixture.assertOnlyInstance.clickHandler = expectAsync0(() {});
-      await fixture.update((_) => fixture.rootElement.click());
+      await fixture.update((_) => (fixture.rootElement as web.HTMLElement).click());
     });
 
     test('should support click through inheritance', () async {
@@ -148,7 +158,7 @@ void main() {
       );
       final fixture = await testBed.create();
       fixture.assertOnlyInstance.clickHandler = expectAsync0(() {});
-      await fixture.update((_) => fixture.rootElement.click());
+      await fixture.update((_) => (fixture.rootElement as web.HTMLElement).click());
     });
 
     test('should support multiple annotations on a single field', () async {
@@ -161,10 +171,10 @@ void main() {
         count: 2,
       );
       await fixture.update((_) {
-        fixture.rootElement.dispatchEvent(FocusEvent('focus'));
+        fixture.rootElement.dispatchEvent(web.FocusEvent('focus'));
       });
       await fixture.update((_) {
-        fixture.rootElement.dispatchEvent(FocusEvent('blur'));
+        fixture.rootElement.dispatchEvent(web.FocusEvent('blur'));
       });
     });
   });

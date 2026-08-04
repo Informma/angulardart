@@ -1,6 +1,6 @@
 library angular2.test.common.styling.shim_test;
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -266,14 +266,14 @@ class ChildComponent {}
 )
 class SvgComponentTest {}
 
-void expectColor(Element element, String color) {
-  var elementColor = element.getComputedStyle().color;
+void expectColor(web.Element element, String color) {
+  var elementColor = web.window.getComputedStyle(element).color;
   elementColor = colorToHex(elementColor);
   expect(elementColor, color);
 }
 
-void expectBackgroundColor(Element element, String color) {
-  var elementColor = element.getComputedStyle().backgroundColor;
+void expectBackgroundColor(web.Element element, String color) {
+  var elementColor = web.window.getComputedStyle(element).backgroundColor;
   elementColor = colorToHex(elementColor);
   expect(elementColor, color);
 }

@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -14,14 +14,14 @@ void main() {
     final testFixture = await testBed.create();
     // 1 template + 2 copies.
     expect(testFixture.rootElement.childNodes, hasLength(3));
-    expect(testFixture.rootElement.childNodes[1].text, 'hello');
-    expect(testFixture.rootElement.childNodes[2].text, 'again');
+    expect(testFixture.rootElement.childNodes.item(1)!.textContent, 'hello');
+    expect(testFixture.rootElement.childNodes.item(2)!.textContent, 'again');
   });
 
   test('should not detach views when parent is destroyed', () async {
     final testBed = NgTestBed(ng.createDestroyParentViewComponentFactory());
     final testFixture = await testBed.create();
-    final ngIfElement = testFixture.rootElement.children.first;
+    final ngIfElement = testFixture.rootElement.children.item(0)!;
     final someViewport = testFixture.assertOnlyInstance.viewport!;
     expect(ngIfElement.children, hasLength(2));
     expect(someViewport.container, hasLength(2));
@@ -35,7 +35,7 @@ void main() {
     final testFixture = await testBed.create();
     final childNodes = testFixture.rootElement.childNodes;
     expect(childNodes, hasLength(1));
-    expect(childNodes.first, TypeMatcher<Comment>());
+    expect(childNodes.item(0), TypeMatcher<web.Comment>());
   });
 
   test('should transplant TemplateRef into another ViewContainer', () async {

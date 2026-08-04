@@ -3,7 +3,7 @@
 library angular.test.bootstrap.run_app_test;
 
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:js/js.dart';
 import 'package:test/test.dart';
@@ -16,7 +16,7 @@ void main() {
   ng.initReflector();
 
   late ComponentRef<HelloWorldComponent> component;
-  late Element rootDomContainer;
+  late web.Element rootDomContainer;
 
   FutureOr<T> runInApp<T>(T Function() fn) {
     final appRef = component.injector.provideType<ApplicationRef>(
@@ -27,9 +27,9 @@ void main() {
 
   /// Verify that the DOM of the page represents the component.
   void verifyDomAndStyles({String innerText = 'Hello World!'}) {
-    expect(rootDomContainer.text, innerText);
+    expect(rootDomContainer.textContent, innerText);
     final h1 = rootDomContainer.querySelector('h1');
-    expect(h1!.getComputedStyle().height, '100px');
+    expect(web.window.getComputedStyle(h1!).height, '100px');
   }
 
   /// Verify the `Testability` interface is working for this application.
@@ -38,7 +38,7 @@ void main() {
   void verifyTestability() {
     expect(component.injector.get(Testability), isNotNull);
     var jsTestability = getAngularTestability(
-      rootDomContainer.children.first,
+      rootDomContainer.children.item(0)!,
     );
     expect(getAllAngularTestabilities(), isNot(hasLength(0)));
     expect(jsTestability.isStable(), isTrue, reason: 'Expected stability');
@@ -53,14 +53,15 @@ void main() {
   }
 
   setUp(() {
-    rootDomContainer = DivElement()..id = 'test-root-dom';
-    rootDomContainer.append(Element.tag('hello-world'));
-    document.body!.append(rootDomContainer);
+    rootDomContainer = web.document.createElement('div') as web.HTMLDivElement;
+    rootDomContainer.id = 'test-root-dom';
+    rootDomContainer.append(web.document.createElement('hello-world'));
+    web.document.body!.append(rootDomContainer);
     HelloWorldComponent.name = 'World';
   });
 
   tearDown(() {
-    rootDomContainer.remove();
+    rootDomContainer.parentNode?.removeChild(rootDomContainer);
     final appRef = component.injector.provideType<ApplicationRef>(
       ApplicationRef,
     );
@@ -191,7 +192,7 @@ class StubExceptionHandler implements ExceptionHandler {
 }
 
 @JS()
-external JsTestability getAngularTestability(Element e);
+external JsTestability getAngularTestability(web.Element e);
 
 @JS()
 external List<JsTestability> getAllAngularTestabilities();

@@ -1,5 +1,5 @@
-import 'dart:html';
-import 'dart:js';
+import 'dart:js_interop';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -13,7 +13,7 @@ void main() {
   test("Should receive 'keydown' event", () async {
     var testBed = NgTestBed(ng.createKeydownListenerComponentFactory());
     var testFixture = await testBed.create();
-    var event = KeyboardEvent('keydown');
+    var event = web.KeyboardEvent('keydown');
     testFixture.rootElement.dispatchEvent(event);
     await testFixture.update((component) {
       expect(component.receivedKeydown, true);
@@ -25,7 +25,7 @@ void main() {
   test("Should receive 'keydown.a' event", () async {
     var testBed = NgTestBed(ng.createKeydownListenerComponentFactory());
     var testFixture = await testBed.create();
-    var event = createKeyboardEvent('keydown', KeyCode.A);
+    var event = createKeyboardEvent('keydown', 65);
     testFixture.rootElement.dispatchEvent(event);
     await testFixture.update((component) {
       expect(component.receivedKeydown, true);
@@ -37,7 +37,7 @@ void main() {
   test("Should receive 'keydown.shift.a", () async {
     var testBed = NgTestBed(ng.createKeydownListenerComponentFactory());
     var testFixture = await testBed.create();
-    var event = createKeyboardEvent('keydown', KeyCode.A, shiftKey: true);
+    var event = createKeyboardEvent('keydown', 65, shiftKey: true);
     testFixture.rootElement.dispatchEvent(event);
     await testFixture.update((component) {
       expect(component.receivedKeydown, true);
@@ -49,7 +49,7 @@ void main() {
   test("Should receive 'keypress' event", () async {
     var testBed = NgTestBed(ng.createKeypressListenerComponentFactory());
     var testFixture = await testBed.create();
-    var event = KeyboardEvent('keypress');
+    var event = web.KeyboardEvent('keypress');
     testFixture.rootElement.dispatchEvent(event);
     await testFixture.update((component) {
       expect(component.receivedKeypress, true);
@@ -59,7 +59,7 @@ void main() {
   test("Should receive 'keyup' event", () async {
     var testBed = NgTestBed(ng.createKeyupListenerComponentFactory());
     var testFixture = await testBed.create();
-    var event = KeyboardEvent('keyup');
+    var event = web.KeyboardEvent('keyup');
     testFixture.rootElement.dispatchEvent(event);
     await testFixture.update((component) {
       expect(component.receivedKeyup, true);
@@ -71,7 +71,7 @@ void main() {
   test("Should receive 'keyup.enter' event", () async {
     var testBed = NgTestBed(ng.createKeyupListenerComponentFactory());
     var testFixture = await testBed.create();
-    var event = createKeyboardEvent('keyup', KeyCode.ENTER);
+    var event = createKeyboardEvent('keyup', 13);
     testFixture.rootElement.dispatchEvent(event);
     await testFixture.update((component) {
       expect(component.receivedKeyup, true);
@@ -83,7 +83,7 @@ void main() {
   test("Should receive 'keyup.control.enter' event", () async {
     var testBed = NgTestBed(ng.createKeyupListenerComponentFactory());
     var testFixture = await testBed.create();
-    var event = createKeyboardEvent('keyup', KeyCode.ENTER, ctrlKey: true);
+    var event = createKeyboardEvent('keyup', 13, ctrlKey: true);
     testFixture.rootElement.dispatchEvent(event);
     await testFixture.update((component) {
       expect(component.receivedKeyup, true);
@@ -95,7 +95,7 @@ void main() {
   test('Should receive keyboard event with multiple modifiers', () async {
     var testBed = NgTestBed(ng.createModifiersListenerFactory());
     var testFixture = await testBed.create();
-    var event = createKeyboardEvent('keyup', KeyCode.NUM_ZERO,
+    var event = createKeyboardEvent('keyup', 48,
         altKey: true, metaKey: true);
     testFixture.rootElement.dispatchEvent(event);
     await testFixture.update((component) {
@@ -164,32 +164,7 @@ class ModifiersListener {
   bool receivedModifiers = false;
 }
 
-const CREATE_KEYBOARD_EVENT_NAME = '__dart_createKeyboardEvent';
-const CREATE_KEYBOARD_EVENT_SCRIPT = '''
-window['$CREATE_KEYBOARD_EVENT_NAME'] = function(
-    type, keyCode, ctrlKey, altKey, shiftKey, metaKey) {
-  var event = document.createEvent('KeyboardEvent');
-
-  // Chromium hack.
-  Object.defineProperty(event, 'keyCode', {
-    get: function() { return keyCode; }
-  });
-
-  // Creating keyboard events programmatically isn't supported and relies on
-  // these deprecated APIs.
-  if (event.initKeyboardEvent) {
-    event.initKeyboardEvent(type, true, true, document.defaultView, keyCode,
-        keyCode, ctrlKey, altKey, shiftKey, metaKey);
-  } else {
-    event.initKeyEvent(type, true, true, document.defaultView, ctrlKey, altKey,
-        shiftKey, metaKey, keyCode, keyCode);
-  }
-
-  return event;
-}
-''';
-
-Event createKeyboardEvent(
+web.KeyboardEvent createKeyboardEvent(
   String type,
   int keyCode, {
   bool ctrlKey = false,
@@ -197,18 +172,15 @@ Event createKeyboardEvent(
   bool shiftKey = false,
   bool metaKey = false,
 }) {
-  if (!context.hasProperty(CREATE_KEYBOARD_EVENT_NAME)) {
-    var script = document.createElement('script')
-      ..setAttribute('type', 'text/javascript')
-      ..text = CREATE_KEYBOARD_EVENT_SCRIPT;
-    document.body!.append(script);
-  }
-  return context.callMethod(CREATE_KEYBOARD_EVENT_NAME, [
-    type,
-    keyCode,
-    ctrlKey,
-    altKey,
-    shiftKey,
-    metaKey,
-  ]) as Event;
+  return web.KeyboardEvent(type,
+    web.KeyboardEventInit(
+      keyCode: keyCode,
+      ctrlKey: ctrlKey,
+      altKey: altKey,
+      shiftKey: shiftKey,
+      metaKey: metaKey,
+      bubbles: true,
+      cancelable: true,
+    ),
+  );
 }

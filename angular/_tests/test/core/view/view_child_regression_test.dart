@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -37,11 +37,11 @@ void main() {
   ],
 )
 class ViewChildTest {
-  @ViewChild('portal', read: Element)
-  Element? portalElement;
+  @ViewChild('portal', read: web.Element)
+  web.Element? portalElement;
 
-  @ViewChild('container', read: Element)
-  Element? containerElement;
+  @ViewChild('container', read: web.Element)
+  web.Element? containerElement;
 
   @ViewChild('marker', read: ViewContainerRef)
   ViewContainerRef? markerViewContainer;

@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -32,7 +32,7 @@ void main() {
     final testFixture = await testBed.create();
     expect(testFixture.text, isEmpty);
     await testFixture.update((_) {
-      testFixture.rootElement.firstChild!.dispatchEvent(CustomEvent('set'));
+      testFixture.rootElement.firstChild!.dispatchEvent(web.CustomEvent('set'));
     });
     expect(testFixture.text, TestStaticSetter.valueToSet);
   });
@@ -102,13 +102,13 @@ class TestCallingStaticField {
 
 @Directive(selector: '[invoke]')
 class InvokeTearOff {
-  final Element _host;
+  final web.Element _host;
 
   InvokeTearOff(this._host);
 
   @Input()
   set invoke(String Function() value) {
-    _host.text = value();
+    _host.textContent = value();
   }
 }
 

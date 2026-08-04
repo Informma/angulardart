@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -51,21 +51,21 @@ void main() {
     final testBed = NgTestBed(ng.createPushCmpHostComponentFactory());
     final testFixture = await testBed.create();
     final cmp = testFixture.assertOnlyInstance.child!;
-    final cmpElement = testFixture.rootElement.children.first;
+    final cmpElement = testFixture.rootElement.children.item(0)!;
     expect(cmp.numberOfChecks, 1);
     // Regular element.
     await testFixture.update((_) {
-      cmpElement.children[0].dispatchEvent(MouseEvent('click'));
+      cmpElement.children.item(0)!.dispatchEvent(web.MouseEvent('click'));
     });
     expect(cmp.numberOfChecks, 2);
     // Element inside an *ngIf.
     await testFixture.update((_) {
-      cmpElement.children[1].dispatchEvent(MouseEvent('click'));
+      cmpElement.children.item(1)!.dispatchEvent(web.MouseEvent('click'));
     });
     expect(cmp.numberOfChecks, 3);
     // Element inside a child component.
     await testFixture.update((_) {
-      cmpElement.children[2].children[0].dispatchEvent(MouseEvent('click'));
+      cmpElement.children.item(2)!.children.item(0)!.dispatchEvent(web.MouseEvent('click'));
     });
     expect(cmp.numberOfChecks, 4);
   });

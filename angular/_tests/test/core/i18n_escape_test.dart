@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -36,7 +36,7 @@ void main() {
       final testBed = NgTestBed(ng.createShouldEscapeI18nPropertyFactory());
       final testFixture = await testBed.create();
       final imgElement =
-          testFixture.rootElement.querySelector('img') as ImageElement;
+          testFixture.rootElement.querySelector('img') as web.HTMLImageElement;
       expect(imgElement.alt, matches(regExp));
     });
 

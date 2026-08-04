@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -19,8 +19,8 @@ void main() {
     var testBed = NgTestBed(ng.createTestContainerFactory());
     var testRoot = await testBed.create();
     var targetElement = testRoot.rootElement.querySelector('.mytarget')!;
-    expect(targetElement.firstChild!.text, 'ChildHello');
-    expect(targetElement.attributes['data-xyz'], 'abc');
+    expect(targetElement.firstChild!.textContent, 'ChildHello');
+    expect(targetElement.attributes.getNamedItem('data-xyz')?.value, 'abc');
   });
 }
 
@@ -55,8 +55,8 @@ class SomeDirective {
   bool disabled = true;
 
   @HostListener('click')
-  void handleClick(Event e) {}
+  void handleClick(web.Event e) {}
 
   @HostListener('keypress')
-  void handleKeyPress(KeyEvent e) {}
+  void handleKeyPress(web.KeyboardEvent e) {}
 }

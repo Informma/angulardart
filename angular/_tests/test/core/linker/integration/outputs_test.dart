@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -46,19 +46,19 @@ void main() {
   test('should support render events', () async {
     final testBed = NgTestBed(ng.createElementWithDomEventComponentFactory());
     final testFixture = await testBed.create();
-    final div = testFixture.rootElement.children.first;
+    final div = testFixture.rootElement.children.item(0)!;
     final listener = testFixture.assertOnlyInstance.listener;
-    await testFixture.update((_) => div.dispatchEvent(Event('click')));
+    await testFixture.update((_) => div.dispatchEvent(web.Event('click')));
     expect(listener!.eventTypes, ['click']);
   });
 
   test('should support preventing default on render events', () async {
     final testBed = NgTestBed(ng.createTestPreventDefaultComponentFactory());
     final testFixture = await testBed.create();
-    final inputPrevent = testFixture.rootElement.children[0] as InputElement;
-    final inputNoPrevent = testFixture.rootElement.children[1] as InputElement;
-    final clickPrevent = MouseEvent('click');
-    final clickNoPrevent = MouseEvent('click');
+    final inputPrevent = testFixture.rootElement.children.item(0)! as web.HTMLInputElement;
+    final inputNoPrevent = testFixture.rootElement.children.item(1)! as web.HTMLInputElement;
+    final clickPrevent = web.MouseEvent('click');
+    final clickNoPrevent = web.MouseEvent('click');
     inputPrevent.dispatchEvent(clickPrevent);
     inputNoPrevent.dispatchEvent(clickNoPrevent);
     await testFixture.update();
@@ -193,7 +193,7 @@ class ElementWithDomEventComponent {
 )
 class DirectiveListeningDomEventPrevent {
   @HostListener('click')
-  void onEvent(Event event) {
+  void onEvent(web.Event event) {
     event.preventDefault();
   }
 }
@@ -203,7 +203,7 @@ class DirectiveListeningDomEventPrevent {
 )
 class DirectiveListeningDomEventNoPrevent {
   @HostListener('click')
-  void onEvent(Event event) {}
+  void onEvent(web.Event event) {}
 }
 
 @Component(

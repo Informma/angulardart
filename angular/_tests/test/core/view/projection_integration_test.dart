@@ -1,4 +1,5 @@
-import 'dart:html';
+import 'dart:js_interop';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -178,7 +179,7 @@ void main() {
       var testBed = NgTestBed(ng.createSwitchOrderTestFactory());
       var fixture = await testBed.create();
       expect(
-          fixture.rootElement.innerHtml,
+          (fixture.rootElement.innerHTML as JSString).toDart,
           '<cmp-a><cmp-b><cmp-d><d>cmp-d</d></cmp-d></cmp-b>'
           '<cmp-c><c>cmp-c</c></cmp-c></cmp-a>');
     });
@@ -186,7 +187,7 @@ void main() {
       var testBed = NgTestBed(ng.createCorrectOrderTestFactory());
       var fixture = await testBed.create();
       expect(
-          fixture.rootElement.innerHtml,
+          (fixture.rootElement.innerHTML as JSString).toDart,
           '<cmp-a1>a1<cmp-b11>b11</cmp-b11><cmp-b12>b12</cmp-b12></cmp-a1>'
           '<cmp-a2>a2<cmp-b21>b21</cmp-b21><cmp-b22>b22</cmp-b22></cmp-a2>');
     });
@@ -639,7 +640,7 @@ class RecursiveTree {
 )
 class CmpD {
   final String tagName;
-  CmpD(Element element) : tagName = element.tagName.toLowerCase();
+  CmpD(web.Element element) : tagName = element.tagName.toLowerCase();
 }
 
 @Component(
@@ -648,7 +649,7 @@ class CmpD {
 )
 class CmpC {
   final String tagName;
-  CmpC(Element element) : tagName = element.tagName.toLowerCase();
+  CmpC(web.Element element) : tagName = element.tagName.toLowerCase();
 }
 
 @Component(

@@ -34,8 +34,8 @@ void main() {
     });
     test('should allow non asset urls as import urls and pass them through',
         () {
-      expect(getImportModulePath('asset:somePkg/lib/modPath', 'dart:html'),
-          'dart:html');
+      expect(getImportModulePath('asset:somePkg/lib/modPath', 'package:web/web.dart'),
+          'package:web/web.dart');
     });
   });
 }

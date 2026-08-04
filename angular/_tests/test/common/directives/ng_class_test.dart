@@ -1,10 +1,24 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_test/angulardart_test.dart';
 
 import 'ng_class_test.template.dart' as ng;
+
+extension _CssClasses on web.Element {
+  List<String> get cssClasses {
+    final result = <String>[];
+    for (var i = 0; i < classList.length; i++) {
+      result.add(classList.item(i)!);
+    }
+    return result;
+  }
+}
+
+void _expectClasses(web.Element element, Object matcher) {
+  expect(element.cssClasses, matcher);
+}
 
 void main() {
   tearDown(disposeAnyRunningTest);
@@ -24,7 +38,7 @@ void main() {
         ];
       });
       expect(
-        testFixture.rootElement.querySelector('div')!.classes,
+        testFixture.rootElement.querySelector('div')!.cssClasses,
         equals(['1']),
       );
     });
@@ -34,7 +48,7 @@ void main() {
       var testBed = NgTestBed(ng.createClassWithNamesFactory());
       var testFixture = await testBed.create();
       expect(
-        testFixture.rootElement.querySelector('div')!.classes,
+        testFixture.rootElement.querySelector('div')!.cssClasses,
         equals(['foo-bar', 'fooBar']),
       );
     });
@@ -43,30 +57,30 @@ void main() {
       var testBed = NgTestBed(ng.createConditionMapTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture.update((ConditionMapTest component) {
         component.condition = false;
       });
-      expect(content.classes, equals(['bar']));
+      expect(content.cssClasses, equals(['bar']));
     });
 
     test('should update classes based on changes to the map', () async {
       var testBed = NgTestBed(ng.createMapUpdateTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture.update((MapUpdateTest component) {
         component.map!['bar'] = true;
       });
-      expect(content.classes, equals(['foo', 'bar']));
+      expect(content.cssClasses, equals(['foo', 'bar']));
       await testFixture.update((MapUpdateTest component) {
         component.map!['baz'] = true;
       });
-      expect(content.classes, equals(['foo', 'bar', 'baz']));
+      expect(content.cssClasses, equals(['foo', 'bar', 'baz']));
       await testFixture.update((MapUpdateTest component) {
         component.map!.remove('bar');
       });
-      expect(content.classes, equals(['foo', 'baz']));
+      expect(content.cssClasses, equals(['foo', 'baz']));
     });
 
     test('should update classes based on reference changes to the map',
@@ -74,30 +88,30 @@ void main() {
       var testBed = NgTestBed(ng.createMapUpdateTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture.update((MapUpdateTest component) {
         component.map = <String, bool>{'foo': true, 'bar': true};
       });
-      expect(content.classes, equals(['foo', 'bar']));
+      expect(content.cssClasses, equals(['foo', 'bar']));
       await testFixture.update((MapUpdateTest component) {
         component.map = <String, bool>{'baz': true};
       });
-      expect(content.classes, equals(['baz']));
+      expect(content.cssClasses, equals(['baz']));
     });
 
     test('should remove classes when expression is null', () async {
       var testBed = NgTestBed(ng.createMapUpdateTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture.update((MapUpdateTest component) {
         component.map = null;
       });
-      expect(content.classes, isEmpty);
+      expect(content.cssClasses, isEmpty);
       await testFixture.update((MapUpdateTest component) {
         component.map = <String, bool>{'foo': false, 'bar': true};
       });
-      expect(content.classes, equals(['bar']));
+      expect(content.cssClasses, equals(['bar']));
     });
 
     test('should allow multiple classes per expression', () async {
@@ -107,11 +121,11 @@ void main() {
       await testFixture.update((MapUpdateTest component) {
         component.map = <String, bool>{'bar baz': true, 'bar1 baz1': true};
       });
-      expect(content.classes, equals(['bar', 'baz', 'bar1', 'baz1']));
+      expect(content.cssClasses, equals(['bar', 'baz', 'bar1', 'baz1']));
       await testFixture.update((MapUpdateTest component) {
         component.map = <String, bool>{'bar baz': false, 'bar1 baz1': true};
       });
-      expect(content.classes, equals(['bar1', 'baz1']));
+      expect(content.cssClasses, equals(['bar1', 'baz1']));
     });
 
     test('should split by one or more spaces between classes', () async {
@@ -121,37 +135,37 @@ void main() {
       await testFixture.update((MapUpdateTest component) {
         component.map = <String, bool>{'foo bar     baz': true};
       });
-      expect(content.classes, equals(['foo', 'bar', 'baz']));
+      expect(content.cssClasses, equals(['foo', 'bar', 'baz']));
     });
 
     test('should update classes based on changes to the list', () async {
       var testBed = NgTestBed(ng.createListUpdateTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture.update((ListUpdateTest component) {
         component.list.add('bar');
       });
-      expect(content.classes, equals(['foo', 'bar']));
+      expect(content.cssClasses, equals(['foo', 'bar']));
       await testFixture.update((ListUpdateTest component) {
         component.list[1] = 'baz';
       });
-      expect(content.classes, equals(['foo', 'baz']));
+      expect(content.cssClasses, equals(['foo', 'baz']));
       await testFixture.update((ListUpdateTest component) {
         component.list.remove('baz');
       });
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
     });
 
     test('should update classes when list reference changes', () async {
       var testBed = NgTestBed(ng.createListUpdateTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture.update((ListUpdateTest component) {
         component.list = ['bar'];
       });
-      expect(content.classes, equals(['bar']));
+      expect(content.cssClasses, equals(['bar']));
     });
 
     test('should take initial classes into account when a reference changes',
@@ -159,11 +173,11 @@ void main() {
       var testBed = NgTestBed(ng.createListUpdateWithInitialTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture.update((ListUpdateWithInitialTest component) {
         component.list = ['bar'];
       });
-      expect(content.classes, equals(['foo', 'bar']));
+      expect(content.cssClasses, equals(['foo', 'bar']));
     });
 
     test('should ignore empty or blank class names', () async {
@@ -173,7 +187,7 @@ void main() {
       await testFixture.update((ListUpdateWithInitialTest component) {
         component.list = ['', '  '];
       });
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
     });
 
     test('should trim blanks from class names', () async {
@@ -183,7 +197,7 @@ void main() {
       await testFixture.update((ListUpdateWithInitialTest component) {
         component.list = [' bar  '];
       });
-      expect(content.classes, equals(['foo', 'bar']));
+      expect(content.cssClasses, equals(['foo', 'bar']));
     });
 
     test('should allow multiple classes per item in lists', () async {
@@ -193,12 +207,12 @@ void main() {
       await testFixture.update((ListUpdateTest component) {
         component.list = ['foo bar baz', 'foo1 bar1   baz1'];
       });
-      expect(content.classes,
+      expect(content.cssClasses,
           equals(['foo', 'bar', 'baz', 'foo1', 'bar1', 'baz1']));
       await testFixture.update((ListUpdateTest component) {
         component.list = ['foo bar   baz foobar'];
       });
-      expect(content.classes, equals(['foo', 'bar', 'baz', 'foobar']));
+      expect(content.cssClasses, equals(['foo', 'bar', 'baz', 'foobar']));
     });
 
     test('should update classes if the set instance changes', () async {
@@ -210,35 +224,35 @@ void main() {
       await testFixture.update((SetUpdateTest component) {
         component.set = set;
       });
-      expect(content.classes, equals(['bar']));
+      expect(content.cssClasses, equals(['bar']));
       set = <String>{};
       set.add('baz');
       await testFixture.update((SetUpdateTest component) {
         component.set = set;
       });
-      expect(content.classes, equals(['baz']));
+      expect(content.cssClasses, equals(['baz']));
     });
 
     test('should add classes specified in a string literal', () async {
       var testBed = NgTestBed(ng.createStringLiteralTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo', 'bar', 'foo-bar', 'fooBar']));
+      expect(content.cssClasses, equals(['foo', 'bar', 'foo-bar', 'fooBar']));
     });
 
     test('should update classes based on changes to the string', () async {
       var testBed = NgTestBed(ng.createStringUpdateTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture.update((StringUpdateTest component) {
         component.string = 'foo bar';
       });
-      expect(content.classes, equals(['foo', 'bar']));
+      expect(content.cssClasses, equals(['foo', 'bar']));
       await testFixture.update((StringUpdateTest component) {
         component.string = 'baz';
       });
-      expect(content.classes, equals(['baz']));
+      expect(content.cssClasses, equals(['baz']));
     });
 
     test('should remove active classes when switching from string to null',
@@ -246,11 +260,11 @@ void main() {
       var testBed = NgTestBed(ng.createStringUpdateTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture.update((StringUpdateTest component) {
         component.string = null;
       });
-      expect(content.classes, isEmpty);
+      expect(content.cssClasses, isEmpty);
     });
 
     test(
@@ -259,11 +273,11 @@ void main() {
       var testBed = NgTestBed(ng.createStringUpdateWithInitialTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture.update((StringUpdateWithInitialTest component) {
         component.string = null;
       });
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
     });
 
     test('should ignore empty and blank strings', () async {
@@ -273,7 +287,7 @@ void main() {
       await testFixture.update((StringUpdateWithInitialTest component) {
         component.string = '';
       });
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
     });
 
     test('should cooperate with the class attribute', () async {
@@ -283,15 +297,15 @@ void main() {
       await testFixture.update((MapUpdateWithInitialTest component) {
         component.map!['bar'] = true;
       });
-      expect(content.classes, equals(['init', 'foo', 'bar']));
+      expect(content.cssClasses, equals(['init', 'foo', 'bar']));
       await testFixture.update((MapUpdateWithInitialTest component) {
         component.map!['foo'] = false;
       });
-      expect(content.classes, equals(['init', 'bar']));
+      expect(content.cssClasses, equals(['init', 'bar']));
       await testFixture.update((MapUpdateWithInitialTest component) {
         component.map = null;
       });
-      expect(content.classes, equals(['init', 'foo']));
+      expect(content.cssClasses, equals(['init', 'foo']));
     });
 
     test('should cooperate with interpolated class attribute', () async {
@@ -303,17 +317,17 @@ void main() {
           .update((MapUpdateWithInitialInterpolationTest component) {
         component.map!['bar'] = true;
       });
-      expect(content.classes, equals(['init', 'foo', 'bar']));
+      expect(content.cssClasses, equals(['init', 'foo', 'bar']));
       await testFixture
           .update((MapUpdateWithInitialInterpolationTest component) {
         component.map!['foo'] = false;
       });
-      expect(content.classes, equals(['init', 'bar']));
+      expect(content.cssClasses, equals(['init', 'bar']));
       await testFixture
           .update((MapUpdateWithInitialInterpolationTest component) {
         component.map = null;
       });
-      expect(content.classes, equals(['init', 'foo']));
+      expect(content.cssClasses, equals(['init', 'foo']));
     });
 
     test('should cooperate with class attribute and binding to it', () async {
@@ -324,15 +338,15 @@ void main() {
       await testFixture.update((MapUpdateWithInitialBindingTest component) {
         component.map!['bar'] = true;
       });
-      expect(content.classes, equals(['init', 'foo', 'bar']));
+      expect(content.cssClasses, equals(['init', 'foo', 'bar']));
       await testFixture.update((MapUpdateWithInitialBindingTest component) {
         component.map!['foo'] = false;
       });
-      expect(content.classes, equals(['init', 'bar']));
+      expect(content.cssClasses, equals(['init', 'bar']));
       await testFixture.update((MapUpdateWithInitialBindingTest component) {
         component.map = null;
       });
-      expect(content.classes, equals(['init', 'foo']));
+      expect(content.cssClasses, equals(['init', 'foo']));
     });
 
     test('should cooperate with class attribute and class.name binding',
@@ -341,19 +355,19 @@ void main() {
           NgTestBed(ng.createMapUpdateWithConditionBindingTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['init', 'foo', 'baz']));
+      expect(content.cssClasses, equals(['init', 'foo', 'baz']));
       await testFixture.update((MapUpdateWithConditionBindingTest component) {
         component.map!['bar'] = true;
       });
-      expect(content.classes, equals(['init', 'foo', 'baz', 'bar']));
+      expect(content.cssClasses, equals(['init', 'foo', 'baz', 'bar']));
       await testFixture.update((MapUpdateWithConditionBindingTest component) {
         component.map!['foo'] = false;
       });
-      expect(content.classes, equals(['init', 'baz', 'bar']));
+      expect(content.cssClasses, equals(['init', 'baz', 'bar']));
       await testFixture.update((MapUpdateWithConditionBindingTest component) {
         component.condition = false;
       });
-      expect(content.classes, equals(['init', 'bar']));
+      expect(content.cssClasses, equals(['init', 'bar']));
     });
 
     test(
@@ -362,19 +376,19 @@ void main() {
       var testBed = NgTestBed(ng.createMapUpdateWithStringBindingTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['init', 'foo']));
+      expect(content.cssClasses, equals(['init', 'foo']));
       await testFixture.update((MapUpdateWithStringBindingTest component) {
         component.map!['bar'] = true;
       });
-      expect(content.classes, equals(['init', 'foo', 'bar']));
+      expect(content.cssClasses, equals(['init', 'foo', 'bar']));
       await testFixture.update((MapUpdateWithStringBindingTest component) {
         component.string = 'baz';
       });
-      expect(content.classes, equals(['init', 'bar', 'baz', 'foo']));
+      expect(content.cssClasses, equals(['init', 'bar', 'baz', 'foo']));
       await testFixture.update((MapUpdateWithStringBindingTest component) {
         component.map = null;
       });
-      expect(content.classes, equals(['init', 'baz']));
+      expect(content.cssClasses, equals(['init', 'baz']));
     });
 
     test(
@@ -384,17 +398,17 @@ void main() {
           NgTestBed(ng.createInterpolationWithConditionBindingTestFactory());
       var testFixture = await testBed.create();
       var content = testFixture.rootElement.querySelector('div')!;
-      expect(content.classes, equals(['foo', 'baz']));
+      expect(content.cssClasses, equals(['foo', 'baz']));
       await testFixture
           .update((InterpolationWithConditionBindingTest component) {
         component.condition = false;
       });
-      expect(content.classes, equals(['foo']));
+      expect(content.cssClasses, equals(['foo']));
       await testFixture
           .update((InterpolationWithConditionBindingTest component) {
         component.condition = true;
       });
-      expect(content.classes, equals(['foo', 'baz']));
+      expect(content.cssClasses, equals(['foo', 'baz']));
     });
   });
 
@@ -668,9 +682,14 @@ class MapUpdateWithStringBindingTest extends Base {}
 )
 class InterpolationWithConditionBindingTest extends Base {}
 
-extension _SumCssClasses on Element {
+extension _SumCssClasses on web.Element {
   Iterable<String> get allCssClasses {
-    return querySelectorAll('*').map((e) => e.classes).expand((c) => c);
+    final all = querySelectorAll('*');
+    final result = <List<String>>[];
+    for (var i = 0; i < all.length; i++) {
+      result.add((all.item(i)! as web.Element).cssClasses);
+    }
+    return result.expand((c) => c);
   }
 }
 

@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 // ignore: implementation_imports
@@ -45,13 +45,13 @@ String _extractId(String valueString) => valueString.split(':')[0];
 class SelectControlValueAccessor extends Object
     with TouchHandler, ChangeHandler<dynamic>
     implements ControlValueAccessor<Object?> {
-  final SelectElement? _element;
+  final web.HTMLSelectElement? _element;
   Object? value;
   final Map<String, Object?> _optionMap = <String, Object?>{};
   num _idCounter = 0;
 
-  SelectControlValueAccessor(@Optional() HtmlElement? element)
-      : _element = element as SelectElement?;
+  SelectControlValueAccessor(@Optional() web.HTMLElement? element)
+      : _element = element as web.HTMLSelectElement?;
 
   @HostListener('change', ['\$event.target.value'])
   void handleChange(String value) {
@@ -96,11 +96,11 @@ class SelectControlValueAccessor extends Object
   selector: 'option',
 )
 class NgSelectOption implements OnDestroy {
-  final OptionElement? _element;
+  final web.HTMLOptionElement? _element;
   final SelectControlValueAccessor? _select;
   late final String id;
-  NgSelectOption(@Optional() HtmlElement? element, @Optional() @Host() this._select)
-      : _element = element as OptionElement? {
+  NgSelectOption(@Optional() web.HTMLElement? element, @Optional() @Host() this._select)
+      : _element = element as web.HTMLOptionElement? {
     if (_select != null) id = _select!._registerOption();
   }
 

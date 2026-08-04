@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 import 'dart:js_util' as js_util;
 
 import 'package:angulardart/angulardart.dart';
@@ -33,7 +33,7 @@ const DEFAULT_VALUE_ACCESSOR = defaultValueAccessor;
 class DefaultValueAccessor extends Object
     with TouchHandler, ChangeHandler<String>
     implements ControlValueAccessor<dynamic> {
-  final HtmlElement? _element;
+  final web.HTMLElement? _element;
 
   DefaultValueAccessor(@Optional() this._element);
 

@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 
@@ -29,9 +29,9 @@ const NUMBER_VALUE_ACCESSOR = numberValueAccessor;
 class NumberValueAccessor extends Object
     with TouchHandler, ChangeHandler<double?>
     implements ControlValueAccessor<Object?> {
-  final InputElement? _element;
+  final web.HTMLInputElement? _element;
 
-  NumberValueAccessor(@Optional() HtmlElement? element) : _element = element as InputElement?;
+  NumberValueAccessor(@Optional() web.HTMLElement? element) : _element = element as web.HTMLInputElement?;
 
   @HostListener('change', ['\$event.target.value'])
   @HostListener('input', ['\$event.target.value'])

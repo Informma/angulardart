@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html' show Event;
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 
@@ -31,14 +31,14 @@ abstract class AbstractForm<T extends AbstractControlGroup>
   Stream<T> get ngBeforeSubmit => _ngBeforeSubmit.stream;
 
   @HostListener('submit')
-  void onSubmit(Event? event) {
+  void onSubmit(web.Event? event) {
     _ngBeforeSubmit.add(form!);
     _ngSubmit.add(form!);
     event?.preventDefault();
   }
 
   @HostListener('reset')
-  void onReset(Event? event) {
+  void onReset(web.Event? event) {
     reset();
     event?.preventDefault();
   }

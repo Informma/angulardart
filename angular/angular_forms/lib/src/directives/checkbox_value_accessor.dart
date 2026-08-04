@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 
@@ -30,10 +30,10 @@ const CHECKBOX_VALUE_ACCESSOR = checkboxValueAccessor;
 class CheckboxControlValueAccessor extends Object
     with TouchHandler, ChangeHandler<bool>
     implements ControlValueAccessor<bool> {
-  final InputElement? _element;
+  final web.HTMLInputElement? _element;
 
-  CheckboxControlValueAccessor(@Optional() HtmlElement? element)
-      : _element = element as InputElement?;
+  CheckboxControlValueAccessor(@Optional() web.HTMLElement? element)
+      : _element = element as web.HTMLInputElement?;
 
   @HostListener('change', ['\$event.target.checked'])
   void handleChange(bool checked) {

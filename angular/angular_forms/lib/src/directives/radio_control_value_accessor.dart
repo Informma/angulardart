@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 import 'dart:js_util' as js_util;
 
 import 'package:angulardart/angulardart.dart';
@@ -81,7 +81,7 @@ class RadioButtonState {
 class RadioControlValueAccessor extends Object
     with TouchHandler, ChangeHandler<RadioButtonState>
     implements ControlValueAccessor<RadioButtonState>, OnDestroy, OnInit {
-  final HtmlElement? _element;
+  final web.HTMLElement? _element;
   final RadioControlRegistry? _registry;
   final Injector? _injector;
   RadioButtonState? _state;
@@ -123,6 +123,6 @@ class RadioControlValueAccessor extends Object
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    setElementDisabled(_element as HtmlElement, isDisabled);
+    setElementDisabled(_element as web.HTMLElement, isDisabled);
   }
 }

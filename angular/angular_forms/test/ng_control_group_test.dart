@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -66,7 +66,7 @@ class NgControlGroupTest {
   NgControlGroup? controlGroup;
 
   @ViewChild('input')
-  InputElement? inputElement;
+  web.HTMLInputElement? inputElement;
 
   bool disabled = false;
 

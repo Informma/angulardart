@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -91,7 +91,7 @@ class NgControlNameTest {
   NgControlName? controlName;
 
   @ViewChild('input')
-  InputElement? inputElement;
+  web.HTMLInputElement? inputElement;
 
   String? loginValue;
 

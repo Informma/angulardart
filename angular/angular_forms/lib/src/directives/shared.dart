@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 import 'dart:js_util' as js_util;
 
 import '../model.dart' show Control, AbstractControlGroup;
@@ -95,6 +95,6 @@ ControlValueAccessor<dynamic>? selectValueAccessor(
   return null;
 }
 
-void setElementDisabled(HtmlElement element, bool isDisabled) {
+void setElementDisabled(web.HTMLElement element, bool isDisabled) {
   js_util.setProperty(element, 'disabled', isDisabled);
 }

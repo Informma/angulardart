@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 import 'dart:js_util' as js_util;
 
 import 'package:test/test.dart';
@@ -66,7 +66,7 @@ typedef ChangeFunctionSimple = dynamic Function(dynamic value);
   ],
 )
 class IntValueAccessor implements ControlValueAccessor<dynamic>, Validator {
-  final HtmlElement? _elementRef;
+  final web.HTMLElement? _elementRef;
 
   @HostListener('input')
   void onChangeBinding() => onChange(null);

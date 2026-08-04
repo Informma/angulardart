@@ -4,7 +4,7 @@ issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://angulardartreborn.com
 documentation: https://angulardartreborn.com/guide
 description: Compiler for AngularDart.
-version: 4.1.0
+version: 5.0.0
 topics:
   - angular
   - compiler
@@ -23,8 +23,8 @@ platforms:
 
 dependencies:
   analyzer: ^13.0.0
-  angulardart: '>=8.0.0 <9.0.0'
-  angulardart_ast: '>=3.0.0 <4.0.0'
+  angulardart: ^9.0.0
+  angulardart_ast: ^3.0.0
   args: ^2.5.0
   build: ^4.0.0
   build_test: ^3.0.0

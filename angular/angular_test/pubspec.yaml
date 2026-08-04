@@ -22,18 +22,15 @@ platforms:
   web:
 
 dependencies:
-  angulardart: '>=8.0.0 <10.0.0'
-  collection: ^1.18.0
-  meta: ^1.15.0
-  lints: ^6.1.0
-  web: ^1.0.0
+  angulardart: '>=9.0.0 <10.0.0'
+  angulardart_meta: '>=1.0.0 <2.0.0'
+  collection: '>=1.18.0 <2.0.0'
+  meta: '>=1.15.0 <2.0.0'
+  lints: '>=6.1.0 <7.0.0'
+  web: '>=1.0.0 <2.0.0'
 
 dev_dependencies:
-  build_runner: ^2.16.0
-  build_test: ^3.0.0
-  build_web_compilers: ^4.8.0
-  test: ^1.31.0
-
-dependency_overrides:
-  angulardart:
-    path: ../angular
+  build_runner: '>=2.16.0 <3.0.0'
+  build_test: '>=3.0.0 <4.0.0'
+  build_web_compilers: '>=4.8.0 <5.0.0'
+  test: '>=1.31.0 <2.0.0'

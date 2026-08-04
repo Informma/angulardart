@@ -1,8 +1,7 @@
 import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
-// ignore: implementation_imports
-import 'package:angulardart/src/utilities.dart';
+import 'package:angulardart_meta/angulardart_meta.dart';
 
 import 'bed.dart';
 import 'stabilizer.dart';

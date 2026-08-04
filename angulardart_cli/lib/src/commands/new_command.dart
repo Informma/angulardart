@@ -26,11 +26,16 @@ class NewProjectCommand extends NgDartCommand {
       ..addOption('root-component',
           abbr: 'r',
           help: 'Class name of root component.',
-          defaultsTo: 'AppComponent');
+          defaultsTo: 'AppComponent')
+      ..addFlag('seo',
+          abbr: 's',
+          help: 'Add SEO and prerendering support.',
+          defaultsTo: false);
   }
 
   String get _projectPath => argResults!['path'] as String;
   String get _rootComponent => argResults!['root-component'] as String;
+  bool get _seo => argResults!['seo'] as bool;
 
   @override
   Future<void> runCommand() async {
@@ -42,7 +47,11 @@ class NewProjectCommand extends NgDartCommand {
     final projectName = EntityName(rest.first);
     final rootComponentName = EntityName(_rootComponent);
 
-    await ProjectGenerator(projectName, _projectPath, rootComponentName)
-        .generate();
+    await ProjectGenerator(
+      projectName,
+      _projectPath,
+      rootComponentName,
+      seo: _seo,
+    ).generate();
   }
 }

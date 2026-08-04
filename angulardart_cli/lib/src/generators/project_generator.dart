@@ -9,19 +9,22 @@ class ProjectGenerator extends Generator {
   final String name;
   final String description;
   final ComponentGenerator component;
+  final bool seo;
 
   ProjectGenerator._(
     this.name,
     this.description,
     this.component,
+    this.seo,
     String destinationFolder,
   ) : super(destinationFolder);
 
   factory ProjectGenerator(
     EntityName projectName,
     String destinationFolder,
-    EntityName componentClassName,
-  ) {
+    EntityName componentClassName, {
+    bool seo = false,
+  }) {
     final projectDir = path.join(destinationFolder, projectName.underscored);
     final component = ComponentGenerator(
       componentClassName,
@@ -31,6 +34,7 @@ class ProjectGenerator extends Generator {
       projectName.underscored,
       projectName.spaced,
       component,
+      seo,
       projectDir,
     );
   }
@@ -40,6 +44,7 @@ class ProjectGenerator extends Generator {
     final context = {
       'name': name,
       'description': description,
+      'seo': seo,
       'component': {
         'selector': component.selector,
         'className': component.className,
@@ -49,7 +54,7 @@ class ProjectGenerator extends Generator {
 
     await writeFromTemplate(
       path.join(destinationFolder, 'pubspec.yaml'),
-      Templates.projectPubspec,
+      seo ? Templates.projectPubspecSeo : Templates.projectPubspec,
       context,
     );
     await writeStatic(
@@ -66,12 +71,12 @@ class ProjectGenerator extends Generator {
     );
     await writeFromTemplate(
       path.join(destinationFolder, 'web', 'index.html'),
-      Templates.projectIndexHtml,
+      seo ? Templates.projectIndexHtmlSeo : Templates.projectIndexHtml,
       context,
     );
     await writeFromTemplate(
       path.join(destinationFolder, 'web', 'main.dart'),
-      Templates.projectMainDart,
+      seo ? Templates.projectMainDartSeo : Templates.projectMainDart,
       context,
     );
     await writeStatic(
@@ -79,13 +84,52 @@ class ProjectGenerator extends Generator {
       Templates.projectStyles,
     );
 
-    await component.generate();
+    if (seo) {
+      await writeStatic(
+        path.join(destinationFolder, 'prerender.yaml'),
+        Templates.projectPrerenderYaml,
+      );
+      await writeFromTemplate(
+        path.join(destinationFolder, 'lib', 'app_component.dart'),
+        Templates.seoAppComponent,
+        context,
+      );
+      await writeStatic(
+        path.join(destinationFolder, 'lib', 'app_component.html'),
+        Templates.seoAppComponentHtml,
+      );
+      await writeFromTemplate(
+        path.join(destinationFolder, 'lib', 'home_component.dart'),
+        Templates.seoHomeComponent,
+        context,
+      );
+      await writeStatic(
+        path.join(destinationFolder, 'lib', 'home_component.html'),
+        Templates.seoHomeComponentHtml,
+      );
+      await writeFromTemplate(
+        path.join(destinationFolder, 'lib', 'about_component.dart'),
+        Templates.seoAboutComponent,
+        context,
+      );
+      await writeStatic(
+        path.join(destinationFolder, 'lib', 'about_component.html'),
+        Templates.seoAboutComponentHtml,
+      );
+    } else {
+      await component.generate();
+    }
 
     print('Created project "$name" at $destinationFolder');
     print('');
     print('Next steps:');
     print('  cd $name');
     print('  dart pub get');
-    print('  dart run build_runner serve');
+    if (seo) {
+      print('  dart run build_runner build --release');
+      print('  dart run angulardart_prerender');
+    } else {
+      print('  dart run build_runner serve');
+    }
   }
 }

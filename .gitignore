@@ -50,3 +50,8 @@ temp/
 
 # Documentation generated
 doc/api/
+
+# GYV specials 
+.opencode/
+/*.md
+!/README.md

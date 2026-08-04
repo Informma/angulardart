@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 /// An Angular view that can be created and destroyed dynamically.
 ///
@@ -76,7 +76,7 @@ abstract class EmbeddedViewRef implements ViewRef {
   bool hasLocal(String name);
 
   /// This view's root DOM nodes.
-  List<Node> get rootNodes;
+  List<web.Node> get rootNodes;
 
   /// Detaches this view and destroys all of its associated state.
   void destroy();

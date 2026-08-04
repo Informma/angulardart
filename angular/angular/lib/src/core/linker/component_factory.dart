@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:meta/meta.dart';
 import 'package:angulardart/src/core/change_detection/change_detector_ref.dart';
@@ -44,7 +44,7 @@ bool debugUsesDefaultChangeDetection(ComponentRef<void> componentRef) {
 /// Component Instance via the [ComponentRef.destroy] method.
 class ComponentRef<C> {
   final HostView<void> _hostView;
-  final Element _nativeElement;
+  final web.Element _nativeElement;
   final C _component;
 
   ComponentRef(
@@ -54,7 +54,7 @@ class ComponentRef<C> {
   );
 
   /// Location of the Host Element of this Component Instance.
-  Element get location => _nativeElement;
+  web.Element get location => _nativeElement;
 
   /// The injector on which the component instance exists.
   Injector get injector => _hostView.injector(0);

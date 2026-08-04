@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/core/linker/app_view_utils.dart';
@@ -65,7 +65,7 @@ abstract class RenderView extends View {
   /// discriminator to determine which parts of the template are mapped to
   /// what parts of the DOM.
   @dart2js.noInline
-  void project(Element target, int index) {
+  void project(web.Element target, int index) {
     // TODO(b/132111830): Determine why this would be out of bounds.
     final projectedNodesByContentIndex = projectedNodes;
     if (index >= projectedNodesByContentIndex.length) {
@@ -163,7 +163,7 @@ abstract class RenderView extends View {
 
   /// Equivalent to [addShimE], but optimized for [HtmlElement].
   @dart2js.tryInline
-  void addShimC(HtmlElement element) {
+  void addShimC(web.HTMLElement element) {
     componentStyles.addContentShimClassHtmlElement(element);
   }
 
@@ -175,7 +175,7 @@ abstract class RenderView extends View {
   /// This should only be used for SVG or custom elements. For a plain
   /// [HtmlElement], use [addShimC] instead.
   @dart2js.tryInline
-  void addShimE(Element element) {
+  void addShimE(web.Element element) {
     componentStyles.addContentShimClass(element);
   }
 
@@ -186,13 +186,13 @@ abstract class RenderView extends View {
   ///
   /// For example, through the `[class]="..."` or `[attr.class]="..."` syntax.
   @dart2js.noInline
-  void updateChildClass(HtmlElement element, String newClass) {
+  void updateChildClass(web.HTMLElement element, String newClass) {
     componentStyles.updateChildClassHtmlElement(element, newClass);
   }
 
   /// Similar to [updateChildClass], for an [element] not guaranteed to be HTML.
   @dart2js.noInline
-  void updateChildClassNonHtml(Element element, String newClass) {
+  void updateChildClassNonHtml(web.Element element, String newClass) {
     componentStyles.updateChildClass(element, newClass);
   }
 }

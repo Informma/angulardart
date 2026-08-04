@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/src/core/linker/views/render_view.dart';
 
@@ -11,5 +11,5 @@ abstract class DirectiveChangeDetector {
   /// Implements `detectChanges()`-like logic but for the directive instance.
   ///
   /// Currently, this implements and updates `@HostBinding()`s only.
-  void detectHostChanges(RenderView view, Element hostElement);
+  void detectHostChanges(RenderView view, web.Element hostElement);
 }

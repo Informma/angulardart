@@ -35,7 +35,7 @@ class _JSTestabilityProxy implements _TestabilityProxy {
   /// For every registered [TestabilityRegistry], tries `getAngularTestability`.
   ///
   /// TODO(b/168535057): Return `JsTestability` instead (needs testing).
-  static Object _getAngularTestability(Element element) {
+  static Object _getAngularTestability(web.Element element) {
     final registry = unsafeCast<List<Object?>>(
       js_util.getProperty(
         _self,
@@ -159,13 +159,14 @@ class _JSTestabilityProxy implements _TestabilityProxy {
   @override
   Testability? findTestabilityInTree(
     TestabilityRegistry registry,
-    Element? element,
+    web.Element? element,
   ) {
     if (element == null) {
       return null;
     }
     final testability = registry.testabilityFor(element);
-    return testability ?? findTestabilityInTree(registry, element.parent);
+    return testability ??
+        findTestabilityInTree(registry, element.parentNode as web.Element?);
   }
 
   /// Given the dart [registry] object, returns a JS-interop enabled object.
@@ -174,7 +175,7 @@ class _JSTestabilityProxy implements _TestabilityProxy {
   static Object _createRegistry(TestabilityRegistry registry) {
     final object = unsafeCast<Object>(js_util.newObject());
 
-    JsTestability? getAngularTestability(Element element) {
+    JsTestability? getAngularTestability(web.Element element) {
       final dartTestability = registry.findTestabilityInTree(element);
       return dartTestability?.asJsApi();
     }

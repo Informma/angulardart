@@ -2,8 +2,7 @@
 library angular.src.testability;
 
 import 'dart:async';
-import 'dart:html' show Element;
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as js_util;
@@ -88,7 +87,7 @@ class Testability {
 
 /// A global registry of [Testability] instances given an app root element.
 class TestabilityRegistry {
-  final _appRoots = <Element, Testability>{};
+  final _appRoots = <web.Element, Testability>{};
 
   _TestabilityProxy? _proxy;
 
@@ -100,14 +99,14 @@ class TestabilityRegistry {
   }
 
   /// Associate [appRoot] with the provided [testability] instance.
-  void registerApplication(Element appRoot, Testability testability) {
+  void registerApplication(web.Element appRoot, Testability testability) {
     // TODO(b/168535057): Figure out why eager initialization is necessary.
     initializeEagerly();
     _appRoots[appRoot] = testability;
   }
 
   /// Returns the registered testability instance for [appRoot], or `null`.
-  Testability? testabilityFor(Element appRoot) => _appRoots[appRoot];
+  Testability? testabilityFor(web.Element appRoot) => _appRoots[appRoot];
 
   /// Returns all testability instances registered.
   Iterable<Testability> get allTestabilities => _appRoots.values;
@@ -115,7 +114,7 @@ class TestabilityRegistry {
   /// Walks the DOM [tree] looking for a registered [Testability] instance.
   ///
   /// TODO(b/168535057): Is this functionality actually necessary?
-  Testability? findTestabilityInTree(Element? tree) {
+  Testability? findTestabilityInTree(web.Element? tree) {
     return _proxy?.findTestabilityInTree(this, tree);
   }
 }
@@ -132,6 +131,6 @@ abstract class _TestabilityProxy {
   /// Returns `null` if no registered [Testability] instance was found.
   Testability? findTestabilityInTree(
     TestabilityRegistry registry,
-    Element? element,
+    web.Element? element,
   );
 }

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert' show json;
 import 'dart:developer';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
@@ -58,7 +60,7 @@ class Inspector {
   final _referenceCounter = ReferenceCounter<Object>();
 
   /// Additional locations in the DOM to search for Angular artifacts.
-  final _contentRoots = <Element>[];
+  final _contentRoots = <web.Element>[];
 
   ApplicationRef? _applicationRef;
 
@@ -69,10 +71,10 @@ class Inspector {
   /// inspecting another.
   void inspect(ApplicationRef applicationRef) {
     if (_applicationRef != null) {
-      window.console.error('''
+      web.console.error('''
 AngularDart DevTools does not yet support apps with multiple runApp()
 invocations. Please contact angulardart-eng@ if you encounter this error.
-''');
+'''.toJS);
       return;
     }
 
@@ -190,7 +192,7 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
   }
 
   /// Returns the [_InspectorNodeData] associated with [node].
-  _InspectorNodeData _data(Node node) {
+  _InspectorNodeData _data(web.Node node) {
     return _nodeToData[node] ??= _InspectorNodeData();
   }
 
@@ -202,12 +204,12 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
   }
 
   /// Registers a [directive] on [node] to be inspected by this service.
-  void registerDirective(Node node, Object directive) {
+  void registerDirective(web.Node node, Object directive) {
     _data(node).directives.add(directive);
   }
 
   /// Registers [element] as a location to search for components.
-  void registerContentRoot(Element element) {
+  void registerContentRoot(web.Element element) {
     for (var i = _contentRoots.length - 1; i >= 0; i--) {
       final root = _contentRoots[i];
       if (root.contains(element)) {
@@ -228,7 +230,7 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
   }
 
   /// Returns the root element of the component for [id].
-  HtmlElement getComponentElement(int id) {
+  web.HTMLElement getComponentElement(int id) {
     final componentView =
         _referenceCounter.toObject(id) as ComponentView<Object>;
     return componentView.rootElement;
@@ -240,14 +242,14 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
   /// [getComponents] call.
   ///
   /// Returns `-1` if [node] has no corresponding component.
-  int getComponentIdForNode(Node node, String groupName) {
-    Node? current = node;
+  int getComponentIdForNode(web.Node node, String groupName) {
+    web.Node? current = node;
     while (current != null) {
       final componentView = _nodeToData[current]?.componentView;
       if (componentView != null) {
         return _referenceCounter.toId(componentView, groupName);
       }
-      current = current.parent;
+      current = current.parentNode;
     }
     return -1;
   }
@@ -280,7 +282,10 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
   List<Map<String, Object>> getComponents(String groupName) {
     final json = <Map<String, Object>>[];
     for (final element in _contentRoots) {
-      final treeWalker = TreeWalker(element, NodeFilter.SHOW_ELEMENT);
+        final treeWalker = web.document.createTreeWalker(
+          element,
+          1, // NodeFilter.SHOW_ELEMENT
+        );
       _collectJson(treeWalker, groupName, json);
     }
     return json;
@@ -295,8 +300,11 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
     return BuiltList.build((b) {
       for (final element in _contentRoots) {
         // Structural directives can be anchored on comments.
-        final whatToShow = NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT;
-        final treeWalker = TreeWalker(element, whatToShow);
+        final whatToShow = 1 | 128; // SHOW_ELEMENT | SHOW_COMMENT
+        final treeWalker = web.document.createTreeWalker(
+          element,
+          whatToShow,
+        );
         _collectNodes(treeWalker, groupName, b);
       }
     });
@@ -307,7 +315,7 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
   /// See [_nodeToData] regarding why the component tree is collected by
   /// traversing the DOM.
   void _collectNodes(
-    TreeWalker treeWalker,
+    web.TreeWalker treeWalker,
     String groupName,
     ListBuilder<InspectorNode> result,
   ) {
@@ -369,7 +377,7 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
   /// traversing the DOM.
   // TODO(b/194920649): remove.
   void _collectJson(
-    TreeWalker treeWalker,
+    web.TreeWalker treeWalker,
     String groupName,
     List<Map<String, Object>> result,
   ) {

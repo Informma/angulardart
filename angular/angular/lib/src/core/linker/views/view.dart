@@ -1,4 +1,4 @@
-import 'dart:html' show Element;
+import 'package:web/web.dart' as web;
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:meta/meta.dart';
@@ -123,7 +123,7 @@ abstract class View implements ChangeDetectorRef {
 
   @override
   void markChildForCheck(Object child) {
-    assert(child is! Element, 'Expected a component instance');
+    assert(child is! web.Element, 'Expected a component instance');
     queryChangeDetectorRefs[child]?.markForCheck();
   }
 

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:meta/meta.dart';
@@ -48,7 +48,7 @@ abstract class ComponentView<T extends Object> extends RenderView {
   late final ComponentStyles componentStyles;
 
   /// The root element of this component, created from its selector.
-  late final HtmlElement rootElement;
+  late final web.HTMLElement rootElement;
 
   final _ComponentViewData _data;
 
@@ -114,7 +114,7 @@ abstract class ComponentView<T extends Object> extends RenderView {
   /// requires less code to assign the return value of a function that's going
   /// to be called anyways, than to generate an extra statement to load a field.
   @dart2js.noInline
-  HtmlElement initViewRoot() {
+  web.HTMLElement initViewRoot() {
     final hostElement = rootElement;
     componentStyles.addHostShimClassHtmlElement(hostElement);
     return hostElement;
@@ -213,7 +213,7 @@ abstract class ComponentView<T extends Object> extends RenderView {
 
   @dart2js.noInline
   @override
-  void updateChildClass(HtmlElement element, String newClass) {
+  void updateChildClass(web.HTMLElement element, String newClass) {
     if (identical(element, rootElement)) {
       componentStyles.updateChildClassForHostHtmlElement(element, newClass);
       final parent = parentView;
@@ -227,7 +227,7 @@ abstract class ComponentView<T extends Object> extends RenderView {
 
   @dart2js.noInline
   @override
-  void updateChildClassNonHtml(Element element, String newClass) {
+  void updateChildClassNonHtml(web.Element element, String newClass) {
     if (identical(element, rootElement)) {
       componentStyles.updateChildClassForHost(element, newClass);
       final parent = parentView;

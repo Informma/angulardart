@@ -23,7 +23,9 @@
 /// ```
 library safe_html_directive;
 
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 
@@ -34,7 +36,7 @@ import 'package:angulardart/angulardart.dart';
 /// built-in sanitization.
 @Directive(selector: '[safeHtml]')
 class SafeHtmlDirective implements OnInit {
-  final HtmlElement? _element;
+  final web.HTMLElement? _element;
 
   /// The trusted HTML content to render.
   @Input()
@@ -47,15 +49,13 @@ class SafeHtmlDirective implements OnInit {
   void ngOnInit() {
     final value = safeHtml;
     if (value == null) {
-      _element?.innerHtml = '';
+      _element?.innerHTML = ''.toJS;
     } else {
-      // Use NodeTreeSanitizer.trusted to bypass sanitization
-      final fragment = DocumentFragment.html(
-        value,
-        treeSanitizer: NodeTreeSanitizer.trusted,
-      );
-      _element?.innerHtml = '';
-      _element?.append(fragment);
+      final template =
+          web.document.createElement('template') as web.HTMLTemplateElement;
+      template.innerHTML = value.toJS;
+      _element?.innerHTML = ''.toJS;
+      _element?.append(template.content.cloneNode(true));
     }
   }
 }

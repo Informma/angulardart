@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:meta/meta.dart';
@@ -215,7 +215,7 @@ abstract class HostView<T extends Object> extends View implements DynamicView {
   // View manipulation ---------------------------------------------------------
 
   @override
-  void addRootNodesAfter(Node node) {
+  void addRootNodesAfter(web.Node node) {
     final rootNodes = viewFragment!.flattenDomNodes();
     insertNodesAsSibling(rootNodes, node);
     domRootRendererIsDirty = true;

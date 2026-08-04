@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/src/core/change_detection/differs/default_iterable_differ.dart';
 import 'package:angulardart/src/core/change_detection/differs/default_keyvalue_differ.dart';
@@ -57,7 +57,7 @@ class NgClass implements DoCheck, OnDestroy {
   // Separator used to split string to parts - can be any number of
   // whitespaces, new lines or tabs.
   static final _separator = RegExp(r'\s+');
-  final Element? _ngEl;
+  final web.Element? _ngEl;
 
   DefaultIterableDiffer? _iterableDiffer;
   DefaultKeyValueDiffer? _keyValueDiffer;
@@ -176,7 +176,7 @@ class NgClass implements DoCheck, OnDestroy {
     if (className.isEmpty) return;
     var el = _ngEl;
     if (el == null) return;
-    var classList = el.classes;
+    var classList = (el as web.HTMLElement).classList;
     if (className.contains(' ')) {
       var classes = className.split(_separator);
       for (var i = 0, len = classes.length; i < len; i++) {

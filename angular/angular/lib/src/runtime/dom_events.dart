@@ -1,4 +1,6 @@
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/src/core/zone/ng_zone.dart';
 
@@ -16,7 +18,7 @@ class EventManager {
 
   /// Adds an event listener to [element] for [name] to invoke [callback].
   void addEventListener(
-    Element element,
+    web.Element element,
     String name,
     void Function(Object) callback,
   ) {
@@ -33,7 +35,7 @@ class EventManager {
     // If the view compiler knows that a given event is a DOM event (i.e.
     // "click"), it will never be called into EventManager. But of course the
     // browser APIs change, so this is the final fallback.
-    element.addEventListener(name, callback);
+    element.addEventListener(name, callback.toJS);
   }
 }
 
@@ -73,23 +75,22 @@ class _KeyEventsHandler {
   static bool _supports(String name) => name.contains(_delimiter);
 
   void addEventListener(
-    Element element,
+    web.Element element,
     String name,
     void Function(Object) callback,
   ) {
     assert(_supports(name), 'Should never be called before "supports".');
     final parsed = _cache[name];
 
-    // Not recognized as a valid or understood event (i.e. "oops.a").
     if (parsed == null) {
       return;
     }
 
-    element.addEventListener(parsed.domEventName, (event) {
-      if (event is KeyboardEvent && parsed.matches(event)) {
+    element.addEventListener(parsed.domEventName, (web.Event event) {
+      if (event is web.KeyboardEvent && parsed.matches(event)) {
         callback(event);
       }
-    });
+    }.toJS);
   }
 
   static _ParsedEvent? _parse(String name) {
@@ -136,7 +137,7 @@ class _ParsedEvent {
   const _ParsedEvent(this.domEventName, this.keyAndModifiers);
 
   /// Returns whether [event] matches [keyAndModifiers].
-  bool matches(KeyboardEvent event) {
+  bool matches(web.KeyboardEvent event) {
     final key = _keyCodeNames[event.keyCode];
     if (key == null) {
       return false;
@@ -239,7 +240,7 @@ const _keyCodeNames = {
 };
 
 /// Determines whether a given modifier key name is currently active.
-final _modifiers = <String, bool Function(KeyboardEvent)>{
+final _modifiers = <String, bool Function(web.KeyboardEvent)>{
   'alt': (event) => event.altKey,
   'control': (event) => event.ctrlKey,
   'meta': (event) => event.metaKey,

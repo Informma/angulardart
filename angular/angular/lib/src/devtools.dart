@@ -1,7 +1,7 @@
 @JS()
 library angular.src.devtools;
 
-import 'dart:html' as html;
+import 'package:web/web.dart' as web;
 
 import 'package:js/js.dart';
 
@@ -38,7 +38,7 @@ void enableDevTools() {
 ///
 /// This method should be used to register elements that are not contained by
 /// the app's root component.
-void registerContentRoot(html.Element element) {
+void registerContentRoot(web.Element element) {
   if (isDevToolsEnabled) {
     Inspector.instance.registerContentRoot(element);
   }
@@ -47,10 +47,10 @@ void registerContentRoot(html.Element element) {
 /// Specifies a function to look up an element by component ID in JavaScript.
 @JS('getAngularComponentElement')
 external set _getComponentElement(
-  html.HtmlElement Function(int) implementation,
+  web.HTMLElement Function(int) implementation,
 );
 
 @JS('getAngularComponentIdForNode')
 external set _getComponentIdForNode(
-  void Function(html.Node, String) implementation,
+  void Function(web.Node, String) implementation,
 );

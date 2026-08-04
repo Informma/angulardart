@@ -10,7 +10,7 @@
 library;
 
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/core/exception_handler.dart';
@@ -105,8 +105,8 @@ class ApplicationRef extends ChangeDetectionHost {
   ) {
     return unsafeCast(run(() {
       final component = componentFactory.create(_injector);
-      final existing = querySelector(componentFactory.selector);
-      Element? replacement;
+      final existing = web.document.querySelector(componentFactory.selector);
+      web.Element? replacement;
       if (existing != null) {
         final newElement = component.location;
         // For app shards using bootstrapStatic, transfer element id
@@ -118,7 +118,7 @@ class ApplicationRef extends ChangeDetectionHost {
         replacement = newElement;
         existing.replaceWith(replacement);
       } else {
-        document.body!.append(component.location);
+        web.document.body!.append(component.location);
       }
       final injector = component.injector;
       final testability = injector.provideTypeOptional<Testability>(
@@ -135,7 +135,7 @@ class ApplicationRef extends ChangeDetectionHost {
     }));
   }
 
-  void _loadedRootComponent(ComponentRef<void> component, Element? node) {
+  void _loadedRootComponent(ComponentRef<void> component, web.Element? node) {
     if (isDevToolsEnabled) {
       Inspector.instance.registerContentRoot(component.location);
     }

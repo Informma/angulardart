@@ -1,3 +1,8 @@
+## 1.0.2
+
+- Fix: Update to angulardart >=9.0.0 (package:web migration)
+- Widen version constraints
+
 ## 1.0.1
 
 - Fix: Remove prerender-related classes (NoPrerender, PrerenderConfig, PrerenderAware) - now in angulardart_prerender only

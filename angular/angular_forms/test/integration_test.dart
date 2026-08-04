@@ -336,7 +336,7 @@ void main() {
         var select =
             fixture.rootElement.querySelector('select') as web.HTMLSelectElement;
         var nycOption =
-            fixture.rootElement.querySelectorAll('option')[1] as web.HTMLOptionElement;
+            fixture.rootElement.querySelectorAll('option').item(1) as web.HTMLOptionElement;
         expect(select.value, '1: Object');
         expect(nycOption.selected, true);
         await fixture.update((_) {
@@ -365,7 +365,7 @@ void main() {
         var select =
             fixture.rootElement.querySelector('select') as web.HTMLSelectElement;
         var buffalo =
-            fixture.rootElement.querySelectorAll('option')[2] as web.HTMLOptionElement;
+            fixture.rootElement.querySelectorAll('option').item(2) as web.HTMLOptionElement;
         expect(select.value, '2: Object');
         expect(buffalo.selected, true);
       });
@@ -403,7 +403,7 @@ void main() {
         var select =
             fixture.rootElement.querySelector('select') as web.HTMLSelectElement;
         var buffalo =
-            fixture.rootElement.querySelectorAll('option')[1] as web.HTMLOptionElement;
+            fixture.rootElement.querySelectorAll('option').item(1) as web.HTMLOptionElement;
         expect(select.value, '1: Buffalo');
         expect(buffalo.selected, true);
       });
@@ -425,7 +425,7 @@ void main() {
         var select =
             fixture.rootElement.querySelector('select') as web.HTMLSelectElement;
         var firstSF =
-            fixture.rootElement.querySelectorAll('option')[1] as web.HTMLOptionElement;
+            fixture.rootElement.querySelectorAll('option').item(1) as web.HTMLOptionElement;
         expect(select.value, '1: Object');
         expect(firstSF.selected, true);
       });
@@ -448,7 +448,7 @@ void main() {
         var select =
             fixture.rootElement.querySelector('select') as web.HTMLSelectElement;
         var secondNYC =
-            fixture.rootElement.querySelectorAll('option')[2] as web.HTMLOptionElement;
+            fixture.rootElement.querySelectorAll('option').item(2) as web.HTMLOptionElement;
         expect(select.value, '2: Object');
         expect(secondNYC.selected, true);
       });

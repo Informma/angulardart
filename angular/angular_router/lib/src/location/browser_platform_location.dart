@@ -1,43 +1,42 @@
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart' show Injectable;
 
 import 'base_href.dart';
 import 'platform_location.dart';
 
-/// `PlatformLocation` encapsulates all of the direct calls to platform APIs.
-/// This class should not be used directly by an application developer. Instead, use
-/// [Location].
 @Injectable()
 class BrowserPlatformLocation extends PlatformLocation {
-  final Location location;
-  final History _history;
+  final web.Location location;
+  final web.History _history;
 
   BrowserPlatformLocation()
-      : location = window.location,
-        _history = window.history;
+      : location = web.window.location,
+        _history = web.window.history;
 
   @override
   String? getBaseHrefFromDOM() => baseHrefFromDOM();
 
   @override
-  void onPopState(EventListener fn) {
-    window.addEventListener('popstate', fn, false);
+  void onPopState(void Function(web.Event) fn) {
+    web.window.addEventListener('popstate', fn.toJS, false);
   }
 
   @override
-  void onHashChange(EventListener fn) {
-    window.addEventListener('hashchange', fn, false);
+  void onHashChange(void Function(web.Event) fn) {
+    web.window.addEventListener('hashchange', fn.toJS, false);
   }
 
   @override
   String get pathname {
-    return location.pathname!;
+    return location.pathname;
   }
 
   @override
   String get search {
-    return location.search!;
+    return location.search;
   }
 
   @override
@@ -51,12 +50,12 @@ class BrowserPlatformLocation extends PlatformLocation {
 
   @override
   void pushState(Object? state, String title, String? url) {
-    _history.pushState(state, title, url);
+    _history.pushState(state.jsify(), title, url);
   }
 
   @override
   void replaceState(Object? state, String title, String? url) {
-    _history.replaceState(state, title, url);
+    _history.replaceState(state.jsify(), title, url);
   }
 
   @override

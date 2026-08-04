@@ -1,5 +1,4 @@
-import 'dart:html' hide Location;
-import 'dart:js';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -34,7 +33,7 @@ void main() {
     ).addInjector(addInjector).create(beforeChangeDetection: (comp) {
       comp.routerLink = '/users/bob';
     });
-    final anchor = fixture.rootElement.querySelector('a') as AnchorElement;
+    final anchor = fixture.rootElement.querySelector('a') as web.HTMLAnchorElement;
     expect(anchor.pathname, '/users/bob');
     expect(fakeRouter.lastNavigatedPath, isNull);
     await fixture.update((_) => anchor.click());
@@ -47,7 +46,7 @@ void main() {
     ).addInjector(addInjector);
     final testFixture = await testBed.create();
     final div = testFixture.rootElement.querySelector('div')!;
-    final keyboardEvent = createKeyboardEvent('keypress', KeyCode.ENTER);
+    final keyboardEvent = createKeyboardEvent('keypress', 13);
     expect(fakeRouter.lastNavigatedPath, isNull);
     await testFixture.update((_) => div.dispatchEvent(keyboardEvent));
     expect(fakeRouter.lastNavigatedPath, '/foo/bar');
@@ -59,7 +58,7 @@ void main() {
     ).addInjector(addInjector).create(beforeChangeDetection: (comp) {
       comp.routerLink = '/users/bob?param1=one&param2=2#frag';
     });
-    final anchor = fixture.rootElement.querySelector('a') as AnchorElement;
+    final anchor = fixture.rootElement.querySelector('a') as web.HTMLAnchorElement;
     expect(anchor.pathname, '/users/bob');
     await fixture.update((_) => anchor.click());
     expect(fakeRouter.lastNavigatedPath, '/users/bob');
@@ -76,7 +75,7 @@ void main() {
     ).addInjector(addInjector).create(beforeChangeDetection: (comp) {
       comp.routerLink = '/users/bob';
     });
-    final anchor = fixture.rootElement.querySelector('a') as AnchorElement;
+    final anchor = fixture.rootElement.querySelector('a') as web.HTMLAnchorElement;
     expect(anchor.pathname, '/users/bob');
     expect(anchor.target, '_parent');
     await fixture.update((_) => anchor.click());
@@ -118,7 +117,7 @@ class TestRouterLinkKeyPress {
 class TestRouterLinkWithTarget {
   late String routerLink;
 
-  void onClick(MouseEvent event) {
+  void onClick(web.MouseEvent event) {
     // Prevent navigating away from test page.
     event.preventDefault();
   }
@@ -142,32 +141,7 @@ class FakeRouter implements Router {
   dynamic noSuchMethod(i) => super.noSuchMethod(i);
 }
 
-const _createKeyboardEventName = '__dart_createKeyboardEvent';
-const _createKeyboardEventScript = '''
-window['$_createKeyboardEventName'] = function(
-    type, keyCode, ctrlKey, altKey, shiftKey, metaKey) {
-  var event = document.createEvent('KeyboardEvent');
-
-  // Chromium hack.
-  Object.defineProperty(event, 'keyCode', {
-    get: function() { return keyCode; }
-  });
-
-  // Creating keyboard events programmatically isn't supported and relies on
-  // these deprecated APIs.
-  if (event.initKeyboardEvent) {
-    event.initKeyboardEvent(type, true, true, document.defaultView, keyCode,
-        keyCode, ctrlKey, altKey, shiftKey, metaKey);
-  } else {
-    event.initKeyEvent(type, true, true, document.defaultView, ctrlKey, altKey,
-        shiftKey, metaKey, keyCode, keyCode);
-  }
-
-  return event;
-}
-''';
-
-Event createKeyboardEvent(
+web.Event createKeyboardEvent(
   String type,
   int keyCode, {
   bool ctrlKey = false,
@@ -175,21 +149,16 @@ Event createKeyboardEvent(
   bool shiftKey = false,
   bool metaKey = false,
 }) {
-  if (!context.hasProperty(_createKeyboardEventName)) {
-    final script = document.createElement('script')
-      ..setAttribute('type', 'text/javascript')
-      ..text = _createKeyboardEventScript;
-    document.body!.append(script);
-  }
-  return context.callMethod(
-    _createKeyboardEventName,
-    [
-      type,
-      keyCode,
-      ctrlKey,
-      altKey,
-      shiftKey,
-      metaKey,
-    ],
-  ) as Event;
+  return web.KeyboardEvent(
+    type,
+    web.KeyboardEventInit(
+      bubbles: true,
+      cancelable: true,
+      keyCode: keyCode,
+      ctrlKey: ctrlKey,
+      altKey: altKey,
+      shiftKey: shiftKey,
+      metaKey: metaKey,
+    ),
+  );
 }

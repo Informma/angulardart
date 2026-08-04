@@ -1,6 +1,6 @@
-import 'dart:async';
-import 'dart:html'
-    show AnchorElement, Element, Event, KeyboardEvent, KeyCode, MouseEvent;
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 
@@ -28,7 +28,8 @@ class RouterLink implements OnDestroy {
   final Location _location;
   final String? _target;
 
-  StreamSubscription<KeyboardEvent>? _keyPressSubscription;
+  web.Element? _element;
+  JSFunction? _keyPressHandler;
   late String _routerLink;
   String? _cachedVisibleHref;
   Url? _cachedUrl;
@@ -37,13 +38,12 @@ class RouterLink implements OnDestroy {
     this._router,
     this._location,
     @Attribute('target') this._target,
-    Element element,
+    web.Element element,
   ) {
-    // The browser will synthesize a click event for anchor elements when they
-    // receive an Enter key press. For other elements, we must manually add a
-    // key press listener to ensure the link remains keyboard accessible.
-    if (element is! AnchorElement) {
-      _keyPressSubscription = element.onKeyPress.listen(_onKeyPress);
+    if (element.tagName != 'A') {
+      _element = element;
+      _keyPressHandler = ((web.Event e) => _onKeyPress(e as web.KeyboardEvent)).toJS;
+      element.addEventListener('keypress', _keyPressHandler!);
     }
   }
 
@@ -82,26 +82,25 @@ class RouterLink implements OnDestroy {
 
   @override
   void ngOnDestroy() {
-    _keyPressSubscription?.cancel();
+    if (_element != null && _keyPressHandler != null) {
+      _element!.removeEventListener('keypress', _keyPressHandler!);
+    }
   }
 
   @HostListener('click')
-  void onClick(MouseEvent event) {
-    // Control-click (or Command-click) opens link in new tab.
+  void onClick(web.MouseEvent event) {
     if (event.ctrlKey || event.metaKey) return;
     _trigger(event);
   }
 
-  void _onKeyPress(KeyboardEvent event) {
-    // Control-click (or Command-click) opens link in new tab.
-    if (event.keyCode != KeyCode.ENTER || event.ctrlKey || event.metaKey) {
+  void _onKeyPress(web.KeyboardEvent event) {
+    if (event.keyCode != 13 || event.ctrlKey || event.metaKey) {
       return;
     }
     _trigger(event);
   }
 
-  void _trigger(Event event) {
-    // The presence of target="_blank" opens link in new tab.
+  void _trigger(web.Event event) {
     if (_target == null || _target == '_self') {
       event.preventDefault();
       _router.navigate(

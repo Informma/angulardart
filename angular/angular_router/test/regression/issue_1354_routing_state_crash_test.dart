@@ -1,5 +1,7 @@
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -20,7 +22,7 @@ void main() {
     );
     Future<void> onStable() => appComponent.instance.onStable;
 
-    E query<E extends Element>(String selector) {
+    E query<E extends web.Element>(String selector) {
       return appComponent.location.querySelector(selector) as E;
     }
 
@@ -30,24 +32,23 @@ void main() {
     await onStable();
     expect(_logs, isEmpty);
     expect(locationStrategy.path(), isEmpty);
-    expect(routeContainer.text, contains('Home Page'));
+    expect(routeContainer.textContent, contains('Home Page'));
 
     // "Navigate" to /another
     await appComponent.instance.updateUrl('/another');
     expect(_logs, isEmpty);
-    expect(routeContainer.text, contains('Another Page'));
+    expect(routeContainer.textContent, contains('Another Page'));
 
     // "Navigate" to /throws.
     await appComponent.instance.updateUrl('/throws');
     expect(_logs, [contains('$IntentionalException')]);
-    // Since navigation fails, we should still be at the previous route.
-    expect(routeContainer.text, contains('Another Page'));
+    expect(routeContainer.textContent, contains('Another Page'));
 
     // "Navigate" back to /home.
     _logs.clear();
     await appComponent.instance.updateUrl('/home');
     expect(_logs, isEmpty);
-    expect(routeContainer.text, contains('Home Page'));
+    expect(routeContainer.textContent, contains('Home Page'));
   });
 }
 
@@ -71,9 +72,9 @@ class LoggingExceptionHandler implements ExceptionHandler {
     _logs.add('$exception: $stack');
 
     if (exception is! IntentionalException) {
-      window.console.error('$exception\n$stack');
+      web.console.error('$exception\n$stack'.toJS);
     } else {
-      window.console.info('ExceptionHandler caught the intentional exception');
+      web.console.info('ExceptionHandler caught the intentional exception'.toJS);
     }
   }
 }

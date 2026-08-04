@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 /// This class should not be used directly by an application developer. Instead, use
 /// [Location].
@@ -24,8 +24,8 @@ import 'dart:html';
 /// they are all platform independent.
 abstract class PlatformLocation {
   String? getBaseHrefFromDOM();
-  void onPopState(EventListener fn);
-  void onHashChange(EventListener fn);
+  void onPopState(void Function(web.Event) fn);
+  void onHashChange(void Function(web.Event) fn);
   String get pathname;
   String get search;
   String get hash;

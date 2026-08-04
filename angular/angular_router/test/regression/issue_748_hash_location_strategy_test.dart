@@ -1,5 +1,5 @@
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -61,10 +61,10 @@ class FakePlatformLocation implements BrowserPlatformLocation {
   }
 
   @override
-  void onPopState(EventListener fn) {}
+  void onPopState(void Function(web.Event) fn) {}
 
   @override
-  void onHashChange(EventListener fn) {}
+  void onHashChange(void Function(web.Event) fn) {}
 
   @override
   void forward() {}
@@ -113,7 +113,7 @@ class AppComponent {
   static final routes = [fooRoute];
 
   @ViewChild('routerLink')
-  HtmlElement? anchor;
+  web.HTMLElement? anchor;
 }
 
 @Component(selector: 'foo', template: '')

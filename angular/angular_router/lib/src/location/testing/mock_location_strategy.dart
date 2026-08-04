@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:html' show EventListener, PopStateEvent;
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart' show Injectable;
 import 'package:angulardart_router/src/location/location_strategy.dart'
     show LocationStrategy;
 
-/// A mock implementation of [LocationStrategy] that allows tests to fire
-/// simulated location events.
 @Injectable()
 class MockLocationStrategy extends LocationStrategy {
   String internalBaseHref = '/';
@@ -15,11 +14,11 @@ class MockLocationStrategy extends LocationStrategy {
   String internalHash = '';
   List<String> urlChanges = [];
 
-  final _subject = StreamController<PopStateEvent>();
+  final _subject = StreamController<web.PopStateEvent>();
 
   void simulatePopState(String url) {
     internalPath = url;
-    _subject.add(PopStateEvent('popstate'));
+    _subject.add(web.PopStateEvent('popstate'));
   }
 
   @override
@@ -55,8 +54,8 @@ class MockLocationStrategy extends LocationStrategy {
   }
 
   @override
-  void onPopState(EventListener fn) {
-    _subject.stream.listen(fn);
+  void onPopState(void Function(web.Event) fn) {
+    _subject.stream.listen((e) => fn(e));
   }
 
   @override

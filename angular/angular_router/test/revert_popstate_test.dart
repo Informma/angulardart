@@ -1,5 +1,7 @@
 import 'dart:async' show Completer;
-import 'dart:html' show window;
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
@@ -48,9 +50,12 @@ void main() {
     // for the next `popstate` event and use a completer to signal that it has
     // occured.
     var nextPopState = Completer<void>()..complete();
-    window.onPopState.first.then((_) {
+    late JSFunction popStateListener;
+    popStateListener = ((web.Event _) {
       if (!nextPopState.isCompleted) nextPopState.complete();
-    });
+      web.window.removeEventListener('popstate', popStateListener);
+    }).toJS;
+    web.window.addEventListener('popstate', popStateListener);
     // Prevent navigation on back button.
     await testFixture.update((_) {
       routerHook.canLeave = false;
@@ -64,9 +69,12 @@ void main() {
     expect(location.path(), '/c');
 
     nextPopState = Completer<void>()..complete();
-    window.onPopState.first.then((_) {
+    late JSFunction popStateListener2;
+    popStateListener2 = ((web.Event _) {
       if (!nextPopState.isCompleted) nextPopState.complete();
-    });
+      web.window.removeEventListener('popstate', popStateListener2);
+    }).toJS;
+    web.window.addEventListener('popstate', popStateListener2);
     // Allow navigation on back button.
     await testFixture.update((_) {
       routerHook.canLeave = true;

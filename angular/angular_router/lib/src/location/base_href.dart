@@ -1,7 +1,7 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
-final _urlParsingNode = AnchorElement();
-Element? _baseElement;
+final _urlParsingNode = web.HTMLAnchorElement();
+web.Element? _baseElement;
 
 String? baseHrefFromDOM() {
   var href = _getBaseElementHref();
@@ -12,13 +12,12 @@ String? baseHrefFromDOM() {
 }
 
 String? _getBaseElementHref() {
-  _baseElement ??= document.querySelector('base');
+  _baseElement ??= web.document.querySelector('base');
   return _baseElement?.getAttribute('href');
 }
 
-// based on urlUtils.js in AngularJS 1.
 String _relativePath(String url) {
   _urlParsingNode.href = url;
-  var pathname = _urlParsingNode.pathname!;
+  var pathname = _urlParsingNode.pathname;
   return (pathname.isEmpty || pathname[0] == '/') ? pathname : '/$pathname';
 }

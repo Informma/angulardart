@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:collection/collection.dart';
 import 'package:angulardart/angulardart.dart';
@@ -26,7 +27,7 @@ import 'router_link_directive.dart';
   selector: '[routerLinkActive]',
 )
 class RouterLinkActive implements AfterViewInit, OnDestroy {
-  final Element _element;
+  final web.Element _element;
   final Router _router;
 
   late StreamSubscription<RouterState> _routeChanged;
@@ -81,6 +82,13 @@ class RouterLinkActive implements AfterViewInit, OnDestroy {
         break;
       }
     }
-    _element.classes.toggleAll(_classes, isActive);
+    var classList = (_element as web.HTMLElement).classList;
+    for (var cls in _classes) {
+      if (isActive) {
+        classList.add(cls);
+      } else {
+        classList.remove(cls);
+      }
+    }
   }
 }

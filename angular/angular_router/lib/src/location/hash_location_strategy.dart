@@ -1,4 +1,4 @@
-import 'dart:html' as html;
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart' show Injectable, Inject, Optional;
 
@@ -43,7 +43,7 @@ class HashLocationStrategy extends LocationStrategy {
   ]) : _baseHref = baseHref ?? '';
 
   @override
-  void onPopState(html.EventListener fn) {
+  void onPopState(void Function(web.Event) fn) {
     _platformLocation.onPopState(fn);
   }
 

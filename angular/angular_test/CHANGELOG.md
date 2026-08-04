@@ -1,3 +1,8 @@
+## 6.0.1
+
+- Fix: Use angulardart_meta for isDevMode (dart analyze clean)
+- Widen version constraints
+
 ## 6.0.0
 
 - **BREAKING**: Migrate from `dart:html` to `package:web`

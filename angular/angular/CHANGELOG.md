@@ -1,3 +1,8 @@
+## 9.0.1
+
+- Fix: Remove unnecessary imports (dart analyze clean)
+- Migrate to use `angulardart_meta` package for metadata annotations
+
 ## 9.0.0
 
 - **BREAKING**: Migrate from `dart:html` to `package:web`

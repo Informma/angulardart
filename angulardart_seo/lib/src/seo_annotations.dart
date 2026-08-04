@@ -134,64 +134,6 @@ class DynamicSeo {
   const DynamicSeo();
 }
 
-/// Annotation to exclude a component from prerendering.
-///
-/// Use this for pages that require authentication or have
-/// dynamic content that shouldn't be prerendered.
-///
-/// Example:
-/// ```dart
-/// @Component(
-///   selector: 'admin-dashboard',
-///   template: '...',
-/// )
-/// @NoPrerender()
-/// class AdminDashboardComponent {}
-/// ```
-class NoPrerender {
-  /// Optional reason for excluding from prerendering.
-  final String? reason;
-
-  const NoPrerender({this.reason});
-}
-
-/// Annotation to configure prerendering for a component.
-///
-/// Use this to customize how a component is prerendered.
-///
-/// Example:
-/// ```dart
-/// @Component(
-///   selector: 'blog-post',
-///   template: '...',
-/// )
-/// @PrerenderConfig(
-///   waitForSelector: '[data-content-loaded]',
-///   timeout: 10000,
-/// )
-/// class BlogPostComponent {}
-/// ```
-class PrerenderConfig {
-  /// CSS selector to wait for before capturing the page.
-  final String? waitForSelector;
-
-  /// Timeout in milliseconds for rendering.
-  final int timeout;
-
-  /// Whether to wait for network idle before capturing.
-  final bool waitForNetworkIdle;
-
-  /// Custom data to pass to the prerenderer.
-  final Map<String, dynamic>? data;
-
-  const PrerenderConfig({
-    this.waitForSelector,
-    this.timeout = 5000,
-    this.waitForNetworkIdle = true,
-    this.data,
-  });
-}
-
 /// Interface for components that provide dynamic SEO configuration.
 ///
 /// Implement this interface when your component needs to set SEO values
@@ -220,34 +162,4 @@ class PrerenderConfig {
 abstract class SeoAware {
   /// Returns the SEO configuration for this component.
   SeoConfig get seoConfig;
-}
-
-/// Interface for components that are aware of prerendering.
-///
-/// Implement this interface to control whether the component
-/// should be prerendered and to provide prerendering configuration.
-///
-/// Example:
-/// ```dart
-/// @Component(...)
-/// class BlogPostComponent implements PrerenderAware {
-///   final AuthService _auth;
-///
-///   BlogPostComponent(this._auth);
-///
-///   @override
-///   bool shouldPrerender() => !_auth.requiresLogin;
-///
-///   @override
-///   PrerenderConfig get prerenderConfig => PrerenderConfig(
-///     waitForSelector: '[data-post-loaded]',
-///   );
-/// }
-/// ```
-abstract class PrerenderAware {
-  /// Returns whether this component should be prerendered.
-  bool shouldPrerender() => true;
-
-  /// Returns the prerendering configuration for this component.
-  PrerenderConfig get prerenderConfig => const PrerenderConfig();
 }

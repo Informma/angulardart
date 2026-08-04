@@ -379,36 +379,6 @@ titleService.goBack(); // Go to previous title
 titleService.clearHistory();
 ```
 
-## Prerendering Control
-
-### Exclude from Prerendering
-
-```dart
-@Component(...)
-@NoPrerender(reason: 'Requires authentication')
-class AdminDashboardComponent {}
-```
-
-### Configure Prerendering
-
-```dart
-@Component(...)
-@PrerenderConfig(
-  waitForSelector: '[data-content-loaded]',
-  timeout: 10000,
-  waitForNetworkIdle: true,
-)
-class BlogPostComponent implements PrerenderAware {
-  @override
-  bool shouldPrerender() => true;
-
-  @override
-  PrerenderConfig get prerenderConfig => PrerenderConfig(
-    waitForSelector: '[data-post-loaded]',
-  );
-}
-```
-
 ## Best Practices
 
 ### 1. Set SEO Early

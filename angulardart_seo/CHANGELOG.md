@@ -1,3 +1,8 @@
+## 1.0.1
+
+- Fix: Remove prerender-related classes (NoPrerender, PrerenderConfig, PrerenderAware) - now in angulardart_prerender only
+- Cleaner separation of concerns between SEO and prerendering
+
 ## 1.0.0
 
 - Initial release

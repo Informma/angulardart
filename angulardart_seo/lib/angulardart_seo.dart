@@ -72,7 +72,4 @@ export 'src/seo_annotations.dart'
     show
         SeoConfig,
         DynamicSeo,
-        NoPrerender,
-        PrerenderConfig,
-        SeoAware,
-        PrerenderAware;
+        SeoAware;

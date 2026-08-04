@@ -7,7 +7,6 @@ import 'package:angulardart/src/core/change_detection/host.dart';
 import 'package:angulardart/src/core/linker/style_encapsulation.dart';
 import 'package:angulardart/src/devtools.dart';
 import 'package:angulardart/src/meta.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import 'render_view.dart';
 import 'view.dart';

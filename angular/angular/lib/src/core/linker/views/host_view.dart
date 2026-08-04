@@ -9,7 +9,6 @@ import 'package:angulardart/src/core/linker/view_fragment.dart';
 import 'package:angulardart/src/di/injector.dart';
 import 'package:angulardart/src/meta.dart';
 import 'package:angulardart/src/runtime/dom_helpers.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import 'component_view.dart';
 import 'dynamic_view.dart';

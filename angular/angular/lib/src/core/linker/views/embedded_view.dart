@@ -10,7 +10,6 @@ import 'package:angulardart/src/core/linker/view_fragment.dart';
 import 'package:angulardart/src/core/linker/view_ref.dart';
 import 'package:angulardart/src/meta.dart';
 import 'package:angulardart/src/runtime/dom_helpers.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import 'dynamic_view.dart';
 import 'render_view.dart';

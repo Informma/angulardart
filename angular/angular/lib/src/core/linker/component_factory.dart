@@ -5,7 +5,6 @@ import 'package:angulardart/src/core/change_detection/change_detector_ref.dart';
 import 'package:angulardart/src/core/zone/ng_zone.dart';
 import 'package:angulardart/src/di/injector.dart';
 import 'package:angulardart/src/meta.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import 'view_ref.dart' show ViewRef;
 import 'views/host_view.dart';

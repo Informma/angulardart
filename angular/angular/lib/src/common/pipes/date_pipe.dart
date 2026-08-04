@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:angulardart/src/meta.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import 'invalid_pipe_argument_exception.dart';
 

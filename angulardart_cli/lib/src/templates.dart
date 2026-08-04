@@ -202,9 +202,6 @@ base_url: 'https://example.com'
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_router/angulardart_router.dart';
 
-import 'home_component.dart';
-import 'about_component.dart';
-
 import 'home_component.template.dart' as home_ng;
 import 'about_component.template.dart' as about_ng;
 
@@ -223,6 +220,8 @@ class AppComponent implements OnInit {
 
   @override
   void ngOnInit() {
+    _router.onRouteActivated.listen((_) {});
+    
     routes = [
       RouteDefinition(
         path: '/',

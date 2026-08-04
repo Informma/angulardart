@@ -1,3 +1,9 @@
+## 1.0.12
+
+- feat: add --seo flag to `ngdart new` command
+- feat: add `ngdart seo init` command for existing projects
+- fix: remove unused imports in SEO templates
+
 ## 1.0.11
 
 - fix: release.sh now looks for commits touching the package directory

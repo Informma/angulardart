@@ -141,15 +141,49 @@ class _RuntimeInjector extends HierarchicalInjector
       final provider = _providers[token];
       // Provider not found, default to "orElse".
       if (provider == null) {
+        // Fallback for extension types from package:web: at runtime in dart2js,
+        // Type identity may differ across compilation boundaries. Try finding
+        // a matching provider by searching through registered tokens.
+        instance = _tryFindExtensionTypeProvider(token);
+      }
+      if (instance == null) {
         return orElse;
       }
-      // Resolve the provider and cache the instance.
-      if (_isMultiProvider(provider)) {
-        return _instances[provider.token] = _resolveMulti(provider);
-      }
-      _instances[token] = instance = buildAtRuntime(provider, this);
     }
     return instance;
+  }
+
+  /// Try to find a provider for extension types from package:web where Type
+  /// identity may differ across compilation boundaries.
+  Object? _tryFindExtensionTypeProvider(Object token) {
+    // Check if this looks like an extension type from package:web by examining
+    // the string representation of the type.
+    final tokenStr = '$token';
+    if (!tokenStr.contains('package:web')) {
+      return null;
+    }
+
+    // Search through all providers for a potential match.
+    // Extension types wrap JSObject, so we look for any provider whose
+    // string representation also indicates it's from package:web and is
+    // compatible with the requested type.
+    for (final providerToken in _providers.keys) {
+      var instance = _instances[providerToken];
+      if (instance == null && !_instances.containsKey(providerToken)) {
+        final provider = _providers[providerToken];
+        if (provider != null) {
+          if (_isMultiProvider(provider)) {
+            return _instances[provider.token] = _resolveMulti(provider);
+          }
+          _instances[providerToken] = instance = buildAtRuntime(provider, this);
+        }
+      }
+      if (instance != null || _instances.containsKey(providerToken)) {
+        return _instances[providerToken];
+      }
+    }
+
+    return null;
   }
 
   @override

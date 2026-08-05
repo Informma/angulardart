@@ -1,6 +1,6 @@
-import 'dart:js_interop';
-
 import 'package:web/web.dart' as web;
+
+import '../runtime/js_interop.dart';
 
 const _dangerousTags = <String>{
   'script',
@@ -23,9 +23,9 @@ const _dangerousAttrPrefixes = <String>{'on'};
 String? sanitizeHtmlInternal(String value) {
   final template =
       web.document.createElement('template') as web.HTMLTemplateElement;
-  template.innerHTML = value.toJS;
+  template.innerHTML = value.js;
   _sanitizeNode(template.content);
-  return (template.innerHTML as JSString).toDart;
+  return template.innerHTML.toString();
 }
 
 void _sanitizeNode(web.Node node) {

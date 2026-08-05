@@ -23,9 +23,9 @@
 /// ```
 library safe_html_directive;
 
-import 'dart:js_interop';
-
 import 'package:web/web.dart' as web;
+
+import '../../runtime/js_interop.dart';
 
 import 'package:angulardart/angulardart.dart';
 
@@ -49,12 +49,12 @@ class SafeHtmlDirective implements OnInit {
   void ngOnInit() {
     final value = safeHtml;
     if (value == null) {
-      _element?.innerHTML = ''.toJS;
+      _element?.innerHTML = ''.js;
     } else {
       final template =
           web.document.createElement('template') as web.HTMLTemplateElement;
-      template.innerHTML = value.toJS;
-      _element?.innerHTML = ''.toJS;
+      template.innerHTML = value.js;
+      _element?.innerHTML = ''.js;
       _element?.append(template.content.cloneNode(true));
     }
   }

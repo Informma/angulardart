@@ -1,6 +1,6 @@
-import 'dart:js_interop';
-
 import 'package:web/web.dart' as web;
+
+import '../runtime/js_interop.dart';
 
 /// Provides a hook for receiving unhandled errors/exceptions.
 ///
@@ -70,6 +70,6 @@ class ExceptionHandler {
       exception,
       stackTrace,
       reason,
-    ).toJS);
+    ).js);
   }
 }

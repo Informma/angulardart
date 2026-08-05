@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert' show json;
 import 'dart:developer';
-import 'dart:js_interop';
-
 import 'package:web/web.dart' as web;
+
+import '../runtime/js_interop.dart';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
@@ -74,7 +74,7 @@ class Inspector {
       web.console.error('''
 AngularDart DevTools does not yet support apps with multiple runApp()
 invocations. Please contact angulardart-eng@ if you encounter this error.
-'''.toJS);
+'''.js);
       return;
     }
 

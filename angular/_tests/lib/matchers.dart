@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
@@ -39,17 +37,17 @@ class _HasTextContent extends Matcher {
 String? _elementText(Object? n) {
   if (n is Iterable) {
     return n.map(_elementText).join('');
-  } else if (n.isA<web.Node>()) {
+  } else if (n is web.Node) {
     final node = n as web.Node;
-    if (node.isA<web.Comment>()) {
+    if (node is web.Comment) {
       return '';
     }
 
-    if (node.isA<web.HTMLSlotElement>()) {
+    if (node is web.HTMLSlotElement) {
       return _elementText((node as web.HTMLSlotElement).assignedNodes());
     }
 
-    if (node.isA<web.Element>()) {
+    if (node is web.Element) {
       final element = node as web.Element;
       if (element.shadowRoot != null) {
         final nodes = <web.Node>[];

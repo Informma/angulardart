@@ -1,6 +1,6 @@
-import 'dart:js_interop';
-
 import 'package:web/web.dart' as web;
+
+import '../../runtime/js_interop.dart';
 
 import 'package:angulardart/src/core/application_tokens.dart' show APP_ID;
 import 'package:angulardart/src/runtime/dom_events.dart' show EventManager;
@@ -24,6 +24,6 @@ class AppViewUtils {
 web.DocumentFragment createTrustedHtml(String trustedHtml) {
   final template =
       web.document.createElement('template') as web.HTMLTemplateElement;
-  template.innerHTML = trustedHtml.toJS;
+  template.innerHTML = trustedHtml.js;
   return template.content;
 }

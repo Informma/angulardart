@@ -1,6 +1,6 @@
-import 'dart:js_interop';
-
 import 'package:web/web.dart' as web;
+
+import 'js_interop.dart';
 
 import 'package:angulardart/src/core/zone/ng_zone.dart';
 
@@ -35,7 +35,7 @@ class EventManager {
     // If the view compiler knows that a given event is a DOM event (i.e.
     // "click"), it will never be called into EventManager. But of course the
     // browser APIs change, so this is the final fallback.
-    element.addEventListener(name, callback.toJS);
+    element.addEventListener(name, toJsEventListener(callback));
   }
 }
 
@@ -86,11 +86,12 @@ class _KeyEventsHandler {
       return;
     }
 
-    element.addEventListener(parsed.domEventName, (web.Event event) {
+    final _keyEventHandler = (web.Event event) {
       if (event is web.KeyboardEvent && parsed.matches(event)) {
         callback(event);
       }
-    }.toJS);
+    };
+    element.addEventListener(parsed.domEventName, toJsEventListener(_keyEventHandler));
   }
 
   static _ParsedEvent? _parse(String name) {

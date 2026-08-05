@@ -1,3 +1,12 @@
+## 5.0.6
+
+- Fix: Use direct `web.Element` injection instead of deprecated `ElementRef` workaround
+- Fix: Simplified constructor signatures for RouterLink and RouterLinkActive directives
+
+## 5.0.5
+
+- Fix: RouterLink and RouterLinkActive now properly cast ElementRef.nativeElement to web.Element/web.HTMLElement to avoid runtime errors with extension types
+
 ## 5.0.3
 
 - Fix: Remove third argument from addEventListener calls (package:web compatibility)

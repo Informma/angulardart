@@ -1,7 +1,10 @@
+## 5.0.7
+
+- Fix: Correctly resolve DI lookups for `web.Element` via updated angulardart 9.0.6 DI system
+
 ## 5.0.6
 
 - Fix: Use direct `web.Element` injection instead of deprecated `ElementRef` workaround
-- Fix: Simplified constructor signatures for RouterLink and RouterLinkActive directives
 
 ## 5.0.5
 

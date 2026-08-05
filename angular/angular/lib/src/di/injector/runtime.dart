@@ -156,30 +156,32 @@ class _RuntimeInjector extends HierarchicalInjector
   /// Try to find a provider for extension types from package:web where Type
   /// identity may differ across compilation boundaries.
   Object? _tryFindExtensionTypeProvider(Object token) {
-    // Check if this looks like an extension type from package:web by examining
-    // the string representation of the type.
+    // At runtime in dart2js, extension types from package:web are compiled as
+    // their underlying JSObject type. The compiler registers providers under the
+    // extension type name (e.g., Element), but lookups may come as JSObject.
+    // Search through all registered providers looking for one from package:web.
     final tokenStr = '$token';
-    if (!tokenStr.contains('package:web')) {
-      return null;
-    }
-
-    // Search through all providers for a potential match.
-    // Extension types wrap JSObject, so we look for any provider whose
-    // string representation also indicates it's from package:web and is
-    // compatible with the requested type.
     for (final providerToken in _providers.keys) {
-      var instance = _instances[providerToken];
-      if (instance == null && !_instances.containsKey(providerToken)) {
-        final provider = _providers[providerToken];
-        if (provider != null) {
-          if (_isMultiProvider(provider)) {
-            return _instances[provider.token] = _resolveMulti(provider);
+      final providerTokenStr = '$providerToken';
+      if (providerTokenStr.contains('package:web')) {
+        var instance = _instances[providerToken];
+        if (instance == null && !_instances.containsKey(providerToken)) {
+          final provider = _providers[providerToken];
+          if (provider != null) {
+            if (_isMultiProvider(provider)) {
+              return _instances[provider.token] = _resolveMulti(provider);
+            }
+            _instances[providerToken] = instance = buildAtRuntime(provider, this);
           }
-          _instances[providerToken] = instance = buildAtRuntime(provider, this);
         }
-      }
-      if (instance != null || _instances.containsKey(providerToken)) {
-        return _instances[providerToken];
+        if (instance != null || _instances.containsKey(providerToken)) {
+          // Only use this provider if it's compatible with what we're looking for.
+          // If the requested token is JSObject or contains 'Element', any package:web
+          // element type could be a match. Otherwise skip to avoid wrong matches.
+          if (tokenStr == 'JSObject' || tokenStr.contains('Element')) {
+            return _instances[providerToken];
+          }
+        }
       }
     }
 

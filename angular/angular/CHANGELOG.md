@@ -1,8 +1,12 @@
+## 9.0.6
+
+- Fix: Correctly resolve `JSObject` lookups to `package:web` extension type providers (Element, HTMLElement) in DI system
+- Fix: Platform-agnostic JS interop utilities for DDC/VM compatibility
+- Fix: Event listener callbacks now work correctly with dart2js and DDC
+
 ## 9.0.5
 
 - Fix: Support injection of `package:web` extension types (web.Element, web.HTMLElement) in DI system
-- Fix: Platform-agnostic JS interop utilities for DDC/VM compatibility
-- Fix: Event listener callbacks now work correctly with dart2js and DDC
 
 ## 9.0.3
 

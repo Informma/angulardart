@@ -4,7 +4,7 @@ issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://angulardartreborn.com
 documentation: https://angulardartreborn.com/guide
 description: Router for AngularDart.
-version: 5.0.6
+version: 5.0.7
 topics:
   - angular
   - router

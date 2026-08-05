@@ -316,7 +316,7 @@ class BaseMaterialInput extends FocusableMixin
     return _localValidationMessage ?? '';
   }
 
-  ElementRef? get inputRef => null;
+  web.Element? get inputRef => null;
 
   @override
   void ngOnDestroy() {
@@ -379,7 +379,7 @@ class BaseMaterialInput extends FocusableMixin
   }
 
   void selectAll() {
-    (inputRef!.nativeElement as web.HTMLInputElement).select();
+    (inputRef! as web.HTMLInputElement).select();
   }
 
   @ViewChild(FocusableDirective)
@@ -425,17 +425,20 @@ class BaseMaterialInput extends FocusableMixin
 
 class BaseSingleLineInputComponent extends BaseMaterialInput
     implements Focusable, ReferenceDirective, AfterViewInit, OnDestroy {
-  @ViewChild('inputEl')
-  ElementRef? inputEl;
+  @ViewChild('inputEl', read: web.HTMLInputElement)
+  web.HTMLInputElement? inputEl;
 
-  @ViewChild('popupSourceEl')
-  ElementRef? popupSourceEl;
-
-  @override
-  ElementRef get elementRef => popupSourceEl!;
+  @ViewChild('popupSourceEl', read: web.HTMLDivElement)
+  web.HTMLDivElement? popupSourceEl;
 
   @override
-  ElementRef? get inputRef => inputEl;
+  web.Element get element => popupSourceEl!;
+
+  // kept for backward compatibility with code that expects elementRef
+  web.Element get elementRef => popupSourceEl!;
+
+  @override
+  web.Element? get inputRef => inputEl;
 
   String? type;
 

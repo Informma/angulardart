@@ -117,13 +117,13 @@ class MaterialExpansionPanel
   Focusable? _focusOnOpenChild;
 
   /// Sets the focus child so that we can focus on it when the panel opens.
-  @ContentChild('focusOnOpen')
+  @ContentChild('focusOnOpen', read: web.Element)
   @Input('focusOnOpen')
   set focusOnOpenChild(dynamic element) {
     if (element is Focusable) {
       _focusOnOpenChild = element;
-    } else if (element is ElementRef) {
-      _focusOnOpenChild = RootFocusable(element.nativeElement);
+    } else if (_isHTMLElement(element)) {
+      _focusOnOpenChild = RootFocusable(element as web.HTMLElement);
     } else {
       assert(
           element == null,
@@ -698,3 +698,5 @@ class MaterialExpansionPanel
       desc: 'Text on cancel button.',
       meaning: 'Text on cancel button.');
 }
+
+bool _isHTMLElement(dynamic value) => value.isA<web.HTMLElement>();

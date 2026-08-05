@@ -40,7 +40,8 @@ class RootFocusable implements Focusable, Disposable {
 }
 
 abstract class ProjectedFocus implements Focusable {
-  Future< /* Focusable | ElementRef */ dynamic> get focusDelegate;
+  /// Returns a [Focusable] or a [web.Element] that should be focused.
+  Future<dynamic> get focusDelegate;
   Focusable? _resolvedFocusable;
 
   @override

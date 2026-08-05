@@ -51,7 +51,7 @@ class PopupSourceDirective
 
   @override
   void ngAfterViewInit() {
-    _element = _referenceDirective?.elementRef.nativeElement ?? _element;
+    _element = (_referenceDirective?.element as web.HTMLElement?) ?? _element;
     _updateSource();
   }
 

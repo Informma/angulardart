@@ -7,7 +7,6 @@ import 'dart:js_interop';
 
 import 'package:web/web.dart' as web;
 
-import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/utils/browser/feature_detector/feature_detector.dart';
 
 /// Determines if the space key was pressed in a [KeyboardEvent].
@@ -42,8 +41,7 @@ typedef Predicate<T> = bool Function(T value);
 Predicate<T> not<T>(Predicate<T> predicate) => (value) => !predicate(value);
 
 /// A stream of click, mouseup or focus events outside a given element.
-Stream<web.Event> triggersOutside(dynamic /* Element | ElementRef */ element) {
-  if (element is ElementRef) element = element.nativeElement;
+Stream<web.Event> triggersOutside(web.Element? element) {
   return triggersOutsideAny((node) => node == element);
 }
 

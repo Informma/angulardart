@@ -57,11 +57,11 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
 
   StreamSubscription? _subscription;
 
-  @ViewChild('textareaEl')
-  ElementRef? textareaEl;
+  @ViewChild('textareaEl', read: web.HTMLTextAreaElement)
+  web.HTMLTextAreaElement? textareaEl;
 
   @override
-  ElementRef get inputRef => textareaEl!;
+  web.Element get inputRef => textareaEl!;
 
   int _rows = 1;
 
@@ -80,21 +80,24 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
   @override
   void focus() => super.focus();
 
-  @ViewChild('popupSourceEl')
-  ElementRef? popupSourceEl;
+  @ViewChild('popupSourceEl', read: web.HTMLDivElement)
+  web.HTMLDivElement? popupSourceEl;
 
   @override
-  ElementRef get elementRef => popupSourceEl!;
+  web.Element get element => popupSourceEl!;
+
+  // kept for backward compatibility with code that expects elementRef
+  web.Element get elementRef => popupSourceEl!;
 
   String get mirrorText => '$inputText\n';
 
   @ViewChild('lineHeightMeasure')
-  set lineHeightMeasure(ElementRef value) {
+  set lineHeightMeasure(web.Element value) {
     _domService.scheduleRead(() {
       var isDestroyed = textareaEl == null;
       if (isDestroyed) return;
 
-      var height = (value.nativeElement as web.Element).clientHeight;
+      var height = value.clientHeight;
       if (height != 0) {
         _inputLineHeight = height;
         _subscription?.cancel();

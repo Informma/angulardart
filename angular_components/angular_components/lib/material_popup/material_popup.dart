@@ -118,7 +118,7 @@ class MaterialPopupComponent extends Object
 
   // Needed to implement the PopupHierarchyElement interface.
   @override
-  final ElementRef elementRef;
+  final web.Element elementRef;
 
   final String role;
   static final _idGenerator = SequentialIdGenerator.fromUUID();
@@ -304,7 +304,7 @@ class MaterialPopupComponent extends Object
 
   void _updateOverlayCssClass() {
     if (_overlayRef == null) return;
-    var hostClassName = elementRef.nativeElement.className;
+    var hostClassName = elementRef.className;
     _overlayRef!.overlayElement.className += ' $hostClassName';
   }
 

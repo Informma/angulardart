@@ -17,8 +17,8 @@ const darkThemeClass = 'acx-theme-dark';
 ///
 /// code:
 ///
-///     MyComponent(AcxTheme acxTheme, ElementRef myElementRef) {
-///       acxTheme.theme(myElementRef);
+///     MyComponent(AcxTheme acxTheme, web.HTMLElement myElement) {
+///       acxTheme.theme(myElement);
 ///     }
 ///
 /// sass:

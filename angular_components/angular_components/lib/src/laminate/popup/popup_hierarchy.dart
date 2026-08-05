@@ -39,7 +39,7 @@ class PopupHierarchy {
   void _attach(PopupHierarchyElement child) {
     if (_visiblePopupStack.isEmpty) {
       _rootPane =
-          events.closestWithClass(child.elementRef!.nativeElement, 'pane');
+           events.closestWithClass(child.elementRef!, 'pane');
     }
     _visiblePopupStack.add(child);
 
@@ -157,7 +157,7 @@ abstract mixin class PopupHierarchyElement {
 
   web.Element get container;
 
-  ElementRef? get elementRef => null;
+  web.Element? get elementRef => null;
 
   List<web.Element> get autoDismissBlockers;
 

@@ -3,13 +3,14 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:angulardart/angulardart.dart';
+import 'package:web/web.dart' as web;
 
 // TODO(google): Remove this once use of '#' in a template is either
 // consistent, or has a way to declare specifically what you want - e.g. the
 // component instance or the element ref. Today, using # on an HTML element will
 // be an elementRef, but # on a component will be a component instance.
 
-/// Place on an element or component to expose the `[ElementRef]` as 'ref'.
+/// Place on an element or component to expose the DOM [Element] as 'ref'.
 ///
 /// Example usage:
 ///     `<material-button ref #button="ref"></materialButton>`
@@ -19,7 +20,7 @@ import 'package:angulardart/angulardart.dart';
   exportAs: 'ref',
 )
 class ReferenceDirective {
-  final ElementRef elementRef;
+  final web.Element element;
 
-  ReferenceDirective(this.elementRef);
+  ReferenceDirective(this.element);
 }

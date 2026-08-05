@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html' as html;
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -606,7 +607,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @visibleForTemplate
-  void handleClick(html.Event event) {
+  void handleClick(web.Event event) {
     showPopup = true;
     event.stopPropagation();
   }
@@ -626,10 +627,10 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   /// Fired when the input gains focus.
   @Output('focus')
-  Stream<html.FocusEvent> get onFocus => _onFocus.stream;
-  final _onFocus = StreamController<html.FocusEvent>.broadcast(sync: true);
+  Stream<web.FocusEvent> get onFocus => _onFocus.stream;
+  final _onFocus = StreamController<web.FocusEvent>.broadcast(sync: true);
 
-  void handleFocus(html.FocusEvent event) {
+  void handleFocus(web.FocusEvent event) {
     if (_isFocused) return;
 
     showPopup = true;
@@ -653,7 +654,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   Stream<void> get onInputBlur => _onInputBlur.stream;
   final _onInputBlur = StreamController<void>.broadcast(sync: true);
 
-  void handleBlur(html.FocusEvent event) {
+  void handleBlur(web.FocusEvent event) {
     _onInputBlur.add(null);
 
     _isFocused = false;
@@ -713,7 +714,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  void handleEnterKey(html.KeyboardEvent event) {
+  void handleEnterKey(web.KeyboardEvent event) {
     if (!showPopup) {
       showPopup = true;
     } else {
@@ -737,7 +738,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   /// Type a space into the search box in all other cases including a
   /// multi-select input with no active item.
   @override
-  void handleSpaceKey(html.KeyboardEvent event) {
+  void handleSpaceKey(web.KeyboardEvent event) {
     if (!showPopup || !isMultiSelect) return;
 
     final item = activeModel.activeItem;
@@ -751,7 +752,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   ///
   /// WAI-ARIA Guidelines: https://www.w3.org/TR/wai-aria-practices/#combobox
   @override
-  void handleBackspaceKey(html.KeyboardEvent event) {
+  void handleBackspaceKey(web.KeyboardEvent event) {
     if (activeModel.activeItem != null) {
       activeModel.activate(null);
     }
@@ -775,7 +776,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  void handleUpKey(html.KeyboardEvent event) {
+  void handleUpKey(web.KeyboardEvent event) {
     if (showPopup) {
       event.preventDefault(); // Prevent input caret from jumping.
       event.stopPropagation();
@@ -785,7 +786,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  void handleDownKey(html.KeyboardEvent event) {
+  void handleDownKey(web.KeyboardEvent event) {
     if (showPopup) {
       event.preventDefault(); // Prevent input caret from jumping.
       event.stopPropagation();
@@ -795,7 +796,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  void handlePageUp(html.KeyboardEvent event) {
+  void handlePageUp(web.KeyboardEvent event) {
     if (showPopup) {
       event.preventDefault(); // Prevent page from scrolling.
       event.stopPropagation();
@@ -805,7 +806,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  void handlePageDown(html.KeyboardEvent event) {
+  void handlePageDown(web.KeyboardEvent event) {
     if (showPopup) {
       event.preventDefault(); // Prevent page from scrolling.
       event.stopPropagation();
@@ -899,7 +900,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   @override
   num getMaxHeight(num positionY, num viewportHeight) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate!.getMaxHeight(positionY, viewportHeight) ?? 0;
+      return _popupSizeDelegate.getMaxHeight(positionY, viewportHeight) ?? 0;
     } else {
       // The default max height for auto suggest input's popup.
       return 400;
@@ -909,7 +910,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   @override
   num getMaxWidth(num positionX, num viewportWidth) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate!.getMaxWidth(positionX, viewportWidth) ?? 0;
+      return _popupSizeDelegate.getMaxWidth(positionX, viewportWidth) ?? 0;
     } else {
       // The default max height for auto suggest input's popup. This was
       // previously max width for material list.

@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/utils/angular/imperative_view/imperative_view.dart';
@@ -280,7 +281,7 @@ class PortalHostDirective extends BasePortalHost {
 /// An implementation of [PortalHost] that has an arbitrary DOM node as its
 /// container.
 class DomPortalHost extends BasePortalHost {
-  final HtmlElement _hostElement;
+  final web.HTMLElement _hostElement;
   final AcxImperativeViewUtils _imperativeViewUtils;
 
   DomPortalHost(this._hostElement, this._imperativeViewUtils);
@@ -294,7 +295,7 @@ class DomPortalHost extends BasePortalHost {
           'is not an Angular component.');
     }
     return _imperativeViewUtils
-        .insertComponent(portal.componentFactory, portal.origin!, _hostElement)
+        .insertComponent(portal.componentFactory, portal.origin!, (_hostElement as dynamic))
         .then((ref) {
       setPortalDisposer(ref.destroy);
       return ref;
@@ -304,7 +305,7 @@ class DomPortalHost extends BasePortalHost {
   @override
   Future<Map<String, dynamic>> attachTemplatePortal(TemplatePortal portal) {
     return _imperativeViewUtils
-        .insertAngularView(_hostElement, portal.template, portal.viewContainer)
+        .insertAngularView((_hostElement as dynamic), portal.template, portal.viewContainer)
         .then((ref) {
       portal.locals.forEach(ref.viewRef.setLocal);
       setPortalDisposer(ref.dispose);

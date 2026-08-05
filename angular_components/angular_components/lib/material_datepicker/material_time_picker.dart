@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -335,21 +336,21 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
 
   /// Stops propagating arrow key action from time input box to
   /// material-dropdown-select.
-  void onInputBoxKeyDown(KeyboardEvent event) {
+  void onInputBoxKeyDown(web.KeyboardEvent event) {
     event.stopPropagation();
   }
 
   /// Stops material-dropdown-select from closing popup when user type space in
   /// the input field.
   @override
-  void handleSpaceKey(KeyboardEvent event) {
+  void handleSpaceKey(web.KeyboardEvent event) {
     event.stopPropagation();
   }
 
   /// Stops material-dropdown-select from selecting dropdown item when user
   /// press enter key in the input field.
   @override
-  void handleEnterKey(KeyboardEvent event) {
+  void handleEnterKey(web.KeyboardEvent event) {
     popupVisible = false;
     event.stopPropagation();
   }

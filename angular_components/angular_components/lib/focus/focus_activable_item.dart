@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -22,7 +22,7 @@ class FocusActivableItemDirective extends RootFocusable
   @override
   late String key;
 
-  FocusActivableItemDirective(HtmlElement super.root);
+  FocusActivableItemDirective(web.HTMLElement super.root);
 }
 
 /// A focusable component with a matching [key].

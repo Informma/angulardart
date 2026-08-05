@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus_interface.dart';
@@ -13,18 +14,15 @@ import 'package:angulardart_components/src/laminate/popup/popup_source.dart';
 import 'package:angulardart_components/utils/angular/properties/properties.dart';
 import 'package:angulardart_components/utils/angular/reference/reference.dart';
 
-/// A directive that exposes the [PopupSource] interface as `popupSource`.
 @Directive(
   selector: '[popupSource]',
   exportAs: 'popupSource',
 )
-// TODO(google): Deprecate use of `relativeTo` with an Element, use instead.
-// TODO(google): Move the setting of alignOriginX and Y into DomPopupSource.
 class PopupSourceDirective
     implements ElementPopupSource, AfterViewInit, OnDestroy {
   final DomPopupSourceFactory _domPopupSourceFactory;
   final bool _initAriaAttributes;
-  HtmlElement? _element;
+  web.HTMLElement? _element;
   ReferenceDirective? _referenceDirective;
   Focusable? _focusable;
 
@@ -34,9 +32,6 @@ class PopupSourceDirective
   PopupSource? _popupSource;
   String? _popupId;
 
-  /// [initPopupAriaAttributes] is an attribute input that decide whether to
-  /// set the popup related aria attributes. This defaults to true and can be
-  /// set to false for cases where the popup source isn't the focus target.
   PopupSourceDirective(
       this._domPopupSourceFactory,
       this._element,
@@ -56,30 +51,16 @@ class PopupSourceDirective
 
   @override
   void ngAfterViewInit() {
-    // We have to wait until the view is inited to have elementRef
     _element = _referenceDirective?.elementRef.nativeElement ?? _element;
     _updateSource();
   }
 
   @override
-  HtmlElement get sourceElement => _element!;
+  web.HTMLElement get sourceElement => _element!;
 
   @override
   Alignment? get alignOriginX => _popupSource?.alignOriginX;
 
-  /// Alignment of the popup in the horizontal direction.
-  ///
-  /// Possible values are:
-  /// - `start`: Align popup to the start of a container. This is equivalent
-  ///   to 'flex-start'. (Default)
-  /// - `center`: Align popup to the center of a container. This is equivalent
-  ///   to 'center'.
-  /// - `end`: Align popup to the end of a container. This is equivalent to
-  ///   'flex-end'.
-  /// - `before`: Align popup before a container. This is *not* equivalent to
-  ///   any CSS positioning model.
-  /// - `after`: Align popup after a container. This is *not* equivalent to
-  ///   any CSS positioning model.
   @Input('alignPositionX')
   set alignX(String align) {
     _alignOriginX = Alignment.parse(align);
@@ -89,19 +70,6 @@ class PopupSourceDirective
   @override
   Alignment? get alignOriginY => _popupSource?.alignOriginY;
 
-  /// Alignment of the popup in the vertical direction.
-  ///
-  /// Possible values are:
-  /// - `start`: Align popup to the start of a container. This is equivalent
-  ///   to 'flex-start'. (Default)
-  /// - `center`: Align popup to the center of a container. This is equivalent
-  ///   to 'center'.
-  /// - `end`: Align popup to the end of a container. This is equivalent to
-  ///   'flex-end'.
-  /// - `before`: Align popup before a container. This is *not* equivalent to
-  ///   any CSS positioning model.
-  /// - `after`: Align popup after a container. This is *not* equivalent to
-  ///   any CSS positioning model.
   @Input('alignPositionY')
   set alignY(String align) {
     _alignOriginY = Alignment.parse(align);
@@ -109,12 +77,12 @@ class PopupSourceDirective
   }
 
   @override
-  Stream<Rectangle<num>> onDimensionsChanged({bool track = false}) {
+  Stream<web.DOMRect> onDimensionsChanged({bool track = false}) {
     return _popupSource!.onDimensionsChanged(track: track).distinct();
   }
 
   @override
-  Rectangle get dimensions => _popupSource!.dimensions;
+  web.DOMRect get dimensions => _popupSource!.dimensions;
 
   @override
   bool get isRtl => _popupSource!.isRtl;

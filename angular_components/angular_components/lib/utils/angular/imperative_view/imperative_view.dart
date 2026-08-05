@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
@@ -71,13 +72,13 @@ class AcxImperativeViewUtils {
   Future<ComponentRef<T>> insertComponent<T extends Object>(
       ComponentFactory<T> componentFactory,
       ViewContainerRef viewContainer,
-      HtmlElement intoDomElement,
+      web.HTMLElement intoDomElement,
       {Injector? injector}) async {
     final ref = _componentLoader.loadNextToLocation<T>(
         componentFactory, viewContainer,
         injector: injector ?? viewContainer.parentInjector);
     await _domService.onWrite();
-    intoDomElement.append(ref.location);
+    intoDomElement.appendChild(ref.location as web.Node);
     return ref;
   }
 
@@ -87,12 +88,12 @@ class AcxImperativeViewUtils {
   /// The returned instance can be destroyed by disposing it.
   ///
   /// **WARNING**: This code is experimental.
-  Future<ImperativeViewRef> insertAngularView(HtmlElement intoDomElement,
+  Future<ImperativeViewRef> insertAngularView(web.HTMLElement intoDomElement,
       TemplateRef templateRef, ViewContainerRef viewContainer) {
     return _domService.onWrite().then((_) {
       var viewRef = viewContainer.createEmbeddedView(templateRef);
       for (final rootNode in viewRef.rootNodes) {
-        intoDomElement.append(rootNode);
+        intoDomElement.appendChild(rootNode as web.Node);
       }
       return ImperativeViewRef._(viewRef, () {
         var index = viewContainer.indexOf(viewRef);

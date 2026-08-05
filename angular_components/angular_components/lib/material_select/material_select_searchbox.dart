@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus_interface.dart';
@@ -63,7 +63,7 @@ class MaterialSelectSearchboxComponent extends FocusableMixin
 
   /// Allow typing a space character when the searchbox is used inside another
   /// component that assumes space to be an action (such as select).
-  void stopSpaceKeyPropagation(KeyboardEvent keyboardEvent) {
+  void stopSpaceKeyPropagation(web.KeyboardEvent keyboardEvent) {
     if (isSpaceKey(keyboardEvent)) {
       keyboardEvent.stopPropagation();
     }

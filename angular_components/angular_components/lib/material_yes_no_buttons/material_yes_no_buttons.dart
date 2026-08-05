@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -41,15 +43,15 @@ class MaterialYesNoButtonsComponent implements HasDisabled {
   ///
   /// Published events are either KeyboardEvent or MouseEvent
   @Output()
-  Stream<UIEvent> get yes => _yes.stream;
-  final _yes = StreamController<UIEvent>.broadcast();
+  Stream<web.UIEvent> get yes => _yes.stream;
+  final _yes = StreamController<web.UIEvent>.broadcast();
 
   /// The callback that is to be invoked, when no button is pressed.
   ///
   /// Published events are either KeyboardEvent or MouseEvent
   @Output()
-  Stream<UIEvent> get no => _no.stream;
-  final _no = StreamController<UIEvent>.broadcast();
+  Stream<web.UIEvent> get no => _no.stream;
+  final _no = StreamController<web.UIEvent>.broadcast();
 
   /// The text to be shown on the save button.
   ///
@@ -162,11 +164,11 @@ class MaterialYesNoButtonsComponent implements HasDisabled {
   @ViewChild('noButton')
   MaterialButtonComponent? noButton;
 
-  void onYes(UIEvent event) {
+  void onYes(web.UIEvent event) {
     _yes.add(event);
   }
 
-  void onNo(UIEvent event) {
+  void onNo(web.UIEvent event) {
     _no.add(event);
   }
 
@@ -224,16 +226,16 @@ abstract class BoundaryAwareKeyDirective implements OnDestroy {
   StreamSubscription? _subscription;
 
   BoundaryAwareKeyDirective.keypress(
-      Element element, @Optional() KeyUpBoundaryDirective? boundary) {
+      web.Element element, @Optional() KeyUpBoundaryDirective? boundary) {
     final stream =
-        boundary?.keyPressStream ?? Element.keyPressEvent.forElement(element);
+        boundary?.keyPressStream ?? _keyPressEventForElement(element);
     _subscription = stream.where(_isKeyMatching).listen(_onMatchingKey);
   }
 
   BoundaryAwareKeyDirective.keyup(
-      Element element, @Optional() KeyUpBoundaryDirective? boundary) {
+      web.Element element, @Optional() KeyUpBoundaryDirective? boundary) {
     final stream =
-        boundary?.keyUpStream ?? Element.keyUpEvent.forElement(element);
+        boundary?.keyUpStream ?? _keyUpEventForElement(element);
     _subscription = stream.where(_isKeyMatching).listen(_onMatchingKey);
   }
 
@@ -244,10 +246,28 @@ abstract class BoundaryAwareKeyDirective implements OnDestroy {
   }
 
   /// Tests whether a subclass is interested in the event.
-  bool _isKeyMatching(KeyboardEvent event);
+  bool _isKeyMatching(web.KeyboardEvent event);
 
   /// Invoked for events that passed [_isKeyMatching].
-  void _onMatchingKey(KeyboardEvent event);
+  void _onMatchingKey(web.KeyboardEvent event);
+}
+
+Stream<web.KeyboardEvent> _keyPressEventForElement(web.Element element) {
+  final controller = StreamController<web.KeyboardEvent>.broadcast();
+  void listener(web.Event e) {
+    controller.add(e as web.KeyboardEvent);
+  }
+  element.addEventListener('keypress', listener.toJS);
+  return controller.stream;
+}
+
+Stream<web.KeyboardEvent> _keyUpEventForElement(web.Element element) {
+  final controller = StreamController<web.KeyboardEvent>.broadcast();
+  void listener(web.Event e) {
+    controller.add(e as web.KeyboardEvent);
+  }
+  element.addEventListener('keyup', listener.toJS);
+  return controller.stream;
 }
 
 /// Marks a subtree of the dom that should handle key events for a
@@ -260,9 +280,9 @@ abstract class BoundaryAwareKeyDirective implements OnDestroy {
   visibility: Visibility.all,
 )
 class KeyUpBoundaryDirective {
-  final HtmlElement _element;
-  Stream<KeyboardEvent>? _keyUpStream;
-  Stream<KeyboardEvent>? _keyPressStream;
+  final web.HTMLElement _element;
+  Stream<web.KeyboardEvent>? _keyUpStream;
+  Stream<web.KeyboardEvent>? _keyPressStream;
 
   KeyUpBoundaryDirective(this._element);
 
@@ -270,12 +290,12 @@ class KeyUpBoundaryDirective {
   ///
   /// Use this stream when the KeyDirective you are creating cannot use a
   /// keyPress event such as for modifier keys and Esc.
-  Stream<KeyboardEvent> get keyUpStream =>
-      _keyUpStream ??= Element.keyUpEvent.forElement(_element);
+  Stream<web.KeyboardEvent> get keyUpStream =>
+      _keyUpStream ??= _keyUpEventForElement(_element);
 
   /// Stream of keyPress events.
-  Stream<KeyboardEvent> get keyPressStream =>
-      _keyPressStream ??= Element.keyPressEvent.forElement(_element);
+  Stream<web.KeyboardEvent> get keyPressStream =>
+      _keyPressStream ??= _keyPressEventForElement(_element);
 }
 
 /// If attached to the yes-no buttons it will listen for escape `keyup` event
@@ -292,12 +312,12 @@ class EscapeCancelsDirective extends BoundaryAwareKeyDirective
   MaterialButtonComponent? get noButton => _yesNo.noButton;
 
   EscapeCancelsDirective(
-      this._yesNo, Element element, @Optional() KeyUpBoundaryDirective? boundary)
+      this._yesNo, web.Element element, @Optional() KeyUpBoundaryDirective? boundary)
       : super.keyup(element, boundary);
 
   @override
-  bool _isKeyMatching(KeyboardEvent event) {
-    if (event.keyCode != KeyCode.ESC) return false;
+  bool _isKeyMatching(web.KeyboardEvent event) {
+    if (event.keyCode != 27) return false;
     // Make sure the no button is visible and enabled
     if (noButton == null || noButton!.disabled) return false;
 
@@ -305,7 +325,7 @@ class EscapeCancelsDirective extends BoundaryAwareKeyDirective
   }
 
   @override
-  void _onMatchingKey(KeyboardEvent event) => _yesNo.onNo(event);
+  void _onMatchingKey(web.KeyboardEvent event) => _yesNo.onNo(event);
 }
 
 /// If attached to yes-no buttons, it will listen for Enter `keyup` events and
@@ -323,7 +343,7 @@ class EnterAcceptsDirective extends BoundaryAwareKeyDirective
   MaterialButtonComponent? get noButton => _yesNo.noButton;
 
   EnterAcceptsDirective(
-      this._yesNo, Element element, @Optional() KeyUpBoundaryDirective? boundary)
+      this._yesNo, web.Element element, @Optional() KeyUpBoundaryDirective? boundary)
       : super.keypress(element, boundary);
 
   /// Enables the directive to be conditionally applied.
@@ -331,9 +351,9 @@ class EnterAcceptsDirective extends BoundaryAwareKeyDirective
   bool enterAccepts = true;
 
   @override
-  bool _isKeyMatching(KeyboardEvent event) {
+  bool _isKeyMatching(web.KeyboardEvent event) {
     if (!enterAccepts) return false;
-    if (event.keyCode != KeyCode.ENTER || event.repeat == true) return false;
+    if (event.keyCode != 13 || event.repeat == true) return false;
     // Make sure the yes button is visible and enabled
     if (yesButton == null || yesButton!.disabled) return false;
     // If the no button is visible, it must not be focused (otherwise enter must
@@ -344,5 +364,5 @@ class EnterAcceptsDirective extends BoundaryAwareKeyDirective
   }
 
   @override
-  void _onMatchingKey(KeyboardEvent event) => _yesNo.onYes(event);
+  void _onMatchingKey(web.KeyboardEvent event) => _yesNo.onYes(event);
 }

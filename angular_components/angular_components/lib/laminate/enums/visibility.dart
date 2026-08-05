@@ -38,7 +38,7 @@ class Visibility implements ElementStyleEnum {
   @override
   void apply(SetPropertyFn setProperty) {
     if (_propertyName != null) {
-      setProperty(_propertyName!, _propertyValue);
+      setProperty(_propertyName, _propertyValue);
     }
   }
 

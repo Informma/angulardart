@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/src/laminate/overlay/overlay_ref.dart';
@@ -25,7 +26,7 @@ class OverlayService {
   /// The returned future completes with a reference to the pane.
   Future<OverlayRef> createOverlayRef(
       [OverlayState initialState = _defaultState]) async {
-    HtmlElement pane = await _renderService.createOverlayPane(initialState);
+    web.HTMLElement pane = await _renderService.createOverlayPane(initialState);
     return _createRef(pane, initialState);
   }
 
@@ -33,7 +34,7 @@ class OverlayService {
   ///
   /// Returns with a reference to the pane.
   OverlayRef createOverlayRefSync([OverlayState initialState = _defaultState]) {
-    HtmlElement pane = _renderService.createOverlayPaneSync(initialState);
+    web.HTMLElement pane = _renderService.createOverlayPaneSync(initialState);
     return _createRef(pane, initialState);
   }
 
@@ -42,7 +43,7 @@ class OverlayService {
   /// By default this is normally the viewport, but in some apps the container
   /// may be different dimensions (such as multiple apps alive at the same
   /// time).
-  Future<Rectangle<num>> measureContainer() =>
+  Future<web.DOMRect> measureContainer() =>
       _renderService.measureContainer();
 
   static const _defaultState = OverlayState();
@@ -52,8 +53,8 @@ class OverlayService {
   final NgZone _ngZone;
   final OverlayDomRenderService _renderService;
 
-  OverlayRef _createRef(HtmlElement pane, OverlayState state) => OverlayRef(
-      (OverlayState s, HtmlElement e) async { await _renderService.applyState(s, e); return 0; },
+  OverlayRef _createRef(web.HTMLElement pane, OverlayState state) => OverlayRef(
+      (OverlayState s, web.HTMLElement e) async { await _renderService.applyState(s, e); return 0; },
       _measurePane,
       _renderService.createPortalHost(pane),
       _renderService.containerElement,
@@ -62,7 +63,7 @@ class OverlayService {
       state: state);
 
   // Depending on client flags, either measure sync or async.
-  Stream<Rectangle<num>> _measurePane(HtmlElement pane, {bool track = false}) {
+  Stream<web.DOMRect> _measurePane(web.HTMLElement pane, {bool track = false}) {
     return _renderService.measureSize(pane,
         track: track, sync: _useDomSynchronously);
   }

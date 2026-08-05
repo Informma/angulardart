@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus_trap.dart';
@@ -44,7 +46,7 @@ class MaterialDialogComponent
   @HostBinding('attr.aria-labelledby')
   String? get headerId => shouldShowHeader ? _uid : null;
 
-  final HtmlElement _rootElement;
+  final web.HTMLElement _rootElement;
   final DomService _domService;
   final ChangeDetectorRef _changeDetector;
   final NgZone _ngZone;
@@ -52,7 +54,7 @@ class MaterialDialogComponent
   final _disposer = Disposer.oneShot();
   final _uid = SequentialIdGenerator.fromUUID().nextId();
 
-  HtmlElement? _mainElement;
+  web.HTMLElement? _mainElement;
   bool _shouldShowHeader = true;
   bool _shouldShowFooter = true;
   bool shouldShowTopScrollStroke = false;
@@ -72,14 +74,16 @@ class MaterialDialogComponent
     escapeHandler = _defaultEscapeHandler;
   }
 
-  @ViewChild('main', read: HtmlElement)
-  set main(HtmlElement element) {
+  @ViewChild('main', read: web.HTMLElement)
+  set main(web.HTMLElement element) {
     _mainElement = element;
-    _disposer.addStreamSubscription(element.onScroll.listen((_) {
+    web.EventListener scrollListener = ((web.Event _) {
       _setHeaderFooterScrollBorder();
-    }));
+    }).toJS;
+    element.addEventListener('scroll', scrollListener);
+    _disposer.addFunction(() => element.removeEventListener('scroll', scrollListener));
     if (_modal == null) return;
-    _disposer.addStreamSubscription(_modal!.onOpen.listen((_) {
+    _disposer.addStreamSubscription(_modal.onOpen.listen((_) {
       _setHeaderFooterScrollBorder();
     }));
   }
@@ -146,9 +150,11 @@ class MaterialDialogComponent
     if (_shouldListenForFullscreenChanges) return;
 
     _shouldListenForFullscreenChanges = shouldListenForFullscreenChanges;
-    _disposer.addStreamSubscription(window.onResize.listen((_) {
+    web.EventListener resizeListener = ((web.Event _) {
       _listenForFullscreenChanges();
-    }));
+    }).toJS;
+    web.window.addEventListener('resize', resizeListener);
+    _disposer.addFunction(() => web.window.removeEventListener('resize', resizeListener));
   }
 
   /// Stream for when the dialog enters or exits fullscreen mode.
@@ -164,8 +170,8 @@ class MaterialDialogComponent
 
   void _updateForFullscreenChangesInsideDomReadLoop() {
     final isInFullscreenMode =
-        document.body!.clientWidth <= _rootElement.clientWidth &&
-            document.body!.clientHeight <= _rootElement.clientHeight;
+        web.document.body!.clientWidth <= _rootElement.clientWidth &&
+            web.document.body!.clientHeight <= _rootElement.clientHeight;
     if (_isInFullscreenMode != isInFullscreenMode) {
       _isInFullscreenMode = isInFullscreenMode;
       _isInFullscreenModeStreamController.add(isInFullscreenMode);
@@ -173,16 +179,16 @@ class MaterialDialogComponent
   }
 
   @override
-  void handleEscapeKey(KeyboardEvent event) {
+  void handleEscapeKey(web.KeyboardEvent event) {
     if (escapeHandler != null) {
       escapeHandler!(event);
     }
   }
 
-  void _defaultEscapeHandler(KeyboardEvent event) {
+  void _defaultEscapeHandler(web.KeyboardEvent event) {
     if (_modal != null) {
       event.preventDefault();
-      _modal!.close();
+      _modal.close();
     }
   }
 

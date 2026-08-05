@@ -3,8 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
 import 'dart:math';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:meta/meta.dart';
@@ -94,11 +96,11 @@ class MaterialPopupComponent extends Object
       StreamController<bool>.broadcast(sync: true);
 
   /// Stream on which an event is fired when the popup is auto dismissed.
-  /// Output event should be either a [FocusEvent] or a [MouseEvent].
+  /// Output event should be either a [web.FocusEvent] or a [web.MouseEvent].
   @Output('autoDismissed')
-  Stream<Event> get onAutoDismissed => _onAutoDismissed.stream;
-  final StreamController<Event> _onAutoDismissed =
-      StreamController<Event>.broadcast(sync: true);
+  Stream<web.Event> get onAutoDismissed => _onAutoDismissed.stream;
+  final StreamController<web.Event> _onAutoDismissed =
+      StreamController<web.Event>.broadcast(sync: true);
 
   final ChangeDetectorRef _changeDetector;
   final ViewContainerRef _viewContainer;
@@ -131,10 +133,10 @@ class MaterialPopupComponent extends Object
 
   // The last known size of the viewport.
   //
-  // The top/left of this [Rectangle] is always (0, 0). A Rectangle returned by
+  // The top/left of this [web.DOMRect] is always (0, 0). A web.DOMRect returned by
   // getBoundingClientRect() will be positioned relative to this point (i.e.
   // will be in the viewport vector space).
-  final MutableRectangle _viewportRect = MutableRectangle(0, 0, 0, 0);
+  final MutableRectangle<num> _viewportRect = MutableRectangle<num>(0, 0, 0, 0);
 
   // The top/bottom/left/right boundaries for the popup within the viewport
   // rect.
@@ -155,13 +157,23 @@ class MaterialPopupComponent extends Object
   // calls to [_close] should be a no-op.
   bool _isOpening = false;
 
+  Stream<void> get _windowResizeStream {
+    late StreamController<void> controller;
+    void listener(web.Event _) => controller.add(null);
+    controller = StreamController<void>.broadcast(
+      sync: true,
+      onListen: () => web.window.addEventListener('resize', listener.toJS),
+    );
+    return controller.stream;
+  }
+
   // Variables for the requestAnimationFrame reposition loop.
   final bool _useRepositionLoop;
-  Rectangle? _initialSourceDimensions;
+  web.DOMRect? _initialSourceDimensions;
   int _repositionOffsetX = 0;
   int _repositionOffsetY = 0;
   int? _repositionLoopId;
-  List<Element> _autoDismissBlockers = [];
+  List<web.Element> _autoDismissBlockers = [];
 
   @override
   bool get autoDismiss => state.autoDismiss;
@@ -241,7 +253,7 @@ class MaterialPopupComponent extends Object
   /// Page elements that do not auto-dismiss the popup in addition to the popup
   /// up source element.
   @Input()
-  set autoDismissBlockers(List<Element> elements) {
+  set autoDismissBlockers(List<web.Element> elements) {
     _autoDismissBlockers = elements;
   }
 
@@ -299,7 +311,7 @@ class MaterialPopupComponent extends Object
   @override
   void ngOnDestroy() {
     if (_repositionLoopId != null) {
-      window.cancelAnimationFrame(_repositionLoopId!);
+      web.window.cancelAnimationFrame(_repositionLoopId!);
     }
     _visibleDisposer.dispose();
     _disposer.dispose();
@@ -329,7 +341,7 @@ class MaterialPopupComponent extends Object
     _zIndex = _zIndexer.pop();
     var view = _viewContainer.createEmbeddedView(templateRef!);
     for (var node in view.rootNodes) {
-      _overlayRef!.overlayElement.append(node);
+      _overlayRef!.overlayElement.append(node as JSAny);
     }
     _updateOverlayCssClass();
     _viewInitialized = true;
@@ -370,7 +382,7 @@ class MaterialPopupComponent extends Object
   }
 
   @override
-  Element get container => _overlayRef!.overlayElement;
+  web.Element get container => _overlayRef!.overlayElement;
 
   @override
   set source(PopupSource source) {
@@ -388,7 +400,7 @@ class MaterialPopupComponent extends Object
   }
 
   @override
-  List<Element> get autoDismissBlockers {
+  List<web.Element> get autoDismissBlockers {
     // If the popup source is based on an element, exclude the source element
     // from the auto dismiss logic, i.e. clicking on the source element does
     // not trigger auto dismiss.
@@ -406,7 +418,7 @@ class MaterialPopupComponent extends Object
   }
 
   @override
-  void onAutoDismiss(Event event) {
+  void onAutoDismiss(web.Event event) {
     close();
     _onAutoDismissed.add(event);
   }
@@ -440,7 +452,7 @@ class MaterialPopupComponent extends Object
     // viewport size before popup position is populated.
     _updatePopupMinMaxSize();
 
-    _visibleDisposer.addStreamSubscription(window.onResize
+    _visibleDisposer.addStreamSubscription(_windowResizeStream
         .transform(throttleStream(_resizeThrottleDuration, guaranteeLast: true))
         .listen((_) {
       _updateViewportSize();
@@ -458,7 +470,7 @@ class MaterialPopupComponent extends Object
     _changeDetector.markForCheck();
 
     // Start listening to both the popup and the source's layout.
-    var initialData = Completer<Rectangle?>();
+    var initialData = Completer<web.DOMRect?>();
     var popupContentsLayoutStream = _overlayRef!
         .measureSizeChanges()
         .asBroadcastStream(onListen: _visibleDisposer.addStreamSubscription);
@@ -563,7 +575,7 @@ class MaterialPopupComponent extends Object
     if (state.source is Focusable && hierarchy.islastTriggerWithKeyboard) {
       _domService.scheduleWrite(() {
         if (_overlayRef!.overlayElement
-            .contains(window.document.activeElement)) {
+            .contains(web.window.document.activeElement)) {
           (state.source as Focusable).focus();
         }
       });
@@ -609,11 +621,11 @@ class MaterialPopupComponent extends Object
     onVisibleController.add(false);
   }
 
-  Rectangle<num>? get _sourceDimensions {
+  web.DOMRect? get _sourceDimensions {
     var sourceDimensions = state.source?.dimensions;
     if (sourceDimensions == null) return null;
     var containerRect = _overlayRef!.containerElement.getBoundingClientRect();
-    return Rectangle(
+    return web.DOMRect(
         (sourceDimensions.left - containerRect.left).round(),
         (sourceDimensions.top - containerRect.top).round(),
         sourceDimensions.width.round(),
@@ -622,12 +634,12 @@ class MaterialPopupComponent extends Object
 
   void _startRepositionLoop() {
     _ngZone.runOutsideAngular(() {
-      _repositionLoopId = window.requestAnimationFrame(_reposition);
+      _repositionLoopId = web.window.requestAnimationFrame(_reposition.toJS);
     });
   }
 
   void _stopRepositionLoop() {
-    window.cancelAnimationFrame(_repositionLoopId!);
+    web.window.cancelAnimationFrame(_repositionLoopId!);
     _repositionLoopId = null;
 
     if (_repositionOffsetX != 0 || _repositionOffsetY != 0) {
@@ -637,8 +649,8 @@ class MaterialPopupComponent extends Object
     }
   }
 
-  void _reposition(dynamic _) {
-    _repositionLoopId = window.requestAnimationFrame(_reposition);
+  void _reposition(double _) {
+    _repositionLoopId = web.window.requestAnimationFrame(_reposition.toJS);
 
     var sourceDimensions = _sourceDimensions;
     if (sourceDimensions == null) return;
@@ -670,8 +682,8 @@ class MaterialPopupComponent extends Object
   }
 
   void _updateViewportSize() {
-    _viewportRect.width = window.innerWidth ?? 0;
-    _viewportRect.height = window.innerHeight ?? 0;
+    _viewportRect.width = web.window.innerWidth;
+    _viewportRect.height = web.window.innerHeight;
   }
 
   void _updatePopupMinMaxSize() {
@@ -696,7 +708,7 @@ class MaterialPopupComponent extends Object
 
   /// Returns the best possible alignment from preferred positions.
   RelativePosition _getBestPosition(
-      Rectangle contentRect, Rectangle sourceRect, Rectangle containerRect) {
+      web.DOMRect contentRect, web.DOMRect sourceRect, web.DOMRect containerRect) {
     // This should only be used when space constraints is enforced.
     assert(state.enforceSpaceConstraints);
 
@@ -708,7 +720,7 @@ class MaterialPopupComponent extends Object
     // containerRect is (0, -500) 1024x768.
     //
     // Hopefully this'll make things easier to understand.
-    var containerOffset = containerRect.topLeft;
+    var containerOffset = Point(containerRect.left, containerRect.top);
 
     // Try each position, and use the one which overlaps most with the viewport.
     var positions = _flatten(_preferredPositions);
@@ -720,20 +732,26 @@ class MaterialPopupComponent extends Object
       }
       // Build up a tentative position for the popup. These numbers are all
       // relative to the container div.
-      var containerPos = Rectangle<num>(
+      var containerPos = web.DOMRect(
           position.originX.calcLeft(sourceRect, contentRect),
           position.originY.calcTop(sourceRect, contentRect),
           contentRect.width,
           contentRect.height);
-      // Now translate that into screen space.
-      var screenPos = Rectangle<num>.fromPoints(
-          containerPos.topLeft + containerOffset,
-          containerPos.bottomRight + containerOffset);
-      if (_viewportRect.containsRectangle(screenPos)) {
+      var containerPosTopLeft = Point(containerPos.left, containerPos.top);
+      var containerPosBottomRight = Point(containerPos.right, containerPos.bottom);
+      var screenPosTopLeft = containerPosTopLeft + containerOffset;
+      var screenPosBottomRight = containerPosBottomRight + containerOffset;
+      var screenPos = web.DOMRect(
+          screenPosTopLeft.x, screenPosTopLeft.y,
+          screenPosBottomRight.x - screenPosTopLeft.x,
+          screenPosBottomRight.y - screenPosTopLeft.y);
+      if (_viewportRect.containsRectangle(
+          Rectangle<num>(screenPos.left, screenPos.top, screenPos.width, screenPos.height))) {
         bestPosition = position;
         break;
       }
-      var overlapRect = _viewportRect.intersection(screenPos);
+      var overlapRect = _viewportRect.intersection(
+          Rectangle<num>(screenPos.left, screenPos.top, screenPos.width, screenPos.height));
       if (overlapRect == null) continue;
       var overlap = overlapRect.width * overlapRect.height;
       if (overlap > bestOverlap) {
@@ -751,7 +769,7 @@ class MaterialPopupComponent extends Object
   ///
   /// Returns a future that completes when the state change is submitted.
   Future _schedulePositionUpdate(
-      Rectangle<num> contentClientRect, Rectangle<num> sourceClientRect) async {
+      web.DOMRect contentClientRect, web.DOMRect sourceClientRect) async {
     RelativePosition? position;
 
     var containerRect = await _overlayService.measureContainer();
@@ -793,9 +811,13 @@ class MaterialPopupComponent extends Object
         : state.offsetX - containerRect.left;
     final offsetY = state.offsetY - containerRect.top;
     _overlayRef!.state
-      ..left = position.originX.calcLeft(sourceClientRect, contentClientRect) +
+      ..left = position.originX.calcLeft(
+          Rectangle<num>(sourceClientRect.left, sourceClientRect.top, sourceClientRect.width, sourceClientRect.height),
+          Rectangle<num>(contentClientRect.left, contentClientRect.top, contentClientRect.width, contentClientRect.height)) +
           offsetX
-      ..top = position.originY.calcTop(sourceClientRect, contentClientRect) +
+      ..top = position.originY.calcTop(
+          Rectangle<num>(sourceClientRect.left, sourceClientRect.top, sourceClientRect.width, sourceClientRect.height),
+          Rectangle<num>(contentClientRect.left, contentClientRect.top, contentClientRect.width, contentClientRect.height)) +
           offsetY
       ..visibility = visibility.Visibility.visible;
     _overlayRef!.overlayElement.style
@@ -885,13 +907,13 @@ Iterable _flatten(Iterable nested) sync* {
   }
 }
 
-Rectangle _resizeRectangle(Rectangle rect, {num? width, num? height}) =>
-    Rectangle(rect.left, rect.top, width ?? rect.width, height ?? rect.height);
+web.DOMRect _resizeRectangle(web.DOMRect rect, {num? width, num? height}) =>
+    web.DOMRect(rect.left, rect.top, width ?? rect.width, height ?? rect.height);
 
-Rectangle _shiftRectangle(Rectangle rect, {num top = 0, num left = 0}) =>
-    Rectangle(rect.left + left, rect.top + top, rect.width, rect.height);
+web.DOMRect _shiftRectangle(web.DOMRect rect, {num top = 0, num left = 0}) =>
+    web.DOMRect(rect.left + left, rect.top + top, rect.width, rect.height);
 
-Rectangle _boundRectangle(Rectangle rect, Box boundaries) => Rectangle(
+web.DOMRect _boundRectangle(Rectangle<num> rect, Box boundaries) => web.DOMRect(
     rect.left + boundaries.left,
     rect.top + boundaries.top,
     rect.width - boundaries.left - boundaries.right,
@@ -904,7 +926,7 @@ Rectangle _boundRectangle(Rectangle rect, Box boundaries) => Rectangle(
 /// the top left corner visible.
 ///
 /// Currently only handles translation, not scale.
-Rectangle _shiftRectangleToFitWithin(Rectangle rect, Rectangle container) {
+web.DOMRect _shiftRectangleToFitWithin(web.DOMRect rect, web.DOMRect container) {
   num x = 0;
   num y = 0;
   if (rect.left < container.left) {
@@ -917,5 +939,5 @@ Rectangle _shiftRectangleToFitWithin(Rectangle rect, Rectangle container) {
   } else if (rect.bottom > container.bottom) {
     y = max(container.bottom - rect.bottom, container.top - rect.top);
   }
-  return Rectangle(x.round(), y.round(), 0, 0);
+  return web.DOMRect(x.round(), y.round(), 0, 0);
 }

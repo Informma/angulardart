@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -37,7 +38,7 @@ class MaterialButtonBase extends ButtonDirective {
   int get zElevation =>
       _isMouseDown || _focused ? mediumElevation : lowElevation;
 
-  MaterialButtonBase(HtmlElement super.element, super.role,
+  MaterialButtonBase(super.element, super.role,
       {super.handleSpacePresses});
 
   // Set _focused in a microtask to avoid triggering changes during a change
@@ -69,14 +70,14 @@ class MaterialButtonBase extends ButtonDirective {
 
   /// Triggered on focus.
   @HostListener('focus')
-  void onFocus(UIEvent event) {
+  void onFocus(web.UIEvent event) {
     if (_clickFocused) return;
     _setFocused(true);
   }
 
   /// Triggered on blur.
   @HostListener('blur')
-  void onBlur(UIEvent event) {
+  void onBlur(web.UIEvent event) {
     if (_clickFocused) _clickFocused = false;
     // Always ensure that focused is false.
     _setFocused(false);

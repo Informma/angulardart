@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 /// Return a string representing the encapsulated classes from [classes]
 /// combined with the classes from [className].
@@ -22,12 +22,13 @@ import 'dart:html';
 ///
 /// Dart Code:
 ///  final popupClass =
-///      constructEncapsulatedCss('myPopup', _hostElement.classes);
-String constructEncapsulatedCss(String className, CssClassSet classes) {
+///      constructEncapsulatedCss('myPopup', _hostElement.classList);
+String constructEncapsulatedCss(String className, web.DOMTokenList classes) {
   var result = className;
-  for (final i in classes) {
+  for (var i = 0; i < classes.length; i++) {
+    final cls = classes.item(i)!;
     // Add encapsulation classes from host
-    if (i.startsWith('_ngcontent')) result += ' $i';
+    if (cls.startsWith('_ngcontent')) result += ' $cls';
   }
   return result;
 }

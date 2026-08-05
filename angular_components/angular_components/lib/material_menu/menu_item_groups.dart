@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -226,7 +228,7 @@ class MenuItemGroupsComponent
   }
 
   @HostListener('mouseover')
-  void onMouseOver(MouseEvent event) {
+  void onMouseOver(web.MouseEvent event) {
     // If not triggered by mouse movement, don't handle it. This can happen when
     // the DOM moved but mouse didn't.
     if (!_isMouseDriven) return;
@@ -242,7 +244,7 @@ class MenuItemGroupsComponent
   }
 
   @HostListener('mouseout')
-  void onMouseOut(MouseEvent event) {
+  void onMouseOut(web.MouseEvent event) {
     if (!_isMouseDriven) return;
 
     MenuItem? item = _itemForTarget(event.target!);
@@ -255,7 +257,7 @@ class MenuItemGroupsComponent
   }
 
   @HostListener('mousemove')
-  void onMouseMove(MouseEvent _) {
+  void onMouseMove(web.MouseEvent _) {
     _isMouseDriven = true;
   }
 
@@ -279,32 +281,32 @@ class MenuItemGroupsComponent
   }
 
   @HostListener('keydown', [r'$event'])
-  void handleKeydown(KeyboardEvent event, {bool shouldPreventDefault = true}) {
+  void handleKeydown(web.KeyboardEvent event, {bool shouldPreventDefault = true}) {
     _isMouseDriven = false;
 
-    if (event.keyCode == KeyCode.TAB) return;
+    if (event.keyCode == 9) return;
 
     var keyCode = event.keyCode;
     var activeMenuItem = activeModel.activeItem as MenuItem;
 
     switch (keyCode) {
-      case KeyCode.UP:
+      case 38:
         _activeHoveredItemIfNone();
         activeModel.activatePrevious();
         _focusActiveItem();
         break;
-      case KeyCode.DOWN:
+      case 40:
         _activeHoveredItemIfNone();
         activeModel.activateNext();
         _focusActiveItem();
         break;
-      case KeyCode.RIGHT:
+      case 39:
         if (activeMenuItem.hasSubMenu == true) {
           _openSubMenu(activeModel.activeItem as MenuItem,
               isOpenedByKeyboard: true);
         }
         break;
-      case KeyCode.LEFT:
+      case 37:
         if (_closeOnPressLeft) {
           _dropdownHandle?.close();
         }
@@ -337,23 +339,23 @@ class MenuItemGroupsComponent
     _submenuParent = item.hasSubMenu ? item : null;
   }
 
-  MenuItem? _itemForTarget(EventTarget? target) {
-    if (target is! Element) return null;
-    Element? element = target;
+  MenuItem? _itemForTarget(web.EventTarget? target) {
+    if (!target.isA<web.Element>()) return null;
+    var element = target as web.Element?;
     while (element != null) {
-      if (element.attributes['role'] == 'menuitem') {
+      if (element.getAttribute('role') == 'menuitem') {
         MenuItemGroup group =
-            menu.itemGroups[int.parse(element.attributes['data-group-index']!)];
-        MenuItem item = group[int.parse(element.attributes['data-item-index']!)];
+            menu.itemGroups[int.parse(element.getAttribute('data-group-index')!)];
+        MenuItem item = group[int.parse(element.getAttribute('data-item-index')!)];
         return item;
       }
-      element = element.parent;
+      element = element.parentNode as web.Element?;
     }
     return null;
   }
 
   @HostListener('focus')
-  void onFocus(FocusEvent event) {
+  void onFocus(web.FocusEvent event) {
     MenuItem? item = _itemForTarget(event.target);
     if (item == null) return;
 
@@ -363,11 +365,11 @@ class MenuItemGroupsComponent
   /// Called when a material select item is triggered, whether through keypress
   /// or through click.
   void handleSelectItemTrigger(
-      MenuItem item, MenuItemGroup group, UIEvent event) {
+      MenuItem item, MenuItemGroup group, web.UIEvent event) {
     if (!item.enabled) return;
 
     if (item.hasSubMenu) {
-      _openSubMenu(item, isOpenedByKeyboard: event is KeyboardEvent);
+      _openSubMenu(item, isOpenedByKeyboard: event.isA<web.KeyboardEvent>());
     } else {
       select(item, group);
     }

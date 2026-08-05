@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -29,15 +30,15 @@ class ButtonDirective extends RootFocusable
     implements HasDisabled {
   /// Fired when the button is activated via click, tap, or key press.
   @Output()
-  Stream<UIEvent> get trigger => _trigger.stream;
+  Stream<web.UIEvent> get trigger => _trigger.stream;
 
-  final _trigger = StreamController<UIEvent>.broadcast(sync: true);
+  final _trigger = StreamController<web.UIEvent>.broadcast(sync: true);
 
   String _hostTabIndex = '0';
   final String? _nonTabbableIndex;
   final bool _shouldHandleSpaceKey;
 
-  ButtonDirective(Element super.element, @Attribute('role') String? role,
+  ButtonDirective(web.HTMLElement super.element, @Attribute('role') String? role,
       {bool addTabIndexWhenNonTabbable = false, bool handleSpacePresses = true})
       : role = (role ?? 'button'),
         // Allow the subclass to define how the element should be made
@@ -80,18 +81,18 @@ class ButtonDirective extends RootFocusable
 
   /// Triggers if not disabled.
   @HostListener('click')
-  void handleClick(MouseEvent mouseEvent) {
+  void handleClick(web.MouseEvent mouseEvent) {
     if (disabled) return;
     _trigger.add(mouseEvent);
   }
 
   /// Triggers on enter and space if not disabled.
   @HostListener('keypress')
-  void handleKeyPress(KeyboardEvent keyboardEvent) {
+  void handleKeyPress(web.KeyboardEvent keyboardEvent) {
     if (disabled) return;
     if (isSpaceKey(keyboardEvent) && !_shouldHandleSpaceKey) return;
     int keyCode = keyboardEvent.keyCode;
-    if (keyCode == KeyCode.ENTER || isSpaceKey(keyboardEvent)) {
+    if (keyCode == 13 || isSpaceKey(keyboardEvent)) {
       _trigger.add(keyboardEvent);
       // Required to prevent window from scrolling.
       keyboardEvent.preventDefault();

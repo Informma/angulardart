@@ -2,7 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -52,17 +54,21 @@ class FocusTrapComponent implements OnDestroy {
         scope: _content!.element, reverse: true, wraps: true));
   }
 
-  void _focusFirstInOrder(Iterator<Element> iterator) {
+  void _focusFirstInOrder(Iterator<web.Element> iterator) {
     while (iterator.moveNext()) {
-      if (iterator.current.tabIndex == 0 && _visible(iterator.current)) {
-        iterator.current.focus();
-        return;
+      var el = iterator.current;
+      if (el.isA<web.HTMLElement>()) {
+        var htmlEl = el as web.HTMLElement;
+        if (htmlEl.tabIndex == 0 && _visible(htmlEl)) {
+          htmlEl.focus();
+          return;
+        }
       }
     }
     _focusDefault();
   }
 
-  bool _visible(Element element) {
+  bool _visible(web.HTMLElement element) {
     return (element.offsetWidth != 0 && element.offsetHeight != 0);
   }
 
@@ -70,7 +76,7 @@ class FocusTrapComponent implements OnDestroy {
     if (_autoFocusDirective != null) {
       _autoFocusDirective!.focus();
     } else if (_content != null) {
-      _content!.element.focus();
+      (_content!.element as web.HTMLElement).focus();
     }
   }
 }
@@ -79,9 +85,9 @@ class FocusTrapComponent implements OnDestroy {
   selector: '[focusContentWrapper]',
 )
 class FocusContentWrapper extends FocusableDirective {
-  final Element _element;
+  final web.HTMLElement _element;
   FocusContentWrapper(super.element)
       : _element = element;
 
-  Element get element => _element;
+  web.Element get element => _element;
 }

@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -12,9 +13,9 @@ import 'package:angulardart_components/focus/focus.dart';
 mixin class FocusableMixin implements Focusable {
   /// Event when the element is focused.
   @Output('focus')
-  Stream<FocusEvent> get onFocus => _onFocus.stream;
-  final StreamController<FocusEvent> _onFocus =
-      StreamController<FocusEvent>.broadcast(sync: true);
+  Stream<web.FocusEvent> get onFocus => _onFocus.stream;
+  final StreamController<web.FocusEvent> _onFocus =
+      StreamController<web.FocusEvent>.broadcast(sync: true);
 
   Focusable? _focusable;
   bool _focusPending = false;
@@ -36,7 +37,7 @@ mixin class FocusableMixin implements Focusable {
     }
   }
 
-  void handleFocus(FocusEvent event) {
+  void handleFocus(web.FocusEvent event) {
     _onFocus.add(event);
   }
 }

@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/content/deferred_content.dart';
@@ -154,8 +155,8 @@ class MaterialTreeDropdownComponent<T>
   final bool optimizeForDropdown = true;
 
   MaterialTreeDropdownComponent(this._domService,
-      @Attribute('popupClass') String popupClass, HtmlElement element)
-      : popupClassName = constructEncapsulatedCss(popupClass, element.classes) {
+      @Attribute('popupClass') String popupClass, web.HTMLElement element)
+      : popupClassName = constructEncapsulatedCss(popupClass, element.classList) {
     selection = SelectionModel<T>.empty();
   }
 

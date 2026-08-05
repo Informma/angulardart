@@ -2,7 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/laminate/enums/alignment.dart';
@@ -20,7 +22,6 @@ import 'tooltip_controller.dart';
 import 'tooltip_source.dart' show tooltipShowDelay;
 import 'tooltip_target.dart';
 
-/// An ink-based tooltip which can be attached to any element.
 @Directive(
   selector: '[materialTooltip]',
   providers: [tooltipControllerBinding],
@@ -31,7 +32,7 @@ class MaterialTooltipDirective extends TooltipTarget
   final ComponentLoader _viewLoader;
   final ChangeDetectorRef _changeDetector;
   final String _popupClassName;
-  final Window _window;
+  final web.Window _window;
 
   String? _lastText;
   bool _isInitialized = false;
@@ -40,11 +41,19 @@ class MaterialTooltipDirective extends TooltipTarget
   bool _isShown = false;
   MaterialInkTooltipComponent? _inkTooltip;
   late DelayedAction _delayedActivate;
-  HtmlElement element;
+  web.HTMLElement element;
   late bool inLongPress;
   bool _hostListenersAttached = false;
 
   ComponentRef? _componentRef;
+
+  web.EventListener? _clickListener;
+  web.EventListener? _blurListener;
+  web.EventListener? _focusListener;
+  web.EventListener? _mouseOverListener;
+  web.EventListener? _mouseLeaveListener;
+  web.EventListener? _pressListener;
+  web.EventListener? _touchEndListener;
 
   MaterialTooltipDirective(
       DomPopupSourceFactory domPopupSourceFactory,
@@ -56,7 +65,7 @@ class MaterialTooltipDirective extends TooltipTarget
       @Attribute('initPopupAriaAttributes') String initAriaAttributes,
       @Attribute('tooltipClass') String tooltipClass)
       : _popupClassName =
-            constructEncapsulatedCss(tooltipClass, element.classes),
+            constructEncapsulatedCss(tooltipClass, element.classList),
         super(domPopupSourceFactory, viewContainerRef, element,
             initAriaAttributes) {
     inLongPress = false;
@@ -66,39 +75,75 @@ class MaterialTooltipDirective extends TooltipTarget
   void _attachHostListeners() {
     if (_hostListenersAttached) return;
     _hostListenersAttached = true;
-    _disposer.addStreamSubscription(element.onClick.listen((_) {
+
+    _clickListener = ((web.Event _) {
       hide(true);
-    }));
-    _disposer.addStreamSubscription(element.onBlur.listen((_) {
+    }).toJS;
+    element.addEventListener('click', _clickListener);
+    _disposer.addFunction(() {
+      element.removeEventListener('click', _clickListener!);
+    });
+
+    _blurListener = ((web.Event _) {
       hide(true);
-    }));
-    _disposer.addStreamSubscription(element.onFocus.listen((_) {
+    }).toJS;
+    element.addEventListener('blur', _blurListener);
+    _disposer.addFunction(() {
+      element.removeEventListener('blur', _blurListener!);
+    });
+
+    _focusListener = ((web.Event _) {
       show();
-    }));
+    }).toJS;
+    element.addEventListener('focus', _focusListener);
+    _disposer.addFunction(() {
+      element.removeEventListener('focus', _focusListener!);
+    });
+
     if (supportsHover(_window)) {
-      _disposer.addStreamSubscription(element.onMouseOver.listen((_) {
+      _mouseOverListener = ((web.Event _) {
         show();
-      }));
-      _disposer.addStreamSubscription(element.onMouseLeave.listen((_) {
+      }).toJS;
+      element.addEventListener('mouseover', _mouseOverListener);
+      _disposer.addFunction(() {
+        element.removeEventListener('mouseover', _mouseOverListener!);
+      });
+
+      _mouseLeaveListener = ((web.Event _) {
         hide();
-      }));
+      }).toJS;
+      element.addEventListener('mouseleave', _mouseLeaveListener);
+      _disposer.addFunction(() {
+        element.removeEventListener('mouseleave', _mouseLeaveListener!);
+      });
     }
+
     if (isHammerLoaded()) {
-      _disposer
-          .addStreamSubscription(element.on['press'].listen(handleLongPress));
-      _disposer.addStreamSubscription(element.onTouchEnd.listen(endLongPress));
+      _pressListener = ((web.Event e) {
+        handleLongPress(e);
+      }).toJS;
+      element.addEventListener('press', _pressListener);
+      _disposer.addFunction(() {
+        element.removeEventListener('press', _pressListener!);
+      });
+
+      _touchEndListener = ((web.Event e) {
+        endLongPress(e as web.TouchEvent);
+      }).toJS;
+      element.addEventListener('touchend', _touchEndListener);
+      _disposer.addFunction(() {
+        element.removeEventListener('touchend', _touchEndListener!);
+      });
     }
   }
 
-  void handleLongPress(Event _) {
+  void handleLongPress(web.Event _) {
     inLongPress = true;
     show();
   }
 
-  void endLongPress(TouchEvent event) {
+  void endLongPress(web.TouchEvent event) {
     if (inLongPress) {
-      // Mouse events always follow the touch events from a single touch.
-      // This prevents the mouse events that fire after a press.
       event.preventDefault();
 
       inLongPress = false;
@@ -106,8 +151,6 @@ class MaterialTooltipDirective extends TooltipTarget
     }
   }
 
-  /// Shows the tooltip if `_canShow` is true, initializing and loading it into
-  /// the view it if is not already.
   void show() {
     if (_isShown || !_canShow) return;
     _isShown = true;
@@ -125,13 +168,9 @@ class MaterialTooltipDirective extends TooltipTarget
   void _maybeLoadTooltip() {
     if (_isInitialized) return;
     _isInitialized = true;
-    // Create the view for the first time
-    // Note: We also support loading components that contain one <ng-content>,
-    // so we provide an empty slot for them.
     _componentRef = _viewLoader.loadNextToLocation(
         ng.MaterialInkTooltipComponentNgFactory, viewContainerRef);
 
-    // Track the tooltip as `_inkTooltip` so we can set the text later.
     _inkTooltip = _componentRef!.instance;
     _disposer.addDisposable(_componentRef!.destroy);
 
@@ -146,10 +185,6 @@ class MaterialTooltipDirective extends TooltipTarget
 
   @override
   void setTooltip(Tooltip component) {
-    // If this is the first time that the tooltip is being set, activate it.
-    // We could have activated in the [onMouseOver] method when the DCL
-    // resolves, however, we want to call activate/deactivate on the [Tooltip]
-    // handle that the component presents (as it might be a proxy).
     if (_tooltip == null) _delayedActivate.start();
     _tooltip = component;
   }
@@ -159,16 +194,12 @@ class MaterialTooltipDirective extends TooltipTarget
     _tooltip!.activate();
   }
 
-  /// The text to show in the tooltip.
   @Input('materialTooltip')
   set text(String text) {
     _lastText = text;
     _inkTooltip?.text = text;
   }
 
-  /// Condition whether to show the tooltip.
-  ///
-  /// Defaults to true.
   @Input('showTooltipIf')
   set canShow(bool value) {
     if (value == _canShow) return;
@@ -181,7 +212,6 @@ class MaterialTooltipDirective extends TooltipTarget
     _canShow = value;
   }
 
-  /// Positions that the tooltip should try to show.
   @Input('tooltipPositions')
   List<RelativePosition>? positions;
 

@@ -65,7 +65,7 @@ class AsyncUpdateScheduler {
       scheduleMicrotask(() {
         _isUpdateScheduled = false;
         if (_updateCallback != null) {
-          _updateCallback!();
+          _updateCallback();
         }
         if (_onUpdateStreamController != null) {
           _onUpdateStreamController!.add(null);

@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -45,7 +46,7 @@ class MaterialRadioComponent extends RootFocusable
         OnDestroy {
   final ChangeDetectorRef _changeDetector;
   final MaterialRadioGroupComponent? _group;
-  final HtmlElement _root;
+  final web.HTMLElement _root;
   final _disposer = Disposer.oneShot();
 
   MaterialRadioComponent(
@@ -113,9 +114,9 @@ class MaterialRadioComponent extends RootFocusable
 
     if (_group != null) {
       if (isChecked) {
-        _group!.componentSelection.select(this);
+        _group.componentSelection.select(this);
       } else {
-        _group!.componentSelection.deselect(this);
+        _group.componentSelection.deselect(this);
       }
     }
     _onChecked.add(_checked);
@@ -155,7 +156,7 @@ class MaterialRadioComponent extends RootFocusable
   // Capture keydown to forward event to radio group when cycling focus.
   @HostListener('keydown')
   @visibleForTemplate
-  void handleKeyDown(KeyboardEvent event) {
+  void handleKeyDown(web.KeyboardEvent event) {
     if (event.target != _root) return;
     var focusEvent = FocusMoveEvent.fromKeyboardEvent(this, event);
 
@@ -172,7 +173,7 @@ class MaterialRadioComponent extends RootFocusable
   // Capture keyup when we are the target of event.
   @HostListener('keyup')
   @visibleForTemplate
-  void handleKeyUp(KeyboardEvent event) {
+  void handleKeyUp(web.KeyboardEvent event) {
     if (event.target != _root) return;
     _isKeyboardEvent = true;
   }
@@ -189,7 +190,7 @@ class MaterialRadioComponent extends RootFocusable
   @visibleForTemplate
   void onFocus() {
     _isFocused = true;
-    if (_group != null) _group!.focusSelection.select(this);
+    if (_group != null) _group.focusSelection.select(this);
   }
 
   @HostListener('blur')
@@ -197,7 +198,7 @@ class MaterialRadioComponent extends RootFocusable
   @visibleForTesting
   void onBlur() {
     _isFocused = false;
-    if (_group != null) _group!.focusSelection.deselect(this);
+    if (_group != null) _group.focusSelection.deselect(this);
   }
 
   @visibleForTesting
@@ -214,7 +215,7 @@ class MaterialRadioComponent extends RootFocusable
 
   @HostListener('keypress')
   @visibleForTemplate
-  void handleKeyPress(KeyboardEvent event) {
+  void handleKeyPress(web.KeyboardEvent event) {
     if (event.target != _root || !isSpaceKey(event)) return;
     // Required to prevent window from scrolling.
     event.preventDefault();

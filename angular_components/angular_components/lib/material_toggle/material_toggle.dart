@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_forms/angulardart_forms.dart';
@@ -34,7 +35,7 @@ class MaterialToggleComponent
   static const hostClass = 'themeable';
 
   @ViewChild('toggle')
-  HtmlElement? toggleElement;
+  web.HTMLElement? toggleElement;
 
   @override
   void ngAfterViewInit() {
@@ -121,16 +122,16 @@ class MaterialToggleComponent
   }
 
   @HostListener('click')
-  void handleClick(MouseEvent mouseEvent) {
+  void handleClick(web.MouseEvent mouseEvent) {
     toggleChecked();
     mouseEvent.preventDefault();
     mouseEvent.stopPropagation();
   }
 
   @HostListener('keypress')
-  void handleKeyPress(KeyboardEvent keyEvent) {
+  void handleKeyPress(web.KeyboardEvent keyEvent) {
     int keyCode = keyEvent.keyCode;
-    if (keyCode == KeyCode.ENTER || isSpaceKey(keyEvent)) {
+    if (keyCode == 13 || isSpaceKey(keyEvent)) {
       toggleChecked();
       keyEvent.preventDefault();
       keyEvent.stopPropagation();
@@ -139,7 +140,7 @@ class MaterialToggleComponent
 
   void _syncAriaPressed() {
     if (toggleElement == null) return;
-    toggleElement!.attributes['aria-pressed'] = '$checked';
+    toggleElement!.setAttribute('aria-pressed', '$checked');
   }
 
   @override

@@ -3,8 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
-import 'dart:js_util';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -134,28 +135,29 @@ class MaterialCalendarPickerComponent
   static final _dayNames = _defaultDayNames.sublist(_firstDayOfWeek)
     ..addAll(_defaultDayNames.sublist(0, _firstDayOfWeek));
 
-  static final DocumentFragment _monthTemplate = _createMonthTemplate();
+  static final web.DocumentFragment _monthTemplate = _createMonthTemplate();
 
-  static DocumentFragment _createMonthTemplate() {
-    final template = DocumentFragment();
+  static web.DocumentFragment _createMonthTemplate() {
+    final template = web.document.createDocumentFragment();
 
     // Create the month container element.
-    final container = DivElement()..className = 'month';
+    final container = web.document.createElement('div') as web.HTMLDivElement;
+    container.className = 'month';
     template.append(container);
 
     // Create the title element.
-    final title = HeadingElement.h2()
-      ..className = 'month-title'
-      ..appendText('');
+    final title = web.document.createElement('h2') as web.HTMLHeadingElement;
+    title.className = 'month-title';
+    title.append(web.document.createTextNode(''));
     container.append(title);
 
     // Add 6 rows of 7 slots.
-    final slotTemplate = DivElement()
-      ..className = 'day-slot'
-      ..appendText('');
-    DivElement slot;
+    final slotTemplate = web.document.createElement('div') as web.HTMLDivElement;
+    slotTemplate.className = 'day-slot';
+    slotTemplate.append(web.document.createTextNode(''));
+    web.HTMLDivElement slot;
     for (var i = 0; i < weekRowsInMonth * 7; i++) {
-      slot = slotTemplate.clone(true) as DivElement;
+      slot = slotTemplate.cloneNode(true) as web.HTMLDivElement;
       container.append(slot);
     }
 
@@ -318,11 +320,11 @@ class MaterialCalendarPickerComponent
     return date >= minDate && date <= maxDate;
   }
 
-  Date? _extractDate(Event event) {
+  Date? _extractDate(web.Event event) {
     final slot = event.target;
-    if (slot is! HtmlElement) return null;
+    if (!slot.isA<web.HTMLElement>()) return null;
 
-    final dateText = (slot).getAttribute(_dateAttribute);
+    final dateText = (slot as web.HTMLElement).getAttribute(_dateAttribute);
     if (dateText == null) return null;
 
     final parts = dateText.split(_dateSeparator);
@@ -349,7 +351,7 @@ class MaterialCalendarPickerComponent
   }
 
   void _scrollToMonth(_Month month) {
-    _container.parent!.scrollTop = _rangeHeight(_minMonth, month);
+    (_container.parentNode as web.HTMLElement?)?.scrollTop = _rangeHeight(_minMonth, month);
   }
 
   /// Scroll the calendar so that [date] becomes visible.
@@ -357,7 +359,7 @@ class MaterialCalendarPickerComponent
     _scrollToMonth(_Month.fromDate(date));
   }
 
-  void _setText(HtmlElement slot, String text) {
+  void _setText(web.HTMLElement slot, String text) {
     // This is much faster than the obvious slot.text = text. It reuses the
     // existing TextNode instead of creating a new one every time. It's also
     // faster than slot.firstChild.text = text (which also reuses the TextNode),
@@ -366,25 +368,25 @@ class MaterialCalendarPickerComponent
     // Edge, reusing the TextNode doesn't trigger a repaint, so we have to
     // create a new TextNode instead.
     if (isEdge) {
-      slot.text = text;
+      slot.textContent = text;
     } else {
-      setProperty(slot.firstChild!, 'nodeValue', text);
+      slot.firstChild?.nodeValue = text;
     }
   }
 
-  void _renderMonth(_Month month, HtmlElement container) {
+  void _renderMonth(_Month month, web.HTMLElement container) {
     int startIndex = _dayOfWeekIndex(month.startDay);
     if (startIndex < _monthTitleWidth) startIndex += 7;
     final daysInMonth = month.days;
 
     // The month container consists of a title element followed by 42 day slots.
-    HtmlElement title = container.firstChild as HtmlElement;
+    web.HTMLElement title = container.firstChild as web.HTMLElement;
     _setText(title, month.title);
 
     // Render the days.
     bool isFirstMonth = month == _minMonth;
     bool isLastMonth = month == _maxMonth;
-    HtmlElement slot = title.nextElementSibling as HtmlElement;
+    web.HTMLElement slot = title.nextElementSibling as web.HTMLElement;
     for (var i = 1; i <= 7 * weekRowsInMonth; i++) {
       final day = i - startIndex;
       if (day <= 0 || day > daysInMonth) {
@@ -407,7 +409,7 @@ class MaterialCalendarPickerComponent
           _setText(slot, day.toString());
         }
       }
-      slot = slot.nextElementSibling as HtmlElement;
+      slot = slot.nextElementSibling as web.HTMLElement;
     }
   }
 
@@ -457,12 +459,12 @@ class MaterialCalendarPickerComponent
 
     // Render the missing months (reusing existing ones).
     _renderedOffsets.clear();
-    HtmlElement panel = _container.firstChild as HtmlElement;
+    web.HTMLElement panel = _container.firstChild as web.HTMLElement;
     for (var month in visibleMonths) {
       _renderMonth(month, panel);
       panel.style.cssText = 'transform: translateY(${offset}px)';
       _renderedOffsets.add(offset);
-      panel = panel.nextElementSibling as HtmlElement;
+      panel = panel.nextElementSibling as web.HTMLElement;
       offset += _monthHeight(month);
     }
 
@@ -471,10 +473,10 @@ class MaterialCalendarPickerComponent
     // fragment, then reappend it to the container. This is still faster than
     // setting textContent for each slot.
     if (isEdge) {
-      var fragment = DocumentFragment();
-      for (HtmlElement? month = _container.firstChild as HtmlElement?;
+      var fragment = web.document.createDocumentFragment();
+      for (web.HTMLElement? month = _container.firstChild as web.HTMLElement?;
           month != null;
-          month = _container.firstChild as HtmlElement?) {
+          month = _container.firstChild as web.HTMLElement?) {
         fragment.append(month);
       }
       _container.append(fragment);
@@ -501,8 +503,8 @@ class MaterialCalendarPickerComponent
   void _renderRange(CalendarSelection selection) {
     if (selection.start! > selection.end!) return;
 
-    HtmlElement? start;
-    HtmlElement? end;
+    web.HTMLElement? start;
+    web.HTMLElement? end;
     final startMonth = _Month.fromDate(selection.start!);
     final endMonth = _Month.fromDate(selection.end!);
     final highlightClass = 'highlight-${selection.id}';
@@ -510,27 +512,27 @@ class MaterialCalendarPickerComponent
 
     if (startMonth >= _renderedMonths.first &&
         startMonth <= _renderedMonths.last) {
-      start = _container.querySelector(_slotSelector(selection.start!)) as HtmlElement?;
+      start = _container.querySelector(_slotSelector(selection.start!)) as web.HTMLElement?;
       if (start == null) return;
-      start.classes.add('boundary');
-      start.classes.add(boundaryClass);
-      start.classes.add('start');
+      start.classList.add('boundary');
+      start.classList.add(boundaryClass);
+      start.classList.add('start');
     } else if (startMonth < _renderedMonths.first &&
         endMonth >= _renderedMonths.first) {
       start = _container
-          .querySelector('.month:first-of-type .day-slot:first-of-type') as HtmlElement?;
+          .querySelector('.month:first-of-type .day-slot:first-of-type') as web.HTMLElement?;
     }
 
     if (endMonth >= _renderedMonths.first && endMonth <= _renderedMonths.last) {
-      end = _container.querySelector(_slotSelector(selection.end!)) as HtmlElement?;
+      end = _container.querySelector(_slotSelector(selection.end!)) as web.HTMLElement?;
       if (end == null) return;
-      end.classes.add('boundary');
-      end.classes.add(boundaryClass);
-      end.classes.add('end');
+      end.classList.add('boundary');
+      end.classList.add(boundaryClass);
+      end.classList.add('end');
     } else if (startMonth <= _renderedMonths.last &&
         endMonth > _renderedMonths.last) {
       end = _container
-          .querySelector('.month:last-of-type .day-slot:last-of-type') as HtmlElement?;
+          .querySelector('.month:last-of-type .day-slot:last-of-type') as web.HTMLElement?;
     }
 
     // If it's out of view, we're done.
@@ -539,42 +541,42 @@ class MaterialCalendarPickerComponent
     // Highlight the active endpoint in bold.
     if (selection.id == state.currentSelection) {
       if (state.previewAnchoredAtStart && end != null) {
-        end.classes.add('active');
+        end.classList.add('active');
       } else if (start != null) {
-        start.classes.add('active');
+        start.classList.add('active');
       }
     }
 
-    var range = Range()
+    var range = web.document.createRange()
       ..setStartBefore(start!)
       ..setEndAfter(end!);
 
     // Fill in the range in the starting month.
-    _highlightElements(start, end.nextElementSibling as HtmlElement?, highlightClass);
+    _highlightElements(start, end.nextElementSibling as web.HTMLElement?, highlightClass);
 
     // Fill in any remaining months.
-    HtmlElement startContainer = range.startContainer as HtmlElement;
-    HtmlElement endContainer = range.endContainer as HtmlElement;
-    for (HtmlElement? month = startContainer.nextElementSibling as HtmlElement?;
+    web.HTMLElement startContainer = range.startContainer as web.HTMLElement;
+    web.HTMLElement endContainer = range.endContainer as web.HTMLElement;
+    for (web.HTMLElement? month = startContainer.nextElementSibling as web.HTMLElement?;
         month != null && month != endContainer.nextElementSibling;
-        month = month.nextElementSibling as HtmlElement?) {
+        month = month.nextElementSibling as web.HTMLElement?) {
       _highlightElements(
-          month.firstChild as HtmlElement?, end.nextElementSibling as HtmlElement?, highlightClass);
+          month.firstChild as web.HTMLElement?, end.nextElementSibling as web.HTMLElement?, highlightClass);
     }
   }
 
   void _highlightElements(
-      HtmlElement? start, HtmlElement? end, String highlightClass) {
-    for (HtmlElement? current = start;
+      web.HTMLElement? start, web.HTMLElement? end, String highlightClass) {
+    for (web.HTMLElement? current = start;
         current != null && current != end;
-        current = current.nextElementSibling as HtmlElement?) {
+        current = current.nextElementSibling as web.HTMLElement?) {
       _highlightElement(current, highlightClass);
     }
   }
 
-  void _highlightElement(HtmlElement el, String highlightClass) {
-    el.classes.add('highlight');
-    el.classes.add(highlightClass);
+  void _highlightElement(web.HTMLElement el, String highlightClass) {
+    el.classList.add('highlight');
+    el.classList.add(highlightClass);
   }
 
   void _resetHighlights() {
@@ -582,8 +584,9 @@ class MaterialCalendarPickerComponent
     final classes = ['visible', 'invisible', 'hidden'];
     for (var className in classes) {
       final selector = '.day-slot.$className';
-      for (HtmlElement el in _container.querySelectorAll(selector)) {
-        el.className = 'day-slot $className';
+      final nodeList = _container.querySelectorAll(selector);
+      for (var i = 0; i < nodeList.length; i++) {
+        (nodeList.item(i) as web.HTMLElement).className = 'day-slot $className';
       }
     }
   }
@@ -621,17 +624,17 @@ class MaterialCalendarPickerComponent
         var a = selections[i];
         var b = selections[j];
         if (a.contains(b.start!) && a.start! < b.start!) {
-          HtmlElement? start = _container.querySelector(_slotSelector(b.start!)) as HtmlElement?;
+          web.HTMLElement? start = _container.querySelector(_slotSelector(b.start!)) as web.HTMLElement?;
           if (start != null) {
-            start.classes.add('left');
-            start.classes.add('left-${a.id}');
+            start.classList.add('left');
+            start.classList.add('left-${a.id}');
           }
         }
         if (a.contains(b.end!) && a.end! > b.end!) {
-          HtmlElement? end = _container.querySelector(_slotSelector(b.end!)) as HtmlElement?;
+          web.HTMLElement? end = _container.querySelector(_slotSelector(b.end!)) as web.HTMLElement?;
           if (end != null) {
-            end.classes.add('right');
-            end.classes.add('right-${a.id}');
+            end.classList.add('right');
+            end.classList.add('right-${a.id}');
           }
         }
       }
@@ -639,18 +642,18 @@ class MaterialCalendarPickerComponent
   }
 
   void _renderToday() {
-    HtmlElement? el = _container.querySelector('.day-slot.today') as HtmlElement?;
-    if (el != null) el.classes.remove('today');
-    el = _container.querySelector(_slotSelector(_today)) as HtmlElement?;
-    if (el != null) el.classes.add('today');
+    web.HTMLElement? el = _container.querySelector('.day-slot.today') as web.HTMLElement?;
+    if (el != null) el.classList.remove('today');
+    el = _container.querySelector(_slotSelector(_today)) as web.HTMLElement?;
+    if (el != null) el.classList.add('today');
   }
 
   void _renderHover() {
-    HtmlElement? el = _container.querySelector('.day-slot.hover') as HtmlElement?;
-    if (el != null) el.classes.remove('hover');
+    web.HTMLElement? el = _container.querySelector('.day-slot.hover') as web.HTMLElement?;
+    if (el != null) el.classList.remove('hover');
     if (_model.value.preview != null) {
-      el = _container.querySelector(_slotSelector(_model.value.preview!)) as HtmlElement?;
-      if (el != null) el.classes.add('hover');
+      el = _container.querySelector(_slotSelector(_model.value.preview!)) as web.HTMLElement?;
+      if (el != null) el.classList.add('hover');
     }
   }
 
@@ -677,12 +680,12 @@ class MaterialCalendarPickerComponent
         _ensureSelectionIsVisible();
       }
       if (!_isRenderScheduled) {
-        window.requestAnimationFrame((_) {
+        web.window.requestAnimationFrame(((double _) {
           _resetHighlights();
           _renderHighlights();
           _renderToday();
           _renderHover();
-        });
+        }).toJS);
       }
     }
   }
@@ -710,10 +713,10 @@ class MaterialCalendarPickerComponent
   final List<int> _renderedOffsets = [];
 
   // The .scroll-container element.
-  late HtmlElement _scroller;
+  late web.HTMLElement _scroller;
 
   // The .calendar-container element.
-  late HtmlElement _container;
+  late web.HTMLElement _container;
 
   // Cached _scroller.scrollTop (to separate DOM reads from writes).
   int _scrollTop = 0;
@@ -741,9 +744,9 @@ class MaterialCalendarPickerComponent
   }
 
   @ViewChild('container')
-  set container(HtmlElement container) {
+  set container(web.HTMLElement container) {
     _container = container;
-    _scroller = container.parent as HtmlElement;
+    _scroller = container.parentNode as web.HTMLElement;
   }
 
   @override
@@ -792,16 +795,18 @@ class MaterialCalendarPickerComponent
 
   void _initializePanels() {
     if (!isFirefox) {
-      _container.classes.add('not-firefox');
+      _container.classList.add('not-firefox');
     }
 
     // Create the blank month containers.
-    _container.children.clear();
+    while (_container.firstChild != null) {
+      _container.removeChild(_container.firstChild!);
+    }
     _renderedMonths.clear();
     _renderedOffsets.clear();
 
     for (var i = -_overdraw; i <= _overdraw; i++) {
-      _container.append(_monthTemplate.clone(true));
+      _container.append(_monthTemplate.cloneNode(true));
     }
 
     _renderVisible();
@@ -813,66 +818,66 @@ class MaterialCalendarPickerComponent
     _scrollToMonth(_Month.fromDate(_initialDate!));
 
     // Wait to render until after the initial scroll.
-    window.requestAnimationFrame((_) {
+    web.window.requestAnimationFrame(((double _) {
       _initializePanels();
       _isRenderScheduled = false;
-    });
+    }).toJS);
   }
 
   // Dart returns a separate instance every time a tearoff is accessed, so we
   // need to cache them for removeEventListener to work.
-  late EventListener _scrollListener;
-  late EventListener _clickListener;
-  late EventListener _mouseDownListener;
-  late EventListener _mouseMoveListener;
-  late EventListener _mouseOutListener;
+  late web.EventListener _scrollListener;
+  late web.EventListener _clickListener;
+  late web.EventListener _mouseDownListener;
+  late web.EventListener _mouseMoveListener;
+  late web.EventListener _mouseOutListener;
 
   void _initializeEvents() {
     // Process the events outside of Angular for lower overhead.
-    _scroller.addEventListener('scroll', _scrollListener = _onScroll);
+    _scroller.addEventListener('scroll', _scrollListener = _onScroll.toJS);
     _container
-      ..addEventListener('click', _clickListener = _onClick)
-      ..addEventListener('mousedown', _mouseDownListener = _onMouseDown)
-      ..addEventListener('mousemove', _mouseMoveListener = _onMouseMove)
-      ..addEventListener('mouseout', _mouseOutListener = _onMouseOut);
+      ..addEventListener('click', _clickListener = _onClick.toJS)
+      ..addEventListener('mousedown', _mouseDownListener = _onMouseDown.toJS)
+      ..addEventListener('mousemove', _mouseMoveListener = _onMouseMove.toJS)
+      ..addEventListener('mouseout', _mouseOutListener = _onMouseOut.toJS);
   }
 
-  void _onClick(Event event) {
+  void _onClick(web.Event event) {
     var date = _extractDate(event);
     if (_canSelectDate(date)) {
       _inputListener.onClick(date!);
     }
   }
 
-  void _onMouseDown(Event event) {
+  void _onMouseDown(web.Event event) {
     var date = _extractDate(event);
     if (_canSelectDate(date)) {
       _inputListener.onMouseDown(date!);
     }
   }
 
-  void _onMouseMove(Event event) {
+  void _onMouseMove(web.Event event) {
     var date = _extractDate(event);
     if (_canSelectDate(date)) {
       _inputListener.onMouseMove(date!);
     }
   }
 
-  void _onMouseOut(Event event) {
+  void _onMouseOut(web.Event event) {
     var date = _extractDate(event);
     if (_canSelectDate(date)) {
       _inputListener.onMouseLeave(date!);
     }
   }
 
-  void _onScroll(Event event) {
-    _scrollTop = _scroller.scrollTop;
+  void _onScroll(web.Event event) {
+    _scrollTop = _scroller.scrollTop.toInt();
     if (_isRenderScheduled) return;
     _isRenderScheduled = true;
-    window.requestAnimationFrame((_) {
+    web.window.requestAnimationFrame(((double _) {
       _renderVisible();
       _isRenderScheduled = false;
-    });
+    }).toJS);
   }
 }
 

@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -16,30 +17,6 @@ import 'package:angulardart_components/theme/dark_theme.dart';
 import 'paper_tooltip.dart';
 import 'tooltip_target.dart';
 
-/// An icon that displays a paper tooltip on mouse-hover, click, enter,
-/// space, and focus.
-///
-/// This is essentially the same as showing [MaterialTooltipCard] on a
-/// [MaterialIconComponent], except that it shows tooltip on click (as
-/// opposed to [MaterialTooltipTarget], which does not have click trigger).
-///
-/// __Attributes:__
-///
-/// - `icon` -- The name of the icon. This overrides `type`, if both are
-/// provided. See [https://www.google.com/design/icons/] for available icons.
-///
-/// - `size` -- The size of the icon. Possible values:
-///   - `x-small`, `small`, `medium`, `large` and `x-large` correspond to
-///     the [MaterialIconComponent] sizes of 12px, 13px, 16px, 18px,
-///     and 20px, respectively.
-///   - No value defaults to `medium`.
-///   - `` -- The empty String corresponds to the default size of
-///   [MaterialIconComponent], which is 24px.
-///
-/// - `type` -- The type of the icon. Possible values:
-///   - `help` -- Shows a "help_outline" icon (a circled "?"). (Default)
-///   - `info` -- Shows an "info_outline" (a circled "i")
-///   - `error` -- Shows an "error_outline" (a circled "!").
 @Component(
   selector: 'material-icon-tooltip',
   providers: [
@@ -70,37 +47,23 @@ import 'tooltip_target.dart';
     KeyboardOnlyFocusIndicatorDirective,
     MaterialPaperTooltipComponent
   ],
-  // TODO(google): Change preserveWhitespace to false to improve codesize.
   preserveWhitespace: true,
 )
 class MaterialIconTooltipComponent implements DeferredContentAware {
   final _contentVisible = StreamController<bool>.broadcast(sync: true);
 
-  HtmlElement element;
+  web.HTMLElement element;
 
-  /// Icon identifier for [MaterialIconComponent]. See
-  /// [https://www.google.com/design/icons/] for available icons.
   final String icon;
 
-  /// Size of the icon. Must be a valid size for [MaterialIconComponent].
   final String iconSize;
 
-  /// Relative positions where to try to show the tooltip.
-  ///
-  /// Defaults to:
-  ///
-  /// `[RelativePosition.offsetBottomRight,
-  /// RelativePosition.offsetTopLeft,
-  /// RelativePosition.offsetBottomLeft,
-  /// RelativePosition.offsetTopRight]`
   @Input()
   List<RelativePosition> preferredPositions = _defaultPositions;
 
-  /// The x-offset to where the tooltip will be ultimately positioned.
   @Input('offsetX')
   int offsetX = 0;
 
-  /// The y-offset to where the tooltip will be ultimately positioned.
   @Input('offsetY')
   int offsetY = 0;
 
@@ -141,7 +104,6 @@ class MaterialIconTooltipComponent implements DeferredContentAware {
       desc: 'Label for help icon which shows help content.');
 }
 
-/// [RelativePosition] list for the ink tooltip.
 const _defaultPositions = [
   RelativePosition.offsetBottomRight,
   RelativePosition.offsetTopLeft,

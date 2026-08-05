@@ -16,7 +16,7 @@ class LabeledList<T> extends collection.DelegatingList<T>
   bool get hasLabel => _labelFcn != null;
 
   @override
-  String get uiDisplayName => _labelFcn != null ? _labelFcn!() : '';
+  String get uiDisplayName => _labelFcn != null ? _labelFcn() : '';
 
   LabeledList(super.items, [this._labelFcn]);
 

@@ -3,8 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
 import 'dart:math' show max, min;
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/utils/async/async.dart';
@@ -60,7 +62,7 @@ class DomService {
   final _domReadQueue = <DomReadWriteFn>[];
   final _domWriteQueue = <DomReadWriteFn>[];
   final NgZone _ngZone;
-  final Window _window;
+  final web.Window _window;
 
   Zone _rootZone = Zone.root;
   bool _insideDigest = false;
@@ -81,6 +83,11 @@ class DomService {
   Timer? _idleTimer;
   bool _inDispatchTurnDoneEvent = false;
 
+  web.EventListener? _animationEndListener;
+  web.EventListener? _resizeListener;
+  web.EventListener? _transitionEndListener;
+  web.EventListener? _turnDoneListener;
+
   /// Optional callback to check if DOM has been mutated by angular in
   /// a zone turn.
   ///
@@ -96,7 +103,7 @@ class DomService {
   bool _writeQueueChangedLayout = false;
 
   /// Creates an instance that automatically runs outside of [ngZone], and
-  /// uses the browser-supplied ([Window]) for animation frames and resizing
+  /// uses the browser-supplied ([web.Window]) for animation frames and resizing
   /// checks.
   DomService(this._ngZone, this._window);
 
@@ -110,7 +117,7 @@ class DomService {
         if (isDomMutatedPredicate == null || isDomMutatedPredicate!()) {
           // Sending an event to DomService in other apps on the same page.
           _inDispatchTurnDoneEvent = true;
-          _window.dispatchEvent(Event(_turnDoneEventType));
+          _window.dispatchEvent(web.Event(_turnDoneEventType));
           _inDispatchTurnDoneEvent = false;
           // If dom has been mutated by angular, mark [_writeQueueChangedLayout]
           // to true. So that [_scheduleOnLayoutChanged] will be called normally
@@ -190,7 +197,7 @@ class DomService {
         // Delayed initialization of the cross-app event sending.
         // TODO(google): figure out a better way to initialize this earlier
         init();
-        _nextFrameId = _window.requestAnimationFrame((highResTimer) {
+        _nextFrameId = _window.requestAnimationFrame(((double highResTimer) {
           // Protect against window implementation that does not
           // cancel the frame.
           if (completer.isCompleted) return;
@@ -199,7 +206,7 @@ class DomService {
             _nextFrameCompleter = null;
           }
           completer.complete(highResTimer);
-        });
+        }).toJS);
       });
       _nextFrameFuture =
           ZonedFuture(completer.future, _ngZone.runOutsideAngular);
@@ -372,26 +379,28 @@ class DomService {
             _writeQueueChangedLayout = false;
           }
         });
-        _listenOnLayoutEvents(_window.onAnimationEnd);
-        _listenOnLayoutEvents(_window.onResize);
-        _listenOnLayoutEvents(_window.onTransitionEnd);
+        _animationEndListener =
+            ((web.Event _) => _scheduleOnLayoutChanged()).toJS;
+        _resizeListener =
+            ((web.Event _) => _scheduleOnLayoutChanged()).toJS;
+        _transitionEndListener =
+            ((web.Event _) => _scheduleOnLayoutChanged()).toJS;
+        _window.addEventListener('animationend', _animationEndListener!);
+        _window.addEventListener('resize', _resizeListener!);
+        _window.addEventListener('transitionend', _transitionEndListener!);
         // Listening Angular turn done events coming from other apps.
-        _window.addEventListener(_turnDoneEventType, (_) {
+        _turnDoneListener = ((web.Event _) {
           if (!_inDispatchTurnDoneEvent) {
             _scheduleOnLayoutChanged();
           }
-        });
+        }).toJS;
+        _window.addEventListener(_turnDoneEventType, _turnDoneListener!);
       });
     }
     return _onLayoutChangedStream!;
   }
 
-  void _listenOnLayoutEvents(Stream<Object>? events) {
-    if (events == null) return; // happens only in tests with mocked window
-    events.listen((_) => _scheduleOnLayoutChanged());
-  }
-
-  /// Tracks a layout change defined by [fn], and calls the [callback] function
+  /// Tracks a layout change by [fn], and calls the [callback] function
   /// with the last stable value.
   ///
   /// If [framesToStabilize] is set, the callback will wait for the specified

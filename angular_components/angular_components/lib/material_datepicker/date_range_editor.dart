@@ -3,8 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 import 'dart:math';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -209,7 +210,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   @Input()
   late DateFormat activeDateFormat;
 
-  final Element _elementRef;
+  final web.Element _elementRef;
   final DomService _domService;
   late MenuModel _presetsMenu;
 
@@ -364,19 +365,19 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     // triggered for a long time (since the main calendar init takes 100+ ms,
     // requestAnimationFrame() tries to render at 10 fps).
     if (_elementRef.querySelector('.preset-list') != null) {
-      _elementRef
-          .querySelector('.preset-list material-select-item.selected')
+      (_elementRef
+          .querySelector('.preset-list material-select-item.selected') as web.HTMLElement?)
           ?.focus();
     } else {
-      _elementRef.querySelector('material-input.active input')?.focus();
+      (_elementRef.querySelector('material-input.active input') as web.HTMLElement?)?.focus();
     }
   }
 
   /// Event which fires when one of the ranges is selected.
   @Output()
-  Stream<UIEvent> get presetRangeSelected => _controller.stream;
-  // TODO(google): change to async.
-  final _controller = StreamController<UIEvent>.broadcast(sync: true);
+  Stream<web.UIEvent> get presetRangeSelected => _controller.stream;
+
+  final _controller = StreamController<web.UIEvent>.broadcast(sync: true);
 
   static String _renderPreset(DatepickerPreset value) => value.title;
   static String _renderAlternativePreset(DatepickerPreset value) =>
@@ -448,7 +449,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     ]);
   }
 
-  void onRangeClicked(UIEvent? event, DatepickerDateRange range) {
+  void onRangeClicked(web.UIEvent? event, DatepickerDateRange range) {
     if (_presetSelection.isNotEmpty &&
         _presetSelection.selectedValue!.range != range) {
       _presetSelection.clear();
@@ -458,7 +459,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   }
 
   void onAlternativePresetClicked(
-      UIEvent? event, DatepickerPreset parent, DatepickerPreset alternative) {
+      web.UIEvent? event, DatepickerPreset parent, DatepickerPreset alternative) {
     // Replace parent preset with alternative in main menu.
     for (var i = 0; i < _presets.length; i++) {
       if (_presets[i] == parent) {
@@ -471,7 +472,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   }
 
   /// Clears existing range.
-  void onClearRangeClicked(UIEvent? event) {
+  void onClearRangeClicked(web.UIEvent? event) {
     model.selectRange(null);
     if (event != null) _controller.add(event);
   }

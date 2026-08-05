@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:math';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/annotations/rtl_annotation.dart';
@@ -11,22 +13,16 @@ import 'package:angulardart_components/laminate/enums/alignment.dart';
 import 'package:angulardart_components/laminate/ruler/dom_ruler.dart';
 import 'package:angulardart_components/src/laminate/popup/popup_source.dart';
 
-/// A handler to return the position and size of the *content* of [element].
-///
-/// If [track] is true, should observe the DOM for layout changes. This is used
-/// to decouple [DomPopupSource] from the Ruler package.
-typedef AsyncMeasureSize<E> = Stream<Rectangle> Function(E element,
+typedef AsyncMeasureSize<E> = Stream<web.DOMRect> Function(E element,
     {bool track});
 
-/// A factory that can [createPopupSource] from HTML elements.
 @Injectable()
 class DomPopupSourceFactory {
   final DomRuler _domRuler;
 
   DomPopupSourceFactory(this._domRuler);
 
-  /// Returns a new [DomPopupSource] from [sourceElement].
-  DomPopupSource createPopupSource(HtmlElement sourceElement,
+  DomPopupSource createPopupSource(web.HTMLElement sourceElement,
       {Alignment alignOriginX = Alignment.start,
       Alignment alignOriginY = Alignment.start,
       bool initAriaAttributes = true}) {
@@ -36,38 +32,26 @@ class DomPopupSourceFactory {
         initAriaAttributes: initAriaAttributes);
   }
 
-  /// Returns a stream of client sizes for [element], and offsets with the
-  /// current scrolling position.
-  ///
-  /// If [track] is set, will wait for DOM update notifications and respond if
-  /// the measurement changes.
-  Stream<Rectangle> _asyncMeasureSize(HtmlElement element,
+  Stream<web.DOMRect> _asyncMeasureSize(web.HTMLElement element,
       {bool track = false}) {
     if (track) {
-      return _domRuler.track(element);
+      return _domRuler.track(element).map((rect) =>
+          web.DOMRect(rect.left, rect.top, rect.width, rect.height));
     } else {
-      return _domRuler.measure(element).asStream();
+      return _domRuler.measure(element).then((rect) =>
+          web.DOMRect(rect.left, rect.top, rect.width, rect.height)).asStream();
     }
   }
 }
 
-/// An implementation of [PopupSource] that lives on the UI layer.
 class DomPopupSource implements ElementPopupSource {
-  static final bool _isRtl = determineRtl(document);
+  static final bool _isRtl = determineRtl(web.document);
 
-  final AsyncMeasureSize<HtmlElement> _asyncMeasureSize;
+  final AsyncMeasureSize<web.HTMLElement> _asyncMeasureSize;
   @override
-  final HtmlElement sourceElement;
+  final web.HTMLElement sourceElement;
   final bool _initAriaAttributes;
 
-  /// Creates a new source from a measure function and source DOM element.
-  ///
-  /// Setting [alignOriginX] and [alignOriginY] is used for calculating what
-  /// the x and y position should be.
-  ///
-  /// [initAriaAttributes] decides whether to set the popup related aria
-  /// attributes. This defaults to true and can be set to false for cases where
-  /// the popup source isn't the focus target.
   DomPopupSource(this._asyncMeasureSize, this.sourceElement,
       {Alignment alignOriginX = Alignment.start,
       Alignment alignOriginY = Alignment.start,
@@ -89,12 +73,12 @@ class DomPopupSource implements ElementPopupSource {
   Alignment get alignOriginY => _alignOriginY;
 
   @override
-  Stream<Rectangle<num>> onDimensionsChanged({bool track = false}) {
+  Stream<web.DOMRect> onDimensionsChanged({bool track = false}) {
     return _asyncMeasureSize(sourceElement, track: track);
   }
 
   @override
-  Rectangle get dimensions => sourceElement.getBoundingClientRect();
+  web.DOMRect get dimensions => sourceElement.getBoundingClientRect();
 
   @override
   bool get isRtl => _isRtl;
@@ -124,6 +108,6 @@ class DomPopupSource implements ElementPopupSource {
   @override
   void onClose() {
     if (!_initAriaAttributes) return;
-    sourceElement.attributes.remove('aria-owns');
+    sourceElement.removeAttribute('aria-owns');
   }
 }

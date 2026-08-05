@@ -3,8 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
 import 'dart:math';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:quiver/iterables.dart' show range;
@@ -14,29 +16,12 @@ import 'package:angulardart_components/utils/keyboard/keyboard.dart';
 
 export 'reorder_events.dart';
 
-/// Provides a list that can reorder it's children using html5 drag&drop.
-/// A vertical reorder-list will use any component in its `<ng-content>`
-/// marked with `reorderPlaceholder` attribute as a placeholder when moving
-/// items.
-///
-/// `reorderItem`s should be direct children of the `reorder-list` and, by
-/// default, the entire element is a handle and may be dragged and dropped
-/// to perfom reorder operations.
-///
-/// If a `reorderItem` component implements [ReorderHandleProvider], the child
-/// element marked with `reorderHandle` will be draggable for reorder
-/// operations. This allows complex components to be reordered by a handle and
-/// not have the entire component be listening to drag and drop events.
-///
-/// __Attention:__ This component is not an implementation of the Material List
-/// reorder control from the Material Spec. There is currently no support for
-/// interactions on a mobile device.
-///
-/// User is responsible for listening to reorder events
-/// and updating order of elements accordingly
-///
-/// Warning: Reorder list does not work with a keyboard and so is not
-/// accessible.
+const int _keyCodeUp = 38;
+const int _keyCodeDown = 40;
+const int _keyCodeDelete = 46;
+const int _keyCodeNumDelete = 110;
+const int _keyCodeBackspace = 8;
+
 @Component(
   selector: 'reorder-list',
   templateUrl: 'reorder_list.html',
@@ -53,65 +38,52 @@ class ReorderListComponent implements OnDestroy {
   static final itemSelectedCssClass = 'item-selected';
   final _disposer = Disposer.oneShot();
 
-  /// Will emit [ReorderEvent] after reordering has finished.
   @Output()
   Stream<ReorderEvent> get reorder => _reorder.stream;
   final _reorder = StreamController<ReorderEvent>.broadcast(sync: true);
 
-  /// Will emit [ReorderEvent] when the prospective reordering position has
-  /// changed.
   @Output()
   Stream<ReorderEvent> get reorderAttempt => _reorderAttempt.stream;
   final _reorderAttempt = StreamController<ReorderEvent>.broadcast(sync: true);
 
-  /// Will emit [int] index of element to delete when delete is triggered.
   @Output()
   Stream<int> get delete => _delete.stream;
   final _delete = StreamController<int>.broadcast(sync: true);
 
-  /// Will emit [ItemSelectionEvent] indexes of the newly selected elements.
   @Output()
   Stream<ItemSelectionEvent> get itemSelectionChanged =>
       _itemSelectionChanged.stream;
   final _itemSelectionChanged =
       StreamController<ItemSelectionEvent>.broadcast(sync: true);
 
-  /// Emits [ReorderEvent] with the source index and the currently hovered index
-  /// during a reorder.
   @Output()
   Stream<ReorderEvent> get reorderProgress => _reorderProgress.stream;
   final _reorderProgress = StreamController<ReorderEvent>.broadcast(sync: true);
 
   final NgZone _ngZone;
 
-  /// If true (default), items are aligned vertically.
   @HostBinding('class.vertical')
   @Input()
   bool verticalItems = true;
 
-  /// If true, enables selecting multiple items for drag and drop.
   @HostBinding('class.multiselect')
   @Input()
   bool multiSelect = false;
 
-  // Reorderable items in the list; keys are the handles, values are the items
-  late Map<HtmlElement, HtmlElement> _items;
-  final Map<HtmlElement, List<StreamSubscription>> _subscriptions = <HtmlElement, List<StreamSubscription>>{};
-  final Map<HtmlElement, StreamSubscription> _dragSubscriptions = <HtmlElement, StreamSubscription>{};
+  late Map<web.HTMLElement, web.HTMLElement> _items;
+  final Map<web.HTMLElement, List<void Function()>> _subscriptions = <web.HTMLElement, List<void Function()>>{};
+  final Map<web.HTMLElement, void Function()?> _dragSubscriptions = <web.HTMLElement, void Function()?>{};
   late List<int> _curTransformY;
   late List<int> _itemSizes;
-  // Flag to ensure that drop index is not updated when drop area is outside
-  // content-area.
   bool _reorderActive = false;
-  // Index of element that is being moved. Set when drag starts.
   int _moveSourceIndex = -1;
   int _currentMoveIndex = -1;
-  late HtmlElement _dragSourceElement;
+  late web.HTMLElement _dragSourceElement;
   final List<int> _selectedElementIndexes = [];
   int? _pivotItemIndex;
 
   @ViewChild('placeholder')
-  late HtmlElement placeholder;
+  late web.HTMLElement placeholder;
 
   ReorderListComponent(this._ngZone);
 
@@ -123,19 +95,17 @@ class ReorderListComponent implements OnDestroy {
 
   void _refreshItems() {
     final newElements = _handleElements.toSet();
-    Set<HtmlElement> currentlyTracked = Set.from(_subscriptions.keys);
-    for (HtmlElement tracked in currentlyTracked) {
+    Set<web.HTMLElement> currentlyTracked = Set.from(_subscriptions.keys);
+    for (web.HTMLElement tracked in currentlyTracked) {
       if (!newElements.contains(tracked)) {
         unTrack(tracked);
       }
     }
-    for (HtmlElement newElement in newElements) {
+    for (web.HTMLElement newElement in newElements) {
       if (!currentlyTracked.contains(newElement)) {
         track(newElement);
       }
     }
-    // When items are refreshed, the selection marks disappears. As for
-    // usability, i assumed that the previous selection is not relevant anymore.
     if (multiSelect) _selectedElementIndexes.clear();
   }
 
@@ -146,9 +116,8 @@ class ReorderListComponent implements OnDestroy {
   }
 
   void _unTrackAll() {
-    // Prevent concurrent modification exception.
-    var keys = List<HtmlElement>.from(_subscriptions.keys);
-    for (HtmlElement element in keys) {
+    var keys = List<web.HTMLElement>.from(_subscriptions.keys);
+    for (web.HTMLElement element in keys) {
       unTrack(element);
     }
   }
@@ -159,25 +128,21 @@ class ReorderListComponent implements OnDestroy {
     int rightSide = 0;
     int childCount = contents.length;
     if (childCount > 0) {
-      leftSide = contents.first.parent.offset.left;
-      rightSide = contents.first.parent.offset.right;
+      final parentRect = (contents.first.parentNode as web.HTMLElement).getBoundingClientRect();
+      leftSide = parentRect.left.toInt();
+      rightSide = parentRect.right.toInt();
     }
     int? nextOffset;
     int upperStackSize = 0;
     var moveRight = true;
     for (int i = 0; i < childCount; i++) {
       int offset = 0;
-      HtmlElement e = contents[i];
-      // Calculate offset based on removing original item and inserting into
-      // new position.
+      web.HTMLElement e = contents[i];
       if (i == _moveSourceIndex) {
-        // move original div off-screen so we only see moving clone.
         offset = -8000;
       } else if (_moveSourceIndex < i && i <= toIndex) {
-        // Remove item delta.
         offset -= _itemSizes[_moveSourceIndex];
       } else if (toIndex <= i && i < _moveSourceIndex) {
-        // insert item delta.
         offset += _itemSizes[_moveSourceIndex];
       }
       if ((i != _moveSourceIndex && i < toIndex) ||
@@ -190,9 +155,6 @@ class ReorderListComponent implements OnDestroy {
           e.style.transition = 'all 0.2s ease-out';
         }
 
-        // If the item aligns horizontally the overflowed items should be
-        // handled to wrap to next row. If the item is moved off-screen, it's
-        // not necessary to be handled.
         if (!verticalItems && offset != -8000) {
           nextOffset = _horizontalTransformHandler(
               e,
@@ -212,27 +174,31 @@ class ReorderListComponent implements OnDestroy {
 
     final draggedElement = _items[_dragSourceElement]!;
     if (verticalItems) {
+      final draggedRect = draggedElement.getBoundingClientRect();
       placeholder.style
-        ..height = "${draggedElement.borderEdge.height}px"
-        ..width = "${draggedElement.borderEdge.width}px"
+        ..height = "${draggedRect.height}px"
+        ..width = "${draggedRect.width}px"
         ..top = "${upperStackSize}px";
     } else {
-      HtmlElement e = contents[toIndex];
+      web.HTMLElement e = contents[toIndex];
+      final eRect = e.getBoundingClientRect();
+      final draggedRect = draggedElement.getBoundingClientRect();
       var left = moveRight
-          ? e.offset.left
-          : e.offset.right - draggedElement.borderEdge.width;
+          ? eRect.left
+          : eRect.right - draggedRect.width;
 
       placeholder.style
-        ..height = "${draggedElement.borderEdge.height}px"
-        ..width = "${draggedElement.borderEdge.width}px"
-        ..top = "${e.offset.top}px"
+        ..height = "${draggedRect.height}px"
+        ..width = "${draggedRect.width}px"
+        ..top = "${eRect.top}px"
         ..left = "${left}px";
     }
     _reorderAttempt.add(_createReorderEvent(_moveSourceIndex, toIndex));
   }
 
-  int _horizontalTransformHandler(HtmlElement e, Element? prev, int offset,
+  int _horizontalTransformHandler(web.HTMLElement e, web.HTMLElement? prev, int offset,
       int? nextOffset, int leftSide, int rightSide) {
+    final eRect = e.getBoundingClientRect();
     if (nextOffset != null) {
       if (offset.sign == nextOffset.sign) {
         offset = nextOffset;
@@ -240,16 +206,21 @@ class ReorderListComponent implements OnDestroy {
         offset += nextOffset;
       }
     }
-    if (e.offset.right + offset > rightSide) {
-      nextOffset = e.offset.width.toInt();
-      e.style.transform = 'translate(${-e.offset.left + leftSide}px,'
-          '${e.offset.height}px)';
-    } else if (e.offset.left + offset < leftSide) {
-      if (e.offset.width < prev!.offset.right) {
-        nextOffset = -e.offset.width.toInt();
-        e.style.transform = 'translate('
-            '${prev.offset.right - leftSide + offset}px,'
-            '${-e.offset.height}px)';
+    if (eRect.right + offset > rightSide) {
+      nextOffset = eRect.width.toInt();
+      e.style.transform = 'translate(${-eRect.left + leftSide}px,'
+          '${eRect.height}px)';
+    } else if (eRect.left + offset < leftSide) {
+      if (prev != null) {
+        final prevRect = prev.getBoundingClientRect();
+        if (eRect.width < prevRect.right) {
+          nextOffset = -eRect.width.toInt();
+          e.style.transform = 'translate('
+              '${prevRect.right - leftSide + offset}px,'
+              '${-eRect.height}px)';
+        } else {
+          nextOffset = 0;
+        }
       } else {
         nextOffset = 0;
       }
@@ -259,58 +230,76 @@ class ReorderListComponent implements OnDestroy {
     return nextOffset ?? 0;
   }
 
-  /// Starts listening to drag events for a child element.
-  void track(HtmlElement element) {
-    element.draggable = true;
-    List subs = _subscriptionsForElement(element);
-    subs.add(element.onDragStart.listen((e) {
-      // Required for firefox to support drag
-      e.dataTransfer.setData("Text", element.id);
-      e.dataTransfer.effectAllowed = "copyMove";
-      _onDragStart(e);
-    }));
+  void _addEventListener(web.HTMLElement element, String eventType, web.EventListener listener) {
+    element.addEventListener(eventType, listener);
+    _subscriptions.putIfAbsent(element, () => []);
+    _subscriptions[element]!.add(() => element.removeEventListener(eventType, listener));
+  }
 
-    subs.add(element.onDragEnd.listen(_onDragEnd));
-    subs.add(element.onKeyDown.listen((e) => _onKeyDown(e, element)));
-    _dragSubscriptions[element] =
-        element.onDragOver.listen((e) => _onDragOver(e, element));
-    // Subscribing to onclick events when multi select is turned on.
+  void track(web.HTMLElement element) {
+    element.draggable = true;
+
+    web.EventListener dragStartListener = (web.Event e) {
+      final dragEvent = e as web.DragEvent;
+      dragEvent.dataTransfer!.setData("Text", element.id);
+      dragEvent.dataTransfer!.effectAllowed = "copyMove";
+      _onDragStart(dragEvent);
+    }.toJS;
+    _addEventListener(element, 'dragstart', dragStartListener);
+
+    web.EventListener dragEndListener = (web.Event e) {
+      _onDragEnd(e as web.MouseEvent);
+    }.toJS;
+    _addEventListener(element, 'dragend', dragEndListener);
+
+    web.EventListener keyDownListener = (web.Event e) {
+      _onKeyDown(e as web.KeyboardEvent, element);
+    }.toJS;
+    _addEventListener(element, 'keydown', keyDownListener);
+
+    web.EventListener dragOverListener = (web.Event e) {
+      _onDragOver(e as web.MouseEvent, element);
+    }.toJS;
+    element.addEventListener('dragover', dragOverListener);
+    _dragSubscriptions[element] = () => element.removeEventListener('dragover', dragOverListener);
+
     if (multiSelect) {
-      subs.add(element.onClick.listen((e) => _onClick(e, element)));
+      web.EventListener clickListener = (web.Event e) {
+        _onClick(e as web.MouseEvent, element);
+      }.toJS;
+      _addEventListener(element, 'click', clickListener);
     }
   }
 
-  void unTrack(HtmlElement element) {
-    // Cancel subscriptions to events for removed element.
-    var subs = _subscriptionsForElement(element);
-    for (StreamSubscription s in subs) {
-      s.cancel();
+  void unTrack(web.HTMLElement element) {
+    var subs = _subscriptions[element];
+    if (subs != null) {
+      for (var cleanup in subs) {
+        cleanup();
+      }
     }
     _subscriptions.remove(element);
 
     if (_dragSubscriptions[element] != null) {
-      _dragSubscriptions[element]!.cancel();
+      _dragSubscriptions[element]!();
     }
     _dragSubscriptions.remove(element);
   }
 
-  List<HtmlElement> get _handleElements => _items.keys.toList();
-  List<HtmlElement> get _reorderElements => _items.values.toList();
+  List<web.HTMLElement> get _handleElements => _items.keys.toList();
+  List<web.HTMLElement> get _reorderElements => _items.values.toList();
 
-  void _onDragStart(MouseEvent e) {
-    // If multiSelect is enabled, clear the selection and replace with the
-    // target of the drag start event.
+  void _onDragStart(web.MouseEvent e) {
     if (multiSelect) {
-      int index = _getIndex(e.currentTarget as HtmlElement);
+      int index = _getIndex(e.currentTarget as web.HTMLElement);
       if (!_selectedElementIndexes.contains(index)) {
         _clearSelection();
         _selectedElementIndexes.add(index);
         _notifySelectionChange();
       }
     }
-    _dragSourceElement = e.currentTarget as HtmlElement;
-    _dragSourceElement.classes.add('reorder-list-dragging-active');
-    // Initialize all transforms.
+    _dragSourceElement = e.currentTarget as web.HTMLElement;
+    _dragSourceElement.classList.add('reorder-list-dragging-active');
     var contents = _reorderElements;
     int childCount = contents.length;
     _moveSourceIndex = _handleElements.indexOf(_dragSourceElement);
@@ -321,18 +310,19 @@ class ReorderListComponent implements OnDestroy {
     }
     _reorderActive = true;
     _currentMoveIndex = _moveSourceIndex;
-    // Move element off the grid as soon as reorder starts
     _moveItem(_currentMoveIndex, _currentMoveIndex);
   }
 
-  int _computeItemSize(Element elem) {
-    final cssStyle = elem.getComputedStyle();
+  int _computeItemSize(web.HTMLElement elem) {
+    final cssStyle = web.window.getComputedStyle(elem);
     if (verticalItems) {
-      return (elem.offset.height +
+      final rect = elem.getBoundingClientRect();
+      return (rect.height +
           _parsePx(cssStyle.marginBottom) +
           _parsePx(cssStyle.marginTop)).toInt();
     } else {
-      return (elem.offset.width +
+      final rect = elem.getBoundingClientRect();
+      return (rect.width +
           _parsePx(cssStyle.marginLeft) +
           _parsePx(cssStyle.marginRight)).toInt();
     }
@@ -340,11 +330,11 @@ class ReorderListComponent implements OnDestroy {
 
   int _parsePx(String style) => int.parse(style.replaceAll('px', ''));
 
-  void _onDragEnd(MouseEvent e) {
+  void _onDragEnd(web.MouseEvent e) {
     e.stopPropagation();
 
     _reorderActive = false;
-    _dragSourceElement.classes.remove('reorder-list-dragging-active');
+    _dragSourceElement.classList.remove('reorder-list-dragging-active');
     _reorderActive = false;
     _resetChildren();
 
@@ -355,8 +345,8 @@ class ReorderListComponent implements OnDestroy {
     }
   }
 
-  void _onKeyDown(KeyboardEvent e, HtmlElement element) {
-    if ((e.keyCode == KeyCode.UP || e.keyCode == KeyCode.DOWN) &&
+  void _onKeyDown(web.KeyboardEvent e, web.HTMLElement element) {
+    if ((e.keyCode == _keyCodeUp || e.keyCode == _keyCodeDown) &&
         modifiersKeysFor(e)) {
       int index = _getIndex(element);
       if (index == -1) {
@@ -368,7 +358,7 @@ class ReorderListComponent implements OnDestroy {
 
       e.preventDefault();
       e.stopPropagation();
-    } else if ((e.keyCode == KeyCode.UP || e.keyCode == KeyCode.DOWN) &&
+    } else if ((e.keyCode == _keyCodeUp || e.keyCode == _keyCodeDown) &&
         modifiersKeysFor(e, shiftKey: true)) {
       int index = _getIndex(element);
       if (index == -1) {
@@ -379,14 +369,11 @@ class ReorderListComponent implements OnDestroy {
 
       if (newIndex != index) {
         _reorder.add(_createReorderEvent(index, newIndex));
-        // Make sure that element will be focused after digest cycle
         _ngZone.onEventDone.first.then((_) {
-          // TODO(google): Add support for multiselect keyboard actions.
-          // At the moment, only moves the last selected item.
           var element = _reorderElements[newIndex];
           if (multiSelect) {
             _clearSelection();
-            element.classes.add(itemSelectedCssClass);
+            element.classList.add(itemSelectedCssClass);
             _selectedElementIndexes.add(newIndex);
             _notifySelectionChange();
           }
@@ -395,11 +382,11 @@ class ReorderListComponent implements OnDestroy {
       }
       e.preventDefault();
       e.stopPropagation();
-    } else if ((e.keyCode == KeyCode.DELETE ||
-            e.keyCode == KeyCode.NUM_DELETE ||
-            e.keyCode == KeyCode.BACKSPACE) &&
+    } else if ((e.keyCode == _keyCodeDelete ||
+            e.keyCode == _keyCodeNumDelete ||
+            e.keyCode == _keyCodeBackspace) &&
         modifiersKeysFor(e)) {
-      if ((e.target as HtmlElement) != element) return;
+      if ((e.target as web.HTMLElement) != element) return;
       int index = _getIndex(element);
       if (index == -1) {
         return;
@@ -410,7 +397,7 @@ class ReorderListComponent implements OnDestroy {
     }
   }
 
-  void _onClick(MouseEvent e, HtmlElement element) {
+  void _onClick(web.MouseEvent e, web.HTMLElement element) {
     int index = _getIndex(element);
     if (index == -1) {
       return;
@@ -425,7 +412,6 @@ class ReorderListComponent implements OnDestroy {
         _clearSelection();
         _selectedElementIndexes.add(index);
       }
-      // When just clicking on an item, it will be the pivot for shift selection
       _pivotItemIndex = index;
     }
     _notifySelectionChange();
@@ -433,7 +419,6 @@ class ReorderListComponent implements OnDestroy {
 
   void removeAt(int index) {
     _delete.add(index);
-    // Wait for digest and focus new element
     _ngZone.onEventDone.first.then((_) {
       if (index < _reorderElements.length) {
         _reorderElements[index].focus();
@@ -443,28 +428,24 @@ class ReorderListComponent implements OnDestroy {
     });
   }
 
-  // Handles selection change call emitting,
   void _notifySelectionChange() {
     var sources = List<int>.from(_selectedElementIndexes);
     sources.sort();
     _itemSelectionChanged.add(ItemSelectionEvent(sources));
   }
 
-  // Handles Ctrl|Metakey key selection when onClick event is fired.
-  void _handleCtrl(int index, HtmlElement element) {
-    // With Ctrl click, the last item selected will be the pivot.
+  void _handleCtrl(int index, web.HTMLElement element) {
     _pivotItemIndex = index;
 
-    if (element.classes.contains(itemSelectedCssClass)) {
-      element.classes.remove(itemSelectedCssClass);
+    if (element.classList.contains(itemSelectedCssClass)) {
+      element.classList.remove(itemSelectedCssClass);
       _selectedElementIndexes.remove(index);
     } else {
-      element.classes.add(itemSelectedCssClass);
+      element.classList.add(itemSelectedCssClass);
       _selectedElementIndexes.add(index);
     }
   }
 
-  // Handles shift key selection when onClick event is fired.
   void _handleShift(int index) {
     _pivotItemIndex ??= index;
 
@@ -474,7 +455,7 @@ class ReorderListComponent implements OnDestroy {
     _clearSelection();
     var allElements = _reorderElements;
     for (var index in indexes) {
-      allElements[index].classes.add(itemSelectedCssClass);
+      allElements[index].classList.add(itemSelectedCssClass);
       _selectedElementIndexes.add(index);
     }
   }
@@ -482,22 +463,22 @@ class ReorderListComponent implements OnDestroy {
   void _clearSelection() {
     var allElements = _reorderElements;
     for (var index in _selectedElementIndexes) {
-      allElements[index].classes.remove(itemSelectedCssClass);
+      allElements[index].classList.remove(itemSelectedCssClass);
     }
     _selectedElementIndexes.clear();
   }
 
   int _getNewIndex(int keyCode, int index) {
-    if (keyCode == KeyCode.UP && index > 0) {
+    if (keyCode == _keyCodeUp && index > 0) {
       return index - 1;
-    } else if (keyCode == KeyCode.DOWN && index < _reorderElements.length - 1) {
+    } else if (keyCode == _keyCodeDown && index < _reorderElements.length - 1) {
       return index + 1;
     } else {
       return index;
     }
   }
 
-  void _onDragOver(MouseEvent event, HtmlElement element) {
+  void _onDragOver(web.MouseEvent event, web.HTMLElement element) {
     if (_dragSourceElement == element) {
       return;
     }
@@ -505,12 +486,6 @@ class ReorderListComponent implements OnDestroy {
     var elementIndex = _getIndex(element);
 
     var moveTargetIndex = elementIndex;
-    // The [moveTargetIndex] needs to be incremented if the dragged item was
-    // previously dragged up in the list (without a drop) and then dragged down
-    // in the list to [element], which will have shifted position after the
-    // first drag because it is in the range
-    // [_currentMoveIndex, _moveSourceIndex).
-    // The reverse situation requires decrementing the [moveTargetIndex].
     if (_currentMoveIndex < _moveSourceIndex &&
         elementIndex >= _currentMoveIndex &&
         elementIndex < _moveSourceIndex) {
@@ -531,22 +506,21 @@ class ReorderListComponent implements OnDestroy {
       _reorderProgress
           .add(_createReorderEvent(_moveSourceIndex, _currentMoveIndex));
 
-      // Need to temporary remove drag listener for element
-      // we're switching with to not trigger another event during transition
-      // otherwise we can trigger onDrag during transition and cause flickering
-      _dragSubscriptions[element]!.cancel();
-      _dragSubscriptions[element] == null;
+      _dragSubscriptions[element]!();
+      _dragSubscriptions[element] = null;
       Future.delayed(Duration(milliseconds: 250), () {
-        // Check if element wasn't untracked
         if (_subscriptions[element] != null) {
-          _dragSubscriptions[element] =
-              element.onDragOver.listen((e) => _onDragOver(e, element));
+          web.EventListener dragOverListener = (web.Event e) {
+            _onDragOver(e as web.MouseEvent, element);
+          }.toJS;
+          element.addEventListener('dragover', dragOverListener);
+          _dragSubscriptions[element] = () => element.removeEventListener('dragover', dragOverListener);
         }
       });
     }
   }
 
-  int _getIndex(HtmlElement element) {
+  int _getIndex(web.HTMLElement element) {
     List contents = _handleElements;
     int childCount = contents.length;
     for (int i = 0; i < childCount; i++) {
@@ -567,14 +541,12 @@ class ReorderListComponent implements OnDestroy {
     }
   }
 
-  /// Resets transforms and transitions for a child after drag&drop event
-  /// iscompleted or is canceled.
   void _resetChildren() {
     if (_currentMoveIndex != -1) {
       List contents = _reorderElements;
       int childCount = contents.length;
       for (int i = 0; i < childCount; i++) {
-        HtmlElement e = contents[i];
+        web.HTMLElement e = contents[i];
         e.style.transition = '';
         if (_curTransformY[i] != 0) {
           e.style.transform = '';
@@ -583,23 +555,11 @@ class ReorderListComponent implements OnDestroy {
     }
   }
 
-  /// Lazily creates a list for subscriptions for element.
-  List<StreamSubscription> _subscriptionsForElement(HtmlElement elm) {
-    var l = _subscriptions[elm];
-    if (l == null) {
-      l = <StreamSubscription>[];
-      _subscriptions[elm] = l;
-    }
-    return l;
-  }
-
   bool get showPlaceholder => _reorderActive;
 }
 
 typedef ReorderListHandler = void Function(int sourceIndex, int destIndex);
 
-/// Indicates that the element is a list item in the containing `reorder-list`
-/// component. See [ReorderListComponent] for usage.
 @Directive(
   selector: '[reorderItem]',
 )
@@ -613,35 +573,27 @@ class ReorderItemDirective {
   @HostBinding('tabIndex')
   static const hostTabIndex = 0;
 
-  final HtmlElement element;
+  final web.HTMLElement element;
   final ReorderHandleProvider? _handleProvider;
-  HtmlElement? _handleElement;
+  web.HTMLElement? _handleElement;
 
-  HtmlElement? get _reorderHandle =>
+  web.HTMLElement? get _reorderHandle =>
       _handleElement ?? _handleProvider?.reorderHandle.element;
 
-  /// The [HtmlElement] to be used as the drag handle.
-  ///
-  /// Optional. If not specified, the host element for this directive will also
-  /// be the handle.
   @Input()
-  set useHandle(HtmlElement element) {
+  set useHandle(web.HTMLElement element) {
     _handleElement = element;
   }
 
-  HtmlElement get handleElement => _reorderHandle ?? element;
+  web.HTMLElement get handleElement => _reorderHandle ?? element;
 
   ReorderItemDirective(this.element, @Optional() this._handleProvider);
 }
 
-/// Interface that will return a [ReorderHandleDirective] for use as a handle of
-/// a component marked as a `reorderItem` inside a reorder-list.
 abstract class ReorderHandleProvider {
   ReorderHandleDirective get reorderHandle;
 }
 
-/// Indicates the element with this directive is the drag handle for the
-/// containing [reorderItem].
 @Directive(
   selector: '[reorderHandle]',
   exportAs: 'handle',
@@ -650,7 +602,7 @@ class ReorderHandleDirective {
   @HostBinding('attr.draggable')
   static const hostDraggable = 'true';
 
-  final HtmlElement element;
+  final web.HTMLElement element;
 
   ReorderHandleDirective(this.element);
 }

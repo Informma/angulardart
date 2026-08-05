@@ -2,32 +2,29 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@JS()
-library;
-
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
-import 'package:js/js.dart';
-import 'package:js/js_util.dart' as js_util;
 import 'package:angulardart_components/utils/browser/feature_detector/feature_detector.dart';
 
 /// Determines if the space key was pressed in a [KeyboardEvent].
 ///
 /// Use this utility because `keyCode` is deprecated in Firefox (and doesn't
 /// work for &lt;space&gt;) and `key` is not yet implemented in Chrome.
-bool isSpaceKey(KeyboardEvent event) {
+bool isSpaceKey(web.KeyboardEvent event) {
   // NB: keyCode does not work on Firefox, returning `0` for the space key.
-  return event.keyCode != 0 ? event.keyCode == KeyCode.SPACE : event.key == ' ';
+  return event.keyCode != 0 ? event.keyCode == 32 : event.key == ' ';
 }
 
-bool isKeyboardTrigger(KeyboardEvent event) =>
-    event.keyCode == KeyCode.ENTER || isSpaceKey(event);
+bool isKeyboardTrigger(web.KeyboardEvent event) =>
+    event.keyCode == 13 || isSpaceKey(event);
 
 /// Whether the [MouseEvent] was initiated with the primary mouse button and no
 /// modifier keys were used.
-bool isStandardMouseEvent(MouseEvent event) =>
+bool isStandardMouseEvent(web.MouseEvent event) =>
     event.button == 0 &&
     !event.altKey &&
     !event.ctrlKey &&
@@ -35,9 +32,9 @@ bool isStandardMouseEvent(MouseEvent event) =>
     !event.shiftKey;
 
 /// Whether the [UIEvent] is a standard trigger event without modifier keys.
-bool isStandardTriggerEvent(UIEvent event) {
-  return event is MouseEvent && isStandardMouseEvent(event) ||
-      event is KeyboardEvent && isKeyboardTrigger(event);
+bool isStandardTriggerEvent(web.UIEvent event) {
+  return event.isA<web.MouseEvent>() && isStandardMouseEvent(event as web.MouseEvent) ||
+      event.isA<web.KeyboardEvent>() && isKeyboardTrigger(event as web.KeyboardEvent);
 }
 
 typedef Predicate<T> = bool Function(T value);
@@ -45,96 +42,103 @@ typedef Predicate<T> = bool Function(T value);
 Predicate<T> not<T>(Predicate<T> predicate) => (value) => !predicate(value);
 
 /// A stream of click, mouseup or focus events outside a given element.
-Stream<Event> triggersOutside(dynamic /* Element | ElementRef */ element) {
+Stream<web.Event> triggersOutside(dynamic /* Element | ElementRef */ element) {
   if (element is ElementRef) element = element.nativeElement;
   return triggersOutsideAny((node) => node == element);
 }
 
 /// A stream of click, mouseup or focus events of any node none of whose parents
 /// pass the check inside function.
-Stream<Event> triggersOutsideAny(Predicate<Node> checkNodeInside) {
-  StreamController<Event>? controller;
-  StreamSubscription<MouseEvent>? clickListener;
-  StreamSubscription<MouseEvent>? mouseDownListener;
-  StreamSubscription<MouseEvent>? mouseUpListener;
-  EventListener? listener;
+Stream<web.Event> triggersOutsideAny(Predicate<web.Node> checkNodeInside) {
+  StreamController<web.Event>? controller;
+  web.EventListener? mouseDownListener;
+  web.EventListener? mouseUpListener;
+  web.EventListener? clickListener;
+  web.EventListener? focusTouchListener;
+  void Function(web.Event)? listenerDart;
 
   controller = StreamController.broadcast(
       sync: true,
       onListen: () {
-        Event? lastEvent;
-        Event? lastDownEvent;
+        web.Event? lastEvent;
+        web.Event? lastDownEvent;
 
-        listener = (Event e) {
+        listenerDart = (web.Event e) {
           lastEvent = e;
-          var node = e.target as Node?;
+          var node = e.target as web.Node?;
           while (node != null) {
             if (checkNodeInside(node)) {
               return;
             } else {
-              node = node.parent;
+              node = node.parentNode;
             }
           }
           controller!.add(e);
         };
+        focusTouchListener = listenerDart!.toJS;
 
-        mouseDownListener = document.onMouseDown.listen((MouseEvent e) {
+        mouseDownListener = (web.Event e) {
           lastDownEvent = e;
-        });
+        }.toJS;
 
-        mouseUpListener = document.onMouseUp.listen((MouseEvent e) {
+        mouseUpListener = (web.Event e) {
           if (lastDownEvent == null || e.target == lastDownEvent!.target) {
-            listener!(e);
+            listenerDart!(e);
           }
           lastEvent = e;
-        });
+        }.toJS;
 
-        clickListener = document.onClick.listen((MouseEvent e) {
+        clickListener = (web.Event e) {
           if (lastEvent?.type == 'mouseup' && e.target == lastEvent?.target) {
             return;
           }
           if (lastDownEvent == null || e.target == lastDownEvent!.target) {
-            listener!(e);
+            listenerDart!(e);
           }
           lastDownEvent = null;
-        });
+        }.toJS;
 
-        document.addEventListener('focus', listener!, true);
-
-        document.addEventListener('touchend', listener!);
+        web.document.addEventListener('mousedown', mouseDownListener);
+        web.document.addEventListener('mouseup', mouseUpListener);
+        web.document.addEventListener('click', clickListener);
+        web.document.addEventListener('focus', focusTouchListener, true.toJS);
+        web.document.addEventListener('touchend', focusTouchListener);
       },
       onCancel: () {
-        clickListener?.cancel();
-        clickListener = null;
-        mouseDownListener?.cancel();
+        web.document.removeEventListener('mousedown', mouseDownListener!);
+        web.document.removeEventListener('mouseup', mouseUpListener!);
+        web.document.removeEventListener('click', clickListener!);
+        web.document.removeEventListener('focus', focusTouchListener!, true.toJS);
+        web.document.removeEventListener('touchend', focusTouchListener!);
         mouseDownListener = null;
-        mouseUpListener?.cancel();
         mouseUpListener = null;
-        document.removeEventListener('focus', listener!, true);
-        document.removeEventListener('touchend', listener!);
+        clickListener = null;
+        focusTouchListener = null;
+        listenerDart = null;
       });
   return controller.stream;
 }
 
 /// A stream of contect rects fired when [element] changes size.
 ///
-/// A content rect is a [Rectangle] where [top] = padding-top, [left] =
+/// A content rect is a [web.DOMRect] where [top] = padding-top, [left] =
 /// padding-left, [width] = innerWidth, and [height] = innerHeight.
 ///
-/// NOTE: This only works in browsers that support [ResizeObserver]. Check
+/// NOTE: This only works in browsers that support [web.ResizeObserver]. Check
 /// [supportsResizeObserver] from feature_detector.dart before using this.
-Stream<Rectangle> onResize(Element element) {
+Stream<web.DOMRect> onResize(web.Element element) {
   assert(supportsResizeObserver, 'ResizeObserver support is required');
-  StreamController<Rectangle>? controller;
-  ResizeObserver? observer;
-  controller = StreamController<Rectangle>.broadcast(
+  StreamController<web.DOMRect>? controller;
+  web.ResizeObserver? observer;
+  controller = StreamController<web.DOMRect>.broadcast(
       sync: true,
       onListen: () {
-        observer = ResizeObserver(allowInterop((entries, _) {
-          for (var entry in entries) {
-            controller!.add(entry.contentRect);
+        observer = web.ResizeObserver(((JSArray<web.ResizeObserverEntry> entries, _) {
+          for (var entry in entries.toDart) {
+            var rect = entry.contentRect;
+            controller!.add(web.DOMRect(rect.left, rect.top, rect.width, rect.height));
           }
-        }));
+        }).toJS);
         observer!.observe(element);
       },
       onCancel: () {
@@ -149,12 +153,12 @@ Stream<Rectangle> onResize(Element element) {
 /// For example, MaterialAutoSuggestInput need close suggest popup when
 /// lose focus from the input, but not for the case when clicking the popup
 /// itself.
-bool anyParentHasAttribute(Element? target, String attribute) {
+bool anyParentHasAttribute(web.Element? target, String attribute) {
   while (target != null) {
-    if (target.attributes.containsKey(attribute)) {
+    if (target.hasAttribute(attribute)) {
       return true;
     }
-    target = target.parent;
+    target = target.parentNode as web.Element?;
   }
   return false;
 }
@@ -164,13 +168,13 @@ bool anyParentHasAttribute(Element? target, String attribute) {
 /// It's used to handle lose focus (or blur) event for composite components.
 /// For example, FilterBarComponent needs to enter summary mode when it loses
 /// focus, unless the focus is moving to one of the components it spawned.
-bool anyParentHasTag(Element? target, String componentTag) {
+bool anyParentHasTag(web.Element? target, String componentTag) {
   componentTag = componentTag.toLowerCase();
   while (target != null) {
     if (target.tagName.toLowerCase() == componentTag) {
       return true;
     }
-    target = target.parent;
+    target = target.parentNode as web.Element?;
   }
   return false;
 }
@@ -181,28 +185,28 @@ bool anyParentHasTag(Element? target, String componentTag) {
 /// scenarios.  For example, BaseLensEdit needs to ignore clicks on targets
 /// that have ancestors of class material-popup-content when deciding whether
 /// a click counts as a click out (for exiting the popup).
-bool anyParentHasClass(Element target, String className) =>
+bool anyParentHasClass(web.Element target, String className) =>
     closestWithClass(target, className) != null;
 
 /// This element or the closest of its ancestor with the given class.
-Element? closestWithClass(Element? target, String className) {
+web.Element? closestWithClass(web.Element? target, String className) {
   while (target != null) {
-    if (target.attributes.containsKey("class") &&
-        target.classes.contains(className)) {
+    if (target.hasAttribute("class") &&
+        target.classList.contains(className)) {
       return target;
     }
-    target = target.parent;
+    target = target.parentNode as web.Element?;
   }
   return null;
 }
 
 /// Whether [element] is a parent of [node] in the dom tree.
-bool isParentOf(Element element, Node? node) {
+bool isParentOf(web.Element element, web.Node? node) {
   while (node != null) {
     if (node == element) {
       return true;
     } else {
-      node = node.parent;
+      node = node.parentNode;
     }
   }
   return false;
@@ -214,9 +218,9 @@ bool isParentOf(Element element, Node? node) {
 ///
 ///     // [elements] is a List<Element>.
 ///     elements.sort(compareDocumentPosition);
-///     // Now they're sorted according to their position in the document.
-int compareDocumentPosition(Node a, Node b) {
-  int bitmask = js_util.callMethod(a, 'compareDocumentPosition', [b]);
+///     // Now they're according to their position in the document.
+int compareDocumentPosition(web.Node a, web.Node b) {
+  int bitmask = a.compareDocumentPosition(b);
   if ((bitmask & 4) != 0 || (bitmask & 16) != 0) {
     // DOCUMENT_POSITION_FOLLOWING or DOCUMENT_POSITION_CONTAINED_BY
     return -1;

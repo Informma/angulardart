@@ -2,25 +2,25 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 
 // These are necessary because 'const' functions don't yet exist within Dart.
 
-/// Returns the current browser's [Document].
+/// Returns the current browser's [web.Document].
 ///
 /// Visible for transformer only.
 @Injectable()
-HtmlDocument getDocument() => document;
+web.Document getDocument() => web.document;
 
-/// Returns the current browser's [Window].
+/// Returns the current browser's [web.Window].
 ///
 /// Visible for transformer only.
 @Injectable()
-Window getWindow() => window;
+web.Window getWindow() => web.window;
 
-/// Provides [Document], [HtmlDocument], and [Window] bound for use
+/// Provides [web.Document] and [web.Window] bound for use
 /// within Angular.
 ///
 /// Ideally, an application would limit direct use of these to maintain
@@ -29,28 +29,26 @@ Window getWindow() => window;
 const windowBindings = [
   // This strange syntax is required because we need windowBindings to be a
   // const list to be usable within component annotations.
-  FactoryProvider(Document, getDocument),
-  FactoryProvider(HtmlDocument, getDocument),
-  FactoryProvider(Window, getWindow),
+  FactoryProvider(web.Document, getDocument),
+  FactoryProvider(web.Window, getWindow),
 ];
 
 const windowModule = Module(provide: [
-  FactoryProvider(Document, getDocument),
-  FactoryProvider(HtmlDocument, getDocument),
-  FactoryProvider(Window, getWindow),
+  FactoryProvider(web.Document, getDocument),
+  FactoryProvider(web.Window, getWindow),
 ]);
 
-/// Returns the current [Window]'s location.
+/// Returns the current [web.Window]'s location.
 ///
 /// This mainly exists so that components can change the location without
-/// requiring a mock [Window] in tests, which can be limiting since the [Window]
+/// requiring a mock [web.Window] in tests, which can be limiting since the [web.Window]
 /// is used for much more than changing the location.
 ///
 /// Visible for transformer only.
 @Injectable()
-Location getLocation(Window window) => window.location;
+web.Location getLocation(web.Window window) => window.location;
 
-/// Provides [Location] bound for use within Angular.
+/// Provides [web.Location] bound for use within Angular.
 const locationBindings = [
-  FactoryProvider(Location, getLocation),
+  FactoryProvider(web.Location, getLocation),
 ];

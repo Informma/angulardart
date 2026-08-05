@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/laminate/overlay/constants.dart';
@@ -15,19 +16,13 @@ import 'package:meta/meta.dart';
 
 import 'tooltip_source.dart' show tooltipShowDelay;
 
-/// A directive that marks the target of a tooltip and handles showing and
-/// hiding a tooltip on hover, click, and focus.
-///
-/// This directive is used in conjunction with a [Tooltip] Component. Such as
-/// the [MaterialInkTooltipComponent], which gives full control over
-/// the content of a simple tooltip.
 @Directive(
   selector: '[tooltipTarget]',
   exportAs: 'tooltipTarget',
 )
 class MaterialTooltipTargetDirective extends TooltipBehavior
     implements AfterViewInit, OnDestroy {
-  HtmlElement? element;
+  web.HTMLElement? element;
 
   MaterialTooltipTargetDirective(
       DomPopupSourceFactory domPopupSourceFactory,
@@ -38,7 +33,6 @@ class MaterialTooltipTargetDirective extends TooltipBehavior
       : super(domPopupSourceFactory, viewContainerRef, element!, changeDetector,
             initAriaAttributes);
 
-  /// Show tooltip on focus to allow keyboard users to see tooltip contents.
   @visibleForTemplate
   @HostListener('focus')
   void onFocus() {
@@ -51,24 +45,20 @@ class MaterialTooltipTargetDirective extends TooltipBehavior
   }
 }
 
-/// Class incorporating the common behavior of a [Directive] that marks the
-/// target of a tooltip.
 abstract class TooltipBehavior extends TooltipTarget {
   final _tooltipActivate = StreamController<bool>.broadcast(sync: true);
   final ChangeDetectorRef _changeDetector;
   late DelayedAction _show;
 
-  // Whether the mouse is currently inside the component.
   bool _isMouseInside = false;
 
-  /// Event that fires when the tooltip is activated.
   @Output()
   Stream<bool> get tooltipActivate => _tooltipActivate.stream.distinct();
 
   TooltipBehavior(
       DomPopupSourceFactory domPopupSourceFactory,
       ViewContainerRef viewContainerRef,
-      HtmlElement element,
+      web.HTMLElement element,
       this._changeDetector,
       String initAriaAttributes)
       : super(domPopupSourceFactory, viewContainerRef, element,
@@ -83,7 +73,7 @@ abstract class TooltipBehavior extends TooltipTarget {
   }
 
   void showTooltip() {
-    _show.cancel(); // Cancel any pending actions if tooltip is shown early.
+    _show.cancel();
     _changeDetector.markForCheck();
     _tooltipActivate.add(true);
     _tooltip?.activate();
@@ -93,7 +83,7 @@ abstract class TooltipBehavior extends TooltipTarget {
   void onBlurOrClick() => hideTooltip();
 
   void hideTooltip({bool immediate = false}) {
-    _show.cancel(); // Cancel any pending actions if tooltip is hidden early.
+    _show.cancel();
     _tooltipActivate.add(false);
     _tooltip?.deactivate(immediate: immediate);
   }
@@ -111,10 +101,6 @@ abstract class TooltipBehavior extends TooltipTarget {
     hideTooltip();
   }
 
-  /// Ensure the tooltip is deactivated when the popup closes.
-  ///
-  /// This is necessary because the popup can close itself and has no concept
-  /// of tooltip activate / deactivate.
   @override
   void onClose() {
     super.onClose();
@@ -122,31 +108,19 @@ abstract class TooltipBehavior extends TooltipTarget {
   }
 
   @HostListener('blur')
-  void onBlur(FocusEvent event) {
-    // Don't hide the tooltip if the user clicked an empty area on the page.
+  void onBlur(web.FocusEvent event) {
     if (event.relatedTarget == null) return;
 
-    // Don't hide the tooltip if focus went to an element inside the tooltip.
-    for (Element? el = event.relatedTarget as Element?;
-        el != null && el.parent != null;
-        el = el.parent) {
-      if (el.className == overlayContainerClassName) return;
+    for (var el = event.relatedTarget as web.Element?;
+        el != null && el.parentNode != null;
+        el = el.parentNode as web.Element?) {
+      if (el.getAttribute('class') == overlayContainerClassName) return;
     }
 
     hideTooltip(immediate: true);
   }
 }
 
-/// A directive that marks the target of a tooltip and handles activating on
-/// mouse over (with delay), click, enter, and space.
-///
-/// This directive is slightly different from [MaterialPaperTooltipComponent].
-/// Click / key events open the tooltip with no delay, and tooltips do not open
-/// on focus.
-///
-/// This directive is used in conjunction with a [Tooltip] Component. Such as
-/// the [MaterialPaperTooltipComponent], which gives full control over the
-/// content of a simple tooltip.
 @Directive(
   selector: '[clickableTooltipTarget]',
   exportAs: 'tooltipTarget',
@@ -154,7 +128,7 @@ abstract class TooltipBehavior extends TooltipTarget {
 class ClickableTooltipTargetDirective extends TooltipBehavior
     implements AfterViewInit, OnDestroy {
   late StreamSubscription _tooltipSubscription;
-  HtmlElement? element;
+  web.HTMLElement? element;
   bool _tooltipVisible = false;
 
   ClickableTooltipTargetDirective(
@@ -184,10 +158,9 @@ class ClickableTooltipTargetDirective extends TooltipBehavior
   }
 
   @HostListener('keypress')
-  void kbTrigger(KeyboardEvent event) {
-    if (event.keyCode == KeyCode.ENTER || isSpaceKey(event)) {
+  void kbTrigger(web.KeyboardEvent event) {
+    if (event.keyCode == 13 || isSpaceKey(event)) {
       _toggleVisibility();
-      // Required to prevent window from scrolling.
       event.preventDefault();
     }
   }
@@ -199,14 +172,10 @@ class ClickableTooltipTargetDirective extends TooltipBehavior
   }
 }
 
-/// Base class for tooltip targets.
-///
-/// This component is the target of alignment for a tooltip and
-/// the object responsible for controlling a tooltip.
 abstract class TooltipTarget extends PopupSourceDirective {
   Tooltip? _tooltip;
   final ViewContainerRef viewContainerRef;
-  final HtmlElement _element;
+  final web.HTMLElement _element;
   String? _previousDescribedbyId;
 
   TooltipTarget(DomPopupSourceFactory domPopupSourceFactory,
@@ -214,7 +183,6 @@ abstract class TooltipTarget extends PopupSourceDirective {
       : super(domPopupSourceFactory, _element, /* referenceDirective */ null,
             /* focusable */ null, initAriaAttributes);
 
-  /// Sets the tooltip associated with this target.
   void setTooltip(Tooltip component) {
     _tooltip = component;
   }
@@ -239,7 +207,7 @@ abstract class TooltipTarget extends PopupSourceDirective {
     if (_previousDescribedbyId != null) {
       _element.setAttribute('aria-describedby', _previousDescribedbyId!);
     } else {
-      _element.attributes.remove('aria-describedby');
+      _element.removeAttribute('aria-describedby');
     }
   }
 }

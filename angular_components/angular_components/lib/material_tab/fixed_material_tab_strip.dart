@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/annotations/rtl_annotation.dart';
@@ -131,11 +132,11 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
 
   @visibleForTemplate
   @ViewChild('navibar')
-  late HtmlElement naviBar;
+  late web.HTMLElement naviBar;
 
   @HostListener('focusout')
-  void focusOutHandler(FocusEvent e) {
-    if (!naviBar.contains(e.relatedTarget as Node?)) {
+  void focusOutHandler(web.FocusEvent e) {
+    if (!naviBar.contains(e.relatedTarget as web.Node?)) {
       focusController.setTabbable(_activeTabIndex);
     }
   }

@@ -3,8 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
 
+import 'package:web/web.dart' as web;
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/utils/angular/scroll_host/interface.dart';
 import 'package:angulardart_components/utils/async/async.dart';
@@ -26,12 +27,12 @@ class NonTouchPanController implements PanController {
 
   final NgZone ngZone;
   final DomService domService;
-  final Element host;
+  final web.Element host;
 
   StreamController<PanEvent>? _controller;
   Stream<PanEvent>? _stream;
-  StreamSubscription<WheelEvent>? _onWheelSubscription;
-  StreamSubscription<Event>? _onScrollSubscription;
+  web.EventListener? _wheelListener;
+  web.EventListener? _scrollListener;
 
   // border pan indicators
   bool _panTop = false;
@@ -70,26 +71,29 @@ class NonTouchPanController implements PanController {
   int get maxScrollY => (host.scrollHeight - host.clientHeight);
 
   void _onListen() {
-    assert(_onWheelSubscription == null);
+    assert(_wheelListener == null);
     ngZone.runOutsideAngular(() {
-      _onWheelSubscription = host.onMouseWheel.listen((WheelEvent event) {
+      _wheelListener = ((web.Event event) {
+        final wheelEvent = event as web.WheelEvent;
         if (_wasScrolling) return;
-        _panTop = _panTop || ((event.deltaY < 0) && (host.scrollTop == 0));
+        _panTop = _panTop || ((wheelEvent.deltaY < 0) && (host.scrollTop == 0));
         _panRight = _panRight ||
-            ((event.deltaX > 0) && (host.scrollLeft == maxScrollX));
+            ((wheelEvent.deltaX > 0) && (host.scrollLeft == maxScrollX));
         _panBottom = _panBottom ||
-            ((event.deltaY > 0) && (host.scrollTop == maxScrollY));
-        _panLeft = _panLeft || ((event.deltaX < 0) && (host.scrollLeft == 0));
+            ((wheelEvent.deltaY > 0) && (host.scrollTop == maxScrollY));
+        _panLeft = _panLeft || ((wheelEvent.deltaX < 0) && (host.scrollLeft == 0));
         _scheduleNotification();
-      });
-      _onScrollSubscription = host.onScroll.listen((event) {
+      }).toJS;
+      host.addEventListener('wheel', _wheelListener!);
+      _scrollListener = ((web.Event event) {
         _wasScrolling = true;
         _scheduleScrollingCooldown();
         if (_wasPanning) {
           _endPan = true;
           _scheduleNotification();
         }
-      });
+      }).toJS;
+      host.addEventListener('scroll', _scrollListener!);
     });
   }
 
@@ -137,13 +141,13 @@ class NonTouchPanController implements PanController {
   }
 
   void _cancelSubscriptions() {
-    if (_onWheelSubscription != null) {
-      _onWheelSubscription!.cancel();
-      _onWheelSubscription = null;
+    if (_wheelListener != null) {
+      host.removeEventListener('wheel', _wheelListener!);
+      _wheelListener = null;
     }
-    if (_onScrollSubscription != null) {
-      _onScrollSubscription!.cancel();
-      _onScrollSubscription = null;
+    if (_scrollListener != null) {
+      host.removeEventListener('scroll', _scrollListener!);
+      _scrollListener = null;
     }
   }
 

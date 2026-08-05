@@ -2,11 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 abstract class ActivationHandler<T> {
   /// Called when a [value] is activated as a result of [event].
   ///
   /// Returns whether or not the activation was handled.
-  bool handle(UIEvent event, T value);
+  bool handle(web.UIEvent event, T value);
 }

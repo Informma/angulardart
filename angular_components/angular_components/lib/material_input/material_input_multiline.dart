@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -18,8 +19,6 @@ import 'deferred_validator.dart';
 
 export 'base_material_input.dart' show ValidityCheck, CharacterCounter;
 
-/// `material-input` is a multi-line text field where user can enter
-/// input, and can optionally have a label.
 @Component(
   selector: 'material-input[multiline]',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,24 +60,13 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
   @ViewChild('textareaEl')
   ElementRef? textareaEl;
 
-  /// The underlying <textarea> element.
-  ///
-  /// If you find the need to use this element in application code, you
-  /// may be building new functionality that all ACX users could benefit
-  /// from! If that's the case, please consider contributing your changes
-  /// back upstream. Feel free to contact acx-widgets@ for more guidance.
   @override
   ElementRef get inputRef => textareaEl!;
 
-  /// The initial/minimum number of rows for multiline input.
-  /// Default value is 1.
   int _rows = 1;
 
-  /// The maximum number of rows for multiline input to grow before it scrolls.
-  /// 0 means no maximum. Default Value is 0.
   int _maxRows = 0;
 
-  /// Line height of the textarea. This is updated at run time.
   int _inputLineHeight = 16;
 
   MaterialMultilineInputComponent(
@@ -88,7 +76,6 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
       this._domService)
       : _changeDetector = changeDetector;
 
-  // Overridden to add a HostListener event.
   @HostListener('focus')
   @override
   void focus() => super.focus();
@@ -96,22 +83,18 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
   @ViewChild('popupSourceEl')
   ElementRef? popupSourceEl;
 
-  /// Container element for popup positioning.
   @override
   ElementRef get elementRef => popupSourceEl!;
 
-  /// Text used to size the multiline textarea.
   String get mirrorText => '$inputText\n';
 
   @ViewChild('lineHeightMeasure')
   set lineHeightMeasure(ElementRef value) {
-    // There's currently no strong use case of line height changing after it's
-    // been measured. So we only measure it once when the view is rendered.
     _domService.scheduleRead(() {
       var isDestroyed = textareaEl == null;
       if (isDestroyed) return;
 
-      var height = (value.nativeElement as Element).clientHeight;
+      var height = (value.nativeElement as web.Element).clientHeight;
       if (height != 0) {
         _inputLineHeight = height;
         _subscription?.cancel();
@@ -131,15 +114,10 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
   int get minInputHeight => rows * _inputLineHeight;
   int? get maxInputHeight => _maxRows > 0 ? _maxRows * _inputLineHeight : null;
 
-  /// Sets height of the text area when the height does not change with the
-  /// amount of text in it.
   int? get textAreaHeight => rows == maxRows ? maxInputHeight : null;
 
   int get rows => _rows;
 
-  /// How many rows the multiline input should have.
-  ///
-  /// Can either be an integer, or a string.
   @Input()
   set rows(dynamic value) {
     _rows = getInt(value);
@@ -148,30 +126,22 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
 
   int get maxRows => _maxRows;
 
-  /// Maximum number of lines to display.
-  ///
-  /// Anything more than the [maxRows] will cause the input to scroll.
   @Input()
   set maxRows(dynamic value) {
     _maxRows = getInt(value);
     _changeDetector.markForCheck();
   }
 
-  /// The ID of an element which should be assigned to the inner input element's
-  /// aria-describedby attribute.
   @Input()
   String? inputAriaDescribedBy;
 
-  /// Textarea element tabindex.
-  ///
-  /// Disabled textarea is not interactive and should not receive focus on TAB.
   int get inputTabIndex => disabled ? -1 : 0;
 
   @visibleForTemplate
-  void handleChange(Event event, TextAreaElement element) {
+  void handleChange(web.Event event, web.HTMLTextAreaElement element) {
     inputChange(
       element.value,
-      element.validity!.valid,
+      element.validity.valid,
       element.validationMessage,
     );
     event.stopPropagation();

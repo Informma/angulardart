@@ -2,33 +2,33 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
-import 'dart:js' as js;
+import 'dart:js_interop';
+import 'dart:js_util' as js_util;
 
-import 'package:js/js_util.dart' as js_util;
+import 'package:web/web.dart' as web;
 
-/// Provides information of current browser features.
+/// Provides information of current browser feature.
 
 /// Detects if the current device and platform supports hovering.
 ///
 /// Nexus 9 is a special case here because it does not match the
 /// "(hover: none)" media query.
-bool supportsHover(Window window) =>
+bool supportsHover(web.Window window) =>
     !(window.matchMedia("(hover: none)").matches ||
         window.navigator.userAgent.contains("Nexus 9"));
 
 /// Whether the primary input mechanism on this system is touch.
 ///
 /// Note: this check doesn't confirm the presence of a touchscreen, or that
-/// [TouchEvent] is supported at all. Any device which doesn't have a mouse
+/// [web.TouchEvent] is supported at all. Any device which doesn't have a mouse
 /// or other fine-grained pointing device will pass this check, e.g. a TV, or
 /// a PC with alternative input devices.
 ///
 /// Checking if touch events are supported? You probably want
-/// [TouchEvent.supported] instead.
+/// [web.TouchEvent.supported] instead.
 final bool isTouchInterface =
-    window.matchMedia('(pointer: coarse)').matches ||
-        js.context.hasProperty('__acxForceTouchEnabled');
+    web.window.matchMedia('(pointer: coarse)').matches ||
+        _hasGlobalProperty('__acxForceTouchEnabled');
 
 /// Returns true if Hammer.js is loaded in the current browser.
 ///
@@ -36,29 +36,39 @@ final bool isTouchInterface =
 /// Apps that want to use Hammer's recognizers need to load
 /// https://www.gstatic.com/external_hosted/hammerjs/v2_0_2/hammer.min.js
 /// into the browser before bootstrapping.
-bool isHammerLoaded() => js.context.hasProperty('Hammer');
+bool isHammerLoaded() => _hasGlobalProperty('Hammer');
 
 /// Whether the browser supports the Web Animations API.
 final bool supportsAnimationApi =
-    js_util.hasProperty(DivElement(), 'animate') &&
-        !js.context.hasProperty('__acxDisableWebAnimationsApi');
+    _hasElementProperty(web.document.createElement('div'), 'animate') &&
+        !_hasGlobalProperty('__acxDisableWebAnimationsApi');
 
 /// Whether the browser supports IntersectionObserver.
 final bool supportsIntersectionObserver =
-    js.context.hasProperty('IntersectionObserver');
+    _hasGlobalProperty('IntersectionObserver');
 
 /// Whether the browser supports ResizeObserver.
-final bool supportsResizeObserver = js.context.hasProperty('ResizeObserver');
+final bool supportsResizeObserver = _hasGlobalProperty('ResizeObserver');
 
 /// Whether the browser supports position: sticky.
 final bool supportsPositionSticky = () {
-  var el = DivElement();
+  var el = web.document.createElement('div') as web.HTMLElement;
   el.style.cssText = 'position: sticky';
   return el.style.position == 'sticky';
 }();
 
 /// Whether the current web browser is Firefox.
-final bool isFirefox = window.navigator.userAgent.contains('Firefox/');
+final bool isFirefox = web.window.navigator.userAgent.contains('Firefox/');
 
 /// Whether the current web browser is MS Edge.
-final bool isEdge = window.navigator.userAgent.contains('Edge/');
+final bool isEdge = web.window.navigator.userAgent.contains('Edge/');
+
+bool _hasGlobalProperty(String property) {
+  final val = js_util.getProperty<JSAny?>(globalContext, property);
+  return val != null;
+}
+
+bool _hasElementProperty(web.Element element, String property) {
+  final val = js_util.getProperty<JSAny?>(element, property);
+  return val != null;
+}

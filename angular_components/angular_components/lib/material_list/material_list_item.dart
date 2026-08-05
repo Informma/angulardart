@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html' as dom;
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -37,7 +37,7 @@ class MaterialListItemComponent extends ButtonDirective implements OnDestroy {
   @override
   final String hostTabIndex;
 
-  dom.HtmlElement element;
+  web.HTMLElement element;
 
   MaterialListItemComponent(this.element, @Optional() this._dropdown,
       @Attribute('tabindex') String tabIndex, @Attribute('role') String role)
@@ -68,7 +68,7 @@ class MaterialListItemComponent extends ButtonDirective implements OnDestroy {
     _disposer.dispose();
   }
 
-  void handleActivate(dom.UIEvent _) {
+  void handleActivate(web.UIEvent _) {
     if (closeOnActivate) _dropdown?.close();
   }
 }

@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/utils/disposer/disposer.dart';
@@ -21,7 +21,7 @@ import 'deferred_content_aware.dart';
 )
 class DeferredContentDirective implements OnDestroy {
   final _disposer = Disposer.oneShot();
-  final _placeholder = DivElement();
+  final _placeholder = web.document.createElement('div') as web.HTMLDivElement;
 
   ViewContainerRef? _viewContainer;
   EmbeddedViewRef? _viewRef;
@@ -65,10 +65,10 @@ class DeferredContentDirective implements OnDestroy {
         // Save the dimensions of the deferred content.
         var rootNodes = _viewRef?.rootNodes ?? [];
         var content = rootNodes.isNotEmpty ? rootNodes.first : null;
-        if (content is HtmlElement) {
+        if (content is web.HTMLElement) {
           // This isn't in DomService.schedule{Read,Write} because
           // it needs to work with components that aren't scheduled.
-          var dimensions = content.getBoundingClientRect();
+          var dimensions = (content as web.HTMLElement).getBoundingClientRect();
           _placeholder.style
             ..width = '${dimensions.width}px'
             ..height = '${dimensions.height}px';
@@ -82,7 +82,7 @@ class DeferredContentDirective implements OnDestroy {
         // Add the placeholder so the parent's size doesn't change.
         var container = _viewContainer?.element.nativeElement;
         if (container?.parentNode != null) {
-          container.parentNode.insertBefore(_placeholder, container);
+          container.parentNode!.insertBefore(_placeholder, container);
         }
       }
     }

@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 
@@ -16,13 +18,25 @@ import 'package:angulardart/angulardart.dart';
 /// they will still be registered to the stream. To avoid that situation, use
 /// this directive only within a deferredContent directive.
 @Directive(selector: '[globalEscape]')
-class GlobalEscapeDirective {
-  final Window _window;
+class GlobalEscapeDirective implements OnDestroy {
+  final web.Window _window;
+  final _escapeController = StreamController<web.KeyboardEvent>.broadcast(sync: true);
+  StreamSubscription? _subscription;
 
-  /// Event triggered when the escape key is pressed.
   @Output()
-  Stream<KeyboardEvent> get globalEscape =>
-      _window.onKeyUp.where((event) => event.keyCode == KeyCode.ESC);
+  Stream<web.KeyboardEvent> get globalEscape =>
+      _escapeController.stream.where((event) => event.keyCode == 27);
 
-  GlobalEscapeDirective(this._window);
+  GlobalEscapeDirective(this._window) {
+    _subscription = _escapeController.stream.listen(null);
+    _window.addEventListener('keyup', ((web.KeyboardEvent event) {
+      _escapeController.add(event);
+    }).toJS);
+  }
+
+  @override
+  void ngOnDestroy() {
+    _subscription?.cancel();
+    _escapeController.close();
+  }
 }

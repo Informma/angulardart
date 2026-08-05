@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -55,7 +56,7 @@ class MaterialCheckboxComponent
   static const hostClass = 'themeable';
 
   final ChangeDetectorRef _changeDetector;
-  final HtmlElement _root;
+  final web.HTMLElement _root;
   final String _defaultTabIndex;
 
   @HostBinding('attr.role')
@@ -223,7 +224,7 @@ class MaterialCheckboxComponent
   }
 
   void _syncAriaChecked() {
-    _root.attributes['aria-checked'] = _checkedStr;
+    _root.setAttribute('aria-checked', _checkedStr);
     _changeDetector.markForCheck();
   }
 
@@ -288,14 +289,14 @@ class MaterialCheckboxComponent
   // Capture keyup when we are the target of event.
   @HostListener('keyup')
   @visibleForTemplate
-  void handleKeyUp(KeyboardEvent event) {
+  void handleKeyUp(web.KeyboardEvent event) {
     if (event.target != _root) return;
     _isKeyboardEvent = true;
   }
 
   @HostListener('click')
   @visibleForTemplate
-  void handleClick(MouseEvent mouseEvent) {
+  void handleClick(web.MouseEvent mouseEvent) {
     if (disabled) return;
     _isKeyboardEvent = false;
     toggleChecked();
@@ -303,7 +304,7 @@ class MaterialCheckboxComponent
 
   @HostListener('mousedown')
   @visibleForTemplate
-  void handleMouseDown(MouseEvent mouseEvent) {
+  void handleMouseDown(web.MouseEvent mouseEvent) {
     // This removes the text selection behavior of mousedown.
     if (readOnly) {
       mouseEvent.preventDefault();
@@ -312,7 +313,7 @@ class MaterialCheckboxComponent
 
   @HostListener('keypress')
   @visibleForTemplate
-  void handleKeyPress(KeyboardEvent event) {
+  void handleKeyPress(web.KeyboardEvent event) {
     if (disabled) return;
     if (event.target != _root) return;
     if (isSpaceKey(event)) {
@@ -333,7 +334,7 @@ class MaterialCheckboxComponent
   // Triggered on blur.
   @HostListener('blur')
   @visibleForTemplate
-  void handleBlur(Event event) {
+  void handleBlur(web.Event event) {
     _focused = false;
     _onTouched?.call();
   }

@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -104,7 +105,7 @@ class MaterialDatepickerComponent
   /// Whether to enable compact calendar styles.
   @Input()
   @HostBinding('class.compact')
-  bool compact = !window.matchMedia("(pointer: coarse)").matches;
+  bool compact = !web.window.matchMedia("(pointer: coarse)").matches;
 
   /// False if null dates are allowed.
   ///
@@ -192,7 +193,7 @@ class MaterialDatepickerComponent
   }
 
   @override
-  void handleEscapeKey(KeyboardEvent event) {
+  void handleEscapeKey(web.KeyboardEvent event) {
     dropdownButton!.focus();
   }
 
@@ -289,10 +290,10 @@ class MaterialDatepickerComponent
   String? error;
 
   MaterialDatepickerComponent(
-      HtmlElement element,
+      web.HTMLElement element,
       @Attribute('popupClass') String popupClass,
       @Optional() @Inject(datepickerClock) Clock? clock)
-      : popupClassName = constructEncapsulatedCss(popupClass, element.classes) {
+      : popupClassName = constructEncapsulatedCss(popupClass, element.classList) {
     clock ??= Clock();
 
     // Init minDate and maxDate to sensible defaults

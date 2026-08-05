@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html' show Event;
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -60,7 +60,7 @@ class NextPrevComponent implements OnDestroy {
 
   @HostListener('click')
   @HostListener('keypress')
-  void stopPropagation(Event e) => e.stopPropagation();
+  void stopPropagation(web.Event e) => e.stopPropagation();
 
   /// Something that can logically move to a next/prev value.
   @Input()

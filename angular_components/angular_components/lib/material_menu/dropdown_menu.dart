@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -38,7 +38,7 @@ class DropdownMenuComponent extends Object
         MenuPopupWrapper,
         MenuPopupTrigger
     implements AfterViewInit, HasDisabled, OnDestroy {
-  final HtmlElement _root;
+  final web.HTMLElement _root;
   final _disposer = Disposer.oneShot();
 
   DropdownMenuComponent(ChangeDetectorRef changeDetector, this._root) {
@@ -98,7 +98,7 @@ class DropdownMenuComponent extends Object
   /// be used to select DOM elements within the overlay when the popup is open.
   @Input()
   set popupClass(String? className) {
-    _popupClass = className != null ? constructEncapsulatedCss(className, _root.classes) : null;
+    _popupClass = className != null ? constructEncapsulatedCss(className, _root.classList) : null;
   }
 
   bool get dropdownStyle => _dropdownStyle;

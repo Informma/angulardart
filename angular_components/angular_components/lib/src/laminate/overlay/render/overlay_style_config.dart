@@ -2,18 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 
-/// Adds CSS to the `document.head` location in order to use overlays.
-///
-/// It is possible to override the default behavior by binding your own:
-///     const Provider(OverlayStyleConfig, useClass: CustomOverlayStyleConfig);
 @Injectable()
 class OverlayStyleConfig {
   static const _styleId = "__overlay_styles";
-  // TODO(google): Move these styles out into a scss file and inline them.
   static const inlinedStyles = r'''
   #default-acx-overlay-container,
   .acx-overlay-container {
@@ -86,19 +81,19 @@ class OverlayStyleConfig {
   }
 ''';
 
-  final HeadElement? _styleHost;
+  final web.HTMLHeadElement? _styleHost;
   bool _stylesRegistered = false;
-  final Document _document;
+  final web.Document _document;
 
-  OverlayStyleConfig(Document document)
-      : _styleHost = document.querySelector('head') as HeadElement?,
+  OverlayStyleConfig(web.Document document)
+      : _styleHost = document.querySelector('head') as web.HTMLHeadElement?,
         _document = document;
 
   void registerStyles() {
     if (stylesRegistered) return;
-    _styleHost!.append(StyleElement()
+    _styleHost!.append(web.document.createElement('style') as web.HTMLStyleElement
       ..id = _styleId
-      ..text = inlinedStyles);
+      ..textContent = inlinedStyles);
     _stylesRegistered = true;
   }
 

@@ -2,32 +2,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'dart:js_interop';
 
-/// DomTreeIterator is tool that will let you traverse the dom in the dom order
-/// and find all (or specific element).
-///
-/// Supports limiting traversal to the scope (element of the scope is included)
-/// Supports reverse traversal (find previous element)
-///
-/// Right now wrapped traversal is supported only if bounded to the scope.
-/// wrapped traversal will stop if it hits starting element
-class DomTreeIterator implements Iterator<Element> {
+import 'package:web/web.dart' as web;
+
+class DomTreeIterator implements Iterator<web.Element> {
   final bool _reverse;
   final bool _wraps;
-  final Element _startingElement;
-  final Element? _scope;
-  Element? _element;
+  final web.Element _startingElement;
+  final web.Element? _scope;
+  web.Element? _element;
 
-  /// Creates new dom iterator.
-  /// [element] : element to start iteration from.
-  /// [reverse] : if true, will iterate back in dom order.
-  /// [scope] : scope to limit the iteration.
-  /// [wraps] : if set to true, will not stop at the end of scope,
-  ///   but instead will wrap through beginning and will end upon hitting
-  ///   the starting element instead.
-  DomTreeIterator(Element element,
-      {bool reverse = false, Element? scope, bool wraps = false})
+  DomTreeIterator(web.Element element,
+      {bool reverse = false, web.Element? scope, bool wraps = false})
       : _element = element,
         _startingElement = element,
         _reverse = reverse,
@@ -36,34 +23,27 @@ class DomTreeIterator implements Iterator<Element> {
     if (_wraps && _scope == null) {
       throw Exception('global wrapping is disallowed, scope is required');
     }
-    if (_scope != null && !_scope!.contains(_element!)) {
+    if (_scope != null && !_scope.contains(_element!)) {
       throw Exception('if scope is set, '
           'starting element should be inside of scope');
     }
   }
 
-  /// Returns another iterator, starting from the current element and heading
-  /// reverse order.
-  /// Scope is retained, while wrapping may be overriden
-  /// if wraps is true or inherited from current as true,
-  /// new wraps will start from current position.
   DomTreeIterator reversed({bool? wraps}) {
     return DomTreeIterator(_element!,
         reverse: !_reverse, scope: _scope, wraps: wraps ?? _wraps);
   }
 
-  /// get current element
   @override
-  Element get current => _element!;
+  web.Element get current => _element!;
 
-  /// move to the next element, return false if no more elements there
   @override
   bool moveNext() {
     if (_element == null) {
       return false;
     }
 
-    if (_element == _scope && _element!.children.isEmpty) {
+    if (_element == _scope && _childrenCount(_element!) == 0) {
       _element = null;
       return false;
     }
@@ -81,81 +61,37 @@ class DomTreeIterator implements Iterator<Element> {
     return (_element != null);
   }
 
-  // Last child first postorder tree traversal.
-  // recursive form:
-  // traverse(this) {
-  //   yield(this);
-  //   for (child in children) {
-  //     traverse(child);
-  //   }
-  // }
-  //
-  // 1) Check if we're the scope (which is the last element in traversal),
-  // if we wrap - do wrap, otherwise finish.
-  //
-  // 2) Check if element has no parent, it likely mean that we are scopeless
-  // and just traversed last element.
-  //
-  // 3) Check if element is first child of it's parent, then parent is next.
-  //
-  // 4) Go to last descendant of previous sibling, it's next in order.
   void _navigateBackward() {
     if (_element == _scope) {
-      // 1
       if (_wraps) {
         _element = lastDescendant(_scope!);
       } else {
         _element = null;
       }
-    } else if (_element!.parent == null) {
-      // 2
+    } else if (_parentElement(_element!) == null) {
       _element = null;
-    } else if (_element == _firstChild(_element!.parent!)) {
-      // 3
-      _element = _element!.parent;
+    } else if (_element == _firstChild(_parentElement(_element!)!)) {
+      _element = _parentElement(_element!);
     } else {
-      // 4
       _element = _element!.previousElementSibling;
-      while (_element!.children.isNotEmpty) {
+      while (_childrenCount(_element!) > 0) {
         _element = _lastChild(_element!);
       }
     }
   }
 
-  // First child first preorder tree traversal.
-  // Recursive form:
-  // traverse(this) {
-  //   for (child in children.reversed) {
-  //     traverse(child);
-  //   }
-  //   yield(this);
-  // }
-  //
-  // 1) Check if element has children, if it does -
-  // next element is the first child.
-  //
-  // 2) Climb up until we hit element that has next sibling or until
-  // it doesn't and it's parent is either scope or it has no parent.
-  //
-  // 3) If we hit scope or null parent and element is last sibling,
-  // we went through the scope/document, wrap if applicable.
-  //
-  // 4) Otherwise simply go to the next sibling.
   void _navigateForward() {
-    if (_element!.children.isNotEmpty) {
-      // 1
+    if (_childrenCount(_element!) > 0) {
       _element = _firstChild(_element!);
     } else {
-      // 2
-      while (_element!.parent != null &&
-          _element!.parent != _scope &&
-          _element == _lastChild(_element!.parent!)) {
-        _element = _element!.parent;
+      while (_parentElement(_element!) != null &&
+          _parentElement(_element!) != _scope &&
+          _element == _lastChild(_parentElement(_element!)!)) {
+        _element = _parentElement(_element!);
       }
-      // 3
-      if (_element!.parent == null ||
-          (_element!.parent == _scope &&
-              _element == _lastChild(_element!.parent!))) {
+      if (_parentElement(_element!) == null ||
+          (_parentElement(_element!) == _scope &&
+              _element == _lastChild(_parentElement(_element!)!))) {
         if (_wraps) {
           _element = _scope;
         } else {
@@ -168,18 +104,25 @@ class DomTreeIterator implements Iterator<Element> {
   }
 }
 
-/// Returns last descendant in the [scope] in dom order
-Element lastDescendant(Element scope) {
-  Element current = scope;
-  while (current.children.isNotEmpty) {
+web.Element lastDescendant(web.Element scope) {
+  web.Element current = scope;
+  while (_childrenCount(current) > 0) {
     current = _lastChild(current);
   }
   return current;
 }
 
-Element _firstChild(Element element) => element.children[0];
+web.Element? _parentElement(web.Element element) =>
+    element.parentNode != null && element.parentNode!.isA<web.Element>()
+        ? element.parentNode as web.Element
+        : null;
 
-Element _lastChild(Element element) {
-  List<Element> children = element.children;
-  return children[children.length - 1];
+int _childrenCount(web.Element element) => element.children.length;
+
+web.Element _firstChild(web.Element element) =>
+    element.children.item(0) as web.Element;
+
+web.Element _lastChild(web.Element element) {
+  var children = element.children;
+  return children.item(children.length - 1) as web.Element;
 }

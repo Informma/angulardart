@@ -203,7 +203,7 @@ class LazyListTracker<S, T> extends Object
       removed.values.forEach(disposeMapped);
     }
     if (_onChange != null) {
-      _onChange!();
+      _onChange();
     }
   }
 
@@ -219,7 +219,7 @@ class LazyListTracker<S, T> extends Object
         for (; end >= 0; end--) {
           int index = record.index + end;
           T? object =
-              _onInsertBackpass!(index, record.object[index], _target![index])
+              _onInsertBackpass(index, record.object[index], _target![index])
                   as T?;
           if (object == null) {
             break;
@@ -231,7 +231,7 @@ class LazyListTracker<S, T> extends Object
 
       for (int i = 0; i <= end; i++) {
         int index = record.index + i;
-        T? object = _onInsert!(index, record.object[index], _target![index]) as T?;
+        T? object = _onInsert(index, record.object[index], _target![index]) as T?;
         if (object != null) {
           _target![index] = object;
         }

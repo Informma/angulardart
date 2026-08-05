@@ -38,7 +38,7 @@ class HighlightAssistant {
     var value = queryHighlightCache[item];
     if (value == null) {
       value = (_optionHighlighter != null
-          ? _optionHighlighter!(lastQuery, item)
+          ? _optionHighlighter(lastQuery, item)
           : _textHighlighter.highlight(
               itemRenderer(item), lastQuery.split(_separatorRegex)));
       queryHighlightCache[item] = value;

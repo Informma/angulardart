@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html' show KeyboardEvent, HtmlElement;
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -21,7 +22,7 @@ class FocusItemDirective extends RootFocusable implements FocusableItem {
   @HostBinding('attr.role')
   final String role;
 
-  FocusItemDirective(HtmlElement super.element, this._changeDetectorRef,
+  FocusItemDirective(web.HTMLElement super.element, this._changeDetectorRef,
       @Attribute('role') this.role);
 
   @HostBinding('attr.tabindex')
@@ -32,7 +33,7 @@ class FocusItemDirective extends RootFocusable implements FocusableItem {
   Stream<FocusMoveEvent> get focusmove => _focusMoveCtrl.stream;
 
   @HostListener('keydown')
-  void keydown(KeyboardEvent event) {
+  void keydown(web.KeyboardEvent event) {
     var focusEvent = FocusMoveEvent.fromKeyboardEvent(this, event);
     if (focusEvent != null) {
       _focusMoveCtrl.add(focusEvent);

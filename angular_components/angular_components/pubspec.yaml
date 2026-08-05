@@ -1,5 +1,5 @@
 name: angulardart_components
-version: 2.1.0
+version: 3.0.0
 description: >
   The official Material Design components for AngularDart. Used at Google in
   production apps.
@@ -19,7 +19,7 @@ screenshots:
     path: logo.png
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.4.0 <4.0.0'
 
 platforms:
   web:

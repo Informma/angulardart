@@ -49,11 +49,11 @@ class PercentagePopupSizeProvider implements PopupSizeProvider {
   num? getMinHeight(num positionY, num viewportHeight) =>
       _minHeightPercentage == null
           ? null
-          : viewportHeight * _minHeightPercentage!;
+          : viewportHeight * _minHeightPercentage;
 
   @override
   num? getMinWidth(num positionX, num viewportWidth) =>
-      _minWidthPercentage == null ? null : viewportWidth * _minWidthPercentage!;
+      _minWidthPercentage == null ? null : viewportWidth * _minWidthPercentage;
 
   @override
   num getMaxWidth(num _, num viewportWidth) =>

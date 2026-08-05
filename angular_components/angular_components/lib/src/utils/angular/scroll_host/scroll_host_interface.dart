@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 
 import 'package:meta/meta.dart';
+import 'package:web/web.dart' as web;
 import 'package:angulardart_components/utils/disposer/disposer.dart';
 
 /// The object that gets sent on scroll events.
@@ -67,10 +67,10 @@ abstract class ScrollHost implements Disposable {
   ///
   /// Calling this may cause reflow, and should be done only in a batched
   /// domRead block or DomService's layout check.
-  Rectangle calcViewportRect();
+  web.DOMRect calcViewportRect();
 
   /// Returns anchor element for hosting virtual horizontal scrollbar.
-  Element get anchorElement;
+  web.Element get anchorElement;
 
   /// Gets the pan controller for the given scroll host.
   PanController get panController;
@@ -83,12 +83,12 @@ abstract class ScrollHost implements Disposable {
   /// NOTE: This requires
   /// [IntersectionObserver](caniuse.com/intersectionobserver). Check
   /// [supportsIntersectionObserver] from feature_detector.dart before using.
-  Stream<IntersectionObserverEntry> onIntersection(Element element);
+  Stream<web.IntersectionObserverEntry> onIntersection(web.Element element);
 
   /// Stop an event.
   // When listening from the document body the event cannot be prevented.
   @protected
-  void stopEvent(WheelEvent event);
+  void stopEvent(web.WheelEvent event);
 }
 
 /// The position  of the sticky row.
@@ -117,11 +117,11 @@ abstract class StickyController implements Disposable {
   /// If [stickyKey] is provided, then only the last (when [position] is top)
   /// or the first (when [position] is bottom) sticky element with the same
   /// [stickyKey] will be stuck.
-  void stick(Element element, StickyPosition position, Element range,
+  void stick(web.Element element, StickyPosition position, web.Element range,
       {String? stickyClass, String? stickyKey});
 
   /// Unregisters the element from sticking.
-  void unstick(Element element);
+  void unstick(web.Element element);
 
   /// Called by the [ScrollHost] during the scroll animation, to reposition
   /// sticky elements.
@@ -130,10 +130,10 @@ abstract class StickyController implements Disposable {
   /// Register the tracking of the [element] that is already floating in the
   /// visual range of the scroll host.
   /// Sticky rows will be placed below or above of such elements.
-  void trackFloating(Element element);
+  void trackFloating(web.Element element);
 
   /// Unregisters the tracking of a floating [element].
-  void untrackFloating(Element element);
+  void untrackFloating(web.Element element);
 
   /// Fires an event immediately after this [StickyController] updates the DOM.
   ///

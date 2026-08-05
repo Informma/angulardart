@@ -3,9 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
 import 'dart:math' as math;
 
+import 'package:web/web.dart' as web;
 import 'package:angulardart/angulardart.dart';
 import 'package:quiver/time.dart';
 import 'package:angulardart_components/src/utils/angular/scroll_host/scroll_host_event_impl.dart';
@@ -39,22 +40,22 @@ class GestureListenerFactory {
   GestureListenerFactory(this._clock);
 
   GestureListener create(
-          Element element, DirectionCheck isDirectionScrollable) =>
+          web.Element element, DirectionCheck isDirectionScrollable) =>
       GestureListener(element, isDirectionScrollable, _clock);
 }
 
 /// Directions in which a parent of [target] can scroll within the [host].
 Map<GestureDirection, bool> innerScrollableDirections(
-    Element host, EventTarget target) {
+    web.Element host, web.EventTarget target) {
   Map<GestureDirection, bool> directions = {
     GestureDirection.up: false,
     GestureDirection.down: false,
     GestureDirection.left: false,
     GestureDirection.right: false
   };
-  Element? element = target as Element?;
+  web.Element? element = target as web.Element?;
   while (element != host && element != null) {
-    var style = element.getComputedStyle();
+    var style = web.window.getComputedStyle(element);
     String overflowX = style.getPropertyValue('overflow-x');
     if (overflowX == 'auto' || overflowX == 'scroll') {
       directions[GestureDirection.left] =
@@ -69,14 +70,14 @@ Map<GestureDirection, bool> innerScrollableDirections(
       directions[GestureDirection.down] = directions[GestureDirection.down]! ||
           element.scrollTop + element.clientHeight < element.scrollHeight;
     }
-    element = element.parent;
+    element = element.parentNode as web.Element?;
   }
   return directions;
 }
 
 /// Adds the element where the gesture began to [ScrollHostEvent].
 class GestureEvent extends ScrollHostEventImpl {
-  final EventTarget startingTarget;
+  final web.EventTarget startingTarget;
 
   GestureEvent(super.deltaX, super.deltaY, this.startingTarget);
 }
@@ -86,7 +87,7 @@ class GestureEvent extends ScrollHostEventImpl {
 class GestureListener implements Disposable {
   static const Duration _defaultScrollInterval = Duration(milliseconds: 17);
 
-  final Element _element;
+  final web.Element _element;
   final DirectionCheck _isDirectionScrollable;
   final Clock _clock;
   final Duration _scrollInterval;
@@ -114,10 +115,17 @@ class GestureListener implements Disposable {
   void _startListeners() {
     if (_disposer != null) return;
     _disposer = Disposer.oneShot();
-    _disposer!
-        .addStreamSubscription(_element.onTouchStart.listen(_onTouchStart));
-    _disposer!.addStreamSubscription(_element.onTouchMove.listen(_onTouchMove));
-    _disposer!.addStreamSubscription(_element.onTouchEnd.listen(_onTouchEnd));
+    web.EventListener touchStartListener = ((web.Event e) => _onTouchStart(e as web.TouchEvent)).toJS;
+    web.EventListener touchMoveListener = ((web.Event e) => _onTouchMove(e as web.TouchEvent)).toJS;
+    web.EventListener touchEndListener = ((web.Event e) => _onTouchEnd(e as web.TouchEvent)).toJS;
+    _element.addEventListener('touchstart', touchStartListener);
+    _element.addEventListener('touchmove', touchMoveListener);
+    _element.addEventListener('touchend', touchEndListener);
+    _disposer!.addFunction(() {
+      _element.removeEventListener('touchstart', touchStartListener);
+      _element.removeEventListener('touchmove', touchMoveListener);
+      _element.removeEventListener('touchend', touchEndListener);
+    });
   }
 
   void _onCancel() {
@@ -132,13 +140,14 @@ class GestureListener implements Disposable {
   }
 
   Map<GestureDirection, bool>? _directions;
-  Point? _startPoint;
+  math.Point? _startPoint;
   bool _capturing = false;
-  void _onTouchStart(TouchEvent touchStart) {
-    if (touchStart.touches!.length > 1) return;
+  void _onTouchStart(web.TouchEvent touchStart) {
+    if (touchStart.touches.length > 1) return;
 
     _directions = innerScrollableDirections(_element, touchStart.target!);
-    _startPoint = touchStart.touches!.single.screen;
+    final t = touchStart.touches.item(0)!;
+    _startPoint = math.Point<num>(t.screenX, t.screenY);
     _capturing = false;
 
     _gesture?.cancel();
@@ -146,12 +155,13 @@ class GestureListener implements Disposable {
     _gesture!.start(touchStart);
   }
 
-  void _onTouchMove(TouchEvent touchMove) {
+  void _onTouchMove(web.TouchEvent touchMove) {
     if (_gesture == null) return;
     if (_gesture!.finished) return _onTouchStart(touchMove);
 
     if (!_capturing) {
-      Point delta = touchMove.touches!.first.screen - _startPoint!;
+      final t = touchMove.touches.item(0)!;
+      math.Point delta = math.Point<num>(t.screenX, t.screenY) - _startPoint!;
 
       if ((delta.y > 0 && _directions![GestureDirection.up]!) ||
           (delta.y < 0 && _directions![GestureDirection.down]!) ||
@@ -174,7 +184,7 @@ class GestureListener implements Disposable {
     _gesture!.update(touchMove);
   }
 
-  void _onTouchEnd(TouchEvent touchEnd) {
+  void _onTouchEnd(web.TouchEvent touchEnd) {
     if (_gesture == null) return;
     touchEnd.stopPropagation();
     _gesture!.finish();
@@ -214,11 +224,11 @@ class _Gesture {
   Timer? _scrollTimer;
   DateTime? _startTime;
   DateTime? _lastTime;
-  Point? _startPoint;
-  Point? _lastTouchPoint;
-  Point? _lastSyncPoint;
+  math.Point? _startPoint;
+  math.Point? _lastTouchPoint;
+  math.Point? _lastSyncPoint;
   bool _finished = false;
-  EventTarget? _startingTarget;
+  web.EventTarget? _startingTarget;
 
   bool get finished => _finished;
 
@@ -242,21 +252,23 @@ class _Gesture {
   }
 
   /// Begin a new gesture.
-  void start(TouchEvent touchStart) {
+  void start(web.TouchEvent touchStart) {
     assert(_scrollTimer == null);
     _scrollTimer = Timer.periodic(_scrollInterval, _addDragEvent);
     _startTime = _clock.now();
     _lastTime = _startTime;
-    _startPoint = touchStart.touches!.single.screen;
+    final t = touchStart.touches.item(0)!;
+    _startPoint = math.Point<num>(t.screenX, t.screenY);
     _lastTouchPoint = _startPoint;
     _lastSyncPoint = _startPoint;
     _startingTarget = touchStart.target;
   }
 
-  void update(TouchEvent touchMove) {
+  void update(web.TouchEvent touchMove) {
     assert(!_finished);
     _lastTime = _clock.now();
-    _lastTouchPoint = touchMove.touches!.first.screen;
+    final t = touchMove.touches.item(0)!;
+    _lastTouchPoint = math.Point<num>(t.screenX, t.screenY);
   }
 
   void finish() {
@@ -277,7 +289,7 @@ class _Gesture {
   }
 
   void _syncToLastTouchPoint() {
-    Point delta = _lastSyncPoint! - _lastTouchPoint!;
+    math.Point delta = _lastSyncPoint! - _lastTouchPoint!;
     if (delta.x != 0 || delta.y != 0) {
       _scrollController.add(GestureEvent(delta.x.toInt(), delta.y.toInt(), _startingTarget!));
       _lastSyncPoint = _lastTouchPoint;

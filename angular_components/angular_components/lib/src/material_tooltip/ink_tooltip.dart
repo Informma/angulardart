@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/content/deferred_content.dart';
@@ -15,21 +15,6 @@ import 'package:angulardart_components/utils/angular/css/css.dart';
 import 'tooltip_controller.dart';
 import 'tooltip_target.dart';
 
-/// An ink-based overlay meant to deliver contextual information about the
-/// element it targets.
-///
-/// It is a "small" tooltip in that it ought to be one or two lines, at most,
-/// and has a maximum width of `320px`.
-///
-/// Typically, the tooltips are associated with an icon or a button and provide
-/// a label or brief helper text about that element. This component should be
-/// used with a [TooltipTarget] component which controls its visibility
-/// and provides the underlying [HtmlElement] at which the tooltip is targeted.
-///
-/// Use this component in conjunction with the [MaterialTooltipTargetDirective].
-///
-/// Consider using [MaterialTooltipDirective] instead; usage is much simpler and
-/// it enforces text-only small tooltips.
 @Component(
   selector: 'material-tooltip-text',
   providers: [tooltipControllerBinding],
@@ -54,7 +39,6 @@ import 'tooltip_target.dart';
   styleUrls: ['ink_tooltip.scss.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   directives: [DeferredContentDirective, NgIf, MaterialPopupComponent],
-  // TODO(google): Change preserveWhitespace to false to improve codesize.
   preserveWhitespace: true,
 )
 class MaterialInkTooltipComponent implements Tooltip {
@@ -64,29 +48,23 @@ class MaterialInkTooltipComponent implements Tooltip {
   PopupSource? _tooltipSource;
   PopupSource? get popupSource => _tooltipSource;
 
-  /// Positions at which the tooltip should try to show.
   @Input()
   List<RelativePosition> positions = RelativePosition.adjacentBottomEdge;
 
-  // Proxy control of this tooltip via the tooltip controller.
   Tooltip? _controllerProxy;
 
   bool _showPopup = false;
   bool get showPopup => _showPopup;
 
-  /// Text content of the tooltip.
   @Input()
   String? text;
 
-  /// Classname applied to material-popup for use with mixins.
-  ///
-  /// Left modifiable so that it can be set by the [MaterialTooltipDirective].
   String popupClassName;
 
   MaterialInkTooltipComponent(this._tooltipController, this._changeDetector,
-      HtmlElement hostElement, @Attribute('tooltipClass') String tooltipClass)
+      web.HTMLElement hostElement, @Attribute('tooltipClass') String tooltipClass)
       : popupClassName =
-            constructEncapsulatedCss(tooltipClass, hostElement.classes);
+            constructEncapsulatedCss(tooltipClass, hostElement.classList);
 
   @override
   void activate() {
@@ -108,13 +86,6 @@ class MaterialInkTooltipComponent implements Tooltip {
     _tooltipController.deactivate(this);
   }
 
-  /// The element at which this tooltip is targeted.
-  ///
-  /// This is typically set in the template by using a var ref. For example:
-  /// ```html
-  ///   <span tooltipTarget #target="tooltipTarget">Tip</span>
-  ///   <material-tooltip-text [for]="target">My tooltip</material-tooltip-text>
-  /// ```
   @Input('for')
   set tooltipRef(TooltipTarget target) {
     _tooltipSource = target;

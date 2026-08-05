@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -140,16 +141,16 @@ class DropdownButtonComponent extends Object
 
   /// Event that fires when the dropdown button is blurred.
   @Output('blur')
-  Stream<FocusEvent> get onBlur => _blur.stream;
-  final _blur = StreamController<FocusEvent>(sync: true);
+  Stream<web.FocusEvent> get onBlur => _blur.stream;
+  final _blur = StreamController<web.FocusEvent>(sync: true);
 
-  void handleBlur(FocusEvent event) {
+  void handleBlur(web.FocusEvent event) {
     _blur.add(event);
   }
 
   /// Event fired when the button is clicked or keyboard activated.
   @Output()
-  Stream<UIEvent> get trigger => _button!.trigger;
+  Stream<web.UIEvent> get trigger => _button!.trigger;
 
   /// Is the component tabbable.
   @Input()

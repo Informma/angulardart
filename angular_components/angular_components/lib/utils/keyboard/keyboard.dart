@@ -2,14 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 /// this utility method will check that keyboard even is happening
 /// only with list of modifiers passed as true
 /// i.e. if called (modifiersKeysFor, shiftKey : true)
 /// it will return true if shift is pressed,
 /// but false if both shift and alt are pressed
-bool modifiersKeysFor(KeyboardEvent event,
+bool modifiersKeysFor(web.KeyboardEvent event,
     {bool shiftKey = false,
     bool ctrlKey = false,
     bool altKey = false,

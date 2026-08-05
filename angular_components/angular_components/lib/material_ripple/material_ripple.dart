@@ -2,8 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'dart:js_interop';
 import 'dart:math';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/utils/browser/events/events.dart';
@@ -32,8 +34,8 @@ int _rippleIndex = 0;
 
 // If these were initialized here (and final), dart2js would wait to initialize
 // them until the first mousedown event, increasing latency.
-List<DivElement?>? _ripplePool;
-DivElement? _rippleTemplate;
+List<web.HTMLDivElement?>? _ripplePool;
+web.HTMLDivElement? _rippleTemplate;
 Map<String, double>? _opacityTiming;
 List<Map<String, double>>? _opacityKeyframes;
 Map<String, dynamic>? _transformTiming;
@@ -41,18 +43,18 @@ Map<String, dynamic>? _transformTiming;
 // This is outside of the class because it causes dart2js to inline this
 // function and use faster variable access patterns.
 void _createRipple(
-    int clientX, int clientY, HtmlElement container, bool center) {
+    int clientX, int clientY, web.HTMLElement container, bool center) {
   // All of the DOM reads occur before the DOM writes.
   final rect = container.getBoundingClientRect();
 
   // Create a ripple or grab one from the pool.
-  DivElement ripple;
+  web.HTMLDivElement ripple;
   if (_numRipples < _maxRipples) {
-    ripple = _rippleTemplate!.clone(false) as DivElement;
+    ripple = _rippleTemplate!.cloneNode(false) as web.HTMLDivElement;
     _ripplePool![_rippleIndex] = ripple;
     _numRipples++;
   } else {
-    ripple = _ripplePool![_rippleIndex] as DivElement;
+    ripple = _ripplePool![_rippleIndex] as web.HTMLDivElement;
     ripple.remove();
   }
 
@@ -70,7 +72,7 @@ void _createRipple(
 
 /// Dynamically generate and apply the ripple animation.
 void _applyAnimation(
-    DivElement ripple, bool center, Rectangle rect, int clientX, int clientY) {
+    web.HTMLDivElement ripple, bool center, web.DOMRect rect, int clientX, int clientY) {
   // The ripple starting diameter is 60% of the largest container dimension.
   final containerWidth = rect.width;
   final containerHeight = rect.height;
@@ -112,14 +114,14 @@ void _applyAnimation(
   ];
 
   ripple.style.cssText = 'top: $top; left: $left; transform: $finalTransform';
-  ripple.animate(_opacityKeyframes!, _opacityTiming!);
-  ripple.animate(transformKeyframes, _transformTiming!);
+  ripple.animate(_opacityKeyframes!.jsify() as JSObject?, _opacityTiming!.jsify() as JSAny);
+  ripple.animate(transformKeyframes.jsify() as JSObject?, _transformTiming!.jsify() as JSAny);
 }
 
 /// Apply a static fallback animation for browsers that don't support the
 /// Web Animations API.
 void _applyFallbackAnimation(
-    DivElement ripple, bool center, Rectangle rect, int clientX, int clientY) {
+    web.HTMLDivElement ripple, bool center, web.DOMRect rect, int clientX, int clientY) {
   String top;
   String left;
 
@@ -153,14 +155,14 @@ void _applyFallbackAnimation(
   changeDetection: ChangeDetectionStrategy.OnPush,
 )
 class MaterialRippleComponent implements OnDestroy {
-  final HtmlElement _element;
-  EventListener? _onMouseDown;
-  EventListener? _onKeyDown;
+  final web.HTMLElement _element;
+  web.EventListener? _onMouseDown;
+  web.EventListener? _onKeyDown;
 
   MaterialRippleComponent(this._element) {
     // These are initialized here instead of when they're declared because
     // dart2js would otherwise wait to initialize them until they are used.
-    _ripplePool ??= List<DivElement?>.filled(_maxRipples, null);
+    _ripplePool ??= List<web.HTMLDivElement?>.filled(_maxRipples, null);
     _opacityTiming ??= {
       'duration': 300.0,
     };
@@ -174,30 +176,32 @@ class MaterialRippleComponent implements OnDestroy {
       'duration': 225.0,
       'easing': 'cubic-bezier(0.4, 0.0, 0.2, 1)',
     };
-    // This is className = instead of classes.add because classes.add compiles
+    // This is className = instead of classList.add because classList.add compiles
     // to a DOM read, conversion to List, and then a DOM write.
     if (_rippleTemplate == null) {
       final className =
           (supportsAnimationApi) ? '__acx-ripple' : '__acx-ripple fallback';
-      _rippleTemplate = DivElement()..className = className;
+      _rippleTemplate = web.document.createElement('div') as web.HTMLDivElement;
+      _rippleTemplate!.className = className;
     }
 
     // This is necessary because if _onMouseDown was a method, a new closure
     // would be created each time it was referenced. That means that
     // _onMouseDown in removeEventListener would point to a different listener,
     // so the listener would not be removed.
-    _onMouseDown = (e) {
+    _onMouseDown = (web.Event e) {
       // This is inlined by dart2js so we aren't incurring an additional
       // function call here.
-      final clientX = (e as MouseEvent).client.x.toInt();
-      final clientY = (e).client.y.toInt();
+      final mouseEvent = e as web.MouseEvent;
+      final clientX = mouseEvent.clientX.toInt();
+      final clientY = mouseEvent.clientY.toInt();
       _createRipple(clientX, clientY, _element, center);
-    };
-    _onKeyDown = (e) {
-      if (!isKeyboardTrigger(e as KeyboardEvent)) return;
+    }.toJS;
+    _onKeyDown = (web.Event e) {
+      if (!isKeyboardTrigger(e as web.KeyboardEvent)) return;
       // Ripples created by a keypress are always centered.
       _createRipple(0, 0, _element, true);
-    };
+    }.toJS;
     // This is about 5x faster than _element.onMouseDown.listen or Angular
     // (mousedown) because this compiles directly to addEventListener, whereas
     // the streams approach adds several layers of slow indirection.
@@ -218,7 +222,7 @@ class MaterialRippleComponent implements OnDestroy {
     _element.removeEventListener('mousedown', _onMouseDown);
     _element.removeEventListener('keydown', _onKeyDown);
     for (var ripple in _ripplePool!) {
-      if (ripple?.parent == _element) {
+      if (ripple?.parentNode == _element) {
         ripple!.remove();
       }
     }

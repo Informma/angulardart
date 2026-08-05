@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/laminate/overlay/module.dart'
@@ -29,12 +31,11 @@ class MaterialExpansionPanelAutoDismiss implements OnDestroy {
   /// The root node that all spawned elements will belong to.
   ///
   /// E.g. modal, dialog, popups.
-  final Element? _overlayContainerToken;
-  final HtmlElement _element;
+  final web.Element? _overlayContainerToken;
+  final web.HTMLElement _element;
 
-  StreamController<Event>? _clicksOutsideController;
-  StreamSubscription<Event>? _clicksOutsideSubscription;
-  StreamSubscription<MouseEvent>? _mouseUpListener;
+  StreamController<web.Event>? _clicksOutsideController;
+  StreamSubscription<web.Event>? _clicksOutsideSubscription;
 
   MaterialExpansionPanelAutoDismiss(
       this._expansionPanel,
@@ -43,12 +44,11 @@ class MaterialExpansionPanelAutoDismiss implements OnDestroy {
     _clicksOutsideController = StreamController.broadcast(
         sync: true,
         onListen: () {
-          _mouseUpListener = document.onMouseUp.listen(_onMouseUp);
+          web.document.addEventListener('mouseup', ((web.MouseEvent event) {
+            _onMouseUp(event);
+          }).toJS);
         },
-        onCancel: () {
-          _mouseUpListener?.cancel();
-          _mouseUpListener = null;
-        });
+        onCancel: () {});
   }
 
   /// Handles expanded status changes from the panel.
@@ -66,8 +66,8 @@ class MaterialExpansionPanelAutoDismiss implements OnDestroy {
     _clicksOutsideSubscription?.cancel();
   }
 
-  void _onMouseUp(MouseEvent e) {
-    var node = e.target as Element?;
+  void _onMouseUp(web.MouseEvent e) {
+    var node = e.target as web.Element?;
     while (node != null) {
       var tagName = node.tagName.toLowerCase();
       if (node == _element) {
@@ -90,7 +90,7 @@ class MaterialExpansionPanelAutoDismiss implements OnDestroy {
         // Excludes any clickable elements.
         return;
       }
-      node = node.parent;
+      node = node.parentNode as web.Element?;
     }
     // Treats clicks on dangling elements as inside the panel.
     //

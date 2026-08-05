@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -55,7 +57,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   final ChangeDetectorRef _cdRef;
   final DropdownHandle? _dropdown;
 
-  final HtmlElement element;
+  final web.HTMLElement element;
 
   StreamSubscription? _selectionChangeStreamSub;
 
@@ -228,11 +230,11 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   bool get _isSelectedInSelectionModel =>
       value != null && (_selection?.isSelected(value) ?? false);
 
-  void handleActivate(UIEvent e) {
+  void handleActivate(web.UIEvent e) {
     var hasCheckbox = supportsMultiSelect && !hideCheckbox;
     if (_dropdown != null && closeOnActivate && !hasCheckbox) {
-      _dropdown!.close();
-      if (e is KeyboardEvent) {
+      _dropdown.close();
+      if (e.isA<web.KeyboardEvent>()) {
         e.stopPropagation();
       }
     }

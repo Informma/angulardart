@@ -3,8 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
 
+import 'package:web/web.dart' as web;
 import 'package:quiver/core.dart';
 import 'package:angulardart_components/utils/angular/scroll_host/interface.dart';
 import 'package:angulardart_components/utils/browser/events/events.dart'
@@ -35,7 +36,7 @@ class PositionStickyController implements StickyController {
   PositionStickyController(this._scrollHost);
 
   @override
-  void stick(Element element, StickyPosition position, Element range,
+  void stick(web.Element element, StickyPosition position, web.Element range,
       {String? stickyClass, String? stickyKey}) {
     final stickyElement =
         _StickyElement(element, position, range, stickyClass, stickyKey);
@@ -50,7 +51,7 @@ class PositionStickyController implements StickyController {
   }
 
   @override
-  void unstick(Element element) {
+  void unstick(web.Element element) {
     _StickyElement? stickyElement;
     for (var e in _stickyElements) {
       if (element == e.element) {
@@ -70,12 +71,12 @@ class PositionStickyController implements StickyController {
   }
 
   @override
-  void trackFloating(Element element) {
+  void trackFloating(web.Element element) {
     // not implemented
   }
 
   @override
-  void untrackFloating(Element element) {
+  void untrackFloating(web.Element element) {
     // not implemented
   }
 
@@ -104,18 +105,18 @@ class PositionStickyController implements StickyController {
   void _scheduleUpdate() {
     if (_isUpdateScheduled) return;
     _isUpdateScheduled = true;
-    window.requestAnimationFrame((_) {
+    web.window.requestAnimationFrame((_) {
       _isUpdateScheduled = false;
       _update();
-    });
+    }.toJS);
   }
 
   void _addStickyStyle(_StickyElement stickyElement, String positionProperty,
       num zIndex, num offset) {
-    stickyElement.element.style
+    (stickyElement.element as web.HTMLElement).style
       ..position = 'sticky'
       ..zIndex = '$zIndex';
-    stickyElement.element.style.setProperty(positionProperty, '${offset}px');
+    (stickyElement.element as web.HTMLElement).style.setProperty(positionProperty, '${offset}px');
 
     if (stickyElement.stickyClass != null) {
       if (feature_detector.supportsIntersectionObserver) {
@@ -123,23 +124,23 @@ class PositionStickyController implements StickyController {
           _startIntersectionSubscription(stickyElement);
         }
         // + 1px wasn't enough to trigger an intersection.
-        stickyElement.intersectionElement!.style
+        (stickyElement.intersectionElement as web.HTMLElement).style
             .setProperty(positionProperty, '${-(offset + 2)}px');
       } else {
-        stickyElement.element.classes.add(stickyElement.stickyClass!);
+        stickyElement.element.classList.add(stickyElement.stickyClass!);
       }
     }
   }
 
   void _removeStickyStyle(_StickyElement stickyElement) {
-    stickyElement.element.style
+    (stickyElement.element as web.HTMLElement).style
       ..position = ''
       ..zIndex = ''
       ..top = ''
       ..bottom = '';
 
     if (stickyElement.stickyClass != null) {
-      stickyElement.element.classes.remove(stickyElement.stickyClass!);
+      stickyElement.element.classList.remove(stickyElement.stickyClass!);
       if (stickyElement.intersectionSubscription != null) {
         _stopIntersectionSubscription(stickyElement);
       }
@@ -154,7 +155,7 @@ class PositionStickyController implements StickyController {
     // edge of the scroll host. The invisible element is positioned relative to
     // the sticky element with an offset opposite of the sticky element's
     // offset.
-    stickyElement.intersectionElement = DivElement()
+    stickyElement.intersectionElement = web.HTMLDivElement()
       ..style.width = '0px'
       ..style.height = '1px'
       ..style.position = 'absolute';
@@ -165,10 +166,10 @@ class PositionStickyController implements StickyController {
     stickyElement.intersectionSubscription = _scrollHost
         .onIntersection(stickyElement.intersectionElement!)
         .listen((e) {
-      if (e.intersectionRect!.height > 0) {
-        stickyElement.element.classes.remove(stickyElement.stickyClass!);
+      if (e.intersectionRect.height > 0) {
+        stickyElement.element.classList.remove(stickyElement.stickyClass!);
       } else {
-        stickyElement.element.classes.add(stickyElement.stickyClass!);
+        stickyElement.element.classList.add(stickyElement.stickyClass!);
       }
     });
   }
@@ -202,7 +203,9 @@ class PositionStickyController implements StickyController {
       _StickyElement elementA = a[0] as _StickyElement;
       _StickyElement elementB = b[0] as _StickyElement;
       return sortOrder *
-          compareDocumentPosition(elementA.element, elementB.element);
+          compareDocumentPosition(
+               elementA.element,
+               elementB.element);
     });
 
     Map<String, num> stickyKeyOffsets = {};
@@ -210,7 +213,7 @@ class PositionStickyController implements StickyController {
     num zIndex = startZIndex;
     for (var item in elementsAndRects) {
       _StickyElement stickyElement = item[0] as _StickyElement;
-      Rectangle rect = item[1] as Rectangle;
+      web.DOMRect rect = item[1] as web.DOMRect;
       if (stickyElement.stickyKey != null) {
         // All elements with the same stickyKey receive the same offset so that
         // they stack on top of each other.
@@ -231,14 +234,14 @@ class PositionStickyController implements StickyController {
 }
 
 class _StickyElement {
-  final Element element;
+  final web.Element element;
   final StickyPosition position;
-  final Element range;
+  final web.Element range;
   final String? stickyClass;
   final String? stickyKey;
 
-  Element? intersectionElement;
-  StreamSubscription<IntersectionObserverEntry>? intersectionSubscription;
+  web.Element? intersectionElement;
+  StreamSubscription<web.IntersectionObserverEntry>? intersectionSubscription;
 
   _StickyElement(this.element, this.position, this.range, this.stickyClass,
       this.stickyKey);

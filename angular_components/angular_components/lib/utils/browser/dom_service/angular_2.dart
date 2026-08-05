@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 // ignore: experimental_member_use
@@ -29,7 +29,7 @@ const domServiceBinding = FactoryProvider(
     [DomService, Optional(), SkipSelf()],
     [Disposer, Optional()],
     NgZone,
-    Window,
+    web.Window,
   ],
 );
 
@@ -41,14 +41,14 @@ DomService? _singletonService;
 
 @Injectable()
 DomService createDomService(@Optional() @SkipSelf() DomService? service,
-    @Optional() Disposer? disposer, NgZone zone, Window window) {
+    @Optional() Disposer? disposer, NgZone zone, web.Window window) {
   // If DomService was bound higher up the tree use that instance. This allows
   // an application to override the service at root.
   if (service != null) return service;
 
   if (_singletonService != null) return _singletonService!;
 
-  _singletonService = DomService(zone, window);
+  _singletonService = DomService(zone, window as dynamic);
 
   createDomServiceWebdriverTestability(_singletonService!).register();
 

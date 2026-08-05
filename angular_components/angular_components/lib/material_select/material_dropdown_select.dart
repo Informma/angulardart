@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/annotations/rtl_annotation.dart';
@@ -199,9 +201,9 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
       @Attribute('popupClass') String popupClass,
       @Attribute('buttonAriaRole') this.buttonAriaRole,
       this._changeDetector,
-      HtmlElement element)
+      web.HTMLElement element)
       : activeModel = ActiveItemModel(idGenerator),
-        popupClassName = constructEncapsulatedCss(popupClass, element.classes),
+        popupClassName = constructEncapsulatedCss(popupClass, element.classList),
         listId = (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId() {
     isRtl = rtl ?? false;
     preferredPositions = RelativePosition.overlapAlignments;
@@ -309,21 +311,21 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
 
   /// Event that fires when the dropdown button is focused.
   @Output()
-  Stream<FocusEvent> get focus => _focus.stream;
-  final StreamController<FocusEvent> _focus =
-      StreamController<FocusEvent>.broadcast(sync: true);
+  Stream<web.FocusEvent> get focus => _focus.stream;
+  final StreamController<web.FocusEvent> _focus =
+      StreamController<web.FocusEvent>.broadcast(sync: true);
 
   /// Event that fires when the dropdown button is blurred.
   @Output()
-  Stream<FocusEvent> get blur => _blur.stream;
-  final StreamController<FocusEvent> _blur =
-      StreamController<FocusEvent>.broadcast(sync: true);
+  Stream<web.FocusEvent> get blur => _blur.stream;
+  final StreamController<web.FocusEvent> _blur =
+      StreamController<web.FocusEvent>.broadcast(sync: true);
 
-  void onFocus(FocusEvent event) {
+  void onFocus(web.FocusEvent event) {
     _focus.add(event);
   }
 
-  void onBlur(FocusEvent event) {
+  void onBlur(web.FocusEvent event) {
     _blur.add(event);
   }
 
@@ -369,7 +371,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
     }
   }
 
-  void _handleNavigationKey(KeyboardEvent event, Function activateFunction) {
+  void _handleNavigationKey(web.KeyboardEvent event, Function activateFunction) {
     if (disabled) return;
     event.preventDefault();
     activateFunction();
@@ -388,32 +390,32 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  void handleUpKey(KeyboardEvent event) {
+  void handleUpKey(web.KeyboardEvent event) {
     _handleNavigationKey(event, activeModel.activatePrevious);
   }
 
   @override
-  void handleDownKey(KeyboardEvent event) {
+  void handleDownKey(web.KeyboardEvent event) {
     _handleNavigationKey(event, activeModel.activateNext);
   }
 
   @override
-  void handleLeftKey(KeyboardEvent event) {
+  void handleLeftKey(web.KeyboardEvent event) {
     _handleNavigationKey(event, activeModel.activatePrevious);
   }
 
   @override
-  void handleRightKey(KeyboardEvent event) {
+  void handleRightKey(web.KeyboardEvent event) {
     _handleNavigationKey(event, activeModel.activateNext);
   }
 
   @override
-  void handlePageUp(KeyboardEvent event) {
+  void handlePageUp(web.KeyboardEvent event) {
     _handleNavigationKey(event, activeModel.activateFirst);
   }
 
   @override
-  void handlePageDown(KeyboardEvent event) {
+  void handlePageDown(web.KeyboardEvent event) {
     _handleNavigationKey(event, activeModel.activateLast);
   }
 
@@ -442,25 +444,25 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  void handleEnterKey(KeyboardEvent event) {
+  void handleEnterKey(web.KeyboardEvent event) {
     _handleKeyboardTrigger();
   }
 
   @override
-  void handleSpaceKey(KeyboardEvent event) {
+  void handleSpaceKey(web.KeyboardEvent event) {
     // Prevent any scrolling.
     event.preventDefault();
     _handleKeyboardTrigger();
   }
 
-  void handleClick(UIEvent event) {
+  void handleClick(web.UIEvent event) {
     // Ignore keyboard events caught by button decorator.
-    if (event is! MouseEvent) return;
+    if (!event.isA<web.MouseEvent>()) return;
     if (!disabled) toggle();
   }
 
   @override
-  void handleCharCodeKey(KeyboardEvent event) {
+  void handleCharCodeKey(web.KeyboardEvent event) {
     if (!disabled) {
       activateOnKeyPress(activeModel, event.charCode, options, itemRenderer,
           !visible && isSingleSelect ? selection : null);
@@ -492,7 +494,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   @override
   num? getMaxHeight(num positionY, num viewportHeight) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate!.getMaxHeight(positionY, viewportHeight);
+      return _popupSizeDelegate.getMaxHeight(positionY, viewportHeight);
     } else {
       return 400;
     }
@@ -501,7 +503,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   @override
   num? getMaxWidth(num positionX, num viewportWidth) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate!.getMaxWidth(positionX, viewportWidth);
+      return _popupSizeDelegate.getMaxWidth(positionX, viewportWidth);
     } else {
       return 448;
     }

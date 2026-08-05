@@ -3,8 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 import 'dart:math';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -131,13 +132,13 @@ class MaterialExpansionPanel
     }
   }
 
-  HtmlElement? _mainPanel;
+  web.HTMLElement? _mainPanel;
   @ViewChild('mainPanel')
-  set mainPanel(HtmlElement mainPanel) {
+  set mainPanel(web.HTMLElement mainPanel) {
     _mainPanel = mainPanel;
     _ngZone.runOutsideAngular(() {
       _disposer.addStreamSubscription(_mainPanel!.onTransitionEnd
-          .where((e) => e.eventPhase == Event.AT_TARGET)
+          .where((e) => e.eventPhase == web.Event.AT_TARGET)
           .listen((_) {
         // Clear height override so it will match the active child's height.
         _mainPanel!.style.height = '';
@@ -164,13 +165,13 @@ class MaterialExpansionPanel
     _disposer.addDisposable(transitionCheck);
   }
 
-  HtmlElement? _headerPanel;
+  web.HTMLElement? _headerPanel;
   @ViewChild('headerPanel')
-  set headerPanel(HtmlElement headerPanel) {
+  set headerPanel(web.HTMLElement headerPanel) {
     _headerPanel = headerPanel;
     _ngZone.runOutsideAngular(() {
       _disposer.addStreamSubscription(_headerPanel!.onTransitionEnd
-          .where((e) => e.eventPhase == Event.AT_TARGET)
+          .where((e) => e.eventPhase == web.Event.AT_TARGET)
           .listen((_) {
         // Clear height override so it will match the active child's height.
         _headerPanel!.style.height = '';
@@ -178,9 +179,9 @@ class MaterialExpansionPanel
     });
   }
 
-  HtmlElement? _mainContent;
+  web.HTMLElement? _mainContent;
   @ViewChild('mainContent')
-  set mainContent(HtmlElement mainContent) {
+  set mainContent(web.HTMLElement mainContent) {
     _mainContent = mainContent;
     if (_mainContent == null) return;
     _completeExpandedPanelHeightReadsIfPossible();
@@ -197,19 +198,19 @@ class MaterialExpansionPanel
     }
   }
 
-  HtmlElement? _headerContent;
+  web.HTMLElement? _headerContent;
   @ViewChild('headerContent')
-  set headerContent(HtmlElement headerContent) =>
+  set headerContent(web.HTMLElement headerContent) =>
       _headerContent = headerContent;
 
-  HtmlElement? _actionContent;
+  web.HTMLElement? _actionContent;
   @ViewChild('action')
-  set actionContent(HtmlElement headerContent) =>
+  set actionContent(web.HTMLElement headerContent) =>
       _actionContent = headerContent;
 
-  HtmlElement? _contentWrapper;
+  web.HTMLElement? _contentWrapper;
   @ViewChild('contentWrapper')
-  set contentWrapper(HtmlElement contentWrapper) {
+  set contentWrapper(web.HTMLElement contentWrapper) {
     _contentWrapper = contentWrapper;
     _completeExpandedPanelHeightReadsIfPossible();
   }
@@ -481,7 +482,7 @@ class MaterialExpansionPanel
   Stream<FocusMoveEvent> get focusmove => _focusMoveCtrl.stream;
 
   @HostListener('keydown')
-  void keydown(KeyboardEvent event) {
+  void keydown(web.KeyboardEvent event) {
     var focusEvent = FocusMoveEvent.fromKeyboardEvent(this, event);
     if (focusEvent != null) {
       _focusMoveCtrl.add(focusEvent);
@@ -645,14 +646,14 @@ class MaterialExpansionPanel
     if (hasHeightTransition) {
       // If the content-wrapper has a top margin, it is not reflected in the
       // scroll height.
-      final topMargin = _contentWrapper!.getComputedStyle().marginTop;
+      final topMargin = web.window.getComputedStyle(_contentWrapper!).marginTop;
       expandedPanelHeight = 'calc(${contentHeight}px + $topMargin)';
     }
     return expandedPanelHeight;
   }
 
   bool get _mainPanelHasHeightTransition {
-    final mainPanelStyle = _mainPanel!.getComputedStyle();
+    final mainPanelStyle = web.window.getComputedStyle(_mainPanel!);
     // Do our best to make sure that onTransitionEnd will fire later.
     return mainPanelStyle.transition.contains('height');
   }
@@ -669,7 +670,7 @@ class MaterialExpansionPanel
           max(_headerContent!.scrollHeight, _actionContent?.scrollHeight ?? 0);
       var expandedHeaderHeight = '';
 
-      final headerPanelStyle = _headerPanel!.getComputedStyle();
+      final headerPanelStyle = web.window.getComputedStyle(_headerPanel!);
       // Do our best to make sure that onTransitionEnd will fire later.
       final hasHeightTransition =
           contentHeight > 0 && headerPanelStyle.transition.contains('height');

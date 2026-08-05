@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/laminate/overlay/constants.dart';
@@ -30,25 +30,25 @@ export 'package:angulardart_components/src/laminate/overlay/render/overlay_dom_r
 /// already.
 /// A hidden focusable element is inserted before and after the overlay
 /// container to support a11y features.
-HtmlElement createAcxOverlayContainer(HtmlElement parent,
+web.HTMLElement createAcxOverlayContainer(web.HTMLElement parent,
     {required String id, required String name, String? className}) {
   var container = parent.querySelector('#$id');
   if (container == null) {
-    container = DivElement()
-      ..id = id
-      ..classes.add(overlayContainerClassName);
-    if (className != null) container.classes.add(className);
+    container = web.document.createElement('div') as web.HTMLElement;
+    container.id = id;
+    container.classList.add(overlayContainerClassName);
+    if (className != null) container.classList.add(className);
     parent.append(container);
   }
-  container.attributes[overlayContainerNameAttribute] = name;
-  return container as HtmlElement;
+  container.setAttribute(overlayContainerNameAttribute, name);
+  return container as web.HTMLElement;
 }
 
 /// Either finds, or creates an "acx-overlay-container" div at the end of body.
 @Injectable()
-HtmlElement getDefaultContainer(
+web.HTMLElement getDefaultContainer(
     @Inject(overlayContainerName) String name,
-    @Inject(overlayContainerParent) HtmlElement parent,
+    @Inject(overlayContainerParent) web.HTMLElement parent,
     @Optional() @SkipSelf() @Inject(overlayContainerToken) container) {
   if (container != null) return container;
   return createAcxOverlayContainer(parent,
@@ -63,17 +63,17 @@ String getDefaultContainerName(
 
 /// Returns an overlay container with debugging aid enabled.
 @Injectable()
-HtmlElement getDebugContainer(@Inject(overlayContainerName) String name,
-    @Inject(overlayContainerParent) HtmlElement parent) {
+web.HTMLElement getDebugContainer(@Inject(overlayContainerName) String name,
+    @Inject(overlayContainerParent) web.HTMLElement parent) {
   var element = getDefaultContainer(name, parent, null);
-  element.classes.add('debug');
+  element.classList.add('debug');
   return element;
 }
 
 @Injectable()
-HtmlElement getOverlayContainerParent(Document document,
+web.HTMLElement getOverlayContainerParent(web.Document document,
     @Optional() @SkipSelf() @Inject(overlayContainerParent) containerParent) {
-  return containerParent ?? document.querySelector('body');
+  return containerParent ?? document.querySelector('body') as web.HTMLElement;
 }
 
 /// DI module for Overlay and its dependencies.

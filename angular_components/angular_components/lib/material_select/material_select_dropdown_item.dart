@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/dynamic_component/dynamic_component.dart';
@@ -56,7 +56,7 @@ class MaterialSelectDropdownItemComponent<T>
   bool _customAriaHandling = false;
 
   MaterialSelectDropdownItemComponent(
-      HtmlElement element,
+      web.HTMLElement element,
       @Attribute('role') String role,
       @Optional() DropdownHandle? dropdown,
       @Optional() ActivationHandler? activationHandler,
@@ -73,7 +73,7 @@ class MaterialSelectDropdownItemComponent<T>
   bool get isSelected => super.isSelected;
 
   @HostListener('mousedown')
-  void preventTextSelectionIfShiftKey(MouseEvent e) {
+  void preventTextSelectionIfShiftKey(web.MouseEvent e) {
     if (e.shiftKey) e.preventDefault();
   }
 

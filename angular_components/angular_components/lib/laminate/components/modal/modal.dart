@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/content/deferred_content_aware.dart';
@@ -161,7 +162,7 @@ abstract class Modal {
 )
 class ModalComponent
     implements DeferredContentAware, Modal, AfterViewInit, OnDestroy {
-  final Element _element;
+  final web.Element _element;
   final Modal? _parentModal;
   final GlobalModalStack? _stack;
   final DomService _domService;
@@ -184,7 +185,7 @@ class ModalComponent
   bool _isHidden = false;
   bool _isVisible = false;
   final OverlayRef _resolvedOverlayRef;
-  Element? _lastFocusedElement;
+  web.HTMLElement? _lastFocusedElement;
 
   /// Whether to return focus to the last focused element before the modal
   /// opened.
@@ -236,7 +237,7 @@ class ModalComponent
 
   @override
   Stream<void> get shieldClick => _resolvedOverlayRef.onPanePressed
-      .where((MouseEvent e) => e.eventPhase == Event.AT_TARGET);
+      .where((web.MouseEvent e) => e.eventPhase == web.Event.AT_TARGET);
 
   @override
   Stream<bool> get contentVisible => onVisibleChanged;
@@ -253,9 +254,9 @@ class ModalComponent
     if (!temporary) {
       _saveFocus();
       if (_stack != null) {
-        _stack!.onModalOpened(this);
+        _stack.onModalOpened(this);
       } else if (_parentModal != null) {
-        _parentModal!.hidden = true;
+        _parentModal.hidden = true;
       }
     }
     _resolvedOverlayRef.setVisible(true);
@@ -268,31 +269,31 @@ class ModalComponent
     if (!temporary) {
       _restoreFocus();
       if (_stack != null) {
-        _stack!.onModalClosed(this);
+        _stack.onModalClosed(this);
       } else if (_parentModal != null) {
-        _parentModal!.hidden = false;
+        _parentModal.hidden = false;
       }
     }
     _resolvedOverlayRef.setVisible(false);
   }
 
   void _saveFocus() {
-    _lastFocusedElement = restoreFocus ? document.activeElement : null;
+    _lastFocusedElement = restoreFocus ? web.document.activeElement as web.HTMLElement? : null;
   }
 
   void _restoreFocus() {
     if (_lastFocusedElement == null) return;
-    if (_stack != null && _stack!.length > 1 || _parentModal != null) return;
+    if (_stack != null && _stack.length > 1 || _parentModal != null) return;
     final elementToFocus = _lastFocusedElement;
     _domService.scheduleWrite(() {
       // Only restore focus if the current active element is inside this overlay
       // or the focus was lost.
       // Note in a browser activeElement is never null and the null check below
       // is only for testing.
-      if (document.activeElement != null &&
+      if (web.document.activeElement != null &&
           (_resolvedOverlayRef.overlayElement
-                  .contains(document.activeElement) ||
-              document.activeElement == document.body)) {
+                  .contains(web.document.activeElement) ||
+               web.document.activeElement == web.document.body)) {
         // Note that if the [elementToFocus] is no longer in the document,
         // the body element will be focused instead.
         elementToFocus?.focus();

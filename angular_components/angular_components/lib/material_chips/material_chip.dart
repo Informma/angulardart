@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +35,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   @HostBinding('class')
   static const hostClass = 'themeable';
 
-  MaterialChipComponent(Element super.root);
+  MaterialChipComponent(web.HTMLElement super.root);
 
   static final chipDeleteButtonMessage = Intl.message('Delete',
       name: 'chipDeleteButtonMessage',

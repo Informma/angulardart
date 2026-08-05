@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:async/async.dart' show StreamQueue;
@@ -24,16 +26,24 @@ class ShowHideDirective implements OnInit, OnDestroy {
   // time after transition started, when acx-showhide-hidden is added forcefully
   static final int _transitionTimeoutMs = 16;
 
-  final Element _element;
+  final web.Element _element;
   final DomService _domService;
-  late StreamQueue<TransitionEvent> _transitionEndQueue;
+  late StreamController<web.TransitionEvent> _transitionEndController;
+  late StreamQueue<web.TransitionEvent> _transitionEndQueue;
+  late web.EventListener _transitionEndListener;
 
   bool _initialized = false;
   bool _initialWritePending = false;
   bool _hiding = true;
 
   ShowHideDirective(this._element, this._domService) {
-    _transitionEndQueue = StreamQueue(_element.onTransitionEnd);
+    _transitionEndController =
+        StreamController<web.TransitionEvent>.broadcast(sync: true);
+    _transitionEndListener = ((web.Event e) {
+      _transitionEndController.add(e as web.TransitionEvent);
+    }).toJS;
+    _element.addEventListener('transitionend', _transitionEndListener);
+    _transitionEndQueue = StreamQueue(_transitionEndController.stream);
   }
 
   @override
@@ -44,27 +54,29 @@ class ShowHideDirective implements OnInit, OnDestroy {
   @override
   void ngOnDestroy() {
     _stopHiding();
+    _element.removeEventListener('transitionend', _transitionEndListener);
+    _transitionEndController.close();
   }
 
   /// Fires when the hide styles are first applied to the element.
   @Output('hide')
-  Stream<Element> get onHide => _onHide.stream;
-  final _onHide = StreamController<Element>.broadcast(sync: true);
+  Stream<web.Element> get onHide => _onHide.stream;
+  final _onHide = StreamController<web.Element>.broadcast(sync: true);
 
   /// Fires when the show styles are first applied to the element.
   @Output('show')
-  Stream<Element> get onShow => _onShow.stream;
-  final _onShow = StreamController<Element>.broadcast(sync: true);
+  Stream<web.Element> get onShow => _onShow.stream;
+  final _onShow = StreamController<web.Element>.broadcast(sync: true);
 
   /// Fires when the transitions have finished and the element is fully visible.
   @Output('showEnd')
-  Stream<Element> get onShowEnd => _onShowEnd.stream;
-  final _onShowEnd = StreamController<Element>.broadcast(sync: true);
+  Stream<web.Element> get onShowEnd => _onShowEnd.stream;
+  final _onShowEnd = StreamController<web.Element>.broadcast(sync: true);
 
   /// Fires when the transitions have finished and the element is fully hidden.
   @Output('hideEnd')
-  Stream<Element> get onHideEnd => _onHideEnd.stream;
-  final _onHideEnd = StreamController<Element>.broadcast(sync: true);
+  Stream<web.Element> get onHideEnd => _onHideEnd.stream;
+  final _onHideEnd = StreamController<web.Element>.broadcast(sync: true);
 
   @Input('showhide')
   set visible(bool value) {
@@ -73,8 +85,8 @@ class ShowHideDirective implements OnInit, OnDestroy {
     } else {
       _initialWritePending = true;
       _domService.scheduleWrite(() {
-        _element.classes.toggle(_hideClass, !value);
-        _element.classes.toggle(_hiddenClass, !value);
+        _element.classList.toggle(_hideClass, !value);
+        _element.classList.toggle(_hiddenClass, !value);
         _initialWritePending = false;
       });
     }
@@ -83,9 +95,9 @@ class ShowHideDirective implements OnInit, OnDestroy {
   void _show() {
     _stopHiding();
     _domService.scheduleRead(() {
-      if (_initialWritePending || _element.classes.contains(_hiddenClass)) {
+      if (_initialWritePending || _element.classList.contains(_hiddenClass)) {
         _domService.scheduleWrite(() {
-          _element.classes.remove(_hiddenClass);
+          _element.classList.remove(_hiddenClass);
         });
         // remove the ng-hide class in the next event loop, so that effects of
         // removing acx-showhide-hidden can settle (like changing display from
@@ -102,7 +114,7 @@ class ShowHideDirective implements OnInit, OnDestroy {
   void _removeNgHide() {
     if (_hiding) return;
     _domService.scheduleWrite(() {
-      _element.classes.remove(_hideClass);
+      _element.classList.remove(_hideClass);
       _onShow.add(_element);
     });
     _onTransitionEnd(() {
@@ -135,7 +147,7 @@ class ShowHideDirective implements OnInit, OnDestroy {
   void _hide() {
     _hiding = true;
     _domService.scheduleWrite(() {
-      _element.classes.add(_hideClass);
+      _element.classList.add(_hideClass);
       _onHide.add(_element);
     });
     _onTransitionEnd(_hideIfHiding);
@@ -146,7 +158,7 @@ class ShowHideDirective implements OnInit, OnDestroy {
   void _hideIfHiding() {
     if (_hiding) {
       _domService.scheduleWrite(() {
-        _element.classes.add(_hiddenClass);
+        _element.classList.add(_hiddenClass);
       });
       _onHideEnd.add(_element);
       _hiding = false;
@@ -158,8 +170,9 @@ class ShowHideDirective implements OnInit, OnDestroy {
     _hiding = false;
   }
 
-  static int _transitionDurationMs(Element element) {
-    String duration = element.getComputedStyle().transitionDuration;
+  static int _transitionDurationMs(web.Element element) {
+    String duration =
+        web.window.getComputedStyle(element).transitionDuration;
     if (duration.isEmpty) return 0;
 
     // TODO(google): remove this when

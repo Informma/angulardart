@@ -205,18 +205,18 @@ class _ClampedDateRange implements DatepickerDateRange {
   @override
   Date? get start {
     final date = _delegate.start;
-    return (date == null || (_min != null && _min! > date)) ? _min : date;
+    return (date == null || (_min != null && _min > date)) ? _min : date;
   }
 
   @override
   Date? get end {
     final date = _delegate.end;
-    return (date == null || (_max != null && _max! < date)) ? _max : date;
+    return (date == null || (_max != null && _max < date)) ? _max : date;
   }
 
   @override
   DatepickerDateRange? get next {
-    if (_max != null && _delegate.end != null && _delegate.end! > _max!) {
+    if (_max != null && _delegate.end != null && _delegate.end! > _max) {
       return null;
     }
     return _delegate.next?.clamp(min: _min, max: _max);
@@ -224,7 +224,7 @@ class _ClampedDateRange implements DatepickerDateRange {
 
   @override
   DatepickerDateRange? get prev {
-    if (_min != null && _delegate.start != null && _delegate.start! < _min!) {
+    if (_min != null && _delegate.start != null && _delegate.start! < _min) {
       return null;
     }
     return _delegate.prev?.clamp(min: _min, max: _max);
@@ -569,7 +569,7 @@ class WeekRange implements DatepickerDateRange {
   proto.DatepickerDateRange toProtoBuf() {
     var result = _makeProtoBuf(this)..weeksAgo = _ago;
     if (_startWeekday != null) {
-      result.startWeekday = _startWeekday!;
+      result.startWeekday = _startWeekday;
     }
     return result;
   }

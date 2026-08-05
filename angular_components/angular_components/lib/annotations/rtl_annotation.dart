@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 
@@ -15,9 +15,9 @@ import 'package:angulardart/angulardart.dart';
 const rtlToken = OpaqueToken('isRtl');
 
 const rtlProvider =
-    FactoryProvider.forToken(rtlToken, determineRtl, deps: [Document]);
+    FactoryProvider.forToken(rtlToken, determineRtl, deps: [web.Document]);
 
 @Injectable()
-bool determineRtl(Document document) =>
-    document.documentElement?.dir == 'rtl' ||
-    (document as HtmlDocument).body?.dir == 'rtl';
+bool determineRtl(web.Document document) =>
+    document.documentElement?.getAttribute('dir') == 'rtl' ||
+    document.body?.getAttribute('dir') == 'rtl';

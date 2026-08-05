@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/keyboard_only_focus_indicator.dart';
@@ -13,6 +14,8 @@ import 'package:angulardart_components/utils/browser/dom_service/dom_service.dar
 import 'package:angulardart_components/utils/browser/events/events.dart';
 import 'package:angulardart_components/utils/color/color.dart';
 import 'package:angulardart_components/utils/color/material_chart_colors.dart';
+
+const int _keyCodeEnter = 13;
 
 /// Standalone scorecard component.
 ///
@@ -49,7 +52,7 @@ class ScorecardComponent extends KeyboardOnlyFocusIndicatorDirective {
   bool _selectable = false;
 
   final ChangeDetectorRef _changeDetector;
-  final HtmlElement element;
+  final web.HTMLElement element;
   ScorecardComponent(this._changeDetector, this.element, DomService domService)
       : super(element, domService);
 
@@ -181,9 +184,9 @@ class ScorecardComponent extends KeyboardOnlyFocusIndicatorDirective {
   }
 
   @HostListener('keypress')
-  void handleKeypress(KeyboardEvent event) {
+  void handleKeypress(web.KeyboardEvent event) {
     int keyCode = event.keyCode;
-    if (selectable && (keyCode == KeyCode.ENTER || isSpaceKey(event))) {
+    if (selectable && (keyCode == _keyCodeEnter || isSpaceKey(event))) {
       event.preventDefault();
       handleClick();
     }

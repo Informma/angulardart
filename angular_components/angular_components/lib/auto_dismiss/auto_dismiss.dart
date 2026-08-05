@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/utils/browser/events/events.dart';
@@ -36,7 +37,7 @@ class AutoDismissDirective {
   final Stream _dismissEvents;
   final NgZone _zone;
 
-  AutoDismissDirective(HtmlElement element, this._zone)
+  AutoDismissDirective(web.HTMLElement element, this._zone)
       : _dismissEvents = triggersOutside(element);
 
   bool _ignoreEvents = false;

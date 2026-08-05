@@ -3,8 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 import 'dart:math';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -293,7 +294,7 @@ abstract class ForcedScrollDirectiveHost {
   selector: '[imperativelyScrollable]',
 )
 class ForcedScrollDirective {
-  final HtmlElement _element;
+  final web.HTMLElement _element;
   final DomService _domService;
 
   ForcedScrollDirective(

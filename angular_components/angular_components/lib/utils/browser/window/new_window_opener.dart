@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 
@@ -17,10 +17,11 @@ class NewWindowOpener {
 /// Gives a hint to Chrome that it should open the given link in a separate
 /// process.
 void openInNewWindow(String url) {
-  var anchorElement = AnchorElement(href: url)
+  var anchorElement = web.HTMLAnchorElement()
+    ..href = url
     ..rel = 'noopener noreferrer'
     ..target = '_blank';
-  document.body!.append(anchorElement);
+  web.document.body!.append(anchorElement);
   anchorElement.click();
   anchorElement.remove();
 }

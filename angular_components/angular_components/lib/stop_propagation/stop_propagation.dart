@@ -2,40 +2,40 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/utils/browser/events/events.dart';
 
-/// A directive that prevents button trigger events from propagating.
-///
-/// Events will trigger on the target component but will be prevented from
-/// bubbling up to parent elements.
-/// https://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-flow-bubbling
 @Directive(
   selector: '[stopPropagation]',
 )
 class StopPropagationDirective implements OnDestroy {
-  StreamSubscription? _clickSubscription, _keyPressSubscription;
+  late final web.EventListener _clickHandler;
+  late final web.EventListener _keyPressHandler;
+  final web.Element _element;
 
-  StopPropagationDirective(Element e) {
-    _clickSubscription = e.onClick.listen(_handleClick);
-    _keyPressSubscription = e.onKeyPress.listen(_handleKeyPress);
+  StopPropagationDirective(this._element) {
+    _clickHandler = _handleClick.toJS;
+    _keyPressHandler = _handleKeyPress.toJS;
+    _element.addEventListener('click', _clickHandler);
+    _element.addEventListener('keypress', _keyPressHandler);
   }
 
   @override
   void ngOnDestroy() {
-    _clickSubscription?.cancel();
-    _keyPressSubscription?.cancel();
+    _element.removeEventListener('click', _clickHandler);
+    _element.removeEventListener('keypress', _keyPressHandler);
   }
 
-  void _handleClick(MouseEvent e) {
+  void _handleClick(web.MouseEvent e) {
     e.stopPropagation();
   }
 
-  void _handleKeyPress(KeyboardEvent e) {
-    if (e.keyCode == KeyCode.ENTER || isSpaceKey(e)) {
+  void _handleKeyPress(web.KeyboardEvent e) {
+    if (e.keyCode == 13 || isSpaceKey(e)) {
       e.stopPropagation();
     }
   }

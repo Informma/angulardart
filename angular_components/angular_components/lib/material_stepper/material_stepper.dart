@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -108,7 +109,7 @@ class MaterialStepperComponent {
     return _stepTo(index);
   }
 
-  void stepForward(Event event, StepDirective step) {
+  void stepForward(web.Event event, StepDirective step) {
     // Prevent event from propagating up to the stepper.  This
     // is necessary for a vertical default sized stepper with
     // all jumps allowed, so that the stepper doesn't jump back
@@ -128,7 +129,7 @@ class MaterialStepperComponent {
     });
   }
 
-  void stepBackward(Event event, StepDirective step) {
+  void stepBackward(web.Event event, StepDirective step) {
     // Prevent event from propagating up to the stepper.  This
     // is necessary for a vertical default sized stepper with
     // all jumps allowed, so that the stepper doesn't jump back
@@ -208,7 +209,7 @@ class MaterialStepperComponent {
   /// This is helpful for ensuring that animations don't go above or behind
   /// the stepper.
   @ViewChild('stepper')
-  late HtmlElement stepperNativeElement;
+  late web.HTMLElement stepperNativeElement;
 
   /// Because of the button decorator enclosing the inline portal eats up
   /// SPACE and ENTER key-presses (by preventing the default on them),
@@ -223,9 +224,9 @@ class MaterialStepperComponent {
   /// behaviour of the SPACE or ENTER key-press (example: a material-input,)
   /// those components won't behave as expected (example: can't type a space
   /// in a material-input, or a new-line in multiline material input.)
-  void stopPropagationOfEnterAndSpace(KeyboardEvent keyboardEvent) {
+  void stopPropagationOfEnterAndSpace(web.KeyboardEvent keyboardEvent) {
     int keyCode = keyboardEvent.keyCode;
-    if (keyCode == KeyCode.ENTER || isSpaceKey(keyboardEvent)) {
+    if (keyCode == 13 || isSpaceKey(keyboardEvent)) {
       keyboardEvent.stopPropagation();
     }
   }

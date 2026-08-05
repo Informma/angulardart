@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 import 'dart:math' show min, max;
 
+import 'package:web/web.dart' as web;
 import 'package:angulardart_components/utils/angular/scroll_host/interface.dart';
 import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
 
@@ -19,8 +19,8 @@ class StickyControllerImpl implements StickyController {
 
   StreamSubscription? _layoutSubscription;
 
-  final _rowMap = <Element, _StickyRow>{};
-  final Set<Element> _floatingElements = {};
+  final _rowMap = <web.Element, _StickyRow>{};
+  final Set<web.Element> _floatingElements = {};
 
   /// The ordered list of rows, based on their position. The order will be
   /// cached between layout checks, unless there was a register or an unregister
@@ -31,7 +31,7 @@ class StickyControllerImpl implements StickyController {
   StickyControllerImpl(this._domService, this._scrollHost);
 
   @override
-  void stick(Element element, StickyPosition position, Element range,
+  void stick(web.Element element, StickyPosition position, web.Element range,
       {String? stickyClass, String? stickyKey}) {
     _StickyRow? row = _rowMap[element];
     // if the definition's key fields are the same, assume that nothing changed
@@ -48,7 +48,7 @@ class StickyControllerImpl implements StickyController {
   }
 
   @override
-  void unstick(Element element) {
+  void unstick(web.Element element) {
     // clearing ordered row cache for both register and unregister
     _orderedRows = null;
     _StickyRow? row = _rowMap.remove(element);
@@ -66,13 +66,13 @@ class StickyControllerImpl implements StickyController {
   }
 
   @override
-  void trackFloating(Element element) {
+  void trackFloating(web.Element element) {
     _floatingElements.add(element);
     _scheduleLayoutCheck();
   }
 
   @override
-  void untrackFloating(Element element) {
+  void untrackFloating(web.Element element) {
     _floatingElements.remove(element);
     _scheduleLayoutCheck();
   }
@@ -89,8 +89,8 @@ class StickyControllerImpl implements StickyController {
   @override
   void dispose() {
     if (_rowMap.isNotEmpty) {
-      List<Element> toRemove = List.from(_rowMap.keys);
-      for (Element element in toRemove) {
+      List<web.Element> toRemove = List.from(_rowMap.keys);
+      for (web.Element element in toRemove) {
         unstick(element);
       }
     }
@@ -128,11 +128,11 @@ class StickyControllerImpl implements StickyController {
   /// Each element is compared to the top or bottom border of the current area,
   /// and will be assumed to belong to the closer one. The area will be reduced
   /// to exclude the element's area on their respective border.
-  Rectangle _getAvailableArea() {
-    Rectangle hostRect = _scrollHost.calcViewportRect();
+  web.DOMRect _getAvailableArea() {
+    web.DOMRect hostRect = _scrollHost.calcViewportRect();
     // assuming that floating elements are either at the top or at the bottom
-    for (Element element in _floatingElements) {
-      Rectangle rect = element.getBoundingClientRect();
+    for (web.Element element in _floatingElements) {
+      web.DOMRect rect = element.getBoundingClientRect();
       num rectMiddle = rect.top + (rect.height / 2.0);
       num topDistance = (hostRect.top - rectMiddle).abs();
       num bottomDistance = (hostRect.bottom - rectMiddle).abs();
@@ -141,24 +141,24 @@ class StickyControllerImpl implements StickyController {
         num newHeight = hostRect.bottom - newTop;
         if ((newTop != hostRect.top) && (newHeight > 0)) {
           hostRect =
-              Rectangle(hostRect.left, newTop, hostRect.width, newHeight);
+              web.DOMRect(hostRect.left, newTop, hostRect.width, newHeight);
         }
       } else {
         num newBottom = min(hostRect.bottom, rect.top);
         num newHeight = newBottom - hostRect.top;
         if ((newBottom != hostRect.bottom) && (newHeight > 0)) {
           hostRect =
-              Rectangle(hostRect.left, hostRect.top, hostRect.width, newHeight);
+              web.DOMRect(hostRect.left, hostRect.top, hostRect.width, newHeight);
         }
       }
     }
-    return Rectangle(
+    return web.DOMRect(
         hostRect.left, hostRect.top, hostRect.width, hostRect.height);
   }
 
   StickyContainerLayout<_StickyRow> _getLayout() {
     _observeRowPositions();
-    Rectangle hostPosition = _getAvailableArea();
+    web.DOMRect hostPosition = _getAvailableArea();
 
     return StickyRowUtils.calculateLayout<_StickyRow>(
         hostPosition, _orderedRows!,
@@ -225,23 +225,23 @@ class StickyControllerImpl implements StickyController {
 /// Interface to make testing easier
 abstract class StickyRowPosition {
   String? get stickyKey;
-  Rectangle get rowPosition;
-  Rectangle? get rangePosition;
+  web.DOMRect get rowPosition;
+  web.DOMRect? get rangePosition;
   bool get isTop;
   bool get isBottom;
 }
 
 class _StickyRow implements StickyRowPosition {
-  final Element element;
+  final web.Element element;
   final StickyPosition position;
-  final Element range;
+  final web.Element range;
   final String? stickyClass;
   final String? _stickyKey;
 
   @override
-  late Rectangle rowPosition;
+  late web.DOMRect rowPosition;
   @override
-  Rectangle? rangePosition;
+  web.DOMRect? rangePosition;
   String _currentPosition = '';
   String _currentTransform = '';
   String _currentZIndex = '';
@@ -273,7 +273,7 @@ class _StickyRow implements StickyRowPosition {
   /// Observes the position of the row's Element and its range.
   void readRowPositions() {
     rowPosition = element.getBoundingClientRect();
-    rowPosition = Rectangle(rowPosition.left, rowPosition.top - translateY,
+    rowPosition = web.DOMRect(rowPosition.left, rowPosition.top - translateY,
         rowPosition.width, rowPosition.height);
     rangePosition = range.getBoundingClientRect();
   }
@@ -284,20 +284,20 @@ class _StickyRow implements StickyRowPosition {
     if (translateY == 0) return;
     translateY = 0;
     if (_currentTransform != '' || _currentZIndex != '') {
-      element.style
+      (element as web.HTMLElement).style
         ..transform = ''
         ..zIndex = '';
     }
     _currentTransform = '';
     _currentZIndex = '';
-    if (stickyClass != null) element.classes.toggle(stickyClass!, false);
+    if (stickyClass != null) element.classList.toggle(stickyClass!, false);
   }
 
   /// Completely resets the row's position and styling (expensive in Firefox).
   void resetTop() {
     softResetTop();
     if (_currentPosition != '') {
-      element.style.position = '';
+      (element as web.HTMLElement).style.position = '';
       _currentPosition = '';
     }
   }
@@ -312,7 +312,7 @@ class _StickyRow implements StickyRowPosition {
       if (_currentPosition != 'relative' ||
           _currentTransform != newTransform ||
           _currentZIndex != newZIndex) {
-        element.style
+        (element as web.HTMLElement).style
           ..position = 'relative'
           ..transform = newTransform
           ..zIndex = newZIndex;
@@ -320,7 +320,7 @@ class _StickyRow implements StickyRowPosition {
         _currentTransform = newTransform;
         _currentZIndex = newZIndex;
       }
-      if (stickyClass != null) element.classes.toggle(stickyClass!, true);
+      if (stickyClass != null) element.classList.toggle(stickyClass!, true);
     }
   }
 
@@ -362,7 +362,7 @@ class RowData<T> {
 /// bottom, or keep hidden.
 class StickyContainerLayout<T> {
   /// The host's visible area
-  late Rectangle hostPosition;
+  late web.DOMRect hostPosition;
 
   /// Rows that should stick to the top.
   List<RowData<T>>? topRows;
@@ -433,7 +433,7 @@ abstract class StickyRowUtils {
 
   /// Whether the row should stick or not, given the surrounding.
   static bool shouldStick(bool isTop, num hostTop, num hostBottom,
-      Rectangle rowPosition, Rectangle? rangePosition) {
+      web.DOMRect rowPosition, web.DOMRect? rangePosition) {
     if (rowPosition.height == 0) {
       return false;
     }
@@ -465,7 +465,7 @@ abstract class StickyRowUtils {
   /// Decides what rows should be on top, on bottom, or be hidden (inlined),
   /// and computes an additional offset for top/bottom rows.
   static StickyContainerLayout<T> calculateLayout<T extends StickyRowPosition>(
-      Rectangle hostPosition, List<T> rows,
+      web.DOMRect hostPosition, List<T> rows,
       {bool enableSmoothPushing = false}) {
     num hostTop = hostPosition.top;
     num hostBottom = hostPosition.bottom;

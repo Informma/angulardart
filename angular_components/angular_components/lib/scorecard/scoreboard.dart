@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -200,7 +201,7 @@ class ScoreboardComponent implements OnInit, OnDestroy {
   /// the end of the scorecard overlaps with the scroll arrow, it'll hover over
   /// the scorecard without affecting the transform. This is not the case for
   /// vertical score cards, therefore we need to look for the bottom.
-  int _scorecardOffset(HtmlElement element) {
+  int _scorecardOffset(web.HTMLElement element) {
     return isVertical
         ? element.offsetTop + element.offsetHeight
         : element.offsetLeft;
@@ -241,7 +242,7 @@ class ScoreboardComponent implements OnInit, OnDestroy {
   }
 
   void _makeScorecardsUniformWidth() {
-    List<HtmlElement> scorecardsElem = _scorecards
+    List<web.HTMLElement> scorecardsElem = _scorecards
         .map((ScorecardComponent scorecard) => scorecard.element)
         .toList();
 
@@ -253,8 +254,8 @@ class ScoreboardComponent implements OnInit, OnDestroy {
       }
       _disposer.addDisposable(_domService.scheduleRead(() {
         for (var element in scorecardsElem) {
-          var elemWidth = element
-              .getComputedStyle()
+          var elemWidth = web.window
+              .getComputedStyle(element)
               .width
               .replaceAll(RegExp('[^0-9.]'), '');
           var elemWidthValue =

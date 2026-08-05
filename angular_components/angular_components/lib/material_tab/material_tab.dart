@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/content/deferred_content_aware.dart';
@@ -52,7 +53,7 @@ class MaterialTabComponent extends RootFocusable
   final String _uuid;
   final _visible = StreamController<bool>.broadcast(sync: true);
 
-  MaterialTabComponent(HtmlElement super.element, @Optional() IdGenerator? idGenerator)
+  MaterialTabComponent(web.HTMLElement super.element, @Optional() IdGenerator? idGenerator)
       : _uuid = (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId();
 
   /// The label for this tab.

@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html' as dom;
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
-import 'package:js/js_util.dart' as js_util;
 import 'package:angulardart_components/laminate/components/modal/modal.dart';
 import 'package:angulardart_components/laminate/popup/popup.dart';
 import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
@@ -18,16 +18,12 @@ import 'package:angulardart_components/utils/browser/dom_service/dom_service.dar
 /// not hovering over it.
 @Directive(selector: '[itemActive]')
 class ActiveItemDirective implements AfterViewInit, OnDestroy {
-  /// Dom element of the item, that will be scrolled to view on activate.
-  final dom.HtmlElement _element;
+  final web.HTMLElement _element;
 
-  /// An instance of DomService, used to coordinate scrolling.
   final DomService _domService;
 
-  /// Parent modal if any.
   final Modal? _modal;
 
-  /// Parent popup if any.
   final PopupRef? _popupRef;
 
   bool _active = false;
@@ -36,7 +32,6 @@ class ActiveItemDirective implements AfterViewInit, OnDestroy {
 
   StreamSubscription? _visibilitySubscription;
 
-  /// Whether the element is active.
   @HostBinding('class.active')
   bool get active => _active;
 
@@ -55,7 +50,6 @@ class ActiveItemDirective implements AfterViewInit, OnDestroy {
     _scrollIntoViewIfNecessary();
   }
 
-  /// Marks item as active from keyboard selection.
   @Input()
   set itemActive(bool value) {
     if (value == _active) return;
@@ -70,15 +64,15 @@ class ActiveItemDirective implements AfterViewInit, OnDestroy {
 
     if (_shouldScrollIntoView) {
       var isVisible = _popupRef != null
-          ? _popupRef!.isVisible
+          ? _popupRef.isVisible
           : _modal != null
-              ? _modal!.visible
+              ? _modal.visible
               : true;
       if (isVisible) {
         _scrollIntoView();
       } else {
         var onVisibleChanged = _popupRef != null
-            ? _popupRef!.onVisibleChanged
+            ? _popupRef.onVisibleChanged
             : _modal!.onVisibleChanged;
         _visibilitySubscription = onVisibleChanged.listen((isVisible) {
           if (isVisible) {
@@ -95,17 +89,14 @@ class ActiveItemDirective implements AfterViewInit, OnDestroy {
   void _scrollIntoView() {
     _domService.scheduleWrite(() {
       try {
-        var options = js_util.newObject();
-        js_util.setProperty(options, 'block', 'nearest');
-        js_util.setProperty(options, 'inline', 'nearest');
-        js_util.callMethod(_element, 'scrollIntoView', [options]);
+        _element.scrollIntoView(
+            web.ScrollIntoViewOptions(block: 'nearest', inline: 'nearest'));
       } catch (_) {
         _element.scrollIntoView();
       }
     });
   }
 
-  /// Whether the element has hover.
   bool _hasHover = false;
 
   @HostListener('mouseenter')

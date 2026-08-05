@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/content/deferred_content.dart';
@@ -35,7 +35,7 @@ import 'package:angulardart_components/utils/angular/css/css.dart';
     styleUrls: ['menu_popup.scss.css'],
     changeDetection: ChangeDetectionStrategy.OnPush)
 class MenuPopupComponent extends Object with FocusableMixin, MenuPopupWrapper {
-  HtmlElement element;
+  web.HTMLElement element;
 
   @Input()
   PopupSource? popupSource;
@@ -46,7 +46,7 @@ class MenuPopupComponent extends Object with FocusableMixin, MenuPopupWrapper {
   /// be used to select DOM elements within the overlay when the popup is open.
   @Input()
   set popupClass(String value) {
-    _popupClass = constructEncapsulatedCss(value, element.classes);
+    _popupClass = constructEncapsulatedCss(value, element.classList);
   }
 
   String get popupClass => _popupClass ?? '';

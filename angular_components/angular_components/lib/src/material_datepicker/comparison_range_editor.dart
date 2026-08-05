@@ -62,7 +62,7 @@ class ComparisonRangeEditorComponent {
       // When users turn on toggle, scrolls to the end to make
       // comparison options discoverable.
       _ngZone.runAfterChangesObserved(
-          () => _scrollHost?.scrollToPosition(_scrollHost!.scrollLength));
+          () => _scrollHost.scrollToPosition(_scrollHost.scrollLength));
     }
   }
 

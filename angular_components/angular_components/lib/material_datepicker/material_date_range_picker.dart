@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -212,7 +213,7 @@ class MaterialDateRangePickerComponent
   /// Whether to enable compact calendar styles.
   @Input()
   @HostBinding('class.compact')
-  bool compact = !window.matchMedia("(pointer: coarse)").matches;
+  bool compact = !web.window.matchMedia("(pointer: coarse)").matches;
 
   /// For date range selection, whether clicking to move the start date should
   /// also move the end date (preserving the length of the selected range).
@@ -406,12 +407,12 @@ class MaterialDateRangePickerComponent
       Clock legacyClock,
       @Optional() DatepickerConfig? config,
       @Attribute('popupClass') String popupClass,
-      @Optional() @SkipSelf() this._popupSizeProvider,
-      HtmlElement element,
-      this._domService,
-      this._ngZone)
+       @Optional() @SkipSelf() this._popupSizeProvider,
+       web.HTMLElement element,
+       this._domService,
+       this._ngZone)
       : _config = config ?? DatepickerConfig(),
-        popupClassName = constructEncapsulatedCss(popupClass, element.classes) {
+        popupClassName = constructEncapsulatedCss(popupClass, element.classList) {
     // TODO(google): Migrate to use only datepickerClock
     clock ??= legacyClock;
 
@@ -568,7 +569,7 @@ class MaterialDateRangePickerComponent
     applyBarVisible = b;
   }
 
-  void onRangeClicked(UIEvent event) {
+  void onRangeClicked(web.UIEvent event) {
     // Close eagerly for preset ranges and the cleared range.
     final shouldCloseEagerly = _isPreset(model.value!) ||
         (model.value!.range == null && model.value!.comparison == null);
@@ -579,7 +580,7 @@ class MaterialDateRangePickerComponent
     }
   }
 
-  void apply(UIEvent event) {
+  void apply(web.UIEvent event) {
     _isApplying = true;
     selection.value = model.value;
     close();
@@ -587,7 +588,7 @@ class MaterialDateRangePickerComponent
   }
 
   @visibleForTemplate
-  void applyAndPreventDefault(UIEvent event) {
+  void applyAndPreventDefault(web.UIEvent event) {
     apply(event);
     event.preventDefault();
   }
@@ -601,7 +602,7 @@ class MaterialDateRangePickerComponent
   }
 
   @visibleForTemplate
-  void cancelAndPreventDefault(UIEvent event) {
+  void cancelAndPreventDefault(web.UIEvent event) {
     cancel();
     event.preventDefault();
   }

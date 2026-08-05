@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html' show KeyCode, KeyboardEvent, Element, HtmlElement;
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:meta/meta.dart';
@@ -19,18 +21,13 @@ export 'focus_interface.dart';
 /// A class for components to extend if their programmatic focus
 /// should simply put focus on root element.
 class RootFocusable implements Focusable, Disposable {
-  Element? _root;
+  web.HTMLElement? _root;
   RootFocusable(this._root);
 
   @override
   void focus() {
     if (_root == null) return;
-    // if element does not have positive tab index attribute already specified
-    // or is native element.
-    // NOTE: even for elements with tab index unspecified it will return
-    // tabIndex as "-1" and we have to set it to "-1"
-    // to actually make it focusable.
-    if (_root!.tabIndex! < 0) {
+    if (_root!.tabIndex < 0) {
       _root!.tabIndex = -1;
     }
     _root!.focus();
@@ -53,11 +50,11 @@ abstract class ProjectedFocus implements Focusable {
       return;
     }
     focusDelegate.then((delegate) {
-      assert(delegate is Focusable || delegate is Element);
+      assert(delegate is Focusable || (delegate as Object?).isA<web.Element>());
       if (delegate is Focusable) {
         _resolvedFocusable = delegate;
       } else {
-        _resolvedFocusable = RootFocusable(delegate as Element);
+        _resolvedFocusable = RootFocusable(delegate as web.HTMLElement);
       }
       _resolvedFocusable!.focus();
     });
@@ -96,7 +93,7 @@ class FocusMoveEvent {
   /// of the `KeyboardEvent`, allowing consumers of this event to control the
   /// underlying DOM event.
   void preventDefault() {
-    if (_preventDefaultDelegate != null) _preventDefaultDelegate!();
+    if (_preventDefaultDelegate != null) _preventDefaultDelegate();
   }
 
   final Function? _preventDefaultDelegate;
@@ -131,7 +128,7 @@ class FocusMoveEvent {
   /// Builds a `FocusMoveEvent` instance from a keyboard event, iff the keycode
   /// is a next, previous, home or end key (i.e. up/down/left/right/home/end).
   static FocusMoveEvent? fromKeyboardEvent(
-      FocusableItem item, KeyboardEvent kbEvent) {
+      FocusableItem item, web.KeyboardEvent kbEvent) {
     int keyCode = kbEvent.keyCode;
     void preventDefaultFn() {
       kbEvent.preventDefault();
@@ -145,7 +142,7 @@ class FocusMoveEvent {
     if (!_isNextKey(keyCode) && !_isPrevKey(keyCode)) return null;
 
     int offset = _isNextKey(keyCode) ? 1 : -1;
-    if (keyCode == KeyCode.UP || keyCode == KeyCode.DOWN) {
+    if (keyCode == 38 || keyCode == 40) {
       return FocusMoveEvent.upDownKey(item, offset, preventDefaultFn);
     }
 
@@ -154,11 +151,11 @@ class FocusMoveEvent {
 
   // TODO(google): account for RTL.
   static bool _isNextKey(int keyCode) =>
-      keyCode == KeyCode.RIGHT || keyCode == KeyCode.DOWN;
+      keyCode == 39 || keyCode == 40;
   static bool _isPrevKey(int keyCode) =>
-      keyCode == KeyCode.LEFT || keyCode == KeyCode.UP;
-  static bool _isHomeKey(int keyCode) => keyCode == KeyCode.HOME;
-  static bool _isEndKey(int keyCode) => keyCode == KeyCode.END;
+      keyCode == 37 || keyCode == 38;
+  static bool _isHomeKey(int keyCode) => keyCode == 36;
+  static bool _isEndKey(int keyCode) => keyCode == 35;
 }
 
 /// The element will be focused as soon as directive is initialized.
@@ -178,7 +175,7 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
   PopupRef? _popupRef;
 
   AutoFocusDirective(
-      HtmlElement super.node,
+      web.HTMLElement super.node,
       this._domService,
       @Self() @Optional() this._focusable,
       @Optional() this._modal,
@@ -248,5 +245,5 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
     exportAs: 'focusableElement',
     providers: [ExistingProvider(Focusable, FocusableDirective)])
 class FocusableDirective extends RootFocusable {
-  FocusableDirective(HtmlElement super.node);
+  FocusableDirective(web.HTMLElement super.node);
 }

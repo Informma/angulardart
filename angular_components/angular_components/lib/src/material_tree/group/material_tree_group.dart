@@ -2,7 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -126,12 +128,12 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T>
     return '${padding}px';
   }
 
-  void handleExpansion(Event e, T option) {
+  void handleExpansion(web.Event e, T option) {
     toggleExpansion(option);
     e.stopPropagation();
   }
 
-  void handleSelectionOrExpansion(Event e, T option) {
+  void handleSelectionOrExpansion(web.Event e, T option) {
     if (!isExpandable(option) && isSelectable(option) ||
         (allowParentSingleSelection && isSelectable(option)) ||
         (allowParentMultiSelection && isSelectable(option))) {
@@ -144,7 +146,7 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T>
 
       if (isMultiSelect &&
           previouslyToggledNode != null &&
-          (e is MouseEvent && e.shiftKey)) {
+          (e.isA<web.MouseEvent>() && (e as web.MouseEvent).shiftKey)) {
         toggleSelectionRangeInclusive(
             previouslyToggledNode as T, option, isSelected(previouslyToggledNode as T));
       }
@@ -183,7 +185,7 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T>
   }
 
   /// Toggles on the collapsed options.
-  void viewMoreOptions(Event event) {
+  void viewMoreOptions(web.Event event) {
     event.preventDefault();
     event.stopImmediatePropagation();
 

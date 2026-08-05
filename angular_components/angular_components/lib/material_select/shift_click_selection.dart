@@ -2,7 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 import 'dart:math';
 
 import 'package:angulardart_components/material_select/activation_handler.dart';
@@ -27,7 +29,7 @@ abstract mixin class ShiftClickSelectionMixin<T>
   /// previously clicked value are set to the new state. As a result if the
   /// value you shift-click was previously selected all values in the range will
   /// become unselected.
-  void _handleClick(MouseEvent e, T value) {
+  void _handleClick(web.MouseEvent e, T value) {
     var toggleSelection =
         selection.isSelected(value) ? selection.deselect : selection.select;
     if (_pivot == null || !e.shiftKey) {
@@ -47,16 +49,16 @@ abstract mixin class ShiftClickSelectionMixin<T>
     _pivot = value;
   }
 
-  /// Handles updating the selection model from [MouseEvent] activations.
+  /// Handles updating the selection model from [web.MouseEvent] activations.
   ///
-  /// If [event] is not a [MouseEvent] it will not be handled. This method
+  /// If [event] is not a [web.MouseEvent] it will not be handled. This method
   /// does handle mouse events even if shift is not held down.
   @override
-  bool handle(UIEvent event, dynamic activatedValue) {
-    if (selection is! MultiSelectionModel || event is! MouseEvent) return false;
+  bool handle(web.UIEvent event, dynamic activatedValue) {
+    if (selection is! MultiSelectionModel || !event.isA<web.MouseEvent>()) return false;
     // The deselect label is never shown with a MultiSelectionModel, so it's
     // safe to assume activatedValue is of type T at this point.
-    _handleClick(event, activatedValue as T);
+    _handleClick(event as web.MouseEvent, activatedValue as T);
     return true;
   }
 }

@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/content/deferred_content.dart';
@@ -130,12 +132,12 @@ class MaterialFabMenuComponent extends Object
 
   /// Keypress callback is used to handle UP and DOWN keys.
   @override
-  void handleUpKey(KeyboardEvent event) {
+  void handleUpKey(web.KeyboardEvent event) {
     _trigger(activateLastItem: true);
   }
 
   @override
-  void handleDownKey(KeyboardEvent event) {
+  void handleDownKey(web.KeyboardEvent event) {
     _trigger(activateFirstItem: true);
   }
 
@@ -157,10 +159,10 @@ class MaterialFabMenuComponent extends Object
     _hideMenuContent();
   }
 
-  void trigger(Event event) {
+  void trigger(web.Event event) {
     _trigger(
         activateFirstItem:
-            event is KeyboardEvent || _isLikelyScreenReader(event));
+            event.isA<web.KeyboardEvent>() || _isLikelyScreenReader(event));
   }
 
   void hideMenu() {
@@ -188,10 +190,11 @@ class MaterialFabMenuComponent extends Object
   /// events. Even if the user hits `Enter` or `Space` on a button, the event
   /// that's dispatched may be a MouseEvent. This method tries to see if the
   /// mouse event was triggered by the accessibility api.
-  bool _isLikelyScreenReader(Event event) {
-    return event is MouseEvent && event.client.x == 0 && event.client.y == 0;
+  bool _isLikelyScreenReader(web.Event event) {
+    if (!event.isA<web.MouseEvent>()) return false;
+    final mouseEvent = event as web.MouseEvent;
+    return mouseEvent.clientX == 0 && mouseEvent.clientY == 0;
   }
-
   final tooltipPositions = const <RelativePosition>[
     RelativePosition.adjacentRight,
     RelativePosition.adjacentLeft,

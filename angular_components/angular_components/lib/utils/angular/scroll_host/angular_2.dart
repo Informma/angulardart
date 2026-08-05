@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/src/utils/angular/scroll_host/scroll_host_base.dart';
@@ -44,7 +45,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   final DomService _domService;
   final NgZone _ngZone;
   @override
-  final HtmlElement element;
+  final web.HTMLElement element;
   final GestureListenerFactory _gestureListenerFactory;
 
   // This is sync to reduce the time between StickyController writing to the
@@ -163,7 +164,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   }
 
   @override
-  Rectangle calcViewportRect() => _scrollHost!.calcViewportRect();
+  web.DOMRect calcViewportRect() => _scrollHost!.calcViewportRect();
 
   @override
   void scrollToPosition(int position) =>
@@ -194,7 +195,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   bool get throttleScrollEvents => _scrollHost!.throttleScrollEvents;
 
   @override
-  GlobalEventHandlers get scrollbarHost => _scrollHost!.scrollbarHost;
+  web.EventTarget get scrollbarHost => _scrollHost!.scrollbarHost;
 
   @override
   int get clientWidth => _scrollHost!.clientWidth;
@@ -206,7 +207,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   num get offsetY => _scrollHost!.offsetY;
 
   @override
-  Element get anchorElement => _scrollHost!.anchorElement;
+  web.Element get anchorElement => _scrollHost!.anchorElement;
 
   @override
   Stream<ScrollHostEvent> get onScroll => _scrollHost!.onScroll;
@@ -224,7 +225,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   int get scrollPosition => _scrollHost!.scrollPosition;
 
   @override
-  Stream<IntersectionObserverEntry> onIntersection(Element element) =>
+  Stream<web.IntersectionObserverEntry> onIntersection(web.Element element) =>
       _scrollHost!.onIntersection(element);
 
   @override
@@ -233,7 +234,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   }
 
   @override
-  void stopEvent(WheelEvent event) => _scrollHost!.stopEvent(event);
+  void stopEvent(web.WheelEvent event) => _scrollHost!.stopEvent(event);
 }
 
 /// Provides a scroll host that uses the browser window content area.
@@ -258,7 +259,7 @@ class WindowScrollHost extends WindowScrollHostBase implements OnDestroy {
 )
 class StickyFloatingTracker implements OnInit, OnDestroy {
   final ScrollHost _scrollHost;
-  final Element _element;
+  final web.Element _element;
 
   StickyFloatingTracker(this._scrollHost, this._element);
 
@@ -289,7 +290,7 @@ class StickyFloatingTracker implements OnInit, OnDestroy {
 class AcxPanClassDirective extends BasePanClassDirective
     implements OnInit, OnDestroy {
   AcxPanClassDirective(
-      super.domService, super.scrollHost, HtmlElement super.element);
+      super.domService, super.scrollHost, web.HTMLElement super.element);
 
   @override
   void ngOnInit() => startPanListener();
@@ -322,9 +323,9 @@ class AcxPanClassDirective extends BasePanClassDirective
   selector: '[acxStickyElement]',
 )
 class StickyElementDirective implements AfterViewInit, OnDestroy {
-  final Element _stickyElement;
+  final web.Element _stickyElement;
   final ScrollHost _scrollHost;
-  Element? _endElement;
+  web.Element? _endElement;
   String? _stickyClass;
   String? _stickyKey;
   bool _sticky = true;
@@ -334,7 +335,7 @@ class StickyElementDirective implements AfterViewInit, OnDestroy {
 
   /// The end element that determines the range of the sticky element.
   @Input('acxStickyElement')
-  set endElement(Element element) {
+  set endElement(web.Element element) {
     _endElement = element;
   }
 

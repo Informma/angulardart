@@ -1,3 +1,13 @@
+## 3.0.0
+
+- **BREAKING CHANGE**: Complete migration from `dart:html` to `package:web`
+  - 109 files migrated from `dart:html` to `package:web/web.dart`
+  - All DOM types converted to `web.*` equivalents (HtmlElement → web.HTMLElement, Element → web.Element, etc.)
+  - All DOM APIs migrated (element.classes → element.classList, stream-based event listeners → addEventListener, etc.)
+  - SDK constraint updated to `>=3.4.0 <4.0.0` to support `.isA<>()` API
+  - Full compatibility with AngularDart 9.x
+  - Zero errors, zero warnings, zero infos in `dart analyze`
+
 ## 2.1.0
 
 - fix: resolve all dart analyze warnings and info messages

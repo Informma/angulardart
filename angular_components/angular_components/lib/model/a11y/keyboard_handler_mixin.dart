@@ -2,49 +2,17 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart_components/utils/browser/events/events.dart';
 
-/// Callback to handle a keyboard event
-typedef KeyboardEventHandler = void Function(KeyboardEvent event);
+typedef KeyboardEventHandler = void Function(web.KeyboardEvent event);
 
-/// Base class for handling common key events implementing accessibility best
-/// practices.
-///
-/// Add onKeyPress, onKeyDown and onKeyUp event handlers to the event
-/// target and override the specific key handler methods in the view class.
-///
-/// Example:
-///   <button (keypress)="onKeyPress($event)"
-///           (keydown)="onKeyDown($event)"
-///           (keyup)="onKeyUp($event)"></button>
-///
-/// Dart:
-///   class ButtonComponent extends KeyboardHandlerMixin {
-///     @override
-///     handleEnterKey(KeyboardEvent event) {
-///       submit();
-///     }
-///     @override
-///     handleDownKey(KeyboardEvent event) {
-///       next();
-///     }
-///     @override
-///     handleEscapeKey(KeyboardEvent event) {
-///       close();
-///     }
-///   }
 mixin class KeyboardHandlerMixin {
-  /// Whether the direction of the component is RTL.
-  ///
-  /// When this value is true, the LEFT keycode is handled by handleRightKey,
-  /// and the RIGHT keycode is handled by handleLeftKey.
   bool isRtl = false;
 
-  /// Keypress callback used to handle enter and space keys.
-  void onKeyPress(KeyboardEvent event) {
-    if (event.keyCode == KeyCode.ENTER) {
+  void onKeyPress(web.KeyboardEvent event) {
+    if (event.keyCode == 13) {
       handleEnterKey(event);
     } else if (isSpaceKey(event)) {
       handleSpaceKey(event);
@@ -53,84 +21,80 @@ mixin class KeyboardHandlerMixin {
     }
   }
 
-  /// Keydown callback used to handle arrow keys.
-  void onKeyDown(KeyboardEvent event) {
+  void onKeyDown(web.KeyboardEvent event) {
     switch (event.keyCode) {
-      case KeyCode.UP:
+      case 38:
         handleUpKey(event);
         break;
-      case KeyCode.DOWN:
+      case 40:
         handleDownKey(event);
         break;
-      case KeyCode.LEFT:
+      case 37:
         if (isRtl == true) {
           handleRightKey(event);
         } else {
           handleLeftKey(event);
         }
         break;
-      case KeyCode.RIGHT:
+      case 39:
         if (isRtl == true) {
           handleLeftKey(event);
         } else {
           handleRightKey(event);
         }
         break;
-      case KeyCode.PAGE_UP:
+      case 33:
         handlePageUp(event);
         break;
-      case KeyCode.PAGE_DOWN:
+      case 34:
         handlePageDown(event);
         break;
-      case KeyCode.HOME:
+      case 36:
         handleHomeKey(event);
         break;
-      case KeyCode.END:
+      case 35:
         handleEndKey(event);
         break;
-      case KeyCode.BACKSPACE:
+      case 8:
         handleBackspaceKey(event);
         break;
-      case KeyCode.DELETE:
+      case 46:
         handleDeleteKey(event);
         break;
     }
   }
 
-  /// Keyup callback used to handle escape keys.
-  void onKeyUp(KeyboardEvent event) {
-    if (event.keyCode == KeyCode.ESC) {
+  void onKeyUp(web.KeyboardEvent event) {
+    if (event.keyCode == 27) {
       handleEscapeKey(event);
     }
   }
 
-  // Methods to override to implement keyboard navigation features.
+  void handleEnterKey(web.KeyboardEvent event) {}
 
-  void handleEnterKey(KeyboardEvent event) {}
+  void handleSpaceKey(web.KeyboardEvent event) {}
 
-  void handleSpaceKey(KeyboardEvent event) {}
+  void handleEscapeKey(web.KeyboardEvent event) {}
 
-  void handleEscapeKey(KeyboardEvent event) {}
+  void handleUpKey(web.KeyboardEvent event) {}
 
-  void handleUpKey(KeyboardEvent event) {}
+  void handleDownKey(web.KeyboardEvent event) {}
 
-  void handleDownKey(KeyboardEvent event) {}
+  void handleLeftKey(web.KeyboardEvent event) {}
 
-  void handleLeftKey(KeyboardEvent event) {}
+  void handleRightKey(web.KeyboardEvent event) {}
 
-  void handleRightKey(KeyboardEvent event) {}
+  void handlePageUp(web.KeyboardEvent event) {}
 
-  void handlePageUp(KeyboardEvent event) {}
+  void handlePageDown(web.KeyboardEvent event) {}
 
-  void handlePageDown(KeyboardEvent event) {}
+  void handleHomeKey(web.KeyboardEvent event) {}
 
-  void handleHomeKey(KeyboardEvent event) {}
+  void handleEndKey(web.KeyboardEvent event) {}
 
-  void handleEndKey(KeyboardEvent event) {}
+  void handleBackspaceKey(web.KeyboardEvent event) {}
 
-  void handleBackspaceKey(KeyboardEvent event) {}
+  void handleDeleteKey(web.KeyboardEvent event) {}
 
-  void handleDeleteKey(KeyboardEvent event) {}
-
-  void handleCharCodeKey(KeyboardEvent event) {}
+  void handleCharCodeKey(web.KeyboardEvent event) {}
 }

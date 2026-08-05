@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -98,37 +100,40 @@ class MaterialMonthPickerComponent
   static final _monthNames = DateFormat().dateSymbols.SHORTMONTHS;
 
   static final _yearTemplate = _createYearTemplate();
-  static final _yearTemplateContainer = DivElement();
-  static final _yearTemplateTitle = HeadingElement.h2();
+  static final _yearTemplateContainer =
+      web.document.createElement('div') as web.HTMLDivElement;
+  static final _yearTemplateTitle =
+      web.document.createElement('h2') as web.HTMLHeadingElement;
 
-  static DocumentFragment _createYearTemplate() {
-    final template = DocumentFragment();
+  static web.DocumentFragment _createYearTemplate() {
+    final template = web.document.createDocumentFragment();
 
     // Create the year container element.
     _yearTemplateContainer.className = 'year';
-    template.append(_yearTemplateContainer);
+    template.appendChild(_yearTemplateContainer);
 
     // Create the year title element.
     _yearTemplateTitle.className = 'year-title';
-    _yearTemplateContainer.append(_yearTemplateTitle);
+    _yearTemplateContainer.appendChild(_yearTemplateTitle);
 
     // Create the month elements.
-    final monthTemplate = DivElement()..className = 'month';
+    final monthTemplate =
+        web.document.createElement('div') as web.HTMLDivElement;
+    monthTemplate.className = 'month';
     for (var i = 0; i < 12; i++) {
-      var month = monthTemplate.clone(true) as HtmlElement;
-      month
-        ..setAttribute(_monthAttribute, '${i + 1}')
-        ..text = _monthNames[i];
-      _yearTemplateContainer.append(month);
+      var month = monthTemplate.cloneNode(true) as web.HTMLElement;
+      month.setAttribute(_monthAttribute, '${i + 1}');
+      month.textContent = _monthNames[i];
+      _yearTemplateContainer.appendChild(month);
     }
 
     return template;
   }
 
-  static DocumentFragment _renderYear(int year) {
+  static web.DocumentFragment _renderYear(int year) {
     _yearTemplateContainer.setAttribute(_yearAttribute, year.toString());
-    _yearTemplateTitle.text = year.toString();
-    return _yearTemplate.clone(true) as DocumentFragment;
+    _yearTemplateTitle.textContent = year.toString();
+    return _yearTemplate.cloneNode(true) as web.DocumentFragment;
   }
 
   void _scrollToSelection() {
@@ -158,31 +163,34 @@ class MaterialMonthPickerComponent
   }
 
   void _resetHighlights() {
-    for (HtmlElement element in _container.querySelectorAll('.year-title')) {
-      element.className = 'year-title';
+    var yearTitles = _container.querySelectorAll('.year-title');
+    for (var i = 0; i < yearTitles.length; i++) {
+      (yearTitles.item(i) as web.HTMLElement).className = 'year-title';
     }
-    for (HtmlElement element
-        in _container.querySelectorAll('.month:not(.disabled)')) {
-      element.className = 'month';
+    var months = _container.querySelectorAll('.month:not(.disabled)');
+    for (var i = 0; i < months.length; i++) {
+      (months.item(i) as web.HTMLElement).className = 'month';
     }
   }
 
   void _renderRange(CalendarSelection selection) {
-    Element? start;
-    Element? end;
+    web.Element? start;
+    web.Element? end;
 
     start = _container.querySelector(_monthSelector(selection.start!));
     if (start == null) return;
-    start.classes.addAll(const ['boundary', 'start']);
+    start.classList.add('boundary');
+    start.classList.add('start');
 
     end = _container.querySelector(_monthSelector(selection.end!));
     if (end == null) return;
-    end.classes.addAll(const ['boundary', 'end']);
+    end.classList.add('boundary');
+    end.classList.add('end');
 
     // If it's a single month range, we're done.
     if (start == end) return;
 
-    var range = Range()
+    var range = web.document.createRange()
       ..setStartBefore(start)
       ..setEndAfter(end);
 
@@ -192,20 +200,20 @@ class MaterialMonthPickerComponent
     // Highlight any remaining months in subsequent years.
     // The outer loop iterates over the year containers; the inner loop
     // iterates over the months within each year.
-    Element startContainer = range.startContainer as Element;
-    Element endContainer = range.endContainer as Element;
-    for (Element? year = startContainer.nextElementSibling;
+    web.Element startContainer = range.startContainer as web.Element;
+    web.Element endContainer = range.endContainer as web.Element;
+    for (web.Element? year = startContainer.nextElementSibling;
         year != null && year != endContainer.nextElementSibling;
         year = year.nextElementSibling) {
-      _highlightElements(year.firstChild as Element?, end.nextElementSibling);
+      _highlightElements(year.firstChild as web.Element?, end.nextElementSibling);
     }
   }
 
-  void _highlightElements(Element? start, Element? end) {
-    for (Element? element = start;
+  void _highlightElements(web.Element? start, web.Element? end) {
+    for (web.Element? element = start;
         element != null && element != end;
         element = element.nextElementSibling) {
-      element.classes.add('highlight');
+      element.classList.add('highlight');
     }
   }
 
@@ -216,11 +224,11 @@ class MaterialMonthPickerComponent
   }
 
   void _renderHover() {
-    Element? element = _container.querySelector('.month.hover');
-    if (element != null) element.classes.remove('hover');
+    web.Element? element = _container.querySelector('.month.hover');
+    if (element != null) element.classList.remove('hover');
     if (_model.value.preview != null) {
       element = _container.querySelector(_monthSelector(_model.value.preview!));
-      if (element != null) element.classes.add('hover');
+      if (element != null) element.classList.add('hover');
     }
   }
 
@@ -237,10 +245,10 @@ class MaterialMonthPickerComponent
   late Date _today;
 
   // The .scroll-container element.
-  late HtmlElement _scroller;
+  late web.HTMLElement _scroller;
 
   // The .calendar-container element.
-  late HtmlElement _container;
+  late web.HTMLElement _container;
 
   // Whether to completely reset (redraw) the view at the end of the change
   // detection cycle.
@@ -266,9 +274,9 @@ class MaterialMonthPickerComponent
   }
 
   @ViewChild('container')
-  set container(Element container) {
-    _container = container as HtmlElement;
-    _scroller = container.parent as HtmlElement;
+  set container(web.Element container) {
+    _container = container as web.HTMLElement;
+    _scroller = container.parentNode as web.HTMLElement;
   }
 
   @override
@@ -310,25 +318,27 @@ class MaterialMonthPickerComponent
   }
 
   void _renderAllYears() {
-    _container.children.clear();
+    while (_container.firstChild != null) {
+      _container.removeChild(_container.firstChild!);
+    }
 
     for (var i = minDate.year; i <= maxDate.year; i++) {
-      _container.append(_renderYear(i));
+      _container.appendChild(_renderYear(i));
     }
 
     // Disable all months before minDate.
-    Element? element;
+    web.Element? element;
     for (var i = 1; i < minDate.month; i++) {
       element =
           _container.querySelector(_monthSelector(Date(minDate.year, i, 1)));
-      element!.classes.add('disabled');
+      element!.classList.add('disabled');
     }
 
     // Disable all months after maxDate.
     for (var i = maxDate.month + 1; i <= 12; i++) {
       element =
           _container.querySelector(_monthSelector(Date(maxDate.year, i, 1)));
-      element!.classes.add('disabled');
+      element!.classList.add('disabled');
     }
   }
 
@@ -343,18 +353,30 @@ class MaterialMonthPickerComponent
 
   // Dart returns a separate instance every time a tearoff is accessed, so we
   // need to cache them for removeEventListener to work.
-  late EventListener _clickListener;
-  late EventListener _mouseDownListener;
-  late EventListener _mouseMoveListener;
-  late EventListener _mouseLeaveListener;
+  late web.EventListener _clickListener;
+  late web.EventListener _mouseDownListener;
+  late web.EventListener _mouseMoveListener;
+  late web.EventListener _mouseLeaveListener;
 
   void _addEventListeners() {
     // Process the events outside of Angular for lower overhead.
+    _clickListener = ((web.Event e) {
+      _onClick(e);
+    }).toJS;
+    _mouseDownListener = ((web.Event e) {
+      _onMouseDown(e);
+    }).toJS;
+    _mouseMoveListener = ((web.Event e) {
+      _onMouseMove(e);
+    }).toJS;
+    _mouseLeaveListener = ((web.Event e) {
+      _onMouseLeave(e);
+    }).toJS;
     _container
-      ..addEventListener('click', _clickListener = _onClick)
-      ..addEventListener('mousedown', _mouseDownListener = _onMouseDown)
-      ..addEventListener('mousemove', _mouseMoveListener = _onMouseMove)
-      ..addEventListener('mouseleave', _mouseLeaveListener = _onMouseLeave);
+      ..addEventListener('click', _clickListener)
+      ..addEventListener('mousedown', _mouseDownListener)
+      ..addEventListener('mousemove', _mouseMoveListener)
+      ..addEventListener('mouseleave', _mouseLeaveListener);
   }
 
   void _removeEventListeners() {
@@ -365,42 +387,43 @@ class MaterialMonthPickerComponent
       ..removeEventListener('mouseleave', _mouseLeaveListener);
   }
 
-  Date? _extractDate(Event event) {
+  Date? _extractDate(web.Event event) {
     final target = event.target;
-    if (target is! HtmlElement) return null;
-    HtmlElement monthElement = target;
+    if (target == null || !target.isA<web.HTMLElement>()) return null;
+    web.HTMLElement monthElement = target as web.HTMLElement;
 
     final month = monthElement.getAttribute(_monthAttribute);
     if (month == null) return null;
 
-    final year = monthElement.parent?.getAttribute(_yearAttribute);
+    final year =
+        (monthElement.parentNode as web.Element?)?.getAttribute(_yearAttribute);
     if (year == null) return null;
 
     return Date(int.parse(year), int.parse(month), 1);
   }
 
-  void _onClick(Event event) {
+  void _onClick(web.Event event) {
     var date = _extractDate(event);
     if (_canSelectDate(date)) {
       _inputListener.onClick(date!);
     }
   }
 
-  void _onMouseDown(Event event) {
+  void _onMouseDown(web.Event event) {
     var date = _extractDate(event);
     if (_canSelectDate(date)) {
       _inputListener.onMouseDown(date!);
     }
   }
 
-  void _onMouseMove(Event event) {
+  void _onMouseMove(web.Event event) {
     var date = _extractDate(event);
     if (_canSelectDate(date)) {
       _inputListener.onMouseMove(date!);
     }
   }
 
-  void _onMouseLeave(Event event) {
+  void _onMouseLeave(web.Event event) {
     var date = _extractDate(event);
     if (_canSelectDate(date)) {
       _inputListener.onMouseLeave(date!);

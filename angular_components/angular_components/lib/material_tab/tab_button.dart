@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/material_button/material_button_base.dart';
@@ -23,12 +23,12 @@ import 'package:angulardart_components/material_tab/tab_mixin.dart';
   directives: [MaterialRippleComponent],
 )
 class TabButtonComponent extends MaterialButtonBase with TabMixin {
-  final Element _nativeElement;
+  final web.Element _nativeElement;
 
-  TabButtonComponent(this._nativeElement) : super(_nativeElement as HtmlElement, 'tab');
+  TabButtonComponent(this._nativeElement) : super(_nativeElement as web.HTMLElement, 'tab');
 
   @override
-  Element get nativeElement => _nativeElement;
+  web.HTMLElement get nativeElement => _nativeElement as web.HTMLElement;
 
   /// Whether the tab represented by this button is currently active.
   @Input('active')

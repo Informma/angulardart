@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/model/menu/menu.dart';
@@ -148,8 +150,8 @@ abstract mixin class MenuPopupTrigger {
   // The following methods are for accessibility-friendly trigger actions.
   // See the 'Keyboard Interaction' section on this page:
   // https://www.w3.org/TR/wai-aria-practices/#menubutton
-  void handlePopupTriggerAction(UIEvent event) {
-    if (event is KeyboardEvent) {
+  void handlePopupTriggerAction(web.UIEvent event) {
+    if (event.isA<web.KeyboardEvent>()) {
       _trigger(const ExpandAction.withFirstItemFocused());
     } else {
       _trigger(const ExpandAction.withNoFocus());
@@ -158,7 +160,7 @@ abstract mixin class MenuPopupTrigger {
 
   /// Provides the default implementation if parent class mixes
   /// in [KeyboardHandlerMixin].
-  void handleUpKey(KeyboardEvent event) {
+  void handleUpKey(web.KeyboardEvent event) {
     _trigger(const ExpandAction.withLastItemFocused());
     // Prevent the scrolling associated with arrow keys.
     event.preventDefault();
@@ -166,7 +168,7 @@ abstract mixin class MenuPopupTrigger {
 
   /// Provides the default implementation if parent class mixes
   /// in [KeyboardHandlerMixin].
-  void handleDownKey(KeyboardEvent event) {
+  void handleDownKey(web.KeyboardEvent event) {
     _trigger(const ExpandAction.withFirstItemFocused());
     // Prevent the scrolling associated with arrow keys.
     event.preventDefault();

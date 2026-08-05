@@ -2,7 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
@@ -16,7 +18,7 @@ import 'package:meta/meta.dart';
   exportAs: 'keyboardOnlyFocusIndicator',
 )
 class KeyboardOnlyFocusIndicatorDirective {
-  final HtmlElement _element;
+  final web.HTMLElement _element;
   final DomService _domService;
   _InteractionType _lastInteraction = _InteractionType.none;
 
@@ -24,7 +26,7 @@ class KeyboardOnlyFocusIndicatorDirective {
 
   @visibleForTemplate
   @HostListener('keydown')
-  void keydown(KeyboardEvent e) {
+  void keydown(web.KeyboardEvent e) {
     _lastInteraction = _InteractionType.keyboard;
     resetOutline();
   }
@@ -58,7 +60,7 @@ class KeyboardOnlyFocusIndicatorDirective {
 
   @visibleForTemplate
   @HostListener('focus')
-  void onFocus(Event event) {
+  void onFocus(web.Event event) {
     // Use the focus event to style the element so that when the element is
     // styled programmatically it will obey the last known state of the
     // directive.
@@ -84,11 +86,11 @@ class KeyboardOnlyFocusIndicatorDirective {
   /// response to clicks on the button, which is undesirable. Using this
   /// function, the outline is hidden in response to button clicks but shown in
   /// response to keypresses on the button.
-  void focus([UIEvent? event]) {
+  void focus([web.UIEvent? event]) {
     _domService.scheduleWrite(() {
       _element.focus();
     });
-    if (event is MouseEvent) {
+    if (event != null && event.isA<web.MouseEvent>()) {
       hideOutline();
     } else {
       resetOutline();

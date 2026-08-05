@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/laminate/overlay/zindexer.dart';
@@ -162,7 +162,7 @@ class MaterialMenuDemoComponent implements OnDestroy {
                       icon: Icon('help_outline'),
                       visibility: IconVisibility.hover)
                 ]),
-                action: () => window.alert('halp!')),
+                action: () => web.window.alert('halp!')),
           ]),
         ]));
 
@@ -217,20 +217,20 @@ class MaterialMenuDemoComponent implements OnDestroy {
             subMenu: MenuModel<MenuItem>([
               MenuItemGroup<MenuItem>([
                 MenuItem('Almost new',
-                    enabled: false, action: () => window.alert('almost new!')),
-                MenuItem('Used', action: () => window.alert('used!')),
-                MenuItem('New', action: () => window.alert('new!')),
+                    enabled: false, action: () => web.window.alert('almost new!')),
+                MenuItem('Used', action: () => web.window.alert('used!')),
+                MenuItem('New', action: () => web.window.alert('new!')),
               ])
             ])),
         MenuItem('Advertise',
             subMenu: MenuModel<MenuItem>([
               MenuItemGroup<MenuItem>([
                 MenuItem('Google',
-                    enabled: false, action: () => window.alert('google!')),
+                    enabled: false, action: () => web.window.alert('google!')),
                 MenuItem('Facebook',
-                    enabled: false, action: () => window.alert('facebook!')),
+                    enabled: false, action: () => web.window.alert('facebook!')),
                 MenuItem('Craigslist',
-                    enabled: false, action: () => window.alert('craigslist!')),
+                    enabled: false, action: () => web.window.alert('craigslist!')),
               ])
             ])),
         MenuItem('Sell'),
@@ -239,26 +239,26 @@ class MaterialMenuDemoComponent implements OnDestroy {
 
     final menuModelWithAffixes = MenuModel<MenuItem>([
       MenuItemGroup<MenuItem>([
-        MenuItem('With no suffixes', action: () => window.alert('1')),
+        MenuItem('With no suffixes', action: () => web.window.alert('1')),
         MenuItem('With an icon suffix',
-            action: () => window.alert('2'),
+            action: () => web.window.alert('2'),
             itemSuffixes: ObservableList.from([
               IconAffix.withAction(
                   icon: Icon('delete'),
-                  action: () => window.alert('action'),
+                  action: () => web.window.alert('action'),
                   ariaLabel: 'ariaLabel',
                   shouldCloseMenuOnTrigger: true)
             ])),
         MenuItem('With text suffix',
-            action: () => window.alert('3'),
+            action: () => web.window.alert('3'),
             itemSuffixes:
                 ObservableList.from([CaptionAffix(text: 'Ctrl + V')])),
         MenuItem('With multiple suffixes',
-            action: () => window.alert('4'),
+            action: () => web.window.alert('4'),
             itemSuffixes: ObservableList.from([
               IconAffix.withAction(
                   icon: Icon('delete'),
-                  action: () => window.alert('action 1'),
+                  action: () => web.window.alert('action 1'),
                   ariaLabel: 'ariaLabel'),
               IconAffix.simple(icon: Icon('accessible')),
               CaptionAffix(text: 'some text'),

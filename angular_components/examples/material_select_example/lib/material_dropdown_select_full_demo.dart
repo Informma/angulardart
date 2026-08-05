@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_forms/angulardart_forms.dart';
@@ -255,7 +255,7 @@ class MaterialDropdownSelectFullDemoComponent {
 
   String selectionOption;
 
-  void alert(String message) => window.alert(message);
+  void alert(String message) => web.window.alert(message);
 
   String languageButtonLabel = 'Select Language';
   List<Language> get languagesList => _languagesList;

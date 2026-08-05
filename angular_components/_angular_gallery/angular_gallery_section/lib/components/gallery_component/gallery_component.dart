@@ -5,9 +5,8 @@
 @JS()
 library angular_components.scaffolding.gallery_section.components.gallery_component;
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 import 'package:angulardart/angulardart.dart';
-import 'package:js/js.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
 import 'package:angulardart_components/dynamic_component/dynamic_component.dart';
 import 'package:angulardart_components/laminate/popup/module.dart';
@@ -54,7 +53,7 @@ class GalleryComponent {
 
   String getDemoId(Demo demo) => '${demo.name}Demo';
 
-  void scroll(String locator) => querySelector(locator).scrollIntoView();
+  void scroll(String locator) => web.document.querySelector(locator)!.scrollIntoView();
 
   String getTeamsLink(String ldap) => 'http://who/$ldap';
 

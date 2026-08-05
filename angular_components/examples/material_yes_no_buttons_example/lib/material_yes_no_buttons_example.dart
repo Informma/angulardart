@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/material_yes_no_buttons/material_yes_no_buttons.dart';
@@ -35,7 +35,7 @@ class MaterialYesNoButtonsGalleryConfig {}
 )
 class MaterialYesNoButtonsExample {
   void alert(String msg) {
-    window.alert(msg);
+    web.window.alert(msg);
   }
 
   bool pending = false;

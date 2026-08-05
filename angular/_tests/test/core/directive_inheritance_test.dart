@@ -65,7 +65,7 @@ void main() {
             .querySelector('derived')!
             .dispatchEvent(web.MouseEvent('click'));
       await testFixture.update((component) {
-        expect((component as TestDerivedComponent).derivedComponent!.clickMessage, 'Original message');
+        expect(component.derivedComponent!.clickMessage, 'Original message');
       });
     });
 
@@ -76,7 +76,7 @@ void main() {
             .querySelector('override')!
             .dispatchEvent(web.MouseEvent('click'));
       await testFixture.update((component) {
-        expect((component as TestOverrideComponent).derivedComponent!.clickMessage, 'Overridden message');
+        expect(component.derivedComponent!.clickMessage, 'Overridden message');
       });
     });
   });
@@ -86,7 +86,7 @@ void main() {
       late final TestDerivedComponent testComponent;
       final testBed = NgTestBed(ng.createTestDerivedComponentFactory());
       await testBed.create(beforeChangeDetection: (component) {
-        testComponent = component as TestDerivedComponent..input = 'Hello';
+        testComponent = component..input = 'Hello';
       });
       expect(testComponent.derivedComponent!.input, 'Hello');
     });
@@ -95,7 +95,7 @@ void main() {
       late final TestOverrideComponent testComponent;
       final testBed = NgTestBed(ng.createTestOverrideComponentFactory());
       await testBed.create(beforeChangeDetection: (component) {
-        testComponent = component as TestOverrideComponent..input = 'Hello';
+        testComponent = component..input = 'Hello';
       });
       expect(testComponent.derivedComponent!.input, 'Hello!');
     });
@@ -106,7 +106,7 @@ void main() {
       late final TestDerivedComponent testComponent;
       final testBed = NgTestBed(ng.createTestDerivedComponentFactory());
       await testBed.create(beforeChangeDetection: (component) {
-        testComponent = component as TestDerivedComponent..derivedComponent!.dispatchOutput('Bye');
+        testComponent = component..derivedComponent!.dispatchOutput('Bye');
       });
       expect(testComponent.receivedOutput, 'Bye');
     });
@@ -115,7 +115,7 @@ void main() {
       late final TestOverrideComponent testComponent;
       final testBed = NgTestBed(ng.createTestOverrideComponentFactory());
       await testBed.create(beforeChangeDetection: (component) {
-        testComponent = component as TestOverrideComponent..derivedComponent!.dispatchOutput('Bye');
+        testComponent = component..derivedComponent!.dispatchOutput('Bye');
       });
       expect(testComponent.receivedOutput, 'Bye!');
     });
@@ -195,7 +195,7 @@ void main() {
           NgTestBed(ng.createTestMultipleSupertypesComponentFactory());
       final testFixture =
           await testBed.create(beforeChangeDetection: (component) {
-        (component as TestMultipleSupertypesComponent).viewChild!
+        component.viewChild!
           ..foo = '1'
           ..bar = '2'
           ..baz = '3';

@@ -38,17 +38,15 @@ String? _elementText(Object? n) {
   if (n is Iterable) {
     return n.map(_elementText).join('');
   } else if (n is web.Node) {
-    final node = n as web.Node;
-    if (node is web.Comment) {
+    if (n is web.Comment) {
       return '';
     }
 
-    if (node is web.HTMLSlotElement) {
-      return _elementText((node as web.HTMLSlotElement).assignedNodes());
+    if (n is web.HTMLSlotElement) {
+      return _elementText(n.assignedNodes());
     }
 
-    if (node is web.Element) {
-      final element = node as web.Element;
+    if (n is web.Element) {
       if (element.shadowRoot != null) {
         final nodes = <web.Node>[];
         final childNodes = element.shadowRoot!.childNodes;

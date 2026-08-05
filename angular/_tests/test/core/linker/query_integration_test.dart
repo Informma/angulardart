@@ -206,7 +206,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createLabeledElementViewChildrenComponentFactory());
       var fixture = await testBed.create();
-      var component = fixture.assertOnlyInstance as LabeledElementViewChildrenComponent;
+      var component = fixture.assertOnlyInstance;
       final divIt = component.elementRefs!.iterator;
       final itemIt = component.list.iterator;
 

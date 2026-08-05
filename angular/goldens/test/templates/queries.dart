@@ -1,7 +1,7 @@
 @JS()
 library golden;
 
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 import 'package:js/js.dart';
 import 'package:angulardart/angulardart.dart';

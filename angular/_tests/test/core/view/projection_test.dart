@@ -57,7 +57,7 @@ void main() {
       expect(element, hasTextContent('(, BC)'));
 
       final viewportDirective =
-          (testFixture.assertOnlyInstance as ContainerABCWithConditionalComponent).child!.manualViewportDirective!;
+          testFixture.assertOnlyInstance.child!.manualViewportDirective!;
       await testFixture.update((ContainerABCWithConditionalComponent comp) {
         viewportDirective.show();
       });

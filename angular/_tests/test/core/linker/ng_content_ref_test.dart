@@ -31,11 +31,11 @@ void main() {
           var testBed = NgTestBed(ng.createItsEmptyOnDartFactory());
           var testFixture = await testBed.create();
           expect(
-              (testFixture.assertOnlyInstance as ItsEmptyOnDart).child!.byRef!.hasContent, isFalse);
-          expect((testFixture.assertOnlyInstance as ItsEmptyOnDart).child!.byType!.hasContent,
+              testFixture.assertOnlyInstance.child!.byRef!.hasContent, isFalse);
+          expect(testFixture.assertOnlyInstance.child!.byType!.hasContent,
               isFalse);
           expect(
-              (testFixture.assertOnlyInstance as ItsEmptyOnDart).child!.byTypes!.single.hasContent,
+              testFixture.assertOnlyInstance.child!.byTypes!.single.hasContent,
               isFalse);
         });
       });
@@ -63,11 +63,11 @@ void main() {
               NgTestBed(ng.createItHasProjectedContentOnDartFactory());
           var testFixture = await testBed.create();
           expect(
-              (testFixture.assertOnlyInstance as ItHasProjectedContentOnDart).child!.byRef!.hasContent, isTrue);
+              testFixture.assertOnlyInstance.child!.byRef!.hasContent, isTrue);
           expect(
-              (testFixture.assertOnlyInstance as ItHasProjectedContentOnDart).child!.byType!.hasContent, isTrue);
+              testFixture.assertOnlyInstance.child!.byType!.hasContent, isTrue);
           expect(
-              (testFixture.assertOnlyInstance as ItHasProjectedContentOnDart).child!.byTypes!.single.hasContent,
+              testFixture.assertOnlyInstance.child!.byTypes!.single.hasContent,
               isTrue);
         });
       });
@@ -128,15 +128,15 @@ void main() {
     test('<ng-content> in a template', () async {
       var testBed = NgTestBed(ng.createNgIfInTemplateFactory());
       var testFixture = await testBed.create();
-      expect((testFixture.assertOnlyInstance as NgIfInTemplate).child!.hasContent, isTrue);
+      expect(testFixture.assertOnlyInstance.child!.hasContent, isTrue);
       // set false
       await testFixture
           .update((NgIfInTemplate component) => component.child!.isContentVisible = false);
-      expect((testFixture.assertOnlyInstance as NgIfInTemplate).child!.ref, isNull);
+      expect(testFixture.assertOnlyInstance.child!.ref, isNull);
       // set back to true
       await testFixture
           .update((NgIfInTemplate component) => component.child!.isContentVisible = true);
-      expect((testFixture.assertOnlyInstance as NgIfInTemplate).child!.hasContent, isTrue);
+      expect(testFixture.assertOnlyInstance.child!.hasContent, isTrue);
     });
   });
 }

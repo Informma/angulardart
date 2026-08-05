@@ -1,3 +1,7 @@
+## 5.0.3
+
+- Fix: Remove third argument from addEventListener calls (package:web compatibility)
+
 ## 5.0.2
 
 - Add community-maintained disclaimer to README

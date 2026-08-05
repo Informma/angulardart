@@ -21,12 +21,12 @@ class BrowserPlatformLocation extends PlatformLocation {
 
   @override
   void onPopState(void Function(web.Event) fn) {
-    web.window.addEventListener('popstate', fn.toJS, false);
+    web.window.addEventListener('popstate', fn.toJS);
   }
 
   @override
   void onHashChange(void Function(web.Event) fn) {
-    web.window.addEventListener('hashchange', fn.toJS, false);
+    web.window.addEventListener('hashchange', fn.toJS);
   }
 
   @override

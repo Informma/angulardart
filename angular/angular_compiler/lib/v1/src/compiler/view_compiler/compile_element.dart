@@ -116,6 +116,8 @@ class CompileElement extends CompileNode implements ProviderResolverHost {
     _providers.add(Identifiers.elementRefToken, elementRef);
     _providers.add(Identifiers.elementToken, renderNode.toReadExpr());
     _providers.add(Identifiers.htmlElementToken, renderNode.toReadExpr());
+    // Register under JSObject for dart2js extension type erasure fallback.
+    _providers.add(Identifiers.jsObjectToken, renderNode.toReadExpr());
     var readInjectorExpr =
         o.InvokeMemberMethodExpr('injector', [o.literal(this.nodeIndex)]);
     _providers.add(Identifiers.injectorToken, readInjectorExpr);

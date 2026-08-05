@@ -281,6 +281,17 @@ class ProviderElementContext implements ElementProviderUsage {
       // access built-ins
       if (requestingProviderType == ProviderAstType.Directive ||
           requestingProviderType == ProviderAstType.Component) {
+        // Use name-based matching for web types to handle moduleUrl differences
+        // across package:web export chains (e.g. Element defined in dom.dart,
+        // re-exported via web.dart). The analyzer may resolve with different
+        // moduleUrls depending on the import path used by the consumer.
+        final tokenName = token.name;
+        if ((tokenName == 'Element' || tokenName == 'HTMLElement') &&
+            (token.identifier?.moduleUrl != null &&
+                token.identifier!.moduleUrl!
+                    .startsWith('package:web'))) {
+          return dep; // FIX: Element from package:web is a built-in
+        }
         if (token.equalsTo(Identifiers.elementRefToken) ||
             token.equalsTo(Identifiers.htmlElementToken) ||
             token.equalsTo(Identifiers.elementToken) ||

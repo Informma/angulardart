@@ -1491,7 +1491,7 @@ class CompileView {
     // Add view child change detection calls.
     for (var viewChild in viewChildren) {
       statements.add(
-          viewChild.componentView!.callMethod('detectChanges', []).toStmt());
+          viewChild.componentView!.callMethod('detectChangesDeprecated', []).toStmt());
     }
 
     var afterViewStmts =

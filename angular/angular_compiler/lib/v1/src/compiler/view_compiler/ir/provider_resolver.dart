@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../compile_metadata.dart';
 import '../../i18n/message.dart';
 import '../../output/output_ast.dart' as o;
@@ -166,7 +168,57 @@ class ProviderResolver {
   }
 
   ProviderSource? _getLocalDependency(CompileTokenMetadata? token) {
-    return token != null ? _instances.get(token) : null;
+    if (token == null) return null;
+    // First try exact identity match.
+    var result = _instances.get(token);
+    if (result != null) return result;
+    // Fallback: for web types the analyzer may resolve with different moduleUrls
+    // depending on import path. The compiler uses asset-based URLs like
+    // `asset:web/lib/src/dom/dom.dart` while identifiers use package URLs like
+    // `package:web/src/dom/dom.dart`. Match by name + package prefix to handle
+    // both schemes and export chain differences.
+    final tokenName = token.name;
+    final tokenModuleUrl = token.identifier?.moduleUrl;
+    if ((tokenName == 'Element' ||
+        tokenName == 'HTMLElement' ||
+        tokenName == 'Node') &&
+        (tokenModuleUrl != null &&
+            (tokenModuleUrl.startsWith('package:web') ||
+                tokenModuleUrl.startsWith('asset:web')))) {
+      for (final moduleUrl in [
+        'package:web/src/dom/dom.dart',
+        'package:web/src/dom/html.dart',
+        'package:web/web.dart',
+        'asset:web/lib/src/dom/dom.dart',
+        'asset:web/lib/src/dom/html.dart',
+      ]) {
+        final fallback = CompileTokenMetadata(
+          identifier: CompileIdentifierMetadata(
+            name: tokenName!,
+            moduleUrl: moduleUrl,
+          ),
+          identifierIsInstance: token.identifierIsInstance,
+        );
+        result = _instances.get(fallback);
+        if (result != null) return result;
+      }
+    }
+    // Also try JSObject fallback for Element/HTMLElement.
+    if ((tokenName == 'Element' || tokenName == 'HTMLElement') &&
+        tokenModuleUrl != null &&
+        (tokenModuleUrl.startsWith('package:web') ||
+            tokenModuleUrl.startsWith('asset:web'))) {
+      final jsObjectFallback = CompileTokenMetadata(
+        identifier: CompileIdentifierMetadata(
+          name: 'JSObject',
+          moduleUrl: 'dart:js_interop',
+        ),
+        identifierIsInstance: false,
+      );
+      result = _instances.get(jsObjectFallback);
+      if (result != null) return result;
+    }
+    return null;
   }
 
   ProviderSource _getDependency(CompileDiDependencyMetadata dep) {

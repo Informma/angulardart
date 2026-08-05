@@ -80,6 +80,15 @@ abstract class View implements ChangeDetectorRef {
   @override
   void detectChangesDeprecated();
 
+  /// Public wrapper for [detectChangesDeprecated] to avoid extension method
+  /// resolution issues in dart2js compiled output.
+  ///
+  /// This is equivalent to calling [detectChangesDeprecated] directly, but
+  /// provided as a public instance method so it doesn't rely on the
+  /// DeprecatedDetectChanges extension which can fail during tree-shaking
+  /// or minification in dart2js.
+  void detectChanges() => detectChangesDeprecated();
+
   /// Invokes change detection on views that use default change detection.
   ///
   /// This applies to all embedded and components views whose associated

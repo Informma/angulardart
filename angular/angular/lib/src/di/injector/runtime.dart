@@ -155,32 +155,25 @@ class _RuntimeInjector extends HierarchicalInjector
 
   /// Try to find a provider for extension types from package:web where Type
   /// identity may differ across compilation boundaries.
+  ///
+  /// After dart2js erasure, Type tokens like Element/HTMLElement become JSObject
+  /// wrappers. Different compilation units produce different JSObject instances
+  /// for the same erased type, breaking HashMap identity lookups. This method
+  /// finds matching providers by comparing string representations of tokens.
   Object? _tryFindExtensionTypeProvider(Object token) {
-    // At runtime in dart2js, extension types from package:web are compiled as
-    // their underlying JSObject type. The compiler registers providers under the
-    // extension type name (e.g., Element), but lookups may come as JSObject.
-    // Search through all registered providers looking for one from package:web.
     final tokenStr = '$token';
+
     for (final providerToken in _providers.keys) {
-      final providerTokenStr = '$providerToken';
-      if (providerTokenStr.contains('package:web')) {
-        var instance = _instances[providerToken];
-        if (instance == null && !_instances.containsKey(providerToken)) {
-          final provider = _providers[providerToken];
-          if (provider != null) {
-            if (_isMultiProvider(provider)) {
-              return _instances[provider.token] = _resolveMulti(provider);
-            }
-            _instances[providerToken] = instance = buildAtRuntime(provider, this);
-          }
-        }
-        if (instance != null || _instances.containsKey(providerToken)) {
-          // Only use this provider if it's compatible with what we're looking for.
-          // If the requested token is JSObject or contains 'Element', any package:web
-          // element type could be a match. Otherwise skip to avoid wrong matches.
-          if (tokenStr == 'JSObject' || tokenStr.contains('Element')) {
-            return _instances[providerToken];
-          }
+      // After dart2js erasure, both the lookup token and stored keys become
+      // JSObject instances. Compare their string representations to find a
+      // match when identity comparison fails due to different compilation
+      // boundaries producing different JSObject wrapper instances.
+      if ('$providerToken' == tokenStr) {
+        final provider = _providers[providerToken];
+        if (provider != null) {
+          return _instances[providerToken] = _isMultiProvider(provider)
+              ? _resolveMulti(provider)
+              : buildAtRuntime(provider, this);
         }
       }
     }

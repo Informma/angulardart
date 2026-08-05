@@ -119,6 +119,14 @@ abstract class ChangeDetectorRef {
   @Deprecated('Breaks assumptions around change detection and will be removed')
   @protected
   void detectChangesDeprecated();
+
+  /// Forces synchronous change detection of this component and its children.
+  ///
+  /// This is a public instance method to avoid extension method resolution
+  /// issues in dart2js compiled output. For internal use, prefer
+  /// [detectChangesDeprecated].
+  @Deprecated('Breaks assumptions around change detection and will be removed')
+  void detectChanges();
 }
 
 extension DeprecatedChangeDetectorRef on ChangeDetectorRef {
@@ -154,26 +162,5 @@ extension DeprecatedChangeDetectorRef on ChangeDetectorRef {
   @Deprecated('Use "changeDetection: ChangeDetectionStrategy.OnPush" instead')
   void reattach() {
     reattachDeprecated();
-  }
-}
-
-extension DeprecatedDetectChanges on ChangeDetectorRef {
-  /// Forces synchronous change detection of this component and its children.
-  ///
-  /// **WARNING**: In practice, this API was not intended to be public with
-  /// perhaps the exception of a select few specialized leaf components, and is
-  /// being completely removed in a future version of Angular.
-  ///
-  /// Try instead:
-  ///
-  /// * Simply removing it, and seeing if it breaks your app.
-  /// * Using `ChangeDetectionStrategy.OnPush` and [markForCheck] instead.
-  ///
-  /// If all else fails, it is strongly preferable to use our explicit API for
-  /// forcing more change detection, `NgZone.runAfterChangesObserved`. It is
-  /// also worth filing a bug if this is needed.
-  @Deprecated('Breaks assumptions around change detection and will be removed')
-  void detectChanges() {
-    detectChangesDeprecated();
   }
 }

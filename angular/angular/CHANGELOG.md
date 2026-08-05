@@ -1,3 +1,8 @@
+## 9.0.3
+
+- Fix: Clarified community-maintained status (not affiliated with Google)
+- Updated pub.dev description and README disclaimer
+
 ## 9.0.2
 
 - Fix: Event listeners now compatible with `package:web`'s `addEventListener`

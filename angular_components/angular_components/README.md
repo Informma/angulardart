@@ -11,7 +11,7 @@
 
 # AngularDart Components
 
-**Material Design UI components for AngularDart. Used at Google in production apps.**
+**Material Design UI components for AngularDart. Community-maintained fork of Google's original components.**
 
 Part of the [AngularDart](https://pub.dev/packages/angulardart) ecosystem.
 
@@ -182,3 +182,11 @@ class AppComponent {
 ## License
 
 MIT License
+
+---
+
+## Disclaimer
+
+**AngularDart Reborn** is a community-maintained fork of Google's original AngularDart framework. This project is **not affiliated with, endorsed by, or sponsored by Google LLC**. Angular and AngularDart are trademarks of Google LLC.
+
+This is an independent, 100% community-driven project. For the original Angular Framework (TypeScript/JavaScript), visit [angular.io](https://angular.io).

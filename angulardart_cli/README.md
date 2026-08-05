@@ -253,3 +253,11 @@ dart run build_runner build --delete-conflicting-outputs
 ## License
 
 BSD 3-Clause License
+
+---
+
+## Disclaimer
+
+**AngularDart Reborn** is a community-maintained fork of Google's original AngularDart framework. This project is **not affiliated with, endorsed by, or sponsored by Google LLC**. Angular and AngularDart are trademarks of Google LLC.
+
+This is an independent, 100% community-driven project. For the original Angular Framework (TypeScript/JavaScript), visit [angular.io](https://angular.io).

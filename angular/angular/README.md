@@ -14,7 +14,7 @@
 
 # AngularDart
 
-**Fast and productive web framework by Google, revived for Dart 3.**
+**Fast and productive web framework for Dart 3.**
 
 AngularDart is a web framework that separates cleanly into a template language and a component model, making it easy to build complex, maintainable web applications.
 
@@ -118,3 +118,11 @@ AngularDart was originally developed by Google. This is a community-maintained r
 <p align="center">
   Made with ❤️ for the Dart community
 </p>
+
+---
+
+## Disclaimer
+
+**AngularDart Reborn** is a community-maintained fork of Google's original AngularDart framework. This project is **not affiliated with, endorsed by, or sponsored by Google LLC**. Angular and AngularDart are trademarks of Google LLC.
+
+This is an independent, 100% community-driven project. For the original Angular Framework (TypeScript/JavaScript), visit [angular.io](https://angular.io).

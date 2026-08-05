@@ -1,8 +1,8 @@
 name: angulardart_components
-version: 3.0.0
+version: 3.0.1
 description: >
-  The official Material Design components for AngularDart. Used at Google in
-  production apps.
+  Material Design UI components for AngularDart.
+  Community-maintained fork of Google's original components.
 repository: https://github.com/flutterdocteur/angulardart/tree/main/angular_components/angular_components
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://angulardartreborn.com

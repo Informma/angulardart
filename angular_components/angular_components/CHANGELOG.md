@@ -1,3 +1,8 @@
+## 3.0.1
+
+- Fix: Clarified community-maintained status (not affiliated with Google)
+- Updated pub.dev description and README disclaimer
+
 ## 3.0.0
 
 - **BREAKING CHANGE**: Complete migration from `dart:html` to `package:web`

@@ -1,3 +1,8 @@
+## 5.0.3
+
+- Fix: Generated code now calls `detectChangesDeprecated()` directly instead of using extension methods that fail during dart2js tree-shaking/minification
+- Fix: Support package:web extension type lookups for Element/HTMLElement providers in DI system
+
 ## 5.0.2
 
 - Add community-maintained disclaimer to README

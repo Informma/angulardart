@@ -1,6 +1,7 @@
-## 5.0.7
+## 5.0.8
 
-- Fix: Correctly resolve DI lookups for `web.Element` via updated angulardart 9.0.6 DI system
+- Fix: Compatible with angulardart 9.0.7 (dart2js extension method resolution fix)
+- Fix: Correctly resolve DI lookups for `web.Element` via updated angulardart DI system
 
 ## 5.0.6
 

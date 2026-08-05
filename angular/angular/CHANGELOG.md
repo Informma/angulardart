@@ -1,6 +1,11 @@
+## 9.0.7
+
+- **BREAKING FIX**: Resolve dart2js `NoSuchMethodError` on sidebar navigation by making `detectChanges()` a proper instance method on `ChangeDetectorRef` instead of relying on extension methods that fail during dart2js tree-shaking/minification
+- Fix: Support injection of `package:web` extension types in DI system (Element, HTMLElement)
+- Fix: Correctly resolve JSObject lookups to package:web extension type providers
+
 ## 9.0.6
 
-- Fix: Correctly resolve `JSObject` lookups to `package:web` extension type providers (Element, HTMLElement) in DI system
 - Fix: Platform-agnostic JS interop utilities for DDC/VM compatibility
 - Fix: Event listener callbacks now work correctly with dart2js and DDC
 

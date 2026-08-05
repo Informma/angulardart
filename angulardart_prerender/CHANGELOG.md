@@ -1,3 +1,7 @@
+## 1.0.2
+
+- Add community-maintained disclaimer to README
+
 ## 1.0.1
 
 - Fix: Widen version constraints

@@ -1,3 +1,7 @@
+## 5.0.2
+
+- Add community-maintained disclaimer to README
+
 ## 5.0.1
 
 - Fix: Generated code now adds `.toJS` for native DOM event listeners

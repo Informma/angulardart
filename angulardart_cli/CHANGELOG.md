@@ -1,3 +1,7 @@
+## 1.0.13
+
+- Add community-maintained disclaimer to README
+
 ## 1.0.12
 
 - feat: add --seo flag to `ngdart new` command

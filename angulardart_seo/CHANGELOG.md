@@ -1,3 +1,7 @@
+## 1.0.3
+
+- Add community-maintained disclaimer to README
+
 ## 1.0.2
 
 - Fix: Update to angulardart >=9.0.0 (package:web migration)

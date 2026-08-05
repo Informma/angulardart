@@ -1,3 +1,7 @@
+## 3.1.1
+
+- Add community-maintained disclaimer to README
+
 ## 3.1.0
 
 - fix: resolve all dart analyze warnings and info messages

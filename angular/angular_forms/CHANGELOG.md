@@ -1,3 +1,7 @@
+## 6.0.2
+
+- Add community-maintained disclaimer to README
+
 ## 6.0.1
 
 - Fix: Update tests for package:web API (innerHtml → innerHTML, NodeList[] → .item())

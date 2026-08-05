@@ -4,7 +4,7 @@ issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://angulardartreborn.com
 documentation: https://angulardartreborn.com/guide
 description: Testing runner and library for AngularDart
-version: 6.0.1
+version: 6.0.2
 topics:
   - angular
   - testing

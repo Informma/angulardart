@@ -56,4 +56,5 @@ doc/api/
 /*.md
 !/README.md
 !/CHANGELOG.md
+!/BUILD_RUNNER_TERMINAL.md
 AGENTS.md

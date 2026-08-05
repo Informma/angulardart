@@ -12,7 +12,7 @@ void main() {
       final testBed = NgTestBed(ng.createTestContentChildFactory());
       final testFixture = await testBed.create();
       expect(testFixture.text, isEmpty);
-      await testFixture.update((component) => component.child!.update('a'));
+      await testFixture.update((TestContentChild component) => component.child!.update('a'));
       expect(testFixture.text, 'a');
     });
 
@@ -20,7 +20,7 @@ void main() {
       final testBed = NgTestBed(ng.createTestContentChildrenFactory());
       final testFixture = await testBed.create();
       expect(testFixture.text, isEmpty);
-      await testFixture.update((component) => component.child!.update('a'));
+      await testFixture.update((TestContentChildren component) => component.child!.update('a'));
       expect(testFixture.text, 'aaa');
     });
 
@@ -28,7 +28,7 @@ void main() {
       final testBed = NgTestBed(ng.createTestViewChildFactory());
       final testFixture = await testBed.create();
       expect(testFixture.text, isEmpty);
-      await testFixture.update((component) => component.update('a'));
+      await testFixture.update((TestViewChild component) => component.update('a'));
       expect(testFixture.text, 'a');
     });
 
@@ -36,7 +36,7 @@ void main() {
       final testBed = NgTestBed(ng.createTestViewChildrenFactory());
       final testFixture = await testBed.create();
       expect(testFixture.text, isEmpty);
-      await testFixture.update((component) => component.update('a'));
+      await testFixture.update((TestViewChildren component) => component.update('a'));
       expect(testFixture.text, 'aaa');
     });
 
@@ -47,7 +47,7 @@ void main() {
             NgTestBed(ng.createTestExistingProviderContentChildrenFactory());
         final testFixture = await testBed.create();
         expect(testFixture.text, isEmpty);
-        await testFixture.update((component) => component.child!.update('a'));
+        await testFixture.update((TestExistingProviderContentChildren component) => component.child!.update('a'));
         expect(testFixture.text, 'aaa');
       });
 
@@ -56,7 +56,7 @@ void main() {
             NgTestBed(ng.createTestExistingProviderViewChildrenFactory());
         final testFixture = await testBed.create();
         expect(testFixture.text, isEmpty);
-        await testFixture.update((component) => component.update('a'));
+        await testFixture.update((TestExistingProviderViewChildren component) => component.update('a'));
         expect(testFixture.text, 'aaa');
       });
     });
@@ -67,15 +67,15 @@ void main() {
             NgTestBed(ng.createTestEmbeddedContentChildrenFactory());
         final testFixture = await testBed.create();
         expect(testFixture.text, isEmpty);
-        await testFixture.update((component) => component.child!.update('a'));
+        await testFixture.update((TestEmbeddedContentChildren component) => component.child!.update('a'));
         expect(testFixture.text, 'a');
-        await testFixture.update((component) {
+        await testFixture.update((TestEmbeddedContentChildren component) {
           component.isSecondChildVisible = true;
         });
         expect(testFixture.text, 'aa');
-        await testFixture.update((component) => component.child!.update('b'));
+        await testFixture.update((TestEmbeddedContentChildren component) => component.child!.update('b'));
         expect(testFixture.text, 'bb');
-        await testFixture.update((component) {
+        await testFixture.update((TestEmbeddedContentChildren component) {
           component.areRemainingChildrenVisible = true;
         });
         expect(testFixture.text, 'bbbb');
@@ -85,17 +85,17 @@ void main() {
         final testBed = NgTestBed(ng.createTestEmbeddedViewChildrenFactory());
         final testFixture = await testBed.create();
         expect(testFixture.text, isEmpty);
-        await testFixture.update((component) {
+        await testFixture.update((TestEmbeddedViewChildren component) {
           component.areRemainingChildrenVisible = true;
         });
         expect(testFixture.text, isEmpty);
-        await testFixture.update((component) => component.update('a'));
+        await testFixture.update((TestEmbeddedViewChildren component) => component.update('a'));
         expect(testFixture.text, 'aaa');
-        await testFixture.update((component) {
+        await testFixture.update((TestEmbeddedViewChildren component) {
           component.isSecondChildVisible = true;
         });
         expect(testFixture.text, 'aaaa');
-        await testFixture.update((component) => component.update('b'));
+        await testFixture.update((TestEmbeddedViewChildren component) => component.update('b'));
         expect(testFixture.text, 'bbbb');
       });
     });

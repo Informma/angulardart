@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:web/web.dart' as web;
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_test/angulardart_test.dart';
 
@@ -49,7 +50,7 @@ void main() {
     test('can be used in event handlers', () async {
       var testBed = NgTestBed(ng.createStaticEventHandlerTestFactory());
       var fixture = await testBed.create();
-      var div = fixture.rootElement.querySelector('div')!;
+      var div = fixture.rootElement.querySelector('div')! as web.HTMLElement;
       clickHandled = false;
       await fixture.update((_) {
         div.click();
@@ -60,7 +61,7 @@ void main() {
     test('can be assigned in an event handler', () async {
       var testBed = NgTestBed(ng.createStaticEventHandlerTargetTestFactory());
       var fixture = await testBed.create();
-      var div = fixture.rootElement.querySelector('div')!;
+      var div = fixture.rootElement.querySelector('div')! as web.HTMLElement;
       MyClass.clickHandled = false;
       await fixture.update((_) {
         div.click();
@@ -71,7 +72,7 @@ void main() {
     test('can be used as event handler arguments', () async {
       var testBed = NgTestBed(ng.createStaticEventHandlerArgTestFactory());
       var fixture = await testBed.create();
-      var div = fixture.rootElement.querySelector('div')!;
+      var div = fixture.rootElement.querySelector('div')! as web.HTMLElement;
       late List<Object> listArg;
       await fixture.update((StaticEventHandlerArgTest component) {
         component.clickHandler = (list) {
@@ -95,11 +96,11 @@ void main() {
     test('can refer to own statics automatically with @HostBinding', () async {
       var testBed = NgTestBed(ng.createSelfReferHostBindingTestFactory());
       var fixture = await testBed.create();
-      expect(fixture.rootElement.title, 'hello');
+      expect((fixture.rootElement as web.HTMLElement).title, 'hello');
       await fixture.update((_) {
         SelfReferHostBindingTest.staticField = 'goodbye';
       });
-      expect(fixture.rootElement.title, 'goodbye');
+      expect((fixture.rootElement as web.HTMLElement).title, 'goodbye');
     });
 
     group('can be prefixed', () {

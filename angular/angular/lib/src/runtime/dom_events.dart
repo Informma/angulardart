@@ -20,7 +20,7 @@ class EventManager {
   void addEventListener(
     web.Element element,
     String name,
-    void Function(Object) callback,
+    void Function(web.Event) callback,
   ) {
     if (_keyEvents.supports(name)) {
       // Run the actual DOM event (i.e. "keydown" or "keyup") outside of the
@@ -77,7 +77,7 @@ class _KeyEventsHandler {
   void addEventListener(
     web.Element element,
     String name,
-    void Function(Object) callback,
+    void Function(web.Event) callback,
   ) {
     assert(_supports(name), 'Should never be called before "supports".');
     final parsed = _cache[name];

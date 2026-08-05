@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:web/web.dart' as web;
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_test/angulardart_test.dart';
 
@@ -53,7 +54,7 @@ void main() {
   test('should remove style when bound expression is null', () async {
     final testBed = NgTestBed(ng.createBoundStyleComponentFactory());
     final testFixture = await testBed.create();
-    final div = testFixture.rootElement.querySelector('div')!;
+    final div = testFixture.rootElement.querySelector('div')! as web.HTMLElement;
     expect(div.style.height, '10px');
     await testFixture.update((component) => component.height = null);
     expect(div.style.height, '');
@@ -63,7 +64,7 @@ void main() {
     final testBed =
         NgTestBed(ng.createBoundMismatchedPropertyComponentFactory());
     final testFixture = await testBed.create();
-    final div = testFixture.rootElement.querySelector('div')!;
+    final div = testFixture.rootElement.querySelector('div')! as web.HTMLElement;
     expect(div.tabIndex, 0);
     await testFixture.update((component) => component.index = 5);
     expect(div.tabIndex, 5);
@@ -73,7 +74,7 @@ void main() {
     final testBed =
         NgTestBed(ng.createBoundCamelCasePropertyComponentFactory());
     final testFixture = await testBed.create();
-    final div = testFixture.rootElement.querySelector('div')!;
+    final div = testFixture.rootElement.querySelector('div')! as web.HTMLElement;
     expect(div.tabIndex, 1);
     await testFixture.update((component) => component.index = 0);
     expect(div.tabIndex, 0);
@@ -83,19 +84,19 @@ void main() {
     final testBed = NgTestBed(ng.createBoundInnerHtmlComponentFactory());
     final testFixture = await testBed.create();
     final div = testFixture.rootElement.querySelector('div')!;
-    expect(div.innerHtml, 'Initial <span>HTML</span>');
+    expect(div.innerHTML, 'Initial <span>HTML</span>');
     await testFixture
         .update((component) => component.html = 'New <div>HTML</div>');
-    expect(div.innerHtml, 'New <div>HTML</div>');
+    expect(div.innerHTML, 'New <div>HTML</div>');
   });
 
   test('should consume className binding using class alias', () async {
     final testBed = NgTestBed(ng.createBoundClassNameAliasFactory());
     final testFixture = await testBed.create();
     final div = testFixture.rootElement.querySelector('div')!;
-    expect(div.classes, contains('foo'));
-    expect(div.classes, contains('bar'));
-    expect(div.classes, isNot(contains('initial')));
+    expect(div.classList, contains('foo'));
+    expect(div.classList, contains('bar'));
+    expect(div.classList, isNot(contains('initial')));
   });
 }
 

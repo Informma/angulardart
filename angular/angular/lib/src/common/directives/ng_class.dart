@@ -124,7 +124,7 @@ class NgClass implements DoCheck, OnDestroy {
       _toggleClass(unsafeCast(record.key), unsafeCast(record.currentValue));
     });
     changes.forEachRemovedItem((KeyValueChangeRecord record) {
-      if (record.previousValue != null) {
+      if (record.previousValue == true) {
         _toggleClass(unsafeCast(record.key), false);
       }
     });
@@ -162,7 +162,7 @@ class NgClass implements DoCheck, OnDestroy {
         }
       } else {
         (rawClassVal as Map<Object, Object?>).forEach((className, expVal) {
-          if (expVal != null) {
+          if (expVal == true) {
             _toggleClass(unsafeCast(className), !isCleanup);
           }
         });

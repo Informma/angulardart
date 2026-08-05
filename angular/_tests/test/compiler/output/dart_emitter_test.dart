@@ -1,4 +1,3 @@
-// @dart=2.9
 
 import 'package:test/test.dart';
 import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart'
@@ -22,8 +21,8 @@ void main() {
   //   Dart exports everything that has no `_` in its name.
   // - return types for function expressions
   group('DartEmitter', () {
-    DartEmitter emitter;
-    o.ReadVarExpr someVar;
+    late DartEmitter emitter;
+    late o.ReadVarExpr someVar;
     setUp(() {
       emitter = DartEmitter();
       someVar = o.variable('someVar');
@@ -197,7 +196,7 @@ void main() {
     });
 
     test('should support Never but emit Null when not opted-in', () {
-      var declareVar = o.variable('a').set(o.NULL_EXPR);
+      var declareVar = o.variable('a').set(o.nullExpr);
       expect(
         emitStmt(declareVar.toDeclStmt(o.NEVER_TYPE)),
         'Null /*Never*/ a = null;',
@@ -206,7 +205,7 @@ void main() {
 
     test('should support and write Never', () {
       enableNullSafety();
-      var declareVar = o.variable('a').set(o.NULL_EXPR);
+      var declareVar = o.variable('a').set(o.nullExpr);
       expect(
         emitStmt(declareVar.toDeclStmt(o.NEVER_TYPE)),
         // = null isn't semantically valid, but this is a synthetic test anyway.
@@ -363,7 +362,7 @@ void main() {
       var bodyStmt = o.variable('body').callFn([]).toStmt();
       var catchStmt = o
           .variable('catchFn')
-          .callFn([o.CATCH_ERROR_VAR, o.CATCH_STACK_VAR]).toStmt();
+          .callFn([o.catchErrorVarExpr, o.catchStackVarExpr]).toStmt();
       expect(
           emitStmt(o.TryCatchStmt([bodyStmt], [catchStmt])),
           [
@@ -378,9 +377,9 @@ void main() {
       expect(emitStmt(o.ThrowStmt(someVar)), 'throw someVar;');
     });
     group('classes', () {
-      o.Statement callSomeMethod;
+      late o.Statement callSomeMethod;
       setUp(() {
-        callSomeMethod = o.THIS_EXPR.callMethod('someMethod', []).toStmt();
+        callSomeMethod = o.thisExpr.callMethod('someMethod', []).toStmt();
       });
       test('should support declaring classes', () {
         expect(emitStmt(o.ClassStmt('SomeClass', null, [], [], null, [])),
@@ -391,7 +390,7 @@ void main() {
             ['class SomeClass extends SomeSuperClass {', '}'].join('\n'));
       });
       test('should support declaring constructors', () {
-        var superCall = o.SUPER_EXPR.callFn([o.variable('someParam')]).toStmt();
+        var superCall = o.superExpr.callFn([o.variable('someParam')]).toStmt();
         expect(
             emitStmt(
                 o.ClassStmt('SomeClass', null, [], [], o.Constructor(), [])),
@@ -546,7 +545,7 @@ void main() {
             'GenericClass',
             o.importExpr(
               CompileIdentifierMetadata(name: 'GenericParent'),
-              typeParams: [o.importType(CompileIdentifierMetadata(name: 'T'))],
+              typeParams: [o.importType(CompileIdentifierMetadata(name: 'T'))!],
             ),
             [],
             [],
@@ -559,7 +558,7 @@ void main() {
       });
     });
     test('should support builtin types', () {
-      var writeVarExpr = o.variable('a').set(o.NULL_EXPR);
+      var writeVarExpr = o.variable('a').set(o.nullExpr);
       expect(emitStmt(writeVarExpr.toDeclStmt(o.DYNAMIC_TYPE)),
           'dynamic a = null;');
       expect(emitStmt(writeVarExpr.toDeclStmt(o.BOOL_TYPE)), 'bool a = null;');
@@ -571,7 +570,7 @@ void main() {
           'Function a = null;');
     });
     test('should support external types', () {
-      var writeVarExpr = o.variable('a').set(o.NULL_EXPR);
+      var writeVarExpr = o.variable('a').set(o.nullExpr);
       expect(
           emitStmt(writeVarExpr.toDeclStmt(o.importType(sameModuleIdentifier))),
           'someLocalId a = null;');
@@ -584,7 +583,7 @@ void main() {
           ].join('\n'));
     });
     test('should support combined types', () {
-      var writeVarExpr = o.variable('a').set(o.NULL_EXPR);
+      var writeVarExpr = o.variable('a').set(o.nullExpr);
       expect(emitStmt(writeVarExpr.toDeclStmt(o.ArrayType(null))),
           'List<dynamic> a = null;');
       expect(emitStmt(writeVarExpr.toDeclStmt(o.ArrayType(o.INT_TYPE))),

@@ -1,4 +1,3 @@
-// @dart=2.9
 
 import 'package:_tests/compiler.dart';
 import 'package:angulardart_compiler/v2/context.dart';

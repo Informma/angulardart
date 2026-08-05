@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
@@ -19,7 +21,7 @@ class _HasTextContent extends Matcher {
 
   @override
   Description describe(Description description) =>
-      description.add('$expectedText');
+      description.add(expectedText);
 
   @override
   Description describeMismatch(
@@ -37,25 +39,29 @@ class _HasTextContent extends Matcher {
 String? _elementText(Object? n) {
   if (n is Iterable) {
     return n.map(_elementText).join('');
-  } else if (n is web.Node) {
-    if (n is web.Comment) {
+  } else if (n.isA<web.Node>()) {
+    final node = n as web.Node;
+    if (node.isA<web.Comment>()) {
       return '';
     }
 
-    if (n is web.HTMLSlotElement) {
-      return _elementText(n.assignedNodes());
+    if (node.isA<web.HTMLSlotElement>()) {
+      return _elementText((node as web.HTMLSlotElement).assignedNodes());
     }
 
-    if (n is web.Element && n.shadowRoot != null) {
-      final nodes = <web.Node>[];
-      final childNodes = n.shadowRoot!.childNodes;
-      for (var i = 0; i < childNodes.length; i++) {
-        nodes.add(childNodes.item(i)!);
+    if (node.isA<web.Element>()) {
+      final element = node as web.Element;
+      if (element.shadowRoot != null) {
+        final nodes = <web.Node>[];
+        final childNodes = element.shadowRoot!.childNodes;
+        for (var i = 0; i < childNodes.length; i++) {
+          nodes.add(childNodes.item(i)!);
+        }
+        return _elementText(nodes);
       }
-      return _elementText(nodes);
     }
 
-    final childNodes = n.childNodes;
+    final childNodes = node.childNodes;
     if (childNodes.length > 0) {
       final nodes = <web.Node>[];
       for (var i = 0; i < childNodes.length; i++) {
@@ -64,7 +70,7 @@ String? _elementText(Object? n) {
       return _elementText(nodes);
     }
 
-    return n.textContent;
+    return node.textContent;
   } else {
     return '$n';
   }

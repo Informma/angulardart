@@ -16,6 +16,10 @@ abstract class BoundValueConverter
   final o.Expression _implicitReceiver;
   final NameResolver? _nameResolver;
 
+  /// Whether this converter is processing directive outputs (stream listeners)
+  /// rather than DOM event handlers.
+  bool isDirectiveOutput = false;
+
   BoundValueConverter(
     this._metadata,
     this._implicitReceiver,
@@ -127,11 +131,12 @@ abstract class BoundValueConverter
     ];
   }
 
-  o.Expression _wrapHandler(o.Expression handlerExpr, int? numArgs) =>
-      o.InvokeMemberMethodExpr(
-        'eventHandler$numArgs',
-        [handlerExpr],
-      );
+  o.Expression _wrapHandler(o.Expression handlerExpr, int? numArgs) {
+    final methodName = isDirectiveOutput
+        ? 'eventHandler${numArgs}Stream'
+        : 'eventHandler$numArgs';
+    return o.InvokeMemberMethodExpr(methodName, [handlerExpr]);
+  }
 
   o.Expression _createEventHandler(List<o.Statement> statements);
 }
@@ -145,11 +150,15 @@ class _DirectiveBoundValueConverter extends BoundValueConverter {
   );
 
   @override
-  BoundValueConverter scopeNamespace() => _DirectiveBoundValueConverter(
-        _metadata,
-        _implicitReceiver,
-        _nameResolver!.scope(),
-      );
+  BoundValueConverter scopeNamespace() {
+    final scoped = _DirectiveBoundValueConverter(
+      _metadata,
+      _implicitReceiver,
+      _nameResolver!.scope(),
+    );
+    scoped.isDirectiveOutput = isDirectiveOutput;
+    return scoped;
+  }
 
   @override
   o.Expression _createI18nMessage(I18nMessage message) {
@@ -187,6 +196,10 @@ class _ViewBoundValueConverter extends BoundValueConverter {
       );
 
   @override
-  BoundValueConverter scopeNamespace() =>
-      _ViewBoundValueConverter(_view, nameResolver: _nameResolver!.scope());
+  BoundValueConverter scopeNamespace() {
+    final scoped =
+        _ViewBoundValueConverter(_view, nameResolver: _nameResolver!.scope());
+    scoped.isDirectiveOutput = isDirectiveOutput;
+    return scoped;
+  }
 }

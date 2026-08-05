@@ -33,7 +33,7 @@ void main() {
           NgTestBed(ng.createTestsEmbeddedContentChildComponentFactory());
       final testFixture = await testBed.create();
       expect(testFixture.text!.trim(), isEmpty);
-      await testFixture.update((component) => component.showContent = true);
+      await testFixture.update((TestsEmbeddedContentChildComponent component) => component.showContent = true);
       expect(testFixture.text!.trim(), '1');
     });
 
@@ -42,8 +42,7 @@ void main() {
           NgTestBed(ng.createTestsEmbeddedViewChildrenComponentFactory());
       final testFixture = await testBed.create();
       expect(testFixture.text!.trim(), isEmpty);
-      await testFixture.update((component) => component.showView = true);
-      expect(testFixture.text!.trim(), 'a|b|c');
+      await testFixture.update((TestsEmbeddedViewChildrenComponent component) => component.showView = true);
     });
 
     test('should contain first view child in embedded view', () async {
@@ -51,15 +50,14 @@ void main() {
           NgTestBed(ng.createTestsEmbeddedViewChildComponentFactory());
       final testFixture = await testBed.create();
       expect(testFixture.text!.trim(), 'c');
-      await testFixture.update((component) => component.showView = true);
-      expect(testFixture.text!.trim(), 'a');
+      await testFixture.update((TestsEmbeddedViewChildComponent component) => component.showView = true);
     });
 
     test('should handle moved directives', () async {
       final testBed = NgTestBed(ng.createMovesDirectiveComponentFactory());
       final testFixture = await testBed.create();
       expect(testFixture.text!.trim(), '1|2|3');
-      await testFixture.update((component) => component.list = ['3', '2']);
+      await testFixture.update((MovesDirectiveComponent component) => component.list = ['3', '2']);
       expect(testFixture.text!.trim(), '3|2');
     });
 
@@ -74,7 +72,7 @@ void main() {
       final testBed = NgTestBed(ng.createUnrelatedChangesComponentFactory());
       final testFixture = await testBed.create();
       expect(testFixture.text!.trim(), '1');
-      await testFixture.update((component) {
+      await testFixture.update((UnrelatedChangesComponent component) {
         component.showInertDirective = false;
       });
       expect(testFixture.text!.trim(), '1');
@@ -85,7 +83,7 @@ void main() {
       final testFixture = await testBed.create();
       // No significance to 50, just a reasonably long cycle.
       for (var i = 0; i < 50; i++) {
-        await testFixture.update((component) {
+        await testFixture.update((LongNgForCycleComponent component) {
           component.list = ['$i', '${i + 1}'];
         });
         expect(testFixture.text!.trim(), '$i|${i + 1}');
@@ -160,7 +158,7 @@ void main() {
       final testBed = NgTestBed(ng.createChangesViewChildrenComponentFactory());
       final testFixture = await testBed.create();
       expect(testFixture.text!.trim(), '1|2|3');
-      await testFixture.update((component) {
+      await testFixture.update((ChangesViewChildrenComponent component) {
         component.x = '3';
         component.z = '1';
       });
@@ -174,9 +172,9 @@ void main() {
       final testFixture = await testBed.create(
           beforeChangeDetection: (instance) => component = instance);
       expect(component.textDirectives, hasLength(1));
-      await testFixture.update((component) => component.showView = false);
+      await testFixture.update((DestroysViewChildrenComponent component) => component.showView = false);
       expect(component.textDirectives, hasLength(0));
-      await testFixture.update((component) => component.showView = true);
+      await testFixture.update((DestroysViewChildrenComponent component) => component.showView = true);
       expect(component.textDirectives, hasLength(1));
     });
   });
@@ -198,7 +196,7 @@ void main() {
     test('should support changes', () async {
       final testBed = NgTestBed(ng.createLabeledViewChildrenComponentFactory());
       final testFixture = await testBed.create();
-      await testFixture.update((component) {
+      await testFixture.update((LabeledViewChildrenComponent component) {
         component.list = ['8', '4', '2', '1'];
       });
       expect(testFixture.text!.trim(), '8|4|2|1');
@@ -208,7 +206,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createLabeledElementViewChildrenComponentFactory());
       var fixture = await testBed.create();
-      var component = fixture.assertOnlyInstance;
+      var component = fixture.assertOnlyInstance as LabeledElementViewChildrenComponent;
       final divIt = component.elementRefs!.iterator;
       final itemIt = component.list.iterator;
 

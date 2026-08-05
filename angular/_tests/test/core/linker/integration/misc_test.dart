@@ -17,7 +17,7 @@ void main() {
     final testBed =
         NgTestBed(ng.createHostAttributeFromDirectiveComponentFactory());
     final testFixture = await testBed.create();
-    final div = testFixture.rootElement.children.first;
+    final div = testFixture.rootElement.children.item(0)!;
     expect(div.attributes, containsPair('role', 'button'));
   });
 
@@ -25,7 +25,7 @@ void main() {
     final testBed =
         NgTestBed(ng.createHostPropertyFromDirectiveComponentFactory());
     final testFixture = await testBed.create();
-    final div = testFixture.rootElement.children.first;
+    final div = testFixture.rootElement.children.item(0)!;
     expect(div.id, 'one');
     await testFixture.update((component) => component.directive!.id = 'two');
     expect(div.id, 'two');

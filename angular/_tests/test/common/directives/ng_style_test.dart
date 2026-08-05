@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:web/web.dart' as web;
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_test/angulardart_test.dart';
 
@@ -11,7 +12,7 @@ void main() {
     test('should update styles specified in an map literal', () async {
       var testBed = NgTestBed(ng.createMapUpdateTestFactory());
       var testFixture = await testBed.create();
-      var content = testFixture.rootElement.querySelector('div')!;
+      var content = testFixture.rootElement.querySelector('div')! as web.HTMLElement;
       await testFixture.update((MapUpdateTest component) {
         component.map = {'max-width': '40px'};
       });
@@ -25,7 +26,7 @@ void main() {
     test('should remove styles when deleting a key in a map literal', () async {
       var testBed = NgTestBed(ng.createMapUpdateTestFactory());
       var testFixture = await testBed.create();
-      var content = testFixture.rootElement.querySelector('div')!;
+      var content = testFixture.rootElement.querySelector('div')! as web.HTMLElement;
       await testFixture.update((MapUpdateTest component) {
         component.map = {'max-width': '40px'};
       });
@@ -39,7 +40,7 @@ void main() {
     test('should cooperate with the style attribute', () async {
       var testBed = NgTestBed(ng.createMapUpdateWithDefaultTestFactory());
       var testFixture = await testBed.create();
-      var content = testFixture.rootElement.querySelector('div')!;
+      var content = testFixture.rootElement.querySelector('div')! as web.HTMLElement;
       await testFixture.update((MapUpdateWithDefaultTest component) {
         component.map = {'max-width': '40px'};
       });
@@ -56,7 +57,7 @@ void main() {
         () async {
       var testBed = NgTestBed(ng.createMapUpdateWithStyleExprTestFactory());
       var testFixture = await testBed.create();
-      var content = testFixture.rootElement.querySelector('div')!;
+      var content = testFixture.rootElement.querySelector('div')! as web.HTMLElement;
       await testFixture.update((MapUpdateWithStyleExprTest component) {
         component.map = {'max-width': '40px'};
       });

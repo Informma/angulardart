@@ -58,6 +58,7 @@ class DartEmitter implements OutputEmitter {
     );
     final ctx = EmitterVisitorContext.createRoot();
     converter.visitAllStatements(stmts, ctx);
+    converter.importsWithPrefixes.putIfAbsent('dart:js_interop', () => '');
     converter.importsWithPrefixes.forEach((importedModuleUrl, prefix) {
       var importPath = getImportModulePath(moduleUrl, importedModuleUrl);
       srcParts.add(prefix.isEmpty

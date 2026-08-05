@@ -1,4 +1,3 @@
-// @dart=2.9
 
 import 'package:angulardart_compiler/v1/src/compiler/schema/element_schema_registry.dart';
 import 'package:angulardart_compiler/v1/src/compiler/security.dart';

@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:web/web.dart' as web;
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_test/angulardart_test.dart';
 
@@ -29,7 +30,7 @@ void main() {
       );
       // Styles from Child are applied because they load second.
       final secondChild = testFixture.rootElement.querySelector('.test')!;
-      expect(secondChild.getComputedStyle().margin, '16px');
+      expect(web.window.getComputedStyle(secondChild).margin, '16px');
     });
 
     test('from Parent win when Child is created before Parent', () async {
@@ -43,7 +44,7 @@ void main() {
       );
       // Styles from Parent are applied because they load second.
       final secondChild = testFixture.rootElement.querySelector('.test')!;
-      expect(secondChild.getComputedStyle().margin, '8px');
+      expect(web.window.getComputedStyle(secondChild).margin, '8px');
     });
   });
 }

@@ -1,6 +1,6 @@
 @JS()
 
-library angular.test.bootstrap.run_app_test;
+library;
 
 import 'dart:async';
 import 'package:web/web.dart' as web;

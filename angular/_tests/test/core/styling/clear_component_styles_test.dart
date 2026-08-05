@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:web/web.dart' as web;
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_test/angulardart_test.dart';
 
@@ -32,7 +33,7 @@ Future<void> expectTextFontStyle(
   final testBed = NgTestBed(componentFactory);
   final testFixture = await testBed.create();
   final text = testFixture.rootElement.querySelector('.text');
-  expect(text!.getComputedStyle().getPropertyValue('font-style'), fontStyle);
+  expect(web.window.getComputedStyle(text!).getPropertyValue('font-style'), fontStyle);
   return testFixture.dispose();
 }
 

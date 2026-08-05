@@ -24,7 +24,7 @@ void main() {
       ng.createMovesEmbeddedViewComponentFactory(),
     ).addInjector(
       (i) => Injector.map({
-        ANCHOR_ELEMENT: template,
+        anchorElement: template,
       }, i),
     );
     final testFixture = await testBed.create();
@@ -164,7 +164,7 @@ class SimpleImperativeViewComponent {
   }
 }
 
-const ANCHOR_ELEMENT = OpaqueToken('AnchorElement');
+const anchorElement = OpaqueToken('AnchorElement');
 
 @Directive(
   selector: '[someImpvp]',
@@ -176,7 +176,7 @@ class SomeImperativeViewport {
   web.HTMLTemplateElement anchor;
 
   SomeImperativeViewport(
-      this.vc, this.templateRef, @Inject(ANCHOR_ELEMENT) this.anchor);
+      this.vc, this.templateRef, @Inject(anchorElement) this.anchor);
 
   @Input()
   set someImpvp(bool value) {
@@ -188,7 +188,7 @@ class SomeImperativeViewport {
       view = vc.createEmbeddedView(templateRef);
       var nodes = view!.rootNodes;
       for (var i = 0; i < nodes.length; i++) {
-        anchor.append(nodes[i] as web.Node);
+        anchor.append(nodes[i]);
       }
     }
   }

@@ -21,19 +21,19 @@ void main() {
     test('should handle nullable bool with ! operator', () async {
       await fixture.update((c) => c.nullableValue = true);
       final div = fixture.rootElement.querySelector('div');
-      expect(div?.classes.contains('my-class'), isTrue);
+      expect(div?.classList.contains('my-class'), isTrue);
     });
 
     test('should handle nullable bool with ?? operator', () async {
       await fixture.update((c) => c.nullableValue = false);
       final div = fixture.rootElement.querySelector('div');
-      expect(div?.classes.contains('my-class'), isFalse);
+      expect(div?.classList.contains('my-class'), isFalse);
     });
 
     test('should handle null value', () async {
       await fixture.update((c) => c.nullableValue = null);
       final div = fixture.rootElement.querySelector('div');
-      expect(div?.classes.contains('my-class'), isFalse);
+      expect(div?.classList.contains('my-class'), isFalse);
     });
   });
 }

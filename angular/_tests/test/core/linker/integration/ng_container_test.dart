@@ -17,44 +17,44 @@ void main() {
   test('renders children in place of self', () async {
     final testBed = NgTestBed(ng.createRendersChildrenFactory());
     final testFixture = await testBed.create();
-    expect(testFixture.rootElement.innerHtml, html);
+    expect(testFixture.rootElement.innerHTML, html);
   });
 
   test('supports *ngFor', () async {
     final testBed = NgTestBed(ng.createSupportsNgForFactory());
     final testFixture = await testBed.create();
-    expect(testFixture.rootElement.innerHtml, anchorHtml);
+    expect(testFixture.rootElement.innerHTML, anchorHtml);
     final values = ['a', 'b', 'c'];
     final html = values.join();
-    await testFixture.update((component) => component.values.addAll(values));
-    expect(testFixture.rootElement.innerHtml, '$anchorHtml$html');
+    await testFixture.update((component) => (component as SupportsNgFor).values.addAll(values));
+    expect(testFixture.rootElement.innerHTML, '$anchorHtml$html');
   });
 
   test('supports *ngIf', () async {
     final testBed = NgTestBed(ng.createSupportsNgIfFactory());
     final testFixture = await testBed.create();
-    expect(testFixture.rootElement.innerHtml, anchorHtml);
-    await testFixture.update((component) => component.visible = true);
-    expect(testFixture.rootElement.innerHtml, '$anchorHtml$html');
+    expect(testFixture.rootElement.innerHTML, anchorHtml);
+    await testFixture.update((SupportsNgIf component) => component.visible = true);
+    expect(testFixture.rootElement.innerHTML, '$anchorHtml$html');
   });
 
   test('supports *ngTemplateOutlet', () async {
     final testBed = NgTestBed(ng.createSupportsNgTemplateOutletFactory());
     final testFixture = await testBed.create();
     expect(
-        testFixture.rootElement.innerHtml,
+        testFixture.rootElement.innerHTML,
         '$anchorHtml ' // <template #ref> anchor
         '$anchorHtml' // <template> and ViewContainerRef anchor for *-directive
-        '${testFixture.assertOnlyInstance.context['message']}');
+        '${(testFixture.assertOnlyInstance as SupportsNgTemplateOutlet).context['message']}');
   });
 
   test('supports nested *-syntax', () async {
     final testBed = NgTestBed(ng.createSupportsNestingFactory());
     final testFixture = await testBed.create();
-    expect(testFixture.rootElement.innerHtml, anchorHtml);
-    await testFixture.update((component) => component.integers = [1, 2, 3]);
+    expect(testFixture.rootElement.innerHTML, anchorHtml);
+    await testFixture.update((SupportsNesting component) => component.integers = [1, 2, 3]);
     expect(
-        testFixture.rootElement.innerHtml,
+        testFixture.rootElement.innerHTML,
         '$anchorHtml' // NgFor
         '$anchorHtml' // NgIf true
         '<li>1</li>'
@@ -62,9 +62,9 @@ void main() {
         '<li>2</li>'
         '$anchorHtml' // NgIf true
         '<li>3</li>');
-    await testFixture.update((component) => component.filterOdd = true);
+    await testFixture.update((SupportsNesting component) => component.filterOdd = true);
     expect(
-        testFixture.rootElement.innerHtml,
+        testFixture.rootElement.innerHTML,
         '$anchorHtml' // NgFor
         '$anchorHtml' // NgIf false
         '$anchorHtml' // NgIf true
@@ -76,17 +76,17 @@ void main() {
   test('can be projected', () async {
     final testBed = NgTestBed(ng.createCanBeProjectedFactory());
     final testFixture = await testBed.create();
-    expect(testFixture.rootElement.innerHtml,
+    expect(testFixture.rootElement.innerHTML,
         '<content-host>$anchorHtml$html</content-host>');
-    await testFixture.update((component) => component.visible = false);
-    expect(testFixture.rootElement.innerHtml,
+    await testFixture.update((CanBeProjected component) => component.visible = false);
+    expect(testFixture.rootElement.innerHTML,
         '<content-host>$anchorHtml</content-host>');
   });
 
   test('can host projected content', () async {
     final testBed = NgTestBed(ng.createCanHostProjectedContentFactory());
     final testFixture = await testBed.create();
-    expect(testFixture.rootElement.innerHtml,
+    expect(testFixture.rootElement.innerHTML,
         '<contained-content-host>$html</contained-content-host>');
   });
 }

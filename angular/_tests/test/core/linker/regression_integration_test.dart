@@ -12,7 +12,7 @@ void main() {
         NgTestBed(ng.createRightPrecedenceConditionalComponentFactory());
     final testFixture = await testBed.create();
     expect(testFixture.text, 'red');
-    await testFixture.update((component) => component.hasBorder = true);
+    await testFixture.update((RightPrecedenceConditionalComponent component) => component.hasBorder = true);
     expect(testFixture.text, 'red border');
   });
 

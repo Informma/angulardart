@@ -1,4 +1,3 @@
-// @dart=2.9
 
 import 'package:test/test.dart';
 import 'package:_tests/test_util.dart';
@@ -26,15 +25,15 @@ void main() {
 }
 
 void _runTests(ExpressionParser Function() createParser) {
-  ASTWithSource parseAction(String text, [String location]) {
+  ASTWithSource parseAction(String text, [String? location]) {
     return createParser().parseAction(text, location, []);
   }
 
-  ASTWithSource parseBinding(String text, [String location]) {
+  ASTWithSource parseBinding(String text, [String? location]) {
     return createParser().parseBinding(text, location, []);
   }
 
-  ASTWithSource parseInterpolation(String text, [String location]) {
+  ASTWithSource parseInterpolation(String text, [String? location]) {
     return createParser().parseInterpolation(text, location, []);
   }
 
@@ -42,19 +41,19 @@ void _runTests(ExpressionParser Function() createParser) {
     return Unparser().unparse(ast);
   }
 
-  void checkInterpolation(String exp, [String expected]) {
+  void checkInterpolation(String exp, [String? expected]) {
     var ast = parseInterpolation(exp);
     expected ??= exp;
     expect(unparse(ast), expected);
   }
 
-  void checkBinding(String exp, [String expected]) {
+  void checkBinding(String exp, [String? expected]) {
     var ast = parseBinding(exp);
     expected ??= exp;
     expect(unparse(ast), expected);
   }
 
-  void checkAction(String exp, [String expected]) {
+  void checkAction(String exp, [String? expected]) {
     var ast = parseAction(exp);
     expected ??= exp;
     expect(unparse(ast), expected);
@@ -78,8 +77,8 @@ void _runTests(ExpressionParser Function() createParser) {
         checkAction('1');
       });
       test('should parse strings', () {
-        checkAction("'1'", '\"1\"');
-        checkAction('\"1\"');
+        checkAction("'1'", '"1"');
+        checkAction('"1"');
       });
       test('should require escaping \$ in strings', () {
         expectActionError(r"'$100 USD'", _throwsParseException);
@@ -150,7 +149,7 @@ void _runTests(ExpressionParser Function() createParser) {
         test('should only allow identifier or keyword as member names', () {
           expectActionError('x.(', _throwsParseException);
           expectActionError('x. 1234', _throwsParseException);
-          expectActionError('x.\"foo\"', _throwsParseException);
+          expectActionError('x."foo"', _throwsParseException);
         });
         test('should parse safe field access', () {
           checkAction('a?.a');
@@ -332,15 +331,15 @@ void _runTests(ExpressionParser Function() createParser) {
         checkInterpolation('{{ a < b ? a : b }}');
       });
       test('should parse expression with newline characters', () {
-        checkInterpolation('''{{ \'foo\' +
- \'bar\' +
- \'baz\' }}''', '''{{ "foo" + "bar" + "baz" }}''');
+        checkInterpolation('''{{ 'foo' +
+ 'bar' +
+ 'baz' }}''', '''{{ "foo" + "bar" + "baz" }}''');
       });
       group('non-comment slashes should parse in', () {
         test('single quote strings', () {
           checkInterpolation(
-            "{{ \'http://www.google.com\' }}",
-            '{{ \"http://www.google.com\" }}',
+            "{{ 'http://www.google.com' }}",
+            '{{ "http://www.google.com" }}',
           );
         });
         test('double quote strings', () {
@@ -367,13 +366,13 @@ void _runTests(ExpressionParser Function() createParser) {
         });
         test('complex strings', () {
           expectInterpolationError(
-            '''{{"//a\'//b`//c`//d\'//e" //comment}}''',
+            '''{{"//a'//b`//c`//d'//e" //comment}}''',
             _throwsParseException,
           );
         });
         test('nested, unterminated strings', () {
           expectInterpolationError(
-            '''{{ "a\'b`" //comment}}''',
+            '''{{ "a'b`" //comment}}''',
             _throwsParseException,
           );
         });

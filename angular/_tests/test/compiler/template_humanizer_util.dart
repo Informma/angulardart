@@ -1,4 +1,3 @@
-// @dart=2.9
 
 import 'package:angulardart_compiler/v1/src/compiler/output/dart_emitter.dart';
 import 'package:angulardart_compiler/v1/src/compiler/template_ast.dart';

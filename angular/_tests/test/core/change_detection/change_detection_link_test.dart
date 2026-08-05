@@ -1,3 +1,5 @@
+// ignore_for_file: experimental_member_use
+
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart/experimental.dart';

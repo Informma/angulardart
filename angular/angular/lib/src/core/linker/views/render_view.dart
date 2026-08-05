@@ -125,7 +125,19 @@ abstract class RenderView extends View {
   ///   * Calls [markForCheck] on this view to ensure it gets change detected
   ///   during the next change detection cycle, in case it uses a non-default
   ///   change detection strategy.
-  void Function(E) eventHandler0<E>(void Function() handler) {
+  ///
+  /// Returns a function compatible with `package:web`'s `EventTarget.addEventListener`.
+  void Function(web.Event) eventHandler0(void Function() handler) {
+    return (web.Event event) {
+      markForCheck();
+      appViewUtils.eventManager.zone.runGuarded(handler);
+    };
+  }
+
+  /// Stream-compatible version of [eventHandler0] for directive outputs.
+  ///
+  /// Returns a Dart function suitable for `Stream.listen()`.
+  void Function(E) eventHandler0Stream<E>(void Function() handler) {
     return (E event) {
       markForCheck();
       appViewUtils.eventManager.zone.runGuarded(handler);
@@ -146,11 +158,21 @@ abstract class RenderView extends View {
   /// of the event listener is a subclass of [Event]. The [Event] passed in from
   /// [EventTarget.addEventListener] can then be safely coerced back to its
   /// known type.
-  void Function(E) eventHandler1<E, F extends E>(void Function(F) handler) {
-    assert(
-        E == Null || F != Null,
-        "Event handler '$handler' isn't assignable to expected type "
-        "'($E) => void'");
+  ///
+  /// Returns a function compatible with `package:web`'s `EventTarget.addEventListener`.
+  void Function(web.Event) eventHandler1<F>(void Function(F) handler) {
+    return (web.Event event) {
+      markForCheck();
+      appViewUtils.eventManager.zone.runGuarded(
+        () => handler(unsafeCast<F>(event)),
+      );
+    };
+  }
+
+  /// Stream-compatible version of [eventHandler1] for directive outputs.
+  ///
+  /// Returns a Dart function suitable for `Stream.listen()`.
+  void Function(E) eventHandler1Stream<E, F>(void Function(F) handler) {
     return (E event) {
       markForCheck();
       appViewUtils.eventManager.zone.runGuarded(

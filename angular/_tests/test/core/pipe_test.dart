@@ -95,7 +95,7 @@ class PurePipe {
   PurePipe._();
 
   // ignore: prefer_void_to_null
-  Null transform(_) {
+  Null transform(Object? _) {
     _invocations++;
     return null;
   }

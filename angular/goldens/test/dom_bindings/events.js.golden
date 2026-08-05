@@ -9414,9 +9414,9 @@
       T.appendText(parentRenderNode, " ");
       _el_4 = T.appendElement(doc, parentRenderNode, _s6_);
       t1 = type$.Event;
-      C.ButtonElement_methods.addEventListener$2(_el_0, _s5_, _this.eventHandler0$1$1(_ctx.get$tearOffNoArguments(), t1));
-      C.ButtonElement_methods.addEventListener$2(_el_2, _s5_, _this.eventHandler1$2$1(_ctx.get$tearOffWithArguments(), t1, t1));
-      C.ButtonElement_methods.addEventListener$2(_el_4, _s5_, _this.eventHandler1$2$1(_ctx.get$callEventWithArguments(), t1, t1));
+      C.ButtonElement_methods.addEventListener$2(_el_0, _s5_, _this.eventHandler0$1$1(_ctx.get$tearOffNoArguments(), t1).toJS);
+      C.ButtonElement_methods.addEventListener$2(_el_2, _s5_, _this.eventHandler1$2$1(_ctx.get$tearOffWithArguments(), t1, t1).toJS);
+      C.ButtonElement_methods.addEventListener$2(_el_4, _s5_, _this.eventHandler1$2$1(_ctx.get$callEventWithArguments(), t1, t1).toJS);
     }
   };
   V.ViewUsesOutputs0.prototype = {

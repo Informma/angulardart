@@ -52,7 +52,7 @@ class ChildComponent {
   var updates = 0;
 
   @Input()
-  set value(value) {
+  set value(dynamic value) {
     updates++;
     _value = value;
   }

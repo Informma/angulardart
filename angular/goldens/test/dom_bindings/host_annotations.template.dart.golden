@@ -12,6 +12,7 @@ import 'package:angular/src/core/linker/views/view.dart' as import3;
 import 'package:angular/src/core/change_detection/change_detection.dart';
 import 'package:angular/src/utilities.dart' as import5;
 import 'dart:html' as import6;
+import 'dart:js_interop';
 import 'package:angular/src/runtime/dom_helpers.dart' as import7;
 import 'package:angular/src/devtools.dart' as import8;
 import 'package:angular/src/core/linker/app_view_utils.dart' as import9;
@@ -58,10 +59,10 @@ class ViewGoldenComponent0 extends import0.ComponentView<import1.GoldenComponent
     this._compView_0.create(this._HasOutput_0_5);
     final subscription_0 = this._HasOutput_0_5.fooEvents.listen(this.eventHandler0(this._ListensToOutput_0_6.onCustomEvent));
     this.initSubscriptions([subscription_0]);
-    parentRenderNode.addEventListener('click', this.eventHandler0(_ctx.onClickNoArguments));
-    parentRenderNode.addEventListener('dblclick', this.eventHandler1(_ctx.onDblClickInferArgument));
-    parentRenderNode.addEventListener('mousedown', this.eventHandler1(_ctx.onMouseDownManualArgument));
-    parentRenderNode.addEventListener('mouseup', this.eventHandler1(this._handleEvent_0));
+    parentRenderNode.addEventListener('click', this.eventHandler0(_ctx.onClickNoArguments).toJS);
+    parentRenderNode.addEventListener('dblclick', this.eventHandler1(_ctx.onDblClickInferArgument).toJS);
+    parentRenderNode.addEventListener('mousedown', this.eventHandler1(_ctx.onMouseDownManualArgument).toJS);
+    parentRenderNode.addEventListener('mouseup', this.eventHandler1(this._handleEvent_0).toJS);
     import9.appViewUtils.eventManager.addEventListener(parentRenderNode, 'keydown.space', this.eventHandler0(_ctx.onSpecialKeyHandler));
   }
 

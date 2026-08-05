@@ -1,12 +1,18 @@
 name: _tests
 description: Tests for AngularDart.
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
   # No strict dependencies, we always use dependency_overrides.
   angulardart:
+  angulardart_compiler:
   angulardart_test:
+  build: ^4.0.0
+  build_test: ^3.0.0
+  glob: ^2.0.0
+  js: ^0.7.0
+  logging: ^1.0.0
 
   # Actual valid dependencies required.
   collection: ^1.15.0
@@ -21,11 +27,12 @@ dev_dependencies:
   # Actual valid dependencies required.
   analyzer: ^13.0.0
   build_runner: ^2.16.0
-  build_test: ^3.0.0
   build_web_compilers: ^4.8.0
+
   mockito: ^5.0.0
   package_config: ^2.0.0
   lints: ^6.0.0
+  source_gen: ^4.0.0
   source_span: ^1.10.0
   term_glyph: ^1.2.0
 

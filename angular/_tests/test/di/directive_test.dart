@@ -261,6 +261,7 @@ void main() {
     final testBed = NgTestBed(
       ng.createWillFailInjecting2NodeParentFactory(),
     ).addInjector(
+      // ignore: experimental_member_use
       (i) => ReflectiveInjector.resolveStaticAndCreate([
         Provider(
           InjectsMissingService,
@@ -812,7 +813,7 @@ class WillFailFollowingExistingProvider {
 }
 
 class PrimeInjectsMissingService extends InjectsMissingService {
-  PrimeInjectsMissingService(MissingService d) : super(d);
+  PrimeInjectsMissingService(super.d);
 }
 
 const baseUrl = OpaqueToken<String>('baseUrl');

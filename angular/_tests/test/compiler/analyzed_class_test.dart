@@ -1,7 +1,6 @@
-// @dart=2.9
 
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/visitor.dart';
+import 'package:analyzer/dart/element/visitor2.dart';
 import 'package:test/test.dart';
 import 'package:angulardart_compiler/v1/src/compiler/analyzed_class.dart';
 import 'package:angulardart_compiler/v1/src/compiler/expression_parser/ast.dart';
@@ -84,7 +83,7 @@ void main() {
           final int eight = 8;
         }
       ''');
-      var analyzedClass = AnalyzedClass(library.getType('SubComponent'));
+      var analyzedClass = AnalyzedClass(library.getClass('SubComponent')!);
       final sevenExpr = PropertyRead(ImplicitReceiver(), 'seven');
       final eightExpr = PropertyRead(ImplicitReceiver(), 'eight');
       final someNumberExpr = PropertyRead(ImplicitReceiver(), 'someNumber');
@@ -98,26 +97,21 @@ void main() {
 Future<AnalyzedClass> analyzeClass(String source) async {
   final library = await resolve(source);
   final visitor = AnalyzedClassVisitor();
-  return library.accept(visitor);
+  return (await library.accept(visitor))!;
 }
 
-class AnalyzedClassVisitor extends RecursiveElementVisitor<AnalyzedClass> {
+class AnalyzedClassVisitor extends RecursiveElementVisitor2<AnalyzedClass> {
   @override
-  AnalyzedClass visitClassElement(ClassElement element) {
+  AnalyzedClass? visitClassElement(ClassElement element) {
     return AnalyzedClass(element);
   }
 
   @override
-  AnalyzedClass visitCompilationUnitElement(CompilationUnitElement element) {
-    return _visitAll(element.types);
+  AnalyzedClass? visitLibraryElement(LibraryElement element) {
+    return _visitAll(element.classes);
   }
 
-  @override
-  AnalyzedClass visitLibraryElement(LibraryElement element) {
-    return _visitAll(element.units);
-  }
-
-  AnalyzedClass _visitAll(List<Element> elements) {
+  AnalyzedClass? _visitAll(List<Element> elements) {
     for (var element in elements) {
       final analyzedClass = element.accept(this);
       if (analyzedClass != null) return analyzedClass;

@@ -1,11 +1,10 @@
-// @dart=2.9
 
 import 'package:angulardart_compiler/v1/src/compiler/expression_parser/ast.dart';
 
 class Unparser implements AstVisitor<void, String> {
   static final _quoteRegExp = RegExp(r'"');
 
-  StringBuffer sb;
+  late StringBuffer sb;
 
   String unparse(ASTWithSource ast) {
     sb = StringBuffer();
@@ -19,7 +18,7 @@ class Unparser implements AstVisitor<void, String> {
     void _,
   ) {
     _visit(ast.receiver);
-    sb.write(ast.receiver is ImplicitReceiver ? '${ast.name}' : '.${ast.name}');
+    sb.write(ast.receiver is ImplicitReceiver ? ast.name : '.${ast.name}');
   }
 
   @override
@@ -104,7 +103,7 @@ class Unparser implements AstVisitor<void, String> {
   @override
   void visitNamedExpr(NamedExpr ast, _) {
     sb.write('${ast.name}: ');
-    ast.expression.visit(this);
+    ast.expression?.visit(this);
   }
 
   @override

@@ -15,6 +15,7 @@ import 'dart:html' as import6;
 import 'package:angular/angular.dart';
 import 'package:angular/src/core/linker/views/host_view.dart' as import8;
 import 'package:angular/src/runtime/dom_helpers.dart' as import9;
+import 'dart:js_interop';
 
 final List<Object> styles$GoldenComponent = const [];
 
@@ -122,9 +123,9 @@ class ViewUsesDomEvents0 extends import0.ComponentView<import1.UsesDomEvents> {
     final _el_2 = import9.appendElement<import6.ButtonElement>(doc, parentRenderNode, 'button');
     final _text_3 = import9.appendText(parentRenderNode, ' ');
     final _el_4 = import9.appendElement<import6.ButtonElement>(doc, parentRenderNode, 'button');
-    _el_0.addEventListener('click', this.eventHandler0(_ctx.tearOffNoArguments));
-    _el_2.addEventListener('click', this.eventHandler1(_ctx.tearOffWithArguments));
-    _el_4.addEventListener('click', this.eventHandler1(_ctx.callEventWithArguments));
+    _el_0.addEventListener('click', this.eventHandler0(_ctx.tearOffNoArguments).toJS);
+    _el_2.addEventListener('click', this.eventHandler1(_ctx.tearOffWithArguments).toJS);
+    _el_4.addEventListener('click', this.eventHandler1(_ctx.callEventWithArguments).toJS);
   }
 
   static void _debugClearComponentStyles() {

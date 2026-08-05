@@ -371,7 +371,7 @@ class NgTestBed<T extends Object> {
       ).then((componentRef) async {
         _checkForActiveTest();
         await allStabilizers.stabilize();
-        final testFixture = NgTestFixture(
+        final testFixture = NgTestFixture<T>(
           componentRef.injector.provideType(ApplicationRef),
           componentRef,
           allStabilizers,

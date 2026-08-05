@@ -9817,10 +9817,10 @@
       _this.initSubscriptions$1(H._setArrayType([_this.get$_HasOutput_0_5().fooEvents.listen$1(_this.eventHandler0$1$1(_this.get$_ListensToOutput_0_6().get$onCustomEvent(), t1))], type$.JSArray_StreamSubscription_void));
       t1 = type$.Event;
       t2 = J.getInterceptor$x(parentRenderNode);
-      t2.addEventListener$2(parentRenderNode, "click", _this.eventHandler0$1$1(_ctx.get$onClickNoArguments(), t1));
-      t2.addEventListener$2(parentRenderNode, "dblclick", _this.eventHandler1$2$1(_ctx.get$onDblClickInferArgument(), t1, t1));
-      t2.addEventListener$2(parentRenderNode, "mousedown", _this.eventHandler1$2$1(_ctx.get$onMouseDownManualArgument(), t1, t1));
-      t2.addEventListener$2(parentRenderNode, "mouseup", _this.eventHandler1$2$1(_this.get$_handleEvent_0(), t1, t1));
+      t2.addEventListener$2(parentRenderNode, "click", _this.eventHandler0$1$1(_ctx.get$onClickNoArguments(), t1).toJS);
+      t2.addEventListener$2(parentRenderNode, "dblclick", _this.eventHandler1$2$1(_ctx.get$onDblClickInferArgument(), t1, t1).toJS);
+      t2.addEventListener$2(parentRenderNode, "mousedown", _this.eventHandler1$2$1(_ctx.get$onMouseDownManualArgument(), t1, t1).toJS);
+      t2.addEventListener$2(parentRenderNode, "mouseup", _this.eventHandler1$2$1(_this.get$_handleEvent_0(), t1, t1).toJS);
       $.appViewUtils._readField$0().eventManager.addEventListener$3(0, parentRenderNode, "keydown.space", _this.eventHandler0$1$1(_ctx.get$onSpecialKeyHandler(), type$.Object));
     },
     detectChangesInternal$0() {

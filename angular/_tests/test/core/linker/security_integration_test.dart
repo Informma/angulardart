@@ -29,7 +29,7 @@ void main() {
     await testFixture.update((component) {
       component.backgroundStyle = 'url(javascript:evil())';
     });
-    expect((div as web.HTMLElement).style.background, isNot(contains('javascript')));
+    expect(div.style.background, isNot(contains('javascript')));
   });
 
   test('should escape unsafe HTML', () async {

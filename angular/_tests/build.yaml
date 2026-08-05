@@ -1,6 +1,16 @@
 targets:
   $default:
     builders:
+      angulardart:
+        generate_for:
+          include:
+            - test/**.dart
+          exclude:
+            - test/compiler/**
+            - test/compiler_integration/**
+            - test/source_gen/**
+            - test/regression/**
+            - test/core/di/provider_test.dart*
       build_web_compilers|entrypoint:
         generate_for:
           include:

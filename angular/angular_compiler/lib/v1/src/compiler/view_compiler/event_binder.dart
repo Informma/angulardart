@@ -12,6 +12,7 @@ void bindDirectiveOutputs(
 ) {
   var view = compileElement.view!;
   var converter = BoundValueConverter.forView(view);
+  converter.isDirectiveOutput = true;
   for (var output in outputs) {
     var handlerExpr = converter
         .scopeNamespace()

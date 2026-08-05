@@ -296,7 +296,7 @@ class _UpdateStatementsVisitor
           [o.Expression? renderValue]) =>
       (renderNode?.toReadExpr() ?? appViewInstance!).callMethod(
         'addEventListener',
-        [o.literal(nativeEvent.name), renderValue!],
+        [o.literal(nativeEvent.name), renderValue!.prop('toJS')],
       ).toStmt();
 }
 

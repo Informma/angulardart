@@ -57,7 +57,7 @@ void main() {
       expect(element, hasTextContent('(, BC)'));
 
       final viewportDirective =
-          testFixture.assertOnlyInstance.child!.manualViewportDirective!;
+          (testFixture.assertOnlyInstance as ContainerABCWithConditionalComponent).child!.manualViewportDirective!;
       await testFixture.update((ContainerABCWithConditionalComponent comp) {
         viewportDirective.show();
       });
@@ -77,7 +77,7 @@ void main() {
       div2.className = 'redStyle';
       mainEl.append(div2);
       expect(web.window.getComputedStyle(div1).color, 'rgb(255, 0, 0)');
-      expect(web.window.getComputedStyle(div2 as web.Element).color, 'rgb(255, 0, 0)');
+      expect(web.window.getComputedStyle(div2).color, 'rgb(255, 0, 0)');
     });
 
     test('should support emulated style encapsulation', () async {
@@ -89,7 +89,7 @@ void main() {
       div2.className = 'blueStyle';
       mainEl.append(div2);
       expect(web.window.getComputedStyle(div1).color, 'rgb(0, 0, 255)');
-      expect(web.window.getComputedStyle(div2 as web.Element).color, 'rgb(0, 0, 0)');
+      expect(web.window.getComputedStyle(div2).color, 'rgb(0, 0, 0)');
     });
 
     test('should project ng-content using select query', () async {
@@ -102,7 +102,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectExactAttributeTestComponentFactory());
       final testFixture = await testBed.create();
-      final select = testFixture.rootElement.querySelector;
+      final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
     });
@@ -111,7 +111,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectHyphenAttributeTestComponentFactory());
       final testFixture = await testBed.create();
-      final select = testFixture.rootElement.querySelector;
+      final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
     });
@@ -120,7 +120,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectListAttributeTestComponentFactory());
       final testFixture = await testBed.create();
-      final select = testFixture.rootElement.querySelector;
+      final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
     });
@@ -129,7 +129,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectPrefixAttributeTestComponentFactory());
       final testFixture = await testBed.create();
-      final select = testFixture.rootElement.querySelector;
+      final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
     });
@@ -138,7 +138,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectSetAttributeTestComponentFactory());
       final testFixture = await testBed.create();
-      final select = testFixture.rootElement.querySelector;
+      final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
     });
@@ -147,7 +147,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectSubstringAttributeTestComponentFactory());
       final testFixture = await testBed.create();
-      final select = testFixture.rootElement.querySelector;
+      final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
     });
@@ -156,7 +156,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectSuffixAttributeTestComponentFactory());
       final testFixture = await testBed.create();
-      final select = testFixture.rootElement.querySelector;
+      final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
     });
@@ -164,7 +164,7 @@ void main() {
     test('should support multiple levels with ngProjectAs', () async {
       final testBed = NgTestBed(ng.createNgProjectAsTestComponentFactory());
       final testFixture = await testBed.create();
-      final select = testFixture.rootElement.querySelector;
+      final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
     });
@@ -228,7 +228,7 @@ class ContainerWithProjectedInterpolationBound {
 @Component(
   selector: 'simple',
   template: 'SIMPLE(<div><ng-content></ng-content></div>'
-      '<div [tabIndex]=\"0\">XY</div>)',
+      '<div [tabIndex]="0">XY</div>)',
 )
 class SimpleComponentWithBinding {}
 
@@ -274,7 +274,7 @@ class ManualViewportDirective {
 
 @Component(
   selector: 'container-with-style-emu',
-  template: '<div class=\"blueStyle\"></div>',
+  template: '<div class="blueStyle"></div>',
   styles: ['.blueStyle { color: blue}'],
   encapsulation: ViewEncapsulation.Emulated,
   directives: [SimpleComponent],
@@ -283,7 +283,7 @@ class ContainerWithStyleEmulated {}
 
 @Component(
   selector: 'container-with-style-not-emu',
-  template: '<div class=\"redStyle\"></div>',
+  template: '<div class="redStyle"></div>',
   styles: ['.redStyle { color: red}'],
   encapsulation: ViewEncapsulation.None,
   directives: [SimpleComponent],

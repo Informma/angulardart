@@ -1,6 +1,4 @@
-// @dart=2.9
 
-import 'package:build_test/build_test.dart';
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
 import 'package:angulardart/src/meta.dart';
@@ -8,6 +6,7 @@ import 'package:angulardart_compiler/v1/angular_compiler.dart';
 import 'package:angulardart_compiler/v1/src/compiler/ast_directive_normalizer.dart';
 import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart';
 import 'package:angulardart_compiler/v2/context.dart';
+import 'package:build_runner/src/internal.dart';
 
 void main() {
   CompileDirectiveMetadata metadata;
@@ -48,7 +47,7 @@ void main() {
         template: 'a.html',
       ),
     );
-    await scopeLogAsync(() => normalizer.normalizeDirective(metadata), logger);
+    await BuildLogLogger.scopeLogAsync(() => normalizer.normalizeDirective(metadata), logger);
     expect(logs, contains(contains('did you mean "templateUrl"')));
   });
 
@@ -75,7 +74,7 @@ void main() {
         template: '',
       ),
     );
-    await scopeLogAsync(() => normalizer.normalizeDirective(metadata), logger);
+    await BuildLogLogger.scopeLogAsync(() => normalizer.normalizeDirective(metadata), logger);
     expect(logs, contains(contains('did you mean "styleUrls"')));
   });
 
@@ -108,7 +107,7 @@ void main() {
       ),
     );
     metadata = await normalizer.normalizeDirective(metadata);
-    expect(metadata.template.ngContentSelectors, [
+    expect(metadata.template!.ngContentSelectors, [
       '*',
       '.left',
       '.right',
@@ -154,7 +153,7 @@ void main() {
     );
     metadata = await normalizer.normalizeDirective(metadata);
     expect(
-      metadata.template.styleUrls,
+      metadata.template!.styleUrls,
       orderedEquals([
         'package:a/1.css',
         'package:a/2.css',
@@ -174,7 +173,7 @@ void main() {
       ),
     );
     metadata = await normalizer.normalizeDirective(metadata);
-    expect(metadata.template.encapsulation, ViewEncapsulation.None);
+    expect(metadata.template!.encapsulation, ViewEncapsulation.None);
   });
 
   test('should resolve inline stylesheets', () async {
@@ -205,9 +204,9 @@ void main() {
       ),
     );
     metadata = await normalizer.normalizeDirective(metadata);
-    expect(metadata.template.encapsulation, ViewEncapsulation.Emulated);
+    expect(metadata.template!.encapsulation, ViewEncapsulation.Emulated);
     expect(
-      metadata.template.styles,
+      metadata.template!.styles,
       [
         contains(':host { margin: 10px; }'),
       ],

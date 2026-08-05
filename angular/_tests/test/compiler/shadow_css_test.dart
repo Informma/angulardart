@@ -1,4 +1,3 @@
-// @dart=2.9
 
 import 'dart:async';
 
@@ -9,7 +8,7 @@ import 'package:angulardart_compiler/v1/src/compiler/stylesheet_compiler/shadow_
 const content = 'content';
 const host = 'host';
 
-const _RE_SPECIAL_CHARS = [
+const _reSpecialChars = [
   '-',
   '[',
   ']',
@@ -27,12 +26,12 @@ const _RE_SPECIAL_CHARS = [
   '\$',
   '|'
 ];
-final _ESCAPE_RE = RegExp('[\\${_RE_SPECIAL_CHARS.join('\\')}]');
+final _escapeRe = RegExp('[\\${_reSpecialChars.join('\\')}]');
 RegExp containsRegexp(String input) {
-  return RegExp(input.replaceAllMapped(_ESCAPE_RE, (match) => '\\${match[0]}'));
+  return RegExp(input.replaceAllMapped(_escapeRe, (match) => '\\${match[0]}'));
 }
 
-RegExp _normalizerExp1,
+RegExp? _normalizerExp1,
     _normalizerExp2,
     _normalizerExp3,
     _normalizerExp4,
@@ -61,7 +60,7 @@ String normalizeCSS(String css) {
 
 /// Shims [css] and compares to the [expected] output for both current and
 /// legacy encapsulation.
-void shimAndExpect(String css, String expected, {String expectedLegacy}) {
+void shimAndExpect(String css, String expected, {String? expectedLegacy}) {
   runZoned(() {
     var actual = shimShadowCss(css, content, host);
     var actualLegacy =

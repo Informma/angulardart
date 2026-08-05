@@ -102,6 +102,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectExactAttributeTestComponentFactory());
       final testFixture = await testBed.create();
+      // ignore: prefer_function_declarations_over_variables
       final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
@@ -111,6 +112,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectHyphenAttributeTestComponentFactory());
       final testFixture = await testBed.create();
+      // ignore: prefer_function_declarations_over_variables
       final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
@@ -120,6 +122,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectListAttributeTestComponentFactory());
       final testFixture = await testBed.create();
+      // ignore: prefer_function_declarations_over_variables
       final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
@@ -129,6 +132,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectPrefixAttributeTestComponentFactory());
       final testFixture = await testBed.create();
+      // ignore: prefer_function_declarations_over_variables
       final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
@@ -138,6 +142,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectSetAttributeTestComponentFactory());
       final testFixture = await testBed.create();
+      // ignore: prefer_function_declarations_over_variables
       final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
@@ -147,6 +152,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectSubstringAttributeTestComponentFactory());
       final testFixture = await testBed.create();
+      // ignore: prefer_function_declarations_over_variables
       final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
@@ -156,6 +162,7 @@ void main() {
       final testBed =
           NgTestBed(ng.createSelectSuffixAttributeTestComponentFactory());
       final testFixture = await testBed.create();
+      // ignore: prefer_function_declarations_over_variables
       final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");
@@ -164,6 +171,7 @@ void main() {
     test('should support multiple levels with ngProjectAs', () async {
       final testBed = NgTestBed(ng.createNgProjectAsTestComponentFactory());
       final testFixture = await testBed.create();
+      // ignore: prefer_function_declarations_over_variables
       final select = (String selectors) => testFixture.rootElement.querySelector(selectors);
       expect(select('.selected')!.textContent!.trim(), 'Should be selected.');
       expect(select('.rejected')!.textContent!.trim(), "Shouldn't be selected.");

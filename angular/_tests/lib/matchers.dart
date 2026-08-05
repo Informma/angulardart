@@ -37,19 +37,23 @@ class _HasTextContent extends Matcher {
 String? _elementText(Object? n) {
   if (n is Iterable) {
     return n.map(_elementText).join('');
+    // ignore: invalid_runtime_check_with_js_interop_types
   } else if (n is web.Node) {
+    // ignore: invalid_runtime_check_with_js_interop_types
     if (n is web.Comment) {
       return '';
     }
 
+    // ignore: invalid_runtime_check_with_js_interop_types
     if (n is web.HTMLSlotElement) {
       return _elementText(n.assignedNodes());
     }
 
+    // ignore: invalid_runtime_check_with_js_interop_types
     if (n is web.Element) {
-      if (element.shadowRoot != null) {
+      if (n.shadowRoot != null) {
         final nodes = <web.Node>[];
-        final childNodes = element.shadowRoot!.childNodes;
+        final childNodes = n.shadowRoot!.childNodes;
         for (var i = 0; i < childNodes.length; i++) {
           nodes.add(childNodes.item(i)!);
         }
@@ -57,7 +61,7 @@ String? _elementText(Object? n) {
       }
     }
 
-    final childNodes = node.childNodes;
+    final childNodes = n.childNodes;
     if (childNodes.length > 0) {
       final nodes = <web.Node>[];
       for (var i = 0; i < childNodes.length; i++) {
@@ -66,7 +70,7 @@ String? _elementText(Object? n) {
       return _elementText(nodes);
     }
 
-    return node.textContent;
+    return n.textContent;
   } else {
     return '$n';
   }

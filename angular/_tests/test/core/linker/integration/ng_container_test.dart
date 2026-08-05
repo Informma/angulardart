@@ -26,7 +26,7 @@ void main() {
     expect(testFixture.rootElement.innerHTML, anchorHtml);
     final values = ['a', 'b', 'c'];
     final html = values.join();
-    await testFixture.update((component) => (component as SupportsNgFor).values.addAll(values));
+    await testFixture.update((component) => component.values.addAll(values));
     expect(testFixture.rootElement.innerHTML, '$anchorHtml$html');
   });
 
@@ -45,7 +45,7 @@ void main() {
         testFixture.rootElement.innerHTML,
         '$anchorHtml ' // <template #ref> anchor
         '$anchorHtml' // <template> and ViewContainerRef anchor for *-directive
-        '${(testFixture.assertOnlyInstance as SupportsNgTemplateOutlet).context['message']}');
+        '${testFixture.assertOnlyInstance.context['message']}');
   });
 
   test('supports nested *-syntax', () async {

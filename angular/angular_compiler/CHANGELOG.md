@@ -1,3 +1,9 @@
+## 5.0.1
+
+- Fix: Generated code now adds `.toJS` for native DOM event listeners
+- Generated templates now import `dart:js_interop` unconditionally
+- Compiler differentiates between DOM events and directive outputs
+
 ## 5.0.0
 
 - **BREAKING**: Migrate from `dart:html` to `package:web`

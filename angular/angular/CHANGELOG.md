@@ -1,3 +1,9 @@
+## 9.0.2
+
+- Fix: Event listeners now compatible with `package:web`'s `addEventListener`
+- Split `eventHandler0/1` into DOM and Stream variants for proper type safety
+- Fix `ngClass` directive to use `== true` instead of `!= null`
+
 ## 9.0.1
 
 - Fix: Remove unnecessary imports (dart analyze clean)

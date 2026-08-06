@@ -49,9 +49,10 @@ Future<T> runWithContext<T>(
       // Convert pkg/source_gen#UnresolvedAnnotationException into a BuildError.
       if (e is UnresolvedAnnotationException) {
         final eCasted = e;
+        final annotationText = eCasted.annotationSource?.text ?? e.toString();
         final convert = BuildError.forSourceSpan(
           spanForElement(eCasted.annotatedElement),
-          'Could not resolve "${eCasted.annotationSource!.text}":\n'
+          'Could not resolve "$annotationText":\n'
           '${messages.analysisFailureReasons}',
         );
         e = convert;

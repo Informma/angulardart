@@ -42,12 +42,6 @@ class PopupState extends Observable {
     }));
   }
 
-  /// Create a new popup state from [other].
-  factory PopupState.from(PopupState other) {
-    // TODO(google): Remove this once it's popup service has a default state.
-    return PopupState._(ObservableMap.from(other._backingMap));
-  }
-
   PopupState._(this._backingMap);
 
   @override

@@ -7,7 +7,8 @@ import 'dart:async';
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/src/utils/angular/managed_zone/managed_zone.dart';
 
-export 'package:angulardart_components/src/utils/angular/managed_zone/managed_zone.dart';
+export 'package:angulardart_components/src/utils/angular/managed_zone/managed_zone.dart'
+    show ManagedZone;
 
 /// An implementation of [ManagedZone] that uses Angular 2's [NgZone].
 @Deprecated('Use NgZone directly instead')

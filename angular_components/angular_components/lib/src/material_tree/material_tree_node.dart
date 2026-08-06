@@ -7,9 +7,10 @@ import 'dart:async';
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/src/material_tree/material_tree_expand_state.dart';
 import 'package:angulardart_components/src/material_tree/material_tree_root.dart';
-import 'package:angulardart_components/model/selection/select.dart';
 import 'package:angulardart_components/model/selection/selection_model.dart';
 import 'package:angulardart_components/model/selection/selection_options.dart';
+import 'package:angulardart_components/model/selection/select.dart'
+    show Parent, Selectable, SelectableOption;
 import 'package:angulardart_components/utils/async/async.dart';
 import 'package:angulardart_components/utils/disposer/disposer.dart';
 
@@ -48,12 +49,9 @@ class MaterialTreeNode<T> {
       _isExpandable = isExpandable ?? hasChildren;
       _parent = _root.options as Parent<T, Iterable<OptionGroup<T>>>;
     }
-    // TODO(google).
     final Object options = _root.options;
     if (options is Selectable<T>) {
       _selectable = options;
-    } else {
-      _selectable = _AlwaysSelectable<T>();
     }
   }
 
@@ -143,10 +141,12 @@ class MaterialTreeNode<T> {
 
   /// Returns whether [option] is selectable.
   bool isSelectable(T option) {
+    var selectableOption = _selectable != null
+        ? Selectable.getOptionIn(_selectable!, option)
+        : SelectableOption.selectable;
     return _allowParentSelection &&
-            _selectable!.getSelectable(option) == SelectableOption.selectable ||
-        !isExpandable(option) &&
-            _selectable!.getSelectable(option) == SelectableOption.selectable;
+            selectableOption == SelectableOption.selectable ||
+        !isExpandable(option) && selectableOption == SelectableOption.selectable;
   }
 
   // True when flag for allowing parent selection is true for the selection
@@ -156,9 +156,12 @@ class MaterialTreeNode<T> {
       (!isMultiSelect && allowParentSingleSelection);
 
   /// Whether a disabled checkbox should be rendered for this option.
-  bool showDisabledCheckbox(T option) =>
-      _selectable!.getSelectable(option) == SelectableOption.disabled &&
-      !hasChildren(option);
+  bool showDisabledCheckbox(T option) {
+    var selectableOption = _selectable != null
+        ? Selectable.getOptionIn(_selectable!, option)
+        : SelectableOption.selectable;
+    return selectableOption == SelectableOption.disabled && !hasChildren(option);
+  }
 
   /// Returns whether [option] is selected.
   bool isSelected(T option) => _root.selection.isSelected(option);
@@ -290,12 +293,6 @@ class MaterialTreeNode<T> {
     // Cause a NPE if we attempt to use the disposer after being destroyed
     _disposer = null;
   }
-}
-
-// TODO(google): Remove once we switch over Selectable interfaces.
-class _AlwaysSelectable<T> implements Selectable<T> {
-  @override
-  SelectableOption getSelectable(T item) => SelectableOption.selectable;
 }
 
 class _NotAParent<P, C> implements Parent<P, C> {

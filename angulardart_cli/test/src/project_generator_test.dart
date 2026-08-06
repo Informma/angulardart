@@ -235,12 +235,11 @@ void main() {
           File('${tempDir.path}/seo_app/pubspec.yaml').readAsStringSync();
       expect(content, contains("angulardart: '>="));
       expect(content, contains('>=9.0.0 <10.0.0'));
-      expect(content, contains('angulardart_router'));
       expect(content, contains('angulardart_seo'));
       expect(content, contains('angulardart_prerender'));
     });
 
-    test('creates SEO main.dart with injector', () async {
+    test('creates SEO main.dart with SeoService', () async {
       final generator = ProjectGenerator(
         EntityName('seo_app'),
         tempDir.path,
@@ -251,12 +250,13 @@ void main() {
 
       final content =
           File('${tempDir.path}/seo_app/web/main.dart').readAsStringSync();
-      expect(content, contains('@GenerateInjector(['));
+      expect(content, contains('package:angulardart_seo/angulardart_seo.dart'));
       expect(content, contains('ClassProvider(SeoService)'));
       expect(content, contains('ClassProvider(TitleService)'));
+      expect(content, contains('_seo.setPageSeo('));
     });
 
-    test('creates SEO component files', () async {
+    test('creates SEO main.dart with template import', () async {
       final generator = ProjectGenerator(
         EntityName('seo_app'),
         tempDir.path,
@@ -265,18 +265,10 @@ void main() {
       );
       await generator.generate();
 
-      expect(
-        File('${tempDir.path}/seo_app/lib/app_component.dart').existsSync(),
-        isTrue,
-      );
-      expect(
-        File('${tempDir.path}/seo_app/lib/home_component.dart').existsSync(),
-        isTrue,
-      );
-      expect(
-        File('${tempDir.path}/seo_app/lib/about_component.dart').existsSync(),
-        isTrue,
-      );
+      final content =
+          File('${tempDir.path}/seo_app/web/main.dart').readAsStringSync();
+      expect(content, contains("import 'main.template.dart' as ng"));
+      expect(content, contains('ng.AppComponentNgFactory'));
     });
 
     test('creates prerender.yaml for SEO project', () async {
@@ -294,52 +286,6 @@ void main() {
       );
     });
 
-    test('SEO home component uses SeoService', () async {
-      final generator = ProjectGenerator(
-        EntityName('seo_app'),
-        tempDir.path,
-        EntityName('AppComponent'),
-        seo: true,
-      );
-      await generator.generate();
-
-      final content = File('${tempDir.path}/seo_app/lib/home_component.dart')
-          .readAsStringSync();
-      expect(content, contains('final SeoService _seo'));
-      expect(content, contains('_seo.setPageSeo('));
-    });
-
-    test('SEO about component uses SeoService', () async {
-      final generator = ProjectGenerator(
-        EntityName('seo_app'),
-        tempDir.path,
-        EntityName('AppComponent'),
-        seo: true,
-      );
-      await generator.generate();
-
-      final content = File('${tempDir.path}/seo_app/lib/about_component.dart')
-          .readAsStringSync();
-      expect(content, contains('final SeoService _seo'));
-      expect(content, contains('_seo.setPageSeo('));
-    });
-
-    test('SEO app component uses router', () async {
-      final generator = ProjectGenerator(
-        EntityName('seo_app'),
-        tempDir.path,
-        EntityName('AppComponent'),
-        seo: true,
-      );
-      await generator.generate();
-
-      final content = File('${tempDir.path}/seo_app/lib/app_component.dart')
-          .readAsStringSync();
-      expect(content,
-          contains('package:angulardart_router/angulardart_router.dart'));
-      expect(content, contains('RouteDefinition'));
-    });
-
     test('SEO index.html has base href', () async {
       final generator = ProjectGenerator(
         EntityName('seo_app'),
@@ -354,7 +300,7 @@ void main() {
       expect(content, contains('<base href="/">'));
     });
 
-    test('SEO project does not create single component file', () async {
+    test('SEO main.dart uses inline template', () async {
       final generator = ProjectGenerator(
         EntityName('seo_app'),
         tempDir.path,
@@ -363,11 +309,10 @@ void main() {
       );
       await generator.generate();
 
-      // SEO projects should NOT have the default lib/app_component.dart from non-SEO mode
-      // They use app_component.dart as part of the SEO structure instead
-      final files = Directory('${tempDir.path}/seo_app/lib').listSync();
-      expect(files.length, greaterThan(3),
-          reason: 'SEO project should create multiple component files');
+      final content =
+          File('${tempDir.path}/seo_app/web/main.dart').readAsStringSync();
+      expect(content, contains("template: '<h1>"));
+      expect(content, isNot(contains('templateUrl')));
     });
 
     test('SEO pubspec uses wide version constraints', () async {
@@ -451,9 +396,8 @@ void main() {
       final projectDir = Directory('${tempDir.path}/seo_structure_test');
       expect(projectDir.existsSync(), isTrue);
       // Expected files: pubspec.yaml, analysis_options.yaml, build.yaml, .gitignore, prerender.yaml,
-      // web/index.html, web/main.dart, web/styles.css, lib/app_component.dart, lib/app_component.html,
-      // lib/home_component.dart, lib/home_component.html, lib/about_component.dart, lib/about_component.html = 14
-      expect(countFiles(projectDir), equals(14));
+      // web/index.html, web/main.dart, web/styles.css = 8
+      expect(countFiles(projectDir), equals(8));
     });
 
     test('all generated Dart files have valid structure', () async {

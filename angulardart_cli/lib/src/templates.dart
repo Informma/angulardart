@@ -138,7 +138,6 @@ environment:
 
 dependencies:
   angulardart: '>=9.0.0 <10.0.0'
-  angulardart_router: '>=5.0.0 <6.0.0'
   angulardart_seo: '>=1.0.0 <2.0.0'
 
 dev_dependencies:
@@ -166,30 +165,39 @@ dev_dependencies:
 </html>
 ''';
 
-  static const projectMainDartSeo = '''
-import 'package:angulardart/angulardart.dart';
-import 'package:angulardart_router/angulardart_router.dart';
+  static const projectMainDartSeo = '''import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_seo/angulardart_seo.dart';
-import 'package:{{name}}/app_component.template.dart' as ng;
-import 'package:{{name}}/main.template.dart' as ng_main;
 
-@GenerateInjector([
-  routerProviders,
-  ClassProvider(SeoService),
-  ClassProvider(TitleService),
-])
-final InjectorFactory appInjector = ng_main.appInjector\$Injector;
+// ignore: uri_has_not_been_generated
+import 'main.template.dart' as ng;
+
+@Component(
+  selector: '{{component.selector}}',
+  template: '<h1>Welcome to {{name}}</h1><p>{{description}}</p>',
+  providers: [ClassProvider(SeoService), ClassProvider(TitleService)],
+)
+class AppComponent implements OnInit {
+  final SeoService _seo;
+
+  AppComponent(this._seo);
+
+  @override
+  void ngOnInit() {
+    _seo.setPageSeo(
+      title: '{{description}}',
+      description: 'Welcome to {{description}}',
+    );
+  }
+}
 
 void main() {
-  ng.initReflector();
-  runApp(ng.AppComponentNgFactory, createInjector: appInjector);
+  runApp(ng.AppComponentNgFactory);
 }
 ''';
 
   static const projectPrerenderYaml = '''
 routes:
   - /
-  - /about
 
 timeout: 5000
 wait_for_network_idle: true
@@ -198,105 +206,14 @@ generate_robots: true
 base_url: 'https://example.com'
 ''';
 
-  static const seoAppComponent = '''
-import 'package:angulardart/angulardart.dart';
-import 'package:angulardart_router/angulardart_router.dart';
-
-import 'home_component.template.dart' as home_ng;
-import 'about_component.template.dart' as about_ng;
-
-@Component(
-  selector: '{{component.selector}}',
-  templateUrl: 'app_component.html',
-  directives: [
-    routerDirectives,
-  ],
-)
-class AppComponent implements OnInit {
-  final Router _router;
-  List<RouteDefinition> routes = [];
-
-  AppComponent(this._router);
-
-  @override
-  void ngOnInit() {
-    _router.onRouteActivated.listen((_) {});
-    
-    routes = [
-      RouteDefinition(
-        path: '/',
-        component: home_ng.createHomeComponentFactory(),
-        useAsDefault: true,
-      ),
-      RouteDefinition(
-        path: '/about',
-        component: about_ng.createAboutComponentFactory(),
-      ),
-    ];
-  }
-}
-''';
-
-  static const seoAppComponentHtml = '''
-<nav>
-  <a [routerLink]="['/']">Home</a>
-  <a [routerLink]="['/about']">About</a>
-</nav>
-<main>
-  <router-outlet [routes]="routes"></router-outlet>
-</main>
-''';
-
-  static const seoHomeComponent = '''
-import 'package:angulardart/angulardart.dart';
-import 'package:angulardart_seo/angulardart_seo.dart';
-
-@Component(
-  selector: 'home-page',
-  templateUrl: 'home_component.html',
-)
-class HomeComponent implements OnInit {
-  final SeoService _seo;
-
-  HomeComponent(this._seo);
-
-  @override
-  void ngOnInit() {
-    _seo.setPageSeo(
-      title: 'Home - {{description}}',
-      description: 'Welcome to {{description}}',
-    );
-  }
-}
+  static const seoAppComponentHtml = '''<h1>Welcome to {{name}}</h1>
+<p>This is the home page.</p>
 ''';
 
   static const seoHomeComponentHtml = '''{{=<% %>=}}
 <h1>Welcome to {{name}}</h1>
 <p>This is the home page.</p>
 <%={{ }}=%>''';
-
-  static const seoAboutComponent = '''
-import 'package:angulardart/angulardart.dart';
-import 'package:angulardart_seo/angulardart_seo.dart';
-
-@Component(
-  selector: 'about-page',
-  templateUrl: 'about_component.html',
-)
-class AboutComponent implements OnInit {
-  final SeoService _seo;
-
-  AboutComponent(this._seo);
-
-  @override
-  void ngOnInit() {
-    _seo.setPageSeo(
-      title: 'About - {{description}}',
-      description: 'Learn more about {{description}}',
-    );
-  }
-}
-''';
 
   static const seoAboutComponentHtml = '''{{=<% %>=}}
 <h1>About {{name}}</h1>

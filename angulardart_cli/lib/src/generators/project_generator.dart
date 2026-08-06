@@ -74,11 +74,15 @@ class ProjectGenerator extends Generator {
       seo ? Templates.projectIndexHtmlSeo : Templates.projectIndexHtml,
       context,
     );
-    await writeFromTemplate(
-      path.join(destinationFolder, 'web', 'main.dart'),
-      seo ? Templates.projectMainDartSeo : Templates.projectMainDart,
-      context,
-    );
+    if (seo) {
+      // SEO projects: main() is in app_component.dart, no separate main.dart needed
+    } else {
+      await writeFromTemplate(
+        path.join(destinationFolder, 'web', 'main.dart'),
+        Templates.projectMainDart,
+        context,
+      );
+    }
     await writeStatic(
       path.join(destinationFolder, 'web', 'styles.css'),
       Templates.projectStyles,
@@ -90,31 +94,9 @@ class ProjectGenerator extends Generator {
         Templates.projectPrerenderYaml,
       );
       await writeFromTemplate(
-        path.join(destinationFolder, 'lib', 'app_component.dart'),
-        Templates.seoAppComponent,
+        path.join(destinationFolder, 'web', 'main.dart'),
+        Templates.projectMainDartSeo,
         context,
-      );
-      await writeStatic(
-        path.join(destinationFolder, 'lib', 'app_component.html'),
-        Templates.seoAppComponentHtml,
-      );
-      await writeFromTemplate(
-        path.join(destinationFolder, 'lib', 'home_component.dart'),
-        Templates.seoHomeComponent,
-        context,
-      );
-      await writeStatic(
-        path.join(destinationFolder, 'lib', 'home_component.html'),
-        Templates.seoHomeComponentHtml,
-      );
-      await writeFromTemplate(
-        path.join(destinationFolder, 'lib', 'about_component.dart'),
-        Templates.seoAboutComponent,
-        context,
-      );
-      await writeStatic(
-        path.join(destinationFolder, 'lib', 'about_component.html'),
-        Templates.seoAboutComponentHtml,
       );
     } else {
       await component.generate();

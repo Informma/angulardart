@@ -80,14 +80,6 @@ void main() {
       );
     });
 
-    test('contains angulardart_router dependency', () {
-      expect(Templates.projectPubspecSeo, contains('angulardart_router:'));
-      expect(
-        Templates.projectPubspecSeo,
-        contains('>=5.0.0 <6.0.0'),
-      );
-    });
-
     test('contains angulardart_seo dependency', () {
       expect(Templates.projectPubspecSeo, contains('angulardart_seo:'));
       expect(
@@ -161,13 +153,6 @@ void main() {
           contains('package:angulardart/angulardart.dart'));
     });
 
-    test('imports router package', () {
-      expect(
-        Templates.projectMainDartSeo,
-        contains('package:angulardart_router/angulardart_router.dart'),
-      );
-    });
-
     test('imports seo package', () {
       expect(
         Templates.projectMainDartSeo,
@@ -175,21 +160,26 @@ void main() {
       );
     });
 
-    test('provides SeoService and TitleService', () {
+    test('provides SeoService and TitleService via component providers', () {
       expect(
           Templates.projectMainDartSeo, contains('ClassProvider(SeoService)'));
       expect(Templates.projectMainDartSeo,
           contains('ClassProvider(TitleService)'));
     });
 
-    test('uses GenerateInjector annotation', () {
-      expect(Templates.projectMainDartSeo, contains('@GenerateInjector(['));
-      expect(Templates.projectMainDartSeo, contains('routerProviders'));
+    test('imports main.template.dart for NgFactory', () {
+      expect(Templates.projectMainDartSeo,
+          contains("import 'main.template.dart' as ng"));
+      expect(Templates.projectMainDartSeo, contains('ng.AppComponentNgFactory'));
     });
 
-    test('calls runApp with createInjector', () {
-      expect(Templates.projectMainDartSeo,
-          contains('createInjector: appInjector'));
+    test('uses inline template instead of templateUrl', () {
+      expect(Templates.projectMainDartSeo, contains("template: '<h1>"));
+      expect(Templates.projectMainDartSeo, isNot(contains('templateUrl')));
+    });
+
+    test('calls runApp with NgFactory', () {
+      expect(Templates.projectMainDartSeo, contains('runApp(ng.AppComponentNgFactory)'));
     });
   });
 
@@ -291,36 +281,26 @@ void main() {
   });
 
   group('Templates SEO templates', () {
-    test('seoAppComponent imports router and angulardart', () {
-      expect(Templates.seoAppComponent,
+    test('projectMainDartSeo imports angulardart and seo', () {
+      expect(Templates.projectMainDartSeo,
           contains('package:angulardart/angulardart.dart'));
-      expect(Templates.seoAppComponent,
-          contains('package:angulardart_router/angulardart_router.dart'));
-    });
-
-    test('seoHomeComponent imports seo package', () {
-      expect(Templates.seoHomeComponent,
+      expect(Templates.projectMainDartSeo,
           contains('package:angulardart_seo/angulardart_seo.dart'));
     });
 
-    test('seoAboutComponent imports seo package', () {
-      expect(Templates.seoAboutComponent,
-          contains('package:angulardart_seo/angulardart_seo.dart'));
+    test('projectMainDartSeo uses SeoService', () {
+      expect(Templates.projectMainDartSeo, contains('final SeoService _seo'));
+      expect(Templates.projectMainDartSeo, contains('_seo.setPageSeo('));
     });
 
-    test('seoHomeComponent uses SeoService', () {
-      expect(Templates.seoHomeComponent, contains('final SeoService _seo'));
-      expect(Templates.seoHomeComponent, contains('_seo.setPageSeo('));
+    test('projectMainDartSeo defines main()', () {
+      expect(Templates.projectMainDartSeo, contains('void main()'));
+      expect(Templates.projectMainDartSeo, contains('runApp(ng.AppComponentNgFactory)'));
     });
 
-    test('seoAboutComponent uses SeoService', () {
-      expect(Templates.seoAboutComponent, contains('final SeoService _seo'));
-      expect(Templates.seoAboutComponent, contains('_seo.setPageSeo('));
-    });
-
-    test('seoAppComponentHtml uses routerLink directive', () {
-      expect(Templates.seoAppComponentHtml, contains('[routerLink]'));
-      expect(Templates.seoAppComponentHtml, contains('<router-outlet'));
+    test('seoAppComponentHtml has basic structure', () {
+      expect(Templates.seoAppComponentHtml, contains('<h1>'));
+      expect(Templates.seoAppComponentHtml, contains('{{name}}'));
     });
   });
 
@@ -371,9 +351,7 @@ void main() {
         Templates.pipeDart,
         Templates.serviceDart,
         Templates.projectMainDart,
-        Templates.seoAppComponent,
-        Templates.seoHomeComponent,
-        Templates.seoAboutComponent,
+        Templates.projectMainDartSeo,
       ];
       for (final template in dartTemplates) {
         expect(

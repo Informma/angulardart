@@ -4,3 +4,7 @@ analyzer:
   errors:
     # False positive related to missing .template.dart files
     argument_type_not_assignable: ignore
+
+linter:
+  rules:
+    package_names: false

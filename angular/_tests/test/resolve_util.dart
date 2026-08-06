@@ -16,9 +16,9 @@ import 'package:angulardart_compiler/v1/src/source_gen/template_compiler/find_co
 final _packageConfigFuture = Platform
             .environment['ANGULAR_PACKAGE_CONFIG_PATH'] !=
         null
-    ? loadPackageConfigUri(
-        Uri.base.resolve(Platform.environment['ANGULAR_PACKAGE_CONFIG_PATH']))
-    : Isolate.packageConfig.then(loadPackageConfigUri);
+    ? Future.value(loadPackageConfigUri(
+        Uri.base.resolve(Platform.environment['ANGULAR_PACKAGE_CONFIG_PATH']!)))
+    : Isolate.packageConfig.then((uri) => loadPackageConfigUri(uri ?? Uri.file('')));
 
 Future<LibraryElement> resolve(String source,
     [PackageConfig? packageConfig]) async {

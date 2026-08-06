@@ -1,3 +1,7 @@
+## 3.0.3
+
+- Fix: Updated dependency on `angulardart` to ^9.0.0 and `angular_forms` to ^6.0.0 for compatibility with latest framework release
+
 ## 3.0.2
 
 - **BREAKING FIX**: Resolved symbol redeclaration conflict in `managed_zone` — `angular_2.dart` now exports only `ManagedZone` instead of all symbols from `managed_zone.dart`, preventing conflicts with `interface.dart`

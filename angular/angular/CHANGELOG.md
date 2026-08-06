@@ -1,3 +1,8 @@
+## 9.0.8
+
+- Fix: Resolve `UnresolvedAnnotationException` crash in compiler when `annotationSource` is null (context.dart)
+- Fix: Updated dependency constraints for compatibility with angulardart_meta 1.x ecosystem
+
 ## 9.0.7
 
 - **BREAKING FIX**: Resolve dart2js `NoSuchMethodError` on sidebar navigation by making `detectChanges()` a proper instance method on `ChangeDetectorRef` instead of relying on extension methods that fail during dart2js tree-shaking/minification

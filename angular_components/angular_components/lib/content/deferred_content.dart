@@ -65,9 +65,11 @@ class DeferredContentDirective implements OnDestroy {
         // Save the dimensions of the deferred content.
         var rootNodes = _viewRef?.rootNodes ?? [];
         var content = rootNodes.isNotEmpty ? rootNodes.first : null;
+        // ignore: invalid_runtime_check_with_js_interop_types
         if (content is web.HTMLElement) {
           // This isn't in DomService.schedule{Read,Write} because
           // it needs to work with components that aren't scheduled.
+          // ignore: unnecessary_cast
           var dimensions = (content as web.HTMLElement).getBoundingClientRect();
           _placeholder.style
             ..width = '${dimensions.width}px'

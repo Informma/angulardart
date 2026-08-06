@@ -1,5 +1,5 @@
 name: angulardart_meta
-version: 1.0.1
+version: 1.0.2
 description: >-
   Metadata annotations and core types for AngularDart.
   Shared between angulardart and angulardart_compiler.

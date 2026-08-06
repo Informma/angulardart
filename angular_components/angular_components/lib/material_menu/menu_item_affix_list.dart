@@ -137,7 +137,7 @@ class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
     return _AffixRef(
         affix,
         viewRef.createComponent(affix.componentFactory, index)
-          ..location.classes.add('affix')
+          ..location.classList.add('affix')
           ..instance.value = affix
           ..instance.disabled = disabled);
   }

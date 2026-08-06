@@ -8,14 +8,14 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  angulardart: ^8.1.6
+  angulardart: '>=9.0.0 <10.0.0'
 
 dev_dependencies:
-  build_runner: ^2.16.0
-  build_web_compilers: ^4.8.0
-  angulardart_test: ^5.1.6
-  lints: ^6.0.0
-  test: ^1.31.0
+  build_runner: '>=2.16.0 <3.0.0'
+  build_web_compilers: '>=4.8.0 <5.0.0'
+  angulardart_test: '>=6.0.0 <7.0.0'
+  lints: '>=6.0.0 <7.0.0'
+  test: '>=1.31.0 <2.0.0'
 ''';
 
   static const projectAnalysisOptions = '''

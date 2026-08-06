@@ -1,4 +1,8 @@
-# 1.0.1
+## 1.0.2
+
+- Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem
+
+## 1.0.1
 
 - Add community-maintained disclaimer to README
 

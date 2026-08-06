@@ -1,5 +1,5 @@
 name: angulardart_components
-version: 3.0.2
+version: 3.0.3
 description: >
   Material Design UI components for AngularDart.
   Community-maintained fork of Google's original components.
@@ -25,8 +25,8 @@ platforms:
   web:
 
 dependencies:
-  angulardart: ^8.0.0
-  angulardart_forms: ^5.0.0
+  angulardart: ^9.0.0
+  angulardart_forms: ^6.0.0
   async: ^2.11.0
   build: ^4.0.0
   build_config: ^1.1.0

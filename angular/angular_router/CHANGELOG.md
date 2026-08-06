@@ -1,3 +1,7 @@
+## 5.0.9
+
+- Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem
+
 ## 5.0.8
 
 - Fix: Compatible with angulardart 9.0.7 (dart2js extension method resolution fix)

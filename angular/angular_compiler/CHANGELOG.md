@@ -1,3 +1,7 @@
+## 5.0.4
+
+- Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem
+
 ## 5.0.3
 
 - Fix: Generated code now calls `detectChangesDeprecated()` directly instead of using extension methods that fail during dart2js tree-shaking/minification

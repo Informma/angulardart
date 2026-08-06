@@ -93,6 +93,7 @@ class AcxImperativeViewUtils {
     return _domService.onWrite().then((_) {
       var viewRef = viewContainer.createEmbeddedView(templateRef);
       for (final rootNode in viewRef.rootNodes) {
+        // ignore: unnecessary_cast
         intoDomElement.appendChild(rootNode as web.Node);
       }
       return ImperativeViewRef._(viewRef, () {

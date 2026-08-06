@@ -138,6 +138,7 @@ environment:
 
 dependencies:
   angulardart: '>=9.0.0 <10.0.0'
+  angulardart_router: '>=5.0.0 <6.0.0'
   angulardart_seo: '>=1.0.0 <2.0.0'
 
 dev_dependencies:
@@ -149,8 +150,7 @@ dev_dependencies:
   test: '>=1.31.0 <2.0.0'
 ''';
 
-  static const projectIndexHtmlSeo = '''
-<!DOCTYPE html>
+  static const projectIndexHtmlSeo = '''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -166,6 +166,7 @@ dev_dependencies:
 ''';
 
   static const projectMainDartSeo = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
 import 'package:angulardart_seo/angulardart_seo.dart';
 
 // ignore: uri_has_not_been_generated
@@ -173,19 +174,97 @@ import 'main.template.dart' as ng;
 
 @Component(
   selector: '{{component.selector}}',
-  template: '<h1>Welcome to {{name}}</h1><p>{{description}}</p>',
-  providers: [ClassProvider(SeoService), ClassProvider(TitleService)],
+  template: '<div class="nav"><a [routerLink]="[\'/\']">Home</a> | <a [routerLink]="[\'/about\']">About</a> | <a [routerLink]="[\'/contact\']">Contact</a></div><main><router-outlet></router-outlet></main>',
+  directives: [routerDirectives],
 )
 class AppComponent implements OnInit {
-  final SeoService _seo;
+  final Router _router;
+  List<RouteDefinition> routes = [];
 
-  AppComponent(this._seo);
+  AppComponent(this._router);
 
   @override
   void ngOnInit() {
+    _router.onRouteActivated.listen((_) {});
+    routes = [
+      RouteDefinition(path: '/', component: HomeComponentNgFactory, useAsDefault: true),
+      RouteDefinition(path: '/about', component: AboutComponentNgFactory),
+      RouteDefinition(path: '/contact', component: ContactComponentNgFactory),
+    ];
+  }
+}
+
+@Component(
+  selector: 'home-page',
+  template: '<h1>Welcome to {{name}}</h1>' +
+      '<p>{{description}} - This is the home page.</p>' +
+      '<p>This page demonstrates SEO with dynamic meta tags and prerendering for search engines.</p>',
+)
+class HomeComponent implements OnInit {
+  final SeoService _seo;
+  final TitleService _title;
+
+  HomeComponent(this._seo, this._title);
+
+  @override
+  void ngOnInit() {
+    _title.setTitle('Home - {{description}}');
     _seo.setPageSeo(
-      title: '{{description}}',
-      description: 'Welcome to {{description}}',
+      title: 'Home - {{description}}',
+      description: 'Welcome to {{description}}. This is the home page with full SEO support.',
+      keywords: 'angular, dart, seo, prerender',
+      ogTitle: '{{description}} - Home',
+      ogDescription: 'The home page of our AngularDart application.',
+    );
+  }
+}
+
+@Component(
+  selector: 'about-page',
+  template: '<h1>About Us</h1>' +
+      '<p>This is the about page. Learn more about {{description}} and what we do.</p>' +
+      '<p>Each page has unique SEO metadata for better search engine indexing.</p>',
+)
+class AboutComponent implements OnInit {
+  final SeoService _seo;
+  final TitleService _title;
+
+  AboutComponent(this._seo, this._title);
+
+  @override
+  void ngOnInit() {
+    _title.setTitle('About - {{description}}');
+    _seo.setPageSeo(
+      title: 'About Us - {{description}}',
+      description: 'Learn about {{description}}, our AngularDart application with SEO and prerendering.',
+      keywords: 'about, angular, dart, team',
+      ogTitle: '{{description}} - About',
+      ogDescription: 'The about page of our AngularDart application.',
+    );
+  }
+}
+
+@Component(
+  selector: 'contact-page',
+  template: '<h1>Contact</h1>' +
+      '<p>Get in touch with us. This is the contact page for {{description}}.</p>' +
+      '<p>Email: hello@example.com</p>',
+)
+class ContactComponent implements OnInit {
+  final SeoService _seo;
+  final TitleService _title;
+
+  ContactComponent(this._seo, this._title);
+
+  @override
+  void ngOnInit() {
+    _title.setTitle('Contact - {{description}}');
+    _seo.setPageSeo(
+      title: 'Contact Us - {{description}}',
+      description: 'Contact us about {{description}}. We are here to help.',
+      keywords: 'contact, angular, dart, support',
+      ogTitle: '{{description}} - Contact',
+      ogDescription: 'The contact page of our AngularDart application.',
     );
   }
 }
@@ -195,28 +274,31 @@ void main() {
 }
 ''';
 
-  static const projectPrerenderYaml = '''
-routes:
+  static const projectPrerenderYaml = '''routes:
   - /
+  - /about
+  - /contact
 
-timeout: 5000
+timeout: 10000
 wait_for_network_idle: true
 generate_sitemap: true
 generate_robots: true
 base_url: 'https://example.com'
 ''';
 
-  static const seoAppComponentHtml = '''<h1>Welcome to {{name}}</h1>
-<p>This is the home page.</p>
-''';
+  static const seoAppComponentHtml = '''<nav>
+    <a [routerLink]="['/']" routerLinkActive="active">Home</a> |
+    <a [routerLink]="['/about']" routerLinkActive="active">About</a> |
+    <a [routerLink]="['/contact']" routerLinkActive="active">Contact</a>
+  </nav>
+  <main><router-outlet></router-outlet></main>''';
 
-  static const seoHomeComponentHtml = '''{{=<% %>=}}
-<h1>Welcome to {{name}}</h1>
-<p>This is the home page.</p>
-<%={{ }}=%>''';
+  static const seoHomeComponentHtml = '''<h1>Welcome to {{name}}</h1>
+<p>{{description}} - This is the home page.</p>''';
 
-  static const seoAboutComponentHtml = '''{{=<% %>=}}
-<h1>About {{name}}</h1>
-<p>This is the about page.</p>
-<%={{ }}=%>''';
+  static const seoAboutComponentHtml = '''<h1>About Us</h1>
+<p>This is the about page for {{name}}.</p>''';
+
+  static const seoContactComponentHtml = '''<h1>Contact</h1>
+<p>Contact us about {{name}}.</p>''';
 }

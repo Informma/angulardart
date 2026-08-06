@@ -161,10 +161,9 @@ void main() {
     });
 
     test('provides SeoService and TitleService via component providers', () {
-      expect(
-          Templates.projectMainDartSeo, contains('ClassProvider(SeoService)'));
-      expect(Templates.projectMainDartSeo,
-          contains('ClassProvider(TitleService)'));
+      // SEO project uses per-component providers instead of top-level injector
+      expect(Templates.projectMainDartSeo, contains('final SeoService _seo'));
+      expect(Templates.projectMainDartSeo, contains('final TitleService _title'));
     });
 
     test('imports main.template.dart for NgFactory', () {
@@ -298,9 +297,9 @@ void main() {
       expect(Templates.projectMainDartSeo, contains('runApp(ng.AppComponentNgFactory)'));
     });
 
-    test('seoAppComponentHtml has basic structure', () {
-      expect(Templates.seoAppComponentHtml, contains('<h1>'));
-      expect(Templates.seoAppComponentHtml, contains('{{name}}'));
+    test('seoAppComponentHtml has navigation links', () {
+      expect(Templates.seoAppComponentHtml, contains('[routerLink]'));
+      expect(Templates.seoAppComponentHtml, contains('<router-outlet>'));
     });
   });
 
@@ -328,7 +327,9 @@ void main() {
 
     test('projectPrerenderYaml has expected config', () {
       expect(Templates.projectPrerenderYaml, contains('routes:'));
-      expect(Templates.projectPrerenderYaml, contains('timeout: 5000'));
+      expect(Templates.projectPrerenderYaml, contains('- /about'));
+      expect(Templates.projectPrerenderYaml, contains('- /contact'));
+      expect(Templates.projectPrerenderYaml, contains('timeout: 10000'));
       expect(Templates.projectPrerenderYaml,
           contains('wait_for_network_idle: true'));
       expect(

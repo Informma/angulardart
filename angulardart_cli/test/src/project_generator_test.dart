@@ -251,8 +251,9 @@ void main() {
       final content =
           File('${tempDir.path}/seo_app/web/main.dart').readAsStringSync();
       expect(content, contains('package:angulardart_seo/angulardart_seo.dart'));
-      expect(content, contains('ClassProvider(SeoService)'));
-      expect(content, contains('ClassProvider(TitleService)'));
+      // SEO project uses per-component providers for SeoService and TitleService
+      expect(content, contains('final SeoService _seo'));
+      expect(content, contains('final TitleService _title'));
       expect(content, contains('_seo.setPageSeo('));
     });
 

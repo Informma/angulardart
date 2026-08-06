@@ -65,7 +65,7 @@ class NgControlGroupTest {
   @ViewChild('controlGroup')
   NgControlGroup? controlGroup;
 
-  @ViewChild('input')
+  @ViewChild('input', read: web.HTMLInputElement)
   web.HTMLInputElement? inputElement;
 
   bool disabled = false;

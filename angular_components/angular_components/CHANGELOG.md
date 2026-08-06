@@ -1,3 +1,9 @@
+## 3.0.2
+
+- **BREAKING FIX**: Resolved symbol redeclaration conflict in `managed_zone` — `angular_2.dart` now exports only `ManagedZone` instead of all symbols from `managed_zone.dart`, preventing conflicts with `interface.dart`
+- Removed redundant `_AlwaysSelectable<T>` class from `material_tree_node.dart` — uses `Selectable.getOptionIn()` with null-safe fallback instead
+- Removed dead code: unused factory `PopupState.from(PopupState other)`
+
 ## 3.0.1
 
 - Fix: Clarified community-maintained status (not affiliated with Google)

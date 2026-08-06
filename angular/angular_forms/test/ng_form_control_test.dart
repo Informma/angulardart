@@ -99,7 +99,7 @@ class NgFormControlTest {
   @ViewChild('login')
   NgFormControl? formControl;
 
-  @ViewChild('input')
+  @ViewChild('input', read: web.HTMLInputElement)
   web.HTMLInputElement? inputElement;
 
   Control loginControl = Control(null);

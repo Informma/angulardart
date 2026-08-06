@@ -168,7 +168,7 @@ class NgFormTest {
   @ViewChild('login')
   NgControlName? loginControlDir;
 
-  @ViewChild('input')
+  @ViewChild('input', read: web.HTMLInputElement)
   web.HTMLInputElement? inputElement;
 
   bool disabled = false;
@@ -196,7 +196,7 @@ class NgFormTest {
 class OnPushControlTest {
   var requiresName = false;
 
-  @ViewChild('submit')
+  @ViewChild('submit', read: web.HTMLButtonElement)
   web.HTMLButtonElement? submitButton;
 }
 
@@ -221,6 +221,6 @@ class OnPushControlTest {
 class OnPushControlGroupTest {
   var requiresGroup = false;
 
-  @ViewChild('submit')
+  @ViewChild('submit', read: web.HTMLButtonElement)
   web.HTMLButtonElement? submitButton;
 }

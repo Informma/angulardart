@@ -1,7 +1,0 @@
-targets:
-  $default:
-    builders:
-      angulardart_components|scss_builder:
-        enabled: True
-      angulardart_gallery|angulardart_gallery:
-        enabled: False

@@ -1,3 +1,7 @@
+## 9.0.10
+
+- Docs: Updated README ecosystem table with angulardart_seo and angulardart_prerender, added recommended packages section
+
 ## 9.0.9
 
 - Fix: Use wide version notation for all dev_dependencies (build_runner, build_web_compilers)

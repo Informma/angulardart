@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Docs: Added integration section with angulardart_seo, updated features list with SEO/canonical/prerendered marker details
+
 ## 1.0.4
 
 - Cleanup: Remove verbose debug logging from HtmlRenderer (body preview, page loaded messages)

@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Docs: Added integration section with angulardart_prerender explaining how the two packages work together
+
 ## 1.0.4
 
 - Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem

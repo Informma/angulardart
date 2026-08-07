@@ -1,3 +1,7 @@
+## 3.0.5
+
+- Docs: Added related packages section linking to angulardart_seo and angulardart_prerender guides
+
 ## 3.0.4
 
 - Fix: Use wide version notation for all dev_dependencies (mockito, lints)

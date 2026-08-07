@@ -1,3 +1,7 @@
+## 1.0.16
+
+- Docs: Documented `ngdart new --seo` and `angulardart seo init` commands, added SEO/prerender to Related Packages
+
 ## 1.0.15
 
 - Fix: Use wide version notation for all dev_dependencies (lints, test)

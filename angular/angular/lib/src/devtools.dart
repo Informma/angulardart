@@ -1,9 +1,9 @@
-@JS()
 library angular.src.devtools;
 
-import 'package:web/web.dart' as web;
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
-import 'package:js/js.dart';
+import 'package:web/web.dart' as web;
 
 import 'devtools/inspector.dart';
 import 'utilities.dart';
@@ -25,11 +25,13 @@ bool _isDevToolsEnabled = false;
 void enableDevTools() {
   if (isDevMode) {
     _isDevToolsEnabled = true;
-    _getComponentElement = allowInterop(
-      Inspector.instance.getComponentElement,
+    globalContext.setProperty(
+      'getAngularComponentElement'.toJS,
+      Inspector.instance.getComponentElement.toJS,
     );
-    _getComponentIdForNode = allowInterop(
-      Inspector.instance.getComponentIdForNode,
+    globalContext.setProperty(
+      'getAngularComponentIdForNode'.toJS,
+      Inspector.instance.getComponentIdForNode.toJS,
     );
   }
 }
@@ -43,14 +45,3 @@ void registerContentRoot(web.Element element) {
     Inspector.instance.registerContentRoot(element);
   }
 }
-
-/// Specifies a function to look up an element by component ID in JavaScript.
-@JS('getAngularComponentElement')
-external set _getComponentElement(
-  web.HTMLElement Function(int) implementation,
-);
-
-@JS('getAngularComponentIdForNode')
-external set _getComponentIdForNode(
-  void Function(web.Node, String) implementation,
-);

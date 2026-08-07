@@ -1,14 +1,12 @@
-@JS()
 library angular.src.testability;
 
 import 'dart:async';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 import 'package:web/web.dart' as web;
 
-import 'package:js/js.dart';
-import 'package:js/js_util.dart' as js_util;
 import 'package:meta/meta.dart';
 import 'package:angulardart/src/core/zone/ng_zone.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import 'js_api.dart';
 

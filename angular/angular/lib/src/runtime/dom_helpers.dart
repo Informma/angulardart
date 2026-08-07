@@ -1,15 +1,14 @@
 /// This library is considered separate from rest of `runtime.dart`, as it
 /// imports `package:web` and `runtime.dart` is currently used on libraries
 /// that expect to only run on the command-line VM.
-@JS()
 library angular.src.runtime.dom_helpers;
+
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:web/web.dart' as web;
 
-import 'package:js/js.dart';
-import 'package:js/js_util.dart' as js;
 import 'package:meta/dart2js.dart' as dart2js;
-import 'package:angulardart/src/utilities.dart';
 
 /// https://developer.mozilla.org/en-US/docs/Web/API/Document/createTextNode
 web.Text _createTextNode(String text) => web.Text(text);
@@ -120,13 +119,22 @@ void setAttribute(
 /// ```js
 /// e.disabled = true;
 /// ```
+/// Helper to convert a Dart value to a JS value for dynamic property setting.
+JSAny? _toJsValue(Object? value) {
+  if (value == null) return null;
+  if (value is String) return value.toJS;
+  if (value is num) return value.toJS;
+  if (value is bool) return value.toJS;
+  return value as JSAny?;
+}
+
 @dart2js.tryInline
 void setProperty(
   web.Element element,
   String property,
   Object? value,
 ) {
-  js.setProperty(element as Object, property, value);
+  (element as JSObject).setProperty(property.toJS, _toJsValue(value));
 }
 
 /// Creates a [Text] node with the provided [contents].
@@ -164,10 +172,9 @@ void setProperty(
 ///
 /// ```js
 /// var t, a, b, c;
-/// t = document;
-/// a = z6(d, 'Hello');
+/// t = z6(d, 'Hello');
 /// b = z6(d, 'World');
-/// c = z6(d, '!');
+/// c = z6(d, '!')
 /// ```
 @dart2js.noInline
 web.Text createText(String contents) {
@@ -179,7 +186,7 @@ web.Text createText(String contents) {
 /// This is an optimization to reduce code size for a common operation.
 @dart2js.noInline
 web.Text appendText(web.Node parent, String text) {
-  return unsafeCast(parent.append(createText(text)));
+  return parent.append(createText(text)) as web.Text;
 }
 
 /// Returns a new [Comment] node with empty contents.
@@ -193,7 +200,7 @@ web.Comment createAnchor() => _createComment();
 /// This is an optimization to reduce code size for a common operation.
 @dart2js.noInline
 web.Comment appendAnchor(web.Node parent) {
-  return unsafeCast(parent.append(_createComment()));
+  return parent.append(_createComment()) as web.Comment;
 }
 
 /// Appends and returns a new empty [DivElement] to a [parent] node.
@@ -201,7 +208,7 @@ web.Comment appendAnchor(web.Node parent) {
 /// This is an optimization to reduce code size for a common operation.
 @dart2js.noInline
 web.HTMLDivElement appendDiv(web.Document doc, web.Node parent) {
-  return unsafeCast(parent.append(doc.createElement('div')));
+  return parent.append(doc.createElement('div')) as web.HTMLDivElement;
 }
 
 /// Appends and returns a new empty [SpanElement] to a [parent] node.
@@ -209,7 +216,7 @@ web.HTMLDivElement appendDiv(web.Document doc, web.Node parent) {
 /// This is an optimization to reduce code size for a common operation.
 @dart2js.noInline
 web.HTMLSpanElement appendSpan(web.Document doc, web.Node parent) {
-  return unsafeCast(parent.append(doc.createElement('span')));
+  return parent.append(doc.createElement('span')) as web.HTMLSpanElement;
 }
 
 /// Appends and returns a new empty [Element] to a [parent] node.
@@ -227,7 +234,7 @@ T appendElement<T extends web.Element>(
   // HtmlElement e = appendElement(doc, parent, 'foo')
   //
   // ... without gratituous use of unsafeCast or casts in general.
-  return unsafeCast(parent.append(doc.createElement(tagName)));
+  return parent.append(doc.createElement(tagName)) as T;
 }
 
 /// Inserts [nodes] into the DOM before [sibling].

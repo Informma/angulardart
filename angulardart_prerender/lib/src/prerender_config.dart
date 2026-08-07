@@ -24,9 +24,10 @@ class PrerenderConfig {
   /// Timeout in milliseconds for rendering each page.
   final int timeout;
 
+  /// Additional delay in milliseconds after page load to let AngularDart render.
+  final int renderDelayMs;
+
   /// CSS selector to wait for before capturing the page.
-  ///
-  /// If empty, the builder will wait for network idle.
   final String waitForSelector;
 
   /// Whether to wait for network idle before capturing.
@@ -89,7 +90,8 @@ class PrerenderConfig {
     this.routes = const [],
     this.excludeRoutes = const [],
     this.outputDir = 'web',
-    this.timeout = 5000,
+    this.timeout = 30000,
+    this.renderDelayMs = 10000,
     this.waitForSelector = '',
     this.waitForNetworkIdle = true,
     this.generateSitemap = true,
@@ -132,7 +134,8 @@ class PrerenderConfig {
       routes: routesList,
       excludeRoutes: excludeRoutes,
       outputDir: config['output_dir'] as String? ?? 'web',
-      timeout: config['timeout'] as int? ?? 5000,
+      timeout: config['timeout'] as int? ?? 15000,
+      renderDelayMs: config['render_delay_ms'] as int? ?? 3000,
       waitForSelector: config['wait_for_selector'] as String? ?? '',
       waitForNetworkIdle: config['wait_for_network_idle'] as bool? ?? true,
       generateSitemap: config['generate_sitemap'] as bool? ?? true,
@@ -209,6 +212,7 @@ class PrerenderConfig {
     List<String>? excludeRoutes,
     String? outputDir,
     int? timeout,
+    int? renderDelayMs,
     String? waitForSelector,
     bool? waitForNetworkIdle,
     bool? generateSitemap,
@@ -234,6 +238,7 @@ class PrerenderConfig {
       excludeRoutes: excludeRoutes ?? this.excludeRoutes,
       outputDir: outputDir ?? this.outputDir,
       timeout: timeout ?? this.timeout,
+      renderDelayMs: renderDelayMs ?? this.renderDelayMs,
       waitForSelector: waitForSelector ?? this.waitForSelector,
       waitForNetworkIdle: waitForNetworkIdle ?? this.waitForNetworkIdle,
       generateSitemap: generateSitemap ?? this.generateSitemap,

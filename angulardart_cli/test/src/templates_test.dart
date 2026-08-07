@@ -177,8 +177,8 @@ void main() {
       expect(Templates.projectMainDartSeo, isNot(contains('templateUrl')));
     });
 
-    test('calls runApp with NgFactory', () {
-      expect(Templates.projectMainDartSeo, contains('runApp(ng.AppComponentNgFactory)'));
+    test('calls runApp with NgFactory and injector', () {
+      expect(Templates.projectMainDartSeo, contains('runApp(ng.AppComponentNgFactory, createInjector: appInjector)'));
     });
   });
 
@@ -294,7 +294,7 @@ void main() {
 
     test('projectMainDartSeo defines main()', () {
       expect(Templates.projectMainDartSeo, contains('void main()'));
-      expect(Templates.projectMainDartSeo, contains('runApp(ng.AppComponentNgFactory)'));
+      expect(Templates.projectMainDartSeo, contains('runApp(ng.AppComponentNgFactory, createInjector: appInjector)'));
     });
 
     test('seoAppComponentHtml has navigation links', () {
@@ -329,9 +329,8 @@ void main() {
       expect(Templates.projectPrerenderYaml, contains('routes:'));
       expect(Templates.projectPrerenderYaml, contains('- /about'));
       expect(Templates.projectPrerenderYaml, contains('- /contact'));
-      expect(Templates.projectPrerenderYaml, contains('timeout: 10000'));
-      expect(Templates.projectPrerenderYaml,
-          contains('wait_for_network_idle: true'));
+      expect(Templates.projectPrerenderYaml, contains('timeout: 30000'));
+      expect(Templates.projectPrerenderYaml, contains('render_delay_ms: 10000'));
       expect(
           Templates.projectPrerenderYaml, contains('generate_sitemap: true'));
       expect(Templates.projectPrerenderYaml, contains('base_url:'));

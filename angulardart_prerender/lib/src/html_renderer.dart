@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:puppeteer/puppeteer.dart';
 import 'package:logging/logging.dart';
@@ -18,11 +17,12 @@ final _logger = Logger('HtmlRenderer');
 /// 5. Applying post-processing (e.g., removing scripts)
 class HtmlRenderer {
   final PrerenderConfig _config;
+  final int _port;
   Browser? _browser;
   Page? _page;
   bool _initialized = false;
 
-  HtmlRenderer(this._config);
+  HtmlRenderer(this._config, [int port = 8080]) : _port = port;
 
   /// Initializes the headless browser.
   Future<void> initialize() async {
@@ -77,25 +77,35 @@ class HtmlRenderer {
 
     final page = _page!;
     final url = _buildUrl(route);
+    final routeTimeout = _config.timeout;
 
-    _logger.fine('Rendering route: $route -> $url');
+    _logger.info('Rendering route: $route -> $url');
+
+    // Collect console messages for debugging.
+    final consoleMessages = <String>[];
+    page.onConsole.listen((msg) {
+      consoleMessages.add('${msg.type}: ${msg.text}');
+    });
 
     try {
-      // Navigate to the URL.
+      // Navigate to the URL and wait for DOMContentLoaded + JS execution.
       await page.goto(
         url,
-        wait: Until.networkIdle,
-        timeout: Duration(milliseconds: _config.timeout),
+        wait: Until.load,
+        timeout: Duration(milliseconds: routeTimeout),
       );
 
-      // Wait for specific selector if configured.
+      _logger.info('Page loaded: $route');
+
+      // Wait for specific selector if configured (route-level or global).
       final waitForSelector = _config.waitForSelector;
       if (waitForSelector.isNotEmpty) {
         try {
           await page.waitForSelector(
             waitForSelector,
-            timeout: Duration(milliseconds: _config.timeout),
+            timeout: Duration(milliseconds: routeTimeout),
           );
+          _logger.info('Selector found: $waitForSelector on $route');
         } catch (e) {
           _logger.warning(
             'Timeout waiting for selector "$waitForSelector" on $route',
@@ -103,13 +113,37 @@ class HtmlRenderer {
         }
       }
 
-      // Wait for network idle if configured.
-      if (_config.waitForNetworkIdle && waitForSelector.isEmpty) {
-        await Future.delayed(const Duration(milliseconds: 500));
+      // Wait for the render delay to let AngularDart finish rendering.
+      if (_config.renderDelayMs > 0) {
+        final delay = Duration(milliseconds: _config.renderDelayMs);
+        _logger.info('Waiting ${delay.inMilliseconds}ms for AngularDart render on $route');
+        await Future.delayed(delay);
+      }
+
+      // Log any JS errors or console messages.
+      if (consoleMessages.isNotEmpty) {
+        final errors = consoleMessages.where((m) => m.startsWith('error')).toList();
+        if (errors.isNotEmpty) {
+          _logger.warning('JS errors on $route:');
+          for (final err in errors.take(5)) {
+            _logger.warning('  $err');
+          }
+        }
       }
 
       // Get the HTML content.
       var html = await page.content ?? '';
+
+      // Log rendered body for debugging.
+      final bodyStart = html.indexOf('<body');
+      final bodyEnd = html.indexOf('</body>');
+      if (bodyStart != -1 && bodyEnd != -1) {
+        final rawBody = html.substring(bodyStart, bodyEnd + '</body>'.length);
+        final cleanedBody = rawBody.replaceAll(RegExp(r'\s+'), ' ');
+        final endIdx = cleanedBody.length.clamp(0, 200);
+        final preview = cleanedBody.substring(0, endIdx);
+        _logger.fine('Rendered body on $route: $preview');
+      }
 
       // Post-process the HTML.
       html = _postProcessHtml(html, route);
@@ -124,16 +158,8 @@ class HtmlRenderer {
 
   /// Builds the full URL for a route.
   String _buildUrl(String route) {
-    if (_config.baseUrl.isNotEmpty) {
-      final baseUrl = _config.baseUrl.endsWith('/')
-          ? _config.baseUrl.substring(0, _config.baseUrl.length - 1)
-          : _config.baseUrl;
-      return '$baseUrl$route';
-    }
-
-    // Use a local file URL for testing.
-    // In production, you'd want to serve the app locally.
-    return 'file://${Directory.current.path}/build/web/index.html#$route';
+    // Always use the local server since we start it before prerendering.
+    return 'http://localhost:$_port$route';
   }
 
   /// Post-processes the HTML content.

@@ -26,7 +26,7 @@ void main(List<String> arguments) async {
         defaultsTo: 'prerender.yaml',
         help: 'Path to configuration file')
     ..addOption('output',
-        abbr: 'o', defaultsTo: 'build/web', help: 'Output directory')
+        abbr: 'o', defaultsTo: 'build/web', help: 'Output directory (also used as build dir)')
     ..addOption('port',
         abbr: 'p', defaultsTo: '8080', help: 'Port for local server')
     ..addFlag('help', abbr: 'h', negatable: false, help: 'Show help');
@@ -83,10 +83,10 @@ Future<void> runPrerender(
   _logger.info('Collected ${routes.length} routes to prerender');
 
   // Check if build directory exists.
-  final buildDir = Directory('build/web');
+  final buildDir = Directory(outputDir);
   if (!await buildDir.exists()) {
     throw Exception(
-        'Build directory not found: build/web. Run build_runner first.');
+        'Build directory not found: $outputDir. Run build_runner first.');
   }
 
   // Start local server.
@@ -94,8 +94,8 @@ Future<void> runPrerender(
   _logger.info('Local server started on port $port');
 
   try {
-    // Initialize renderer.
-    final renderer = HtmlRenderer(config);
+      // Initialize renderer.
+      final renderer = HtmlRenderer(config, port);
     await renderer.initialize();
 
     try {
@@ -151,29 +151,40 @@ Future<void> runPrerender(
 
 Future<HttpServer> _startLocalServer(String buildDir, int port) async {
   final server = await HttpServer.bind(InternetAddress.loopbackIPv4, port);
+  // Wait for the server to be ready before returning.
+  await Future.delayed(const Duration(milliseconds: 100));
   server.listen((request) async {
+    var headersSent = false;
     try {
-      final path = request.uri.path;
-      final filePath = p.join(buildDir, path);
+      final rawPath = request.uri.path.split('?').first;
+      // Normalize path: remove leading slash for join, then reconstruct.
+      final normalizedPath = rawPath.startsWith('/') ? rawPath.substring(1) : rawPath;
+      final filePath = p.join(buildDir, normalizedPath);
+
+      _logger.fine('Request: $rawPath -> $filePath (exists: ${await File(filePath).exists()})');
 
       if (await File(filePath).exists()) {
-        final file = File(filePath);
         request.response.headers.contentType = _getContentType(filePath);
-        await request.response.addStream(file.openRead());
+        await request.response.addStream(File(filePath).openRead());
+        headersSent = true;
       } else {
         // Serve index.html for SPA routes.
         final indexPath = p.join(buildDir, 'index.html');
         if (await File(indexPath).exists()) {
-          final file = File(indexPath);
+          _logger.fine('Serving fallback: $indexPath');
           request.response.headers.contentType = ContentType.html;
-          await request.response.addStream(file.openRead());
+          await request.response.addStream(File(indexPath).openRead());
+          headersSent = true;
         } else {
           request.response.statusCode = HttpStatus.notFound;
+          headersSent = true;
         }
       }
     } catch (e) {
       _logger.severe('Error handling request: $e');
-      request.response.statusCode = HttpStatus.internalServerError;
+      if (!headersSent) {
+        request.response.statusCode = HttpStatus.internalServerError;
+      }
     } finally {
       await request.response.close();
     }

@@ -6,7 +6,8 @@ void main() {
     test('creates config with defaults', () {
       const config = PrerenderConfig();
       expect(config.routes, isEmpty);
-      expect(config.timeout, equals(5000));
+      expect(config.timeout, equals(30000));
+      expect(config.renderDelayMs, equals(10000));
       expect(config.waitForSelector, isEmpty);
       expect(config.waitForNetworkIdle, isTrue);
       expect(config.generateSitemap, isTrue);
@@ -25,6 +26,7 @@ exclude:
   - /admin/**
 
 timeout: 10000
+render_delay_ms: 5000
 base_url: https://example.com
 ''';
       final config = PrerenderConfig.fromYaml(yaml);
@@ -35,6 +37,7 @@ base_url: https://example.com
       expect(config.routes[2].provider, equals('routes.dart#blogRoutes'));
       expect(config.excludeRoutes, contains('/admin/**'));
       expect(config.timeout, equals(10000));
+      expect(config.renderDelayMs, equals(5000));
       expect(config.baseUrl, equals('https://example.com'));
     });
 

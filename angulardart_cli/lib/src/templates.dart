@@ -172,9 +172,12 @@ import 'package:angulardart_seo/angulardart_seo.dart';
 // ignore: uri_has_not_been_generated
 import 'main.template.dart' as ng;
 
+@GenerateInjector([routerProviders, SeoService, TitleService])
+final InjectorFactory appInjector = ng.appInjector\$Injector;
+
 @Component(
   selector: '{{component.selector}}',
-  template: '<div class="nav"><a [routerLink]="[\'/\']">Home</a> | <a [routerLink]="[\'/about\']">About</a> | <a [routerLink]="[\'/contact\']">Contact</a></div><main><router-outlet></router-outlet></main>',
+  template: '<div class="nav"><a [routerLink]="[\\'/\\']">Home</a> | <a [routerLink]="[\\'/about\\']">About</a> | <a [routerLink]="[\\'/contact\\']">Contact</a></div><main><router-outlet [routes]="routes"></router-outlet></main>',
   directives: [routerDirectives],
 )
 class AppComponent implements OnInit {
@@ -187,10 +190,11 @@ class AppComponent implements OnInit {
   void ngOnInit() {
     _router.onRouteActivated.listen((_) {});
     routes = [
-      RouteDefinition(path: '/', component: HomeComponentNgFactory, useAsDefault: true),
-      RouteDefinition(path: '/about', component: AboutComponentNgFactory),
-      RouteDefinition(path: '/contact', component: ContactComponentNgFactory),
+      RouteDefinition(path: '/', component: ng.createHomeComponentFactory(), useAsDefault: true),
+      RouteDefinition(path: '/about', component: ng.createAboutComponentFactory()),
+      RouteDefinition(path: '/contact', component: ng.createContactComponentFactory()),
     ];
+    _router.navigate('/');
   }
 }
 
@@ -199,6 +203,7 @@ class AppComponent implements OnInit {
   template: '<h1>Welcome to {{name}}</h1>' +
       '<p>{{description}} - This is the home page.</p>' +
       '<p>This page demonstrates SEO with dynamic meta tags and prerendering for search engines.</p>',
+  providers: [SeoService, TitleService],
 )
 class HomeComponent implements OnInit {
   final SeoService _seo;
@@ -212,9 +217,7 @@ class HomeComponent implements OnInit {
     _seo.setPageSeo(
       title: 'Home - {{description}}',
       description: 'Welcome to {{description}}. This is the home page with full SEO support.',
-      keywords: 'angular, dart, seo, prerender',
-      ogTitle: '{{description}} - Home',
-      ogDescription: 'The home page of our AngularDart application.',
+      
     );
   }
 }
@@ -224,6 +227,7 @@ class HomeComponent implements OnInit {
   template: '<h1>About Us</h1>' +
       '<p>This is the about page. Learn more about {{description}} and what we do.</p>' +
       '<p>Each page has unique SEO metadata for better search engine indexing.</p>',
+  providers: [SeoService, TitleService],
 )
 class AboutComponent implements OnInit {
   final SeoService _seo;
@@ -237,9 +241,7 @@ class AboutComponent implements OnInit {
     _seo.setPageSeo(
       title: 'About Us - {{description}}',
       description: 'Learn about {{description}}, our AngularDart application with SEO and prerendering.',
-      keywords: 'about, angular, dart, team',
-      ogTitle: '{{description}} - About',
-      ogDescription: 'The about page of our AngularDart application.',
+      
     );
   }
 }
@@ -249,6 +251,7 @@ class AboutComponent implements OnInit {
   template: '<h1>Contact</h1>' +
       '<p>Get in touch with us. This is the contact page for {{description}}.</p>' +
       '<p>Email: hello@example.com</p>',
+  providers: [SeoService, TitleService],
 )
 class ContactComponent implements OnInit {
   final SeoService _seo;
@@ -262,15 +265,13 @@ class ContactComponent implements OnInit {
     _seo.setPageSeo(
       title: 'Contact Us - {{description}}',
       description: 'Contact us about {{description}}. We are here to help.',
-      keywords: 'contact, angular, dart, support',
-      ogTitle: '{{description}} - Contact',
-      ogDescription: 'The contact page of our AngularDart application.',
+      
     );
   }
 }
 
 void main() {
-  runApp(ng.AppComponentNgFactory);
+  runApp(ng.AppComponentNgFactory, createInjector: appInjector);
 }
 ''';
 
@@ -279,8 +280,8 @@ void main() {
   - /about
   - /contact
 
-timeout: 10000
-wait_for_network_idle: true
+timeout: 30000
+render_delay_ms: 10000
 generate_sitemap: true
 generate_robots: true
 base_url: 'https://example.com'

@@ -1,3 +1,7 @@
+## 9.0.11
+
+- Fix: Remove broken dartdoc categories config (missing markdown files) to restore documentation scoring on pub.dev
+
 ## 9.0.10
 
 - Docs: Updated README ecosystem table with angulardart_seo and angulardart_prerender, added recommended packages section

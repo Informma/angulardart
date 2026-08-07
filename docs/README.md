@@ -4,6 +4,7 @@ Ce dossier contient la documentation complète pour les fonctionnalités SEO et 
 
 ## Fichiers
 
+- **SEO_PRERENDER_USER_GUIDE.md** : Guide utilisateur complet — création de projet SEO, configuration des meta tags et prerendering
 - **SEO_GUIDE.md** : Guide complet sur l'utilisation de `angulardart_seo` et les bonnes pratiques SEO
 - **PRERENDER_GUIDE.md** : Guide complet sur l'utilisation de `angulardart_prerender` pour le prerendering
 - **INTEGRATION.md** : Instructions pour intégrer cette documentation au site web angulardartreborn.com

@@ -81,10 +81,13 @@ class HtmlRenderer {
 
     _logger.info('Rendering route: $route -> $url');
 
-    // Collect console messages for debugging.
-    final consoleMessages = <String>[];
+    // Collect JS errors for reporting.
+    final jsErrors = <String>[];
     page.onConsole.listen((msg) {
-      consoleMessages.add('${msg.type}: ${msg.text}');
+      if (msg.type.name.toLowerCase() == 'error') {
+        final text = msg.text ?? '<empty>';
+        jsErrors.add(text);
+      }
     });
 
     try {
@@ -95,8 +98,6 @@ class HtmlRenderer {
         timeout: Duration(milliseconds: routeTimeout),
       );
 
-      _logger.info('Page loaded: $route');
-
       // Wait for specific selector if configured (route-level or global).
       final waitForSelector = _config.waitForSelector;
       if (waitForSelector.isNotEmpty) {
@@ -105,7 +106,6 @@ class HtmlRenderer {
             waitForSelector,
             timeout: Duration(milliseconds: routeTimeout),
           );
-          _logger.info('Selector found: $waitForSelector on $route');
         } catch (e) {
           _logger.warning(
             'Timeout waiting for selector "$waitForSelector" on $route',
@@ -115,35 +115,19 @@ class HtmlRenderer {
 
       // Wait for the render delay to let AngularDart finish rendering.
       if (_config.renderDelayMs > 0) {
-        final delay = Duration(milliseconds: _config.renderDelayMs);
-        _logger.info('Waiting ${delay.inMilliseconds}ms for AngularDart render on $route');
-        await Future.delayed(delay);
+        await Future.delayed(Duration(milliseconds: _config.renderDelayMs));
       }
 
-      // Log any JS errors or console messages.
-      if (consoleMessages.isNotEmpty) {
-        final errors = consoleMessages.where((m) => m.startsWith('error')).toList();
-        if (errors.isNotEmpty) {
-          _logger.warning('JS errors on $route:');
-          for (final err in errors.take(5)) {
-            _logger.warning('  $err');
-          }
+      // Report JS errors found during navigation.
+      if (jsErrors.isNotEmpty) {
+        _logger.warning('JS errors on $route (${jsErrors.length} error(s)):');
+        for (final err in jsErrors.take(5)) {
+          _logger.warning('  $err');
         }
       }
 
       // Get the HTML content.
       var html = await page.content ?? '';
-
-      // Log rendered body for debugging.
-      final bodyStart = html.indexOf('<body');
-      final bodyEnd = html.indexOf('</body>');
-      if (bodyStart != -1 && bodyEnd != -1) {
-        final rawBody = html.substring(bodyStart, bodyEnd + '</body>'.length);
-        final cleanedBody = rawBody.replaceAll(RegExp(r'\s+'), ' ');
-        final endIdx = cleanedBody.length.clamp(0, 200);
-        final preview = cleanedBody.substring(0, endIdx);
-        _logger.fine('Rendered body on $route: $preview');
-      }
 
       // Post-process the HTML.
       html = _postProcessHtml(html, route);

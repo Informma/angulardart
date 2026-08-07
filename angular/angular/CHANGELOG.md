@@ -1,3 +1,10 @@
+## 9.0.12
+
+- **BREAKING**: Migrate from `package:js` to `dart:js_interop` (WASM-compatible JS interop)
+  - Replaced all `@JS()` annotations and `package:js/js_util.dart` usage with `dart:js_interop`
+  - Affected files: testability system, devtools, dom_helpers
+  - Removes discontinued `package:js` dependency
+
 ## 9.0.11
 
 - Fix: Remove broken dartdoc categories config (missing markdown files) to restore documentation scoring on pub.dev

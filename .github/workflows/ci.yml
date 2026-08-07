@@ -1,0 +1,134 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - angulardart_cli
+          - angulardart_seo
+          - angulardart_prerender
+          - angular/angular_meta
+          - angular/angular_ast
+          - angular/angular_compiler
+          - angular/angular_router
+          - angular/angular_forms
+          - angular/_tests
+          - angular/angular_test
+          - angular/angular
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1.10
+        with:
+          sdk: stable
+
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: ${{ matrix.package }}
+
+      - name: Analyze
+        run: dart analyze --fatal-infos
+        working-directory: ${{ matrix.package }}
+
+  test:
+    name: Test (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - angulardart_cli
+          - angulardart_seo
+          - angulardart_prerender
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1.10
+        with:
+          sdk: stable
+
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: ${{ matrix.package }}
+
+      - name: Run tests
+        run: dart test
+        working-directory: ${{ matrix.package }}
+
+  version-check:
+    name: Version notation check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check pubspec.yaml dependencies use wide version constraints
+        run: |
+          # Find all pubspec.yaml files (excluding examples and .dart_tool)
+          mapfile -t PUBSPEC_FILES < <(find . \
+            -name 'pubspec.yaml' \
+            -not -path './.dart_tool/*' \
+            -not -path '*/example/*' \
+            -not -path '*/angular_components/*' \
+            | sort)
+
+          echo "Found ${#PUBSPEC_FILES[@]} pubspec.yaml files to check"
+
+          errors=()
+          for file in "${PUBSPEC_FILES[@]}"; do
+            # Extract dependencies and dev_dependencies sections
+            # Check each version constraint
+            while IFS= read -r line; do
+              # Skip comments and empty lines
+              [[ "$line" =~ ^[[:space:]]*# ]] && continue
+              [[ -z "${line// }" ]] && continue
+
+              # Match dependency entries with version constraints
+              if [[ "$line" =~ ^[[:space:]]+([a-zA-Z0-9_-]+):[[:space:]]*(.+) ]]; then
+                dep_name="${BASH_REMATCH[1]}"
+                version_constraint="${BASH_REMATCH[2]}"
+
+                # Remove quotes
+                version_constraint="${version_constraint//\"/}"
+                version_constraint="${version_constraint//\'/}"
+
+                # Skip path:, git:, sdk: dependencies (they don't use semver)
+                [[ "$version_constraint" =~ ^(path|git|sdk): ]] && continue
+
+                # Check for wide version notation: >=x.y.z <(n+1).0.0 or ^x.y.z
+                if [[ ! "$version_constraint" =~ ^\^ ]]; then
+                  # Must match >=X.Y.Z <Z.0.0 pattern (or similar)
+                  if [[ ! "$version_constraint" =~ ^\>= ]]; then
+                    errors+=("$file: $dep_name uses non-wide constraint: $version_constraint")
+                  fi
+                fi
+              fi
+            done < "$file"
+          done
+
+          if [ ${#errors[@]} -gt 0 ]; then
+            echo "❌ Version notation check failed:"
+            for err in "${errors[@]}"; do
+              echo "  $err"
+            done
+            exit 1
+          else
+            echo "✅ All dependencies use wide version constraints"
+          fi

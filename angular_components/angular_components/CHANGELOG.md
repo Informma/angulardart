@@ -1,3 +1,8 @@
+## 3.0.4
+
+- Fix: Use wide version notation for all dev_dependencies (mockito, lints)
+- Fix: Update dependency on `angulardart` to `>=9.0.0 <10.0.0` and `angular_forms` to `>=6.0.0 <7.0.0`
+
 ## 3.0.3
 
 - Fix: Updated dependency on `angulardart` to ^9.0.0 and `angular_forms` to ^6.0.0 for compatibility with latest framework release

@@ -1,3 +1,8 @@
+## 1.0.3
+
+- Fix: Use wide version notation for `meta` dependency (`>=1.15.0 <2.0.0`)
+- Fix: Add `platforms`, `screenshots`, and community disclaimer to pubspec.yaml
+
 ## 1.0.2
 
 - Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem

@@ -1,3 +1,7 @@
+## 5.0.5
+
+- Fix: Use wide version notation for all dev_dependencies (build_runner, mockito, lints, test)
+
 ## 5.0.4
 
 - Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem

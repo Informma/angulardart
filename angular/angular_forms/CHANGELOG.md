@@ -1,3 +1,7 @@
+## 6.1.0
+
+- Fix: Use wide version notation for all dev_dependencies (mockito, lints)
+
 ## 6.0.3
 
 - Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem

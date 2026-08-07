@@ -1,3 +1,8 @@
+## 3.1.3
+
+- Fix: Use wide version notation for all dependencies and dev_dependencies
+- Fix: Update `lints` from `^4.0.0` to `>=6.0.0 <7.0.0`
+
 ## 3.1.2
 
 - Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem

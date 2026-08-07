@@ -1,3 +1,7 @@
+## 9.0.9
+
+- Fix: Use wide version notation for all dev_dependencies (build_runner, build_web_compilers)
+
 ## 9.0.8
 
 - Fix: Resolve `UnresolvedAnnotationException` crash in compiler when `annotationSource` is null (context.dart)

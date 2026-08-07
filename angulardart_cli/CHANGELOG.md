@@ -1,3 +1,7 @@
+## 1.0.15
+
+- Fix: Use wide version notation for all dev_dependencies (lints, test)
+
 ## 1.0.14
 
 - Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem

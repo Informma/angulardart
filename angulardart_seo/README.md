@@ -23,6 +23,24 @@ Part of the [AngularDart](https://pub.dev/packages/angulardart) ecosystem.
 - **Annotations** - Declarative SEO configuration with `@SeoConfig`
 - **Title service** - Advanced title management with templates and history
 
+## Integration with angulardart_prerender
+
+For production SEO, combine `angulardart_seo` with [angulardart_prerender](https://pub.dev/packages/angulardart_prerender) to generate static HTML pages:
+
+```yaml
+dependencies:
+  angulardart: ^9.0.0
+  angulardart_router: ^5.1.0
+  angulardart_seo: ^1.0.4        # Dynamic meta tags at runtime
+
+dev_dependencies:
+  angulardart_prerender: ^1.0.4   # Static prerendering for search engines
+```
+
+The prerender tool captures the dynamically set meta tags and embeds them into static HTML files, ensuring search engine crawlers see complete SEO metadata even without JavaScript execution.
+
+See [SEO Prerender User Guide](https://github.com/flutterdocteur/angulardart/blob/main/docs/SEO_PRERENDER_USER_GUIDE.md) for a complete walkthrough.
+
 ## Installation
 
 Add to your `pubspec.yaml`:

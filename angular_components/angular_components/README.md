@@ -173,6 +173,12 @@ class AppComponent {
 
 - [API Reference](https://pub.dev/documentation/angulardart_components/latest/)
 - [AngularDart main package](https://pub.dev/packages/angulardart)
+- [SEO & Prerendering Guide](https://github.com/flutterdocteur/angulardart/blob/main/docs/SEO_PRERENDER_USER_GUIDE.md) - Add SEO meta tags and static prerendering to your components
+
+## Related Packages
+
+- [angulardart_seo](https://pub.dev/packages/angulardart_seo) - Dynamic meta tags, titles, Open Graph, Twitter Cards
+- [angulardart_prerender](https://pub.dev/packages/angulardart_prerender) - Static prerendering for search engine optimization
 
 ## Requirements
 

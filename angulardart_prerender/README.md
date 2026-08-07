@@ -17,12 +17,37 @@ Part of the [AngularDart](https://pub.dev/packages/angulardart) ecosystem.
 
 - **Headless browser rendering** - Uses Puppeteer for accurate HTML generation
 - **Automatic route discovery** - Finds routes from your code automatically
-- **Dynamic route support** - Prerender routes with parameters
-- **Sitemap generation** - Automatically generates sitemap.xml
+- **Dynamic route support** - Prerender routes with parameters (`/blog/:slug`)
+- **Sitemap generation** - Automatically generates sitemap.xml with priorities and changefreq
 - **Robots.txt generation** - Creates robots.txt with sitemap reference
-- **Component-level control** - Exclude or configure specific components
+- **SEO integration** - Works seamlessly with [angulardart_seo](https://pub.dev/packages/angulardart_seo) for dynamic meta tags
+- **Canonical URLs** - Adds canonical link tags automatically
+- **Prerendered marker** - Adds `data-prerendered="true"` to `<html>` tag
 - **Parallel rendering** - Fast prerendering with concurrent processing
 - **Caching support** - Cache prerendered pages for faster builds
+
+## Integration with angulardart_seo
+
+`angulardart_prerender` is designed to work together with [angulardart_seo](https://pub.dev/packages/angulardart_seo). The SEO package sets meta tags dynamically at runtime, while the prerender tool captures those rendered pages as static HTML files.
+
+```yaml
+dependencies:
+  angulardart: ^9.0.0
+  angulardart_router: ^5.1.0
+  angulardart_seo: ^1.0.4        # Dynamic meta tags at runtime
+
+dev_dependencies:
+  angulardart_prerender: ^1.0.4   # Static prerendering for search engines
+```
+
+### How it works
+
+1. `angulardart_seo` sets `<title>`, `<meta name="description">`, Open Graph, and Twitter Card tags in your components
+2. `build_runner build --release` compiles the app to JavaScript
+3. `angulardart_prerender` launches a headless browser, navigates each route, waits for AngularDart to render, then captures the fully rendered HTML
+4. The prerendered HTML files include all SEO metadata embedded as static tags — no JavaScript required for search engines
+
+See [SEO Prerender User Guide](https://github.com/flutterdocteur/angulardart/blob/main/docs/SEO_PRERENDER_USER_GUIDE.md) for a complete walkthrough with examples.
 
 ## Installation
 

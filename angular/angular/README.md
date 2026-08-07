@@ -78,11 +78,28 @@ AngularDart comes with a complete set of packages for building modern web applic
 | Package | Description |
 |---------|-------------|
 | [angulardart](https://pub.dev/packages/angulardart) | Core framework (you are here) |
-| [angulardart_cli](https://pub.dev/packages/angulardart_cli) | CLI tools for scaffolding and development |
+| [angulardart_cli](https://pub.dev/packages/angulardart_cli) | CLI tools for scaffolding, SEO init, and project generation |
 | [angulardart_forms](https://pub.dev/packages/angulardart_forms) | Forms framework with validation |
 | [angulardart_router](https://pub.dev/packages/angulardart_router) | Client-side routing and navigation |
 | [angulardart_components](https://pub.dev/packages/angulardart_components) | Material Design UI components |
 | [angulardart_test](https://pub.dev/packages/angulardart_test) | Testing utilities and helpers |
+| [angulardart_seo](https://pub.dev/packages/angulardart_seo) | SEO meta tags, titles, and dynamic page metadata |
+| [angulardart_prerender](https://pub.dev/packages/angulardart_prerender) | Static prerendering for search engine optimization |
+
+### Recommended packages for production
+
+For full-featured applications with SEO support:
+
+```yaml
+dependencies:
+  angulardart: ^9.0.0
+  angulardart_router: ^5.1.0
+  angulardart_seo: ^1.0.4    # Dynamic meta tags and titles
+  angulardart_prerender: ^1.0.4  # Static prerendering for SEO
+
+dev_dependencies:
+  angulardart_cli: ^1.0.15   # Project scaffolding + `ngdart new --seo`
+```
 
 ## Key Features
 

@@ -1,3 +1,8 @@
+## 1.0.4
+
+- Cleanup: Remove verbose debug logging from HtmlRenderer (body preview, page loaded messages)
+- Only collect JS errors instead of all console messages for better production output
+
 ## 1.0.3
 
 - Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem

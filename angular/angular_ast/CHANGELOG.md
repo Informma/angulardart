@@ -1,3 +1,7 @@
+## 3.2.4
+
+- Fix: Template compiler compatibility — ensure AST visitor works with RenderNode helpers in SSR mode
+
 ## 3.2.3
 
 - Fix: Update `package:web` constraint to `<1.2.0` for compatibility with latest SDK

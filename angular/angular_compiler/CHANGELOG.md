@@ -1,3 +1,10 @@
+## 5.2.5
+
+- Fix: Template compiler UPDATE phase — use RenderNodeHelpers.addRenderEventListener for SSR compatibility
+- Fix: Use appendRenderChild helper instead of direct .appendChild() in compile_view.dart
+- Fix: Add RenderNodeHelpers and RenderNodeUpdateHelpers identifiers for template compiler
+- Fix: Ensure AST visitor integration works correctly with new RenderNode helpers
+
 ## 5.2.4
 
 - Fix: Template compiler UPDATE phase — use RenderNodeHelpers.addRenderEventListener for SSR compatibility

@@ -1,3 +1,7 @@
+## 6.2.7
+
+- Fix: Template compiler UPDATE phase — ensure form directives work correctly with RenderNode helpers in SSR mode
+
 ## 6.2.6
 
 - Fix: Template compiler compatibility — ensure form directives work with RenderNode helpers

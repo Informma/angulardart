@@ -32,10 +32,3 @@ dev_dependencies:
   build_web_compilers: '>=4.8.0 <5.0.0'
   lints: '>=6.0.0 <7.0.0'
   test: '>=1.31.0 <2.0.0'
-
-# Local overrides for development only — removed before publishing.
-dependency_overrides:
-  angulardart:
-    path: ../angular/angular
-  angulardart_meta:
-    path: ../angular/angular_meta

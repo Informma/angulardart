@@ -45,8 +45,3 @@ dev_dependencies:
   mockito: '>=5.4.0 <6.0.0'
   lints: '>=6.0.0 <7.0.0'
   test: '>=1.31.0 <2.0.0'
-
-# Local overrides for development only — removed before publishing.
-dependency_overrides:
-  angulardart_meta:
-    path: ../angular_meta

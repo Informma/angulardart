@@ -22,12 +22,6 @@ dependencies:
   collection: '>=1.18.0 <2.0.0'
   web: '>=1.0.0 <1.2.0'
   meta: '>=1.15.0 <2.0.0'
-dependency_overrides:
-  angulardart:
-    path: ../angular
-  angulardart_meta:
-    path: ../angular_meta
-
 dev_dependencies:
   angulardart_compiler: '>=5.0.0 <6.0.0'
   async: '>=2.11.0 <3.0.0'

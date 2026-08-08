@@ -1,5 +1,4 @@
 import 'package:web/web.dart' as web;
-import 'dart:js_util' as js_util;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_forms/src/directives/shared.dart'
@@ -45,7 +44,15 @@ class DefaultValueAccessor extends Object
   @override
   void writeValue(value) {
     var normalizedValue = value ?? '';
-    js_util.setProperty(_element!, 'value', normalizedValue);
+    _writeInputElementValue(_element, normalizedValue);
+  }
+
+  void _writeInputElementValue(web.HTMLElement? element, String value) {
+    if (element == null) return;
+    final tag = element.tagName.toLowerCase();
+    if (tag == 'input' || tag == 'textarea') {
+      (element as dynamic).value = value;
+    }
   }
 
   @override

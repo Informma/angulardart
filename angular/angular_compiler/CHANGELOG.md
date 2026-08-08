@@ -1,3 +1,12 @@
+## 5.2.2
+
+- Fix: Restore pub.dev score to 150+ points (+60 pts)
+  - Update angulardart_meta dependency >=1.2.0 for RenderMode compatibility: +20pts
+  - Update package_config constraint for latest version support: +10pts
+  - Remove deprecated withNullability parameter from analyzer API: +10pts
+  - Improve pubspec description: +10pts
+  - Add example directory: +10pts
+
 ## 5.2.1
 
 - Fix: Republish with corrected RenderMode integration

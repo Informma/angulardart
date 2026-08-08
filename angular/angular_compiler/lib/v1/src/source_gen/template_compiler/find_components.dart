@@ -530,7 +530,7 @@ class _ComponentVisitor
       read: readType != null
           ? CompileTokenMetadata(
               identifier: CompileIdentifierMetadata(
-                name: readType.getDisplayString(withNullability: false),
+                name: readType.getDisplayString(),
                 moduleUrl: moduleUrl(readType.element!),
               ),
             )

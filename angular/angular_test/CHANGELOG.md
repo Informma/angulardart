@@ -1,3 +1,10 @@
+## 6.2.2
+
+- Fix: Restore pub.dev score to 150+ points (+30 pts)
+  - Improve pubspec description: +10pts
+  - Add example directory: +10pts
+  - Remove unused test dependency in example: +10pts
+
 ## 6.2.1
 
 - Fix: Republish for compatibility with corrected angulardart 9.2.1

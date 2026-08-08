@@ -35,7 +35,7 @@ class TokenReader {
     if (constant.instanceOf($OpaqueToken)) {
       return _parseOpaqueToken(constant, element);
     }
-    final typeStr = object.type!.getDisplayString(withNullability: false);
+    final typeStr = object.type!.getDisplayString();
     final error =
         'Not a valid token for injection: $object. In previous versions of '
         'AngularDart it was valid to try and inject by other token types '
@@ -107,7 +107,7 @@ class TokenReader {
         clazz.unnamedConstructor!.formalParameters.isNotEmpty ||
         clazz.typeParameters.isNotEmpty) {
       var supertypeName =
-          clazz.supertype!.getDisplayString(withNullability: false);
+          clazz.supertype!.getDisplayString();
       throw BuildError.forElement(
         type.element!,
         ''

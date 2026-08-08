@@ -1,5 +1,5 @@
 import 'package:web/web.dart' as web;
-import 'dart:js_util' as js_util;
+
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_forms/src/directives/shared.dart'
@@ -113,7 +113,7 @@ class RadioControlValueAccessor extends Object
   void writeValue(RadioButtonState? value) {
     _state = value;
     if (value?.checked ?? false) {
-      js_util.setProperty(_element as Object, 'checked', true);
+      (_element as web.HTMLInputElement).checked = true;
     }
   }
 

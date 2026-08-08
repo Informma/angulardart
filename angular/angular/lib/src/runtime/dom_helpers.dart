@@ -376,3 +376,35 @@ void updateRenderAttribute(dynamic node, String name, String? value) {
   }
 }
 
+/// Met à jour un style sur un RenderNode ou Element.
+@dart2js.noInline
+void updateRenderStyle(dynamic node, String name, String value) {
+  if (node is RenderNode) {
+    // RenderNode n'a pas de propriété style directe, on utilise setProperty
+    node.setProperty(name, value);
+  } else if (node is DomHTMLElement) {
+    node.style.setProperty(name, value);
+  }
+}
+
+/// Met à jour tabIndex sur un RenderNode ou Element.
+@dart2js.noInline
+void updateRenderTabIndex(dynamic node, int? value) {
+  if (node is RenderNode) {
+    // RenderNode n'a pas de tabIndex direct, on utilise setProperty
+    node.setProperty('tabIndex', value);
+  } else if (node is DomHTMLElement) {
+    node.tabIndex = value ?? -1;
+  }
+}
+
+/// Ajoute un écouteur d'événement sur un RenderNode ou Element.
+@dart2js.noInline
+void addRenderEventListener(dynamic target, String type, JSFunction fn) {
+  if (target is DomElement) {
+    target.addEventListener(type, fn);
+  } else if (target is RenderNode && target.nativeNode is DomElement) {
+    (target.nativeNode as DomElement).addEventListener(type, fn);
+  }
+}
+

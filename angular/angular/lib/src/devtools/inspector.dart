@@ -200,7 +200,9 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
   ///
   /// This must be called after [view] has initialized its root element.
   void registerComponentView(ComponentView<Object> view) {
-    _data(view.rootElement).componentView = view;
+    if (view.rootElement is DomNode) {
+      _data(view.rootElement as DomNode).componentView = view;
+    }
   }
 
   /// Registers a [directive] on [node] to be inspected by this service.
@@ -230,10 +232,12 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
   }
 
   /// Returns the root element of the component for [id].
-  DomHTMLElement getComponentElement(int id) {
+  DomHTMLElement? getComponentElement(int id) {
     final componentView =
         _referenceCounter.toObject(id) as ComponentView<Object>;
-    return componentView.rootElement;
+    return componentView.rootElement is DomHTMLElement
+        ? componentView.rootElement as DomHTMLElement
+        : null;
   }
 
   /// Returns the [id] of the component that rendered [node].

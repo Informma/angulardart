@@ -113,7 +113,7 @@ class AppComponent {
   static final routes = [fooRoute];
 
   @ViewChild('routerLink')
-  web.HTMLElement? anchor;
+  dynamic anchor;
 }
 
 @Component(selector: 'foo', template: '')

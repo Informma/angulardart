@@ -79,6 +79,12 @@ class RenderNodeHelpers {
 
   /// createRenderAnchor() -> creates comment anchor via renderFactory
   static final createRenderAnchor = _of('createRenderAnchor');
+
+  /// appendRenderChild(parent, child) -> appends child to parent (SSR compatible)
+  static final appendRenderChild = _of('appendRenderChild');
+
+  /// addRenderEventListener(target, type, fn) -> adds event listener (SSR compatible)
+  static final addRenderEventListener = _of('addRenderEventListener');
 }
 
 /// Identifiers for the global RenderFactory instance.
@@ -90,6 +96,32 @@ class RenderNodeFactory {
     name: 'renderFactory',
     moduleUrl: '$_angularLib/src/runtime/render_factory.dart',
   );
+}
+
+/// Identifiers for RenderNode-based update helpers (Phase 3: SSR template compiler).
+/// These replace direct DOM manipulation in the UPDATE phase with an abstraction
+/// that works on both browser (DOM) and server (HTML string) contexts.
+class RenderNodeUpdateHelpers {
+  const RenderNodeUpdateHelpers._();
+
+  static CompileIdentifierMetadata _of(String name) {
+    return CompileIdentifierMetadata(
+      name: name,
+      moduleUrl: '$_angularLib/src/runtime/dom_helpers.dart',
+    );
+  }
+
+  /// updateRenderClass(node, className, enabled) -> updates class on RenderNode or Element
+  static final updateRenderClass = _of('updateRenderClass');
+
+  /// updateRenderAttribute(node, name, value) -> updates attribute on RenderNode or Element
+  static final updateRenderAttribute = _of('updateRenderAttribute');
+
+  /// updateRenderStyle(node, name, value) -> updates style on RenderNode or Element
+  static final updateRenderStyle = _of('updateRenderStyle');
+
+  /// updateRenderTabIndex(node, value) -> updates tabIndex on RenderNode or Element
+  static final updateRenderTabIndex = _of('updateRenderTabIndex');
 }
 
 class StyleEncapsulation {

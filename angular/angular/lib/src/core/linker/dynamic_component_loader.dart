@@ -1,4 +1,5 @@
 import 'package:angulardart/src/di/injector.dart';
+import 'package:angulardart/src/runtime/dom_apis.dart';
 import 'package:angulardart/src/utilities.dart';
 
 import 'component_factory.dart' show ComponentRef;
@@ -27,7 +28,9 @@ class SlowComponentLoader {
     return factoryFuture.then((component) {
       final reference = _loader.loadDetached(component, injector: injector);
       reference.onDestroy(() {
-        reference.location.remove();
+        if (reference.location is DomElement) {
+          (reference.location as DomElement).remove();
+        }
       });
       return unsafeCast(reference);
     });

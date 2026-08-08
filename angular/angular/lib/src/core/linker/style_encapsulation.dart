@@ -135,6 +135,12 @@ class ComponentStyles {
     updateClassBinding(element, _hostPrefix, true);
   }
 
+  /// Adds a CSS shim class to a RenderNode (SSR compatibility).
+  void addHostShimClassRenderNode(dynamic node) {
+    // Use the generic updateRenderClass helper which handles both RenderNode and Element
+    updateRenderClass(node, _hostPrefix, true);
+  }
+
   /// Applies the correct content shimming to [element] for [newClass].
   void updateChildClass(web.Element element, String newClass) {
     // NOTE: We do not use .className=, because that would fail for SvgElement.
@@ -206,6 +212,11 @@ class _UnscopedComponentStyles extends ComponentStyles {
   @override
   void addHostShimClassHtmlElement(web.HTMLElement element) {
     // Intentionally left blank; unscoped syles do not apply shim classes.
+  }
+
+  @override
+  void addHostShimClassRenderNode(dynamic node) {
+    // Intentionally left blank; unscoped styles do not apply shim classes.
   }
 
   @override

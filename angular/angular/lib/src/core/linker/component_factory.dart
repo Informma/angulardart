@@ -43,7 +43,7 @@ bool debugUsesDefaultChangeDetection(ComponentRef<void> componentRef) {
 /// Component Instance via the [ComponentRef.destroy] method.
 class ComponentRef<C> {
   final HostView<void> _hostView;
-  final DomElement _nativeElement;
+  final Object? _nativeElement;
   final C _component;
 
   ComponentRef(
@@ -53,7 +53,8 @@ class ComponentRef<C> {
   );
 
   /// Location of the Host Element of this Component Instance.
-  DomElement get location => _nativeElement;
+  /// In browser mode returns a [DomElement], in SSR mode returns a [RenderNode].
+  Object? get location => _nativeElement;
 
   /// The injector on which the component instance exists.
   Injector get injector => _hostView.injector(0);

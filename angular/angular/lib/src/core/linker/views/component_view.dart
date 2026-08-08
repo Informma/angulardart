@@ -47,7 +47,20 @@ abstract class ComponentView<T extends Object> extends RenderView {
   late final ComponentStyles componentStyles;
 
   /// The root element of this component, created from its selector.
-  late final web.HTMLElement rootElement;
+  /// In browser mode this wraps a [web.HTMLElement], in SSR mode it's a [RenderNode].
+  dynamic _rootElement;
+
+  /// The native DOM element (browser only). Returns null in SSR mode.
+  web.HTMLElement? get nativeRootElement =>
+      _rootElement is web.HTMLElement ? _rootElement as web.HTMLElement : null;
+
+  /// Sets the root element. Accepts both [web.HTMLElement] and [RenderNode].
+  set rootElement(dynamic value) {
+    _rootElement = value;
+  }
+
+  /// Gets the root element (browser mode returns HTMLElement, SSR returns RenderNode).
+  dynamic get rootElement => _rootElement;
 
   final _ComponentViewData _data;
 
@@ -113,9 +126,14 @@ abstract class ComponentView<T extends Object> extends RenderView {
   /// requires less code to assign the return value of a function that's going
   /// to be called anyways, than to generate an extra statement to load a field.
   @dart2js.noInline
-  web.HTMLElement initViewRoot() {
+  dynamic initViewRoot() {
     final hostElement = rootElement;
-    componentStyles.addHostShimClassHtmlElement(hostElement);
+    if (hostElement is web.HTMLElement) {
+      componentStyles.addHostShimClassHtmlElement(hostElement);
+    } else if (hostElement != null) {
+      // SSR mode: RenderNode - shim class handled via setProperty
+      componentStyles.addHostShimClassRenderNode(hostElement);
+    }
     return hostElement;
   }
 

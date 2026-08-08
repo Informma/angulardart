@@ -10,11 +10,11 @@ void main() {
 
   group('RouterLink with List', () {
     test('should accept List<String> for routerLink', () async {
-      final fixture = await ng.TestComponentNgFactory.create();
-      final routerLink = fixture.rootElement!.querySelector('[routerLink]');
+      final fixture = await NgTestBed<TestComponent>(ng.TestComponentNgFactory).create();
+      final routerLink = fixture.rootElement.querySelector('[routerLink]');
       
       expect(routerLink, isNotNull);
-      expect(routerLink!.attributes['routerLink'], isNotNull);
+      expect(routerLink!.getAttribute('routerLink'), isNotNull);
     });
   });
 }

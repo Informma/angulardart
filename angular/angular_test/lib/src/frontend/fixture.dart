@@ -36,7 +36,8 @@ class NgTestFixture<T> {
   Future<void> dispose() async {
     await update();
     // Remove the test bed's host element.
-    final locationParent = _rootComponentRef.location.parentNode;
+    final locNode = _rootComponentRef.location as web.Node;
+    final locationParent = locNode.parentNode;
     locationParent?.parentNode?.removeChild(locationParent);
     _applicationRef.dispose();
     if (isDevMode) {
@@ -46,7 +47,7 @@ class NgTestFixture<T> {
   }
 
   /// Root element.
-  web.Element get rootElement => _rootComponentRef.location;
+  web.Element get rootElement => _rootComponentRef.location as web.Element;
 
   /// Returns a future that completes after the DOM is reported stable.
   ///

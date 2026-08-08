@@ -43,4 +43,7 @@ class TextBinding {
       _currentValue = newValue;
     }
   }
+
+  /// Retourne le nœud sous-jacent pour la compatibilité avec le code généré.
+  RenderNode get element => node;
 }

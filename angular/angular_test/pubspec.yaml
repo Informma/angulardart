@@ -23,7 +23,7 @@ dependencies:
   collection: '>=1.18.0 <2.0.0'
   meta: '>=1.15.0 <2.0.0'
   lints: '>=6.1.0 <7.0.0'
-  web: '>=1.0.0 <1.1.0'
+  web: '>=1.0.0 <1.2.0'
 dependency_overrides:
   angulardart:
     path: ../angular

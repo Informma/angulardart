@@ -627,16 +627,15 @@ class CompileView {
           _textValue(text),
         ]);
         _createMethod.addStmt(renderNode.toWriteStmt(createText));
-        _createMethod.addStmt(parentNode.callMethod('appendChild', [
-          renderNode.toReadExpr(),
-        ]).toStmt());
+        // Use appendRenderChild helper for SSR compatibility
+        _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+            .callFn([parentNode, renderNode.toReadExpr()]).toStmt());
       } else {
         // A class-level member is created in a previous phase, and all we need
         // to do is append it to its parent (and detectChanges will handle
         // updating it).
-        _createMethod.addStmt(parentNode.callMethod('appendChild', [
-          renderNode.toReadExpr(),
-        ]).toStmt());
+        _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+            .callFn([parentNode, renderNode.toReadExpr()]).toStmt());
       }
     } else if (isImmutable) {
       // Phase 3 (SSR): Use RenderNode factory for SSR compatibility.
@@ -771,9 +770,9 @@ class CompileView {
         o.literal(tagName),
       ]);
       _createMethod.addStmt(elementRef.toWriteStmt(createElementExpr));
-      _createMethod.addStmt(parent.callMethod('appendChild', [
-        elementRef.toReadExpr(),
-      ]).toStmt());
+      // Use appendRenderChild helper for SSR compatibility instead of direct .appendChild()
+      _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+          .callFn([parent, elementRef.toReadExpr()]).toStmt());
     } else {
       // No parent node, just create element and assign.
       final createElementExpr =
@@ -824,9 +823,9 @@ class CompileView {
         o.literal(tagName),
       ]);
       _createMethod.addStmt(elementRef.toWriteStmt(createElementExpr));
-      _createMethod.addStmt(parentNode.callMethod('appendChild', [
-        elementRef.toReadExpr(),
-      ]).toStmt());
+      // Use appendRenderChild helper for SSR compatibility
+      _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+          .callFn([parentNode, elementRef.toReadExpr()]).toStmt());
     } else {
       final createElementExpr =
           o.importExpr(RenderNodeHelpers.createRenderElement).callFn([
@@ -904,9 +903,9 @@ class CompileView {
       final createAnchor =
           o.importExpr(RenderNodeHelpers.createRenderAnchor).callFn([]);
       _createMethod.addStmt(renderNode.toWriteStmt(createAnchor));
-      _createMethod.addStmt(parentNode.callMethod('appendChild', [
-        renderNode.toReadExpr(),
-      ]).toStmt());
+      // Use appendRenderChild helper for SSR compatibility
+      _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+          .callFn([parentNode, renderNode.toReadExpr()]).toStmt());
     } else {
       final createAnchor =
           o.importExpr(RenderNodeHelpers.createRenderAnchor).callFn([]);
@@ -1536,10 +1535,9 @@ class CompileView {
     }
     final parentExpr = _getParentRenderNode(parentElement);
     if (parentExpr != o.nullExpr) {
-      _createMethod.addStmt(parentExpr.callMethod(
-        'append',
-        [nodeReference.toReadExpr()],
-      ).toStmt());
+      // Use appendRenderChild helper for SSR compatibility
+      _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+          .callFn([parentExpr, nodeReference.toReadExpr()]).toStmt());
     }
   }
 

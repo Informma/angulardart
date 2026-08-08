@@ -113,7 +113,7 @@ class ApplicationRef extends ChangeDetectionHost {
         final existing = document.querySelector(componentFactory.selector);
         DomElement? replacement;
         if (existing != null) {
-          final newElement = component.location;
+          final newElement = component.location as DomElement;
           // For app shards using bootstrapStatic, transfer element id
           // from original node to allow hosting applications to locate loaded
           // application root.
@@ -123,7 +123,7 @@ class ApplicationRef extends ChangeDetectionHost {
           replacement = newElement;
           existing.replaceWith(replacement);
         } else {
-          document.body!.append(component.location);
+          document.body!.append(component.location as DomElement);
         }
         final injector = component.injector;
         final testability = injector.provideTypeOptional<Testability>(
@@ -133,7 +133,7 @@ class ApplicationRef extends ChangeDetectionHost {
           final registry = _injector.provideType<TestabilityRegistry>(
             TestabilityRegistry,
           );
-          registry.registerApplication(component.location, testability);
+          registry.registerApplication(component.location as DomElement, testability);
         }
         _loadedRootComponent(component, replacement);
       } else {
@@ -163,7 +163,7 @@ class ApplicationRef extends ChangeDetectionHost {
       final existing = document.querySelector(componentFactory.selector);
       if (existing != null) {
         // Keep the existing SSR element, just ensure proper positioning
-        final newElement = component.location;
+        final newElement = component.location as DomElement;
         if (newElement.id.isEmpty) {
           newElement.id = existing.id;
         }
@@ -171,7 +171,7 @@ class ApplicationRef extends ChangeDetectionHost {
         existing.replaceWith(newElement);
       } else {
         // Fallback: append to body if no SSR element found
-        document.body!.append(component.location);
+        document.body!.append(component.location as DomElement);
       }
       final injector = component.injector;
       final testability = injector.provideTypeOptional<Testability>(
@@ -181,21 +181,24 @@ class ApplicationRef extends ChangeDetectionHost {
         final registry = _injector.provideType<TestabilityRegistry>(
           TestabilityRegistry,
         );
-        registry.registerApplication(component.location, testability);
+        registry.registerApplication(component.location as DomElement, testability);
       }
-      _loadedRootComponent(component, component.location);
+      _loadedRootComponent(component, component.location as DomElement?);
       return component;
     }));
   }
 
-  void _loadedRootComponent(ComponentRef<void> component, DomElement? node) {
-    if (isDevToolsEnabled) {
-      Inspector.instance.registerContentRoot(component.location);
+  void _loadedRootComponent(ComponentRef<void> component, Object? node) {
+    if (isDevToolsEnabled && component.location is DomElement) {
+      Inspector.instance.registerContentRoot(component.location as DomElement);
     }
     _rootComponents.add(component);
     component.onDestroy(() {
       _destroyedRootComponent(component);
-      node?.remove();
+      final el = node;
+      if (el is DomElement) {
+        el.remove();
+      }
     });
     registerChangeDetector(component.changeDetectorRef);
     tick();

@@ -1,3 +1,11 @@
+## 9.2.2
+
+- Fix: Restore pub.dev score to 150/160 points (+40 pts)
+  - Fix `RenderMode` downgrade compatibility (angulardart_meta >=1.2.0): +20pts
+  - Remove remaining `dart:js` usage for WASM compatibility: +10pts
+  - Fix static analysis issues (dangling doc comment, missing type annotation): +10pts
+  - Add example/ directory with hello_world app: +10pts
+
 ## 9.2.1
 
 - Fix: Add missing exports (ComponentFactory, ComponentRef) and RenderMode to public API

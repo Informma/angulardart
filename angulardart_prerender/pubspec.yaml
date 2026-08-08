@@ -1,5 +1,5 @@
 name: angulardart_prerender
-version: 1.0.5
+version: 1.0.6
 description: Prerendering tool for AngularDart applications to improve SEO.
 repository: https://github.com/flutterdocteur/angulardart/tree/main/angulardart_prerender
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues

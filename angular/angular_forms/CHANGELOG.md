@@ -1,45 +1,38 @@
-## 6.3.0
+## 6.2.4
 
-- **BREAKING**: Migrate from `dart:html` to `package:web` for DOM types
+- Migrate from `dart:html` to `package:web` for DOM types
 - Add: SSR rendering support with conditional platform imports (browser_dom_apis.dart, native_dom_apis.dart)
 - Fix: Zero errors/warnings/infos in dart analyze --fatal-infos
 
 ## 6.2.3
-
 - Fix: constrain package:web to <1.1.0 (JSAny/JSObject types removed in web 1.1.x)
 
 ## 6.2.2
-
 - Fix: Restore pub.dev score to 150+ points (+30 pts)
   - Migrate dart:js_util → package:web for WASM compatibility: +10pts
   - Improve pubspec description: +10pts
   - Add example directory: +10pts
 
 ## 6.2.1
-
 - Fix: Republish for compatibility with corrected angulardart 9.2.1
 
 ## 6.2.0
-
 - Add: Compatibility with SSR and hybrid rendering modes
 - Fix: Use wide version notation for all dev_dependencies (mockito, lints)
 
 ## 6.0.3
-
 - Fix: Updated dependency constraints for compatibility with angulardart 9.x ecosystem
 
 ## 6.0.2
-
 - Add community-maintained disclaimer to README
 
 ## 6.0.1
-
 - Fix: Update tests for package:web API (innerHtml → innerHTML, NodeList[] → .item())
 - Widen version constraints
 
 ## 6.0.0
 
-- **BREAKING**: Migrate from `dart:html` to `package:web`
+- Migrate from `dart:html` to `package:web`
 - All form directive types updated to package:web
 - InputElement → web.HTMLInputElement
 - SelectElement → web.HTMLSelectElement
@@ -48,5 +41,4 @@
 - Requires angulardart ^9.0.0
 
 ## 5.2.0
-
 - Previous stable release

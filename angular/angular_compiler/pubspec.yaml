@@ -4,7 +4,7 @@ issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://angulardartreborn.com
 documentation: https://angulardartreborn.com/guide
 description: Build-time template compiler and code generator for AngularDart. Transforms Dart templates into optimized, type-safe rendering code with SSR support.
-version: 5.3.0
+version: 5.2.3
 topics:
   - angular
   - compiler

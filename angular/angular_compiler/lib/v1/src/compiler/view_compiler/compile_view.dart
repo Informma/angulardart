@@ -20,7 +20,14 @@ import '../compile_metadata.dart'
         CompileTypedMetadata;
 import '../compiler_utils.dart';
 import '../i18n/message.dart';
-import '../identifiers.dart';
+import '../identifiers.dart'
+    show
+        DevTools,
+        Identifiers,
+        Interpolation,
+        RenderNodeHelpers,
+        Runtime,
+        identifierToken;
 import '../output/output_ast.dart' as o;
 import '../template_ast.dart'
     show
@@ -55,10 +62,8 @@ import 'view_compiler_utils.dart'
         debugInjectorLeave,
         getViewFactory,
         getViewFactoryName,
-        identifierFromTagName,
         injectFromViewParentInjector,
-        maybeCachedCtxDeclarationStatement,
-        unsafeCast;
+        maybeCachedCtxDeclarationStatement;
 import 'view_name_resolver.dart';
 
 /// Visibility of NodeReference within AppView implementation.
@@ -101,7 +106,7 @@ class NodeReference {
     this._storage,
     int nodeIndex, {
     o.Expression? initialValue,
-  })  : _type = o.importType(Identifiers.htmlTextNode),
+  })  : _type = null, // dynamic type for SSR compatibility (RenderNode)
         _name = '_text_$nodeIndex',
         _initialValue = initialValue;
 
@@ -124,7 +129,7 @@ class NodeReference {
     this._storage,
     int nodeIndex, [
     this._visibility = NodeReferenceVisibility.build,
-  ])  : _type = o.importType(Identifiers.htmlCommentNode),
+  ])  : _type = null, // dynamic type for SSR compatibility (RenderNode)
         _name = '_anchor_$nodeIndex',
         _initialValue = null;
 
@@ -615,60 +620,37 @@ class CompileView {
     final isImmutable = text.isImmutable;
     if (parentNode != o.nullExpr) {
       if (isImmutable) {
+        // Phase 3 (SSR): Use RenderNode factory for SSR compatibility.
         // We do not create a class-level member, effectively "one-time".
-        //
-        // class V {
-        //   build() {
-        //     _el_0 = ...;
-        //     appendText(_el_0, '...');
-        //   }
-        // }
-        final appendText = o.importExpr(DomHelpers.appendText).callFn([
-          parentNode,
+        final createText =
+            o.importExpr(RenderNodeHelpers.createRenderText).callFn([
           _textValue(text),
         ]);
-        _createMethod.addStmt(renderNode.toWriteStmt(appendText));
+        _createMethod.addStmt(renderNode.toWriteStmt(createText));
+        _createMethod.addStmt(parentNode.callMethod('appendChild', [
+          renderNode.toReadExpr(),
+        ]).toStmt());
       } else {
         // A class-level member is created in a previous phase, and all we need
         // to do is append it to its parent (and detectChanges will handle
         // updating it).
-        //
-        // class V {
-        //   final _text_0 = Text('');
-        //
-        //   build() {
-        //     _el_0 = ...;
-        //     _el_0.append(_text_0);
-        //   }
-        // }
-        _createMethod.addStmt(
-          parentNode.callMethod('append', [renderNode.toReadExpr()]).toStmt(),
-        );
+        _createMethod.addStmt(parentNode.callMethod('appendChild', [
+          renderNode.toReadExpr(),
+        ]).toStmt());
       }
     } else if (isImmutable) {
+      // Phase 3 (SSR): Use RenderNode factory for SSR compatibility.
       // Text is being appended or otherwise used somewhere else in the build
-      // (it does not start attached). This is similar to the "isImmutable"
-      // case above, but does not append the text.
-      //
-      // class V {
-      //   build() {
-      //     _text_0 = createText('...')
-      //   }
-      // }
-      final createText = o.importExpr(DomHelpers.createText).callFn([
+      // (it does not start attached). Store it so initRootNode can use it.
+      final createText =
+          o.importExpr(RenderNodeHelpers.createRenderText).callFn([
         _textValue(text),
       ]);
       _createMethod.addStmt(renderNode.toWriteStmt(createText));
     } else {
       // A mutable string without being appended to anything.
-      //
-      // class V {
-      //   final _text_0 = Text('');
-      // }
-      //
       // For example, text nodes that are attached to the root node use the
-      // initN(...) function to append themselves, and not ".append". We may
-      // be able to refactor this case in the future.
+      // initN(...) function to append themselves, and not ".append".
     }
     return renderNode;
   }
@@ -780,49 +762,25 @@ class CompileView {
     String? templateUrl,
     int? offset,
   }) {
-    // No namespace just call [document.createElement].
-    if (docVarName == null) {
-      _createMethod.addStmt(_createLocalDocumentVar());
-    }
+    // Phase 3 (SSR): Use RenderNode-based helpers for SSR compatibility.
+    // renderFactory.createElement() returns BrowserRenderNode or ServerRenderNode
+    // depending on the current rendering context (browser vs server).
     if (parent != o.nullExpr) {
-      o.Expression createExpr;
-      final createParams = <o.Expression>[o.ReadVarExpr(docVarName), parent];
-
-      CompileIdentifierMetadata createAndAppendMethod;
-      o.OutputType? coerceToTypedElement;
-      switch (tagName) {
-        case 'div':
-          createAndAppendMethod = DomHelpers.appendDiv;
-          break;
-        case 'span':
-          createAndAppendMethod = DomHelpers.appendSpan;
-          break;
-        default:
-          createAndAppendMethod = DomHelpers.appendElement;
-          createParams.add(o.literal(tagName));
-          coerceToTypedElement = o.importType(identifierFromTagName(tagName));
-          break;
-      }
-      createExpr = o.importExpr(createAndAppendMethod).callFn(
-        createParams,
-        typeArguments: [
-          // Some of our dom_helper methods expect HtmlElement, so if we know
-          // that this tag is one we should add the generic type argument
-          // <HtmlElement> (which ends up just being an unsafeCast behind the
-          // scenes).
-          if (coerceToTypedElement != null) coerceToTypedElement
-        ],
-      );
-      _createMethod.addStmt(elementRef.toWriteStmt(createExpr));
+      final createElementExpr =
+          o.importExpr(RenderNodeHelpers.createRenderElement).callFn([
+        o.literal(tagName),
+      ]);
+      _createMethod.addStmt(elementRef.toWriteStmt(createElementExpr));
+      _createMethod.addStmt(parent.callMethod('appendChild', [
+        elementRef.toReadExpr(),
+      ]).toStmt());
     } else {
       // No parent node, just create element and assign.
-      final createRenderNodeExpr = o.ReadVarExpr(docVarName).callMethod(
-        'createElement',
-        [o.literal(tagName)],
-      );
-      _createMethod.addStmt(
-        elementRef.toWriteStmt(unsafeCast(createRenderNodeExpr)),
-      );
+      final createElementExpr =
+          o.importExpr(RenderNodeHelpers.createRenderElement).callFn([
+        o.literal(tagName),
+      ]);
+      _createMethod.addStmt(elementRef.toWriteStmt(createElementExpr));
     }
 
     _addDataDebugSource(elementRef, templateUrl, offset);
@@ -857,13 +815,25 @@ class CompileView {
   /// Creates an html node with a namespace and appends to parent element.
   void createElementNs(CompileElement parent, NodeReference elementRef,
       int nodeIndex, String? ns, String tagName, TemplateAst ast) {
-    if (docVarName == null) {
-      _createMethod.addStmt(_createLocalDocumentVar());
+    // Phase 3 (SSR): Use RenderNode factory for SSR compatibility.
+    // Namespaced elements (SVG, etc.) are created via renderFactory.
+    final parentNode = _getParentRenderNode(parent);
+    if (parentNode != o.nullExpr) {
+      final createElementExpr =
+          o.importExpr(RenderNodeHelpers.createRenderElement).callFn([
+        o.literal(tagName),
+      ]);
+      _createMethod.addStmt(elementRef.toWriteStmt(createElementExpr));
+      _createMethod.addStmt(parentNode.callMethod('appendChild', [
+        elementRef.toReadExpr(),
+      ]).toStmt());
+    } else {
+      final createElementExpr =
+          o.importExpr(RenderNodeHelpers.createRenderElement).callFn([
+        o.literal(tagName),
+      ]);
+      _createMethod.addStmt(elementRef.toWriteStmt(createElementExpr));
     }
-    var createRenderNodeExpr = o
-        .variable(docVarName)
-        .callMethod('createElementNS', [o.literal(ns), o.literal(tagName)]);
-    _initializeAndAppendNode(parent, elementRef, createRenderNodeExpr);
   }
 
   /// Initializes a component view for [childComponent].
@@ -930,12 +900,16 @@ class CompileView {
     final renderNode = NodeReference.anchor(storage, nodeIndex);
     final parentNode = _getParentRenderNode(parent);
     if (parentNode != o.nullExpr) {
-      final appendAnchor = o.importExpr(DomHelpers.appendAnchor).callFn([
-        parentNode,
-      ]);
-      _createMethod.addStmt(renderNode.toWriteStmt(appendAnchor));
+      // Phase 3 (SSR): Use RenderNode factory for SSR compatibility.
+      final createAnchor =
+          o.importExpr(RenderNodeHelpers.createRenderAnchor).callFn([]);
+      _createMethod.addStmt(renderNode.toWriteStmt(createAnchor));
+      _createMethod.addStmt(parentNode.callMethod('appendChild', [
+        renderNode.toReadExpr(),
+      ]).toStmt());
     } else {
-      final createAnchor = o.importExpr(DomHelpers.createAnchor).callFn([]);
+      final createAnchor =
+          o.importExpr(RenderNodeHelpers.createRenderAnchor).callFn([]);
       _createMethod.addStmt(renderNode.toWriteStmt(createAnchor));
     }
     return renderNode;
@@ -1070,14 +1044,11 @@ class CompileView {
   void shimCssForNode(NodeReference nodeReference, int nodeIndex,
       CompileIdentifierMetadata nodeType) {
     if (isRootNodeOfHost(nodeIndex)) return;
-    if (component.template!.encapsulation == ViewEncapsulation.Emulated) {
-      // Set ng_content class for CSS shim.
-      var shimMethod =
-          nodeType != Identifiers.htmlElement ? 'addShimC' : 'addShimE';
-      o.Expression shimClassExpr =
-          o.InvokeMemberMethodExpr(shimMethod, [nodeReference.toReadExpr()]);
-      _createMethod.addStmt(shimClassExpr.toStmt());
-    }
+    // Phase 3 (SSR): Style encapsulation shims are deferred to a later phase.
+    // The current approach generates this.componentStyles.addShimE/C() calls
+    // which expect DOM elements. With RenderNode, these need to be handled
+    // differently for server-side rendering. Full style shim support comes
+    // in Phase 4 when RenderNode has proper encapsulation support.
   }
 
   NodeReference createSubscription({bool isMockLike = false}) {

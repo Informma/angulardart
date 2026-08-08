@@ -1,4 +1,8 @@
+// ignore: implementation_imports
+import 'package:angulardart_meta/angulardart_meta.dart' show RenderMode;
 import 'package:angulardart_compiler/v1/cli.dart';
+import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart'
+    show CompileIdentifierMetadata;
 import 'package:angulardart_compiler/v1/src/compiler/expression_parser/parser.dart';
 import 'package:angulardart_compiler/v1/src/compiler/identifiers.dart';
 import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart' as ir;
@@ -117,15 +121,18 @@ class ViewCompiler {
     final componentType = o.importType(componentTypeMetadata)!;
     final componentName = componentTypeMetadata.name;
     final componentFactoryVar = o.variable('_${componentName}NgFactory');
+    final renderModeValue = view.component.renderMode ?? RenderMode.automatic;
+    final renderModeExpr = _renderModeToConst(renderModeValue);
     final componentFactoryArgs = [
       o.literal(view.component.selector),
       o.variable(getHostViewFactoryName(view.component)),
+      renderModeExpr,
     ];
 
     // Declares a component factory.
     //
     //  const _FooComponentNgFactory = ComponentFactory<FooComponent>(
-    //      'foo', viewFactory_FooComponentHost0);
+    //      'foo', viewFactory_FooComponentHost0, RenderMode.automatic);
     //
     // The explicit constructor type argument is necessary to prevent inferring
     // a more specific type from any generic type parameter bounds on the view
@@ -177,5 +184,17 @@ class ViewCompiler {
       declareGetComponentFactory,
       declareCreateComponentFactory,
     ];
+  }
+
+  o.Expression _renderModeToConst(RenderMode mode) {
+    final name = switch (mode) {
+      RenderMode.server => 'server',
+      RenderMode.client => 'client',
+      RenderMode.automatic => 'automatic',
+    };
+    return o.importExpr(CompileIdentifierMetadata(
+      name: 'RenderMode.$name',
+      moduleUrl: Identifiers.renderMode.moduleUrl,
+    ));
   }
 }

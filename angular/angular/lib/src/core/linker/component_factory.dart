@@ -131,11 +131,17 @@ class ComponentFactory<T extends Object> {
   // AppView<{Comp}> as a child view.
   final HostView<T> Function() _viewFactory;
 
+  /// Controls how this component is rendered (SSR, CSR, or automatic).
+  ///
+  /// Defaults to [RenderMode.automatic] when not specified in @Component.
+  final RenderMode renderMode;
+
   /// Internal constructor for generated code only - **do not invoke**.
   const ComponentFactory(
     this.selector,
-    this._viewFactory,
-  );
+    this._viewFactory, [
+    this.renderMode = RenderMode.automatic,
+  ]);
 
   @Deprecated('Unsupported and in the process of removal.')
   Type get componentType => T;

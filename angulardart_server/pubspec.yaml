@@ -1,0 +1,41 @@
+name: angulardart_server
+version: 1.0.0
+description: Server-side rendering (SSR) and hybrid rendering for AngularDart applications.
+repository: https://github.com/flutterdocteur/angulardart/tree/main/angulardart_server
+issue_tracker: https://github.com/flutterdocteur/angulardart/issues
+homepage: https://angulardartreborn.com
+documentation: https://angulardartreborn.com/guide/ssr
+topics:
+  - angular
+  - ssr
+  - server-side-rendering
+  - web
+  - hydration
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+platforms:
+  web:
+
+dependencies:
+  angulardart: '>=9.0.0 <10.0.0'
+  angulardart_meta: '>=1.0.0 <2.0.0'
+  angulardart_router: '>=5.1.0 <6.0.0'
+  collection: '>=1.18.0 <2.0.0'
+  web: '>=1.0.0 <2.0.0'
+  meta: '>=1.15.0 <2.0.0'
+
+dev_dependencies:
+  angulardart_test: '>=6.0.0 <7.0.0'
+  build_runner: '>=2.16.0 <3.0.0'
+  build_web_compilers: '>=4.8.0 <5.0.0'
+  lints: '>=6.0.0 <7.0.0'
+  test: '>=1.31.0 <2.0.0'
+
+# Local overrides for development only — removed before publishing.
+dependency_overrides:
+  angulardart:
+    path: ../angular/angular
+  angulardart_meta:
+    path: ../angular/angular_meta

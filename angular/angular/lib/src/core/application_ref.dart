@@ -16,6 +16,7 @@ import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/core/exception_handler.dart';
 import 'package:angulardart/src/devtools.dart';
 import 'package:angulardart/src/di/injector.dart';
+import 'package:angulardart/src/runtime/render_factory.dart';
 import 'package:angulardart/src/testability.dart';
 import 'package:angulardart/src/utilities.dart';
 
@@ -105,19 +106,70 @@ class ApplicationRef extends ChangeDetectionHost {
   ) {
     return unsafeCast(run(() {
       final component = componentFactory.create(_injector);
+      // Skip DOM operations in server mode - the component tree is built
+      // with ServerRenderNode instances that accumulate HTML strings.
+      if (!renderFactory.isServerMode) {
+        final existing = web.document.querySelector(componentFactory.selector);
+        web.Element? replacement;
+        if (existing != null) {
+          final newElement = component.location;
+          // For app shards using bootstrapStatic, transfer element id
+          // from original node to allow hosting applications to locate loaded
+          // application root.
+          if (newElement.id.isEmpty) {
+            newElement.id = existing.id;
+          }
+          replacement = newElement;
+          existing.replaceWith(replacement);
+        } else {
+          web.document.body!.append(component.location);
+        }
+        final injector = component.injector;
+        final testability = injector.provideTypeOptional<Testability>(
+          Testability,
+        );
+        if (testability != null) {
+          final registry = _injector.provideType<TestabilityRegistry>(
+            TestabilityRegistry,
+          );
+          registry.registerApplication(component.location, testability);
+        }
+        _loadedRootComponent(component, replacement);
+      } else {
+        // In server mode, register the component for one-pass change detection.
+        _rootComponents.add(component);
+        registerChangeDetector(component.changeDetectorRef);
+        tick();
+      }
+      return component;
+    }));
+  }
+
+  /// Hydrate an application that was server-side rendered.
+  ///
+  /// Unlike [bootstrap], this method reuses the existing DOM from SSR
+  /// instead of replacing it. The component's host element is found by
+  /// selector and kept in place, with bindings and event listeners attached.
+  ///
+  /// This enables fast initial page load (SSR) while maintaining full
+  /// interactivity on the client (CSR hydration).
+  ComponentRef<T> hydrate<T extends Object>(
+    ComponentFactory<T> componentFactory,
+  ) {
+    return unsafeCast(run(() {
+      final component = componentFactory.create(_injector);
+      // Find existing SSR element by selector - do NOT replace it
       final existing = web.document.querySelector(componentFactory.selector);
-      web.Element? replacement;
       if (existing != null) {
+        // Keep the existing SSR element, just ensure proper positioning
         final newElement = component.location;
-        // For app shards using bootstrapStatic, transfer element id
-        // from original node to allow hosting applications to locate loaded
-        // application root.
         if (newElement.id.isEmpty) {
           newElement.id = existing.id;
         }
-        replacement = newElement;
-        existing.replaceWith(replacement);
+        // Replace placeholder with hydrated element but keep same position
+        existing.replaceWith(newElement);
       } else {
+        // Fallback: append to body if no SSR element found
         web.document.body!.append(component.location);
       }
       final injector = component.injector;
@@ -130,7 +182,7 @@ class ApplicationRef extends ChangeDetectionHost {
         );
         registry.registerApplication(component.location, testability);
       }
-      _loadedRootComponent(component, replacement);
+      _loadedRootComponent(component, component.location);
       return component;
     }));
   }

@@ -1,3 +1,5 @@
+// ignore: implementation_imports
+import 'package:angulardart_meta/angulardart_meta.dart';
 import 'package:source_span/source_span.dart';
 import 'package:angulardart_compiler/v1/src/compiler/analyzed_class.dart'
     as analyzed;
@@ -42,11 +44,15 @@ class Component implements IRNode {
   final List<String> styles;
   final List<String> styleUrls;
 
+  /// Controls how this component is rendered (SSR, CSR, or automatic).
+  final RenderMode renderMode;
+
   Component(this.name,
       {this.encapsulation = ViewEncapsulation.emulated,
       this.views = const [],
       this.styles = const [],
-      this.styleUrls = const []});
+      this.styleUrls = const [],
+      this.renderMode = RenderMode.automatic});
 
   @override
   R accept<R, C, CO extends C>(IRVisitor<R, C> visitor, [CO? context]) =>

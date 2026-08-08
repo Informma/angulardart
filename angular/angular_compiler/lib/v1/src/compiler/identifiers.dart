@@ -13,6 +13,7 @@ const _ngIfUrl = '$_angularLib/src/common/directives/ng_if.dart';
 const _ngForUrl = '$_angularLib/src/common/directives/ng_for.dart';
 const _profileRuntimeModuleUrl = '$_angularLib/src/debug/profile_runtime.dart';
 const _debugInjectorModuleUrl = '$_angularLib/src/di/errors.dart';
+const _metaModuleUrl = 'package:angulardart_meta/angulardart_meta.dart';
 
 /// Identifiers for generating code that supports developer tooling.
 class DevTools {
@@ -55,6 +56,40 @@ class DomHelpers {
   static final appendDiv = _of('appendDiv');
   static final appendSpan = _of('appendSpan');
   static final appendElement = _of('appendElement');
+}
+
+/// Identifiers for RenderNode-based helpers (Phase 3: SSR template compiler).
+/// These replace direct DOM manipulation with an abstraction that works on
+/// both browser (DOM) and server (HTML string) contexts.
+class RenderNodeHelpers {
+  const RenderNodeHelpers._();
+
+  static CompileIdentifierMetadata _of(String name) {
+    return CompileIdentifierMetadata(
+      name: name,
+      moduleUrl: '$_angularLib/src/runtime/dom_helpers.dart',
+    );
+  }
+
+  /// createRenderElement('div') -> creates element via renderFactory
+  static final createRenderElement = _of('createRenderElement');
+
+  /// createRenderText('content') -> creates text node via renderFactory
+  static final createRenderText = _of('createRenderText');
+
+  /// createRenderAnchor() -> creates comment anchor via renderFactory
+  static final createRenderAnchor = _of('createRenderAnchor');
+}
+
+/// Identifiers for the global RenderFactory instance.
+class RenderNodeFactory {
+  const RenderNodeFactory._();
+
+  static final CompileIdentifierMetadata renderFactory =
+      CompileIdentifierMetadata(
+    name: 'renderFactory',
+    moduleUrl: '$_angularLib/src/runtime/render_factory.dart',
+  );
 }
 
 class StyleEncapsulation {
@@ -235,6 +270,8 @@ class Identifiers {
       moduleUrl: 'asset:angulardart/lib/src/core/linker/view_type.dart');
   static final changeDetectionStrategy = CompileIdentifierMetadata(
       name: 'ChangeDetectionStrategy', moduleUrl: _cdModuleUrl);
+  static final renderMode =
+      CompileIdentifierMetadata(name: 'RenderMode', moduleUrl: _metaModuleUrl);
   static final identical = CompileIdentifierMetadata(name: 'identical');
   static final profileSetup = CompileIdentifierMetadata(
       name: 'profileSetup', moduleUrl: _profileRuntimeModuleUrl);

@@ -725,6 +725,16 @@ class _ComponentVisitor
         defaultTo: Visibility.local,
       ),
       isChangeDetectionLink: isChangeDetectionLink,
+      renderMode: isComponent ? _renderMode(annotationValue) : null,
+    );
+  }
+
+  RenderMode? _renderMode(DartObject? value) {
+    return coerceEnum(
+      value,
+      'renderMode',
+      RenderMode.values,
+      defaultTo: RenderMode.automatic,
     );
   }
 

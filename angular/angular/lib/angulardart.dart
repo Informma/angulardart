@@ -114,6 +114,7 @@ export 'src/meta.dart'
         Output,
         Pipe,
         Provider,
+        RenderMode,
         Self,
         SkipSelf,
         Typed,

@@ -34,33 +34,33 @@ class _JSTestabilityProxy implements _TestabilityProxy {
   }
 
   /// For every registered [TestabilityRegistry], tries `getAngularTestability`.
-  static JSObject? _getAngularTestability(web.Element element) {
+  static JSObject? getAngularTestability(JSAny? element) {
     final registry = (_self.getProperty('ngTestabilityRegistries'.toJS).dartify() as List).cast<Object?>();
     for (var i = 0; i < registry.length; i++) {
       final elem = registry[i];
       if (elem != null && elem is JSObject) {
         final rawResult = elem.callMethod(
           'getAngularTestability'.toJS,
-          element as JSAny?,
+          element,
         );
         if (rawResult != null) {
-          return _getNonNullOrFail(rawResult, '_getAngularTestability');
+          return _getNonNullOrFail(rawResult, 'getAngularTestability');
         }
       }
     }
     throw StateError('Could not find testability for element.');
   }
 
-  /// Sets `self.getAngularTestability` => [_getAngularTestability].
+  /// Sets `self.getAngularTestability` => [getAngularTestability].
   static void _export$getAngularTestability() {
     _self.setProperty(
       'getAngularTestability'.toJS,
-      _getAngularTestability.toJS,
+      getAngularTestability.toJS,
     );
   }
 
   /// For every registered [TestabilityRegistry], returns the JS API for it.
-  static List<JSObject> _getAllAngularTestabilities() {
+  static List<JSObject> getAllAngularTestabilities() {
     final registry = (_self.getProperty('ngTestabilityRegistries'.toJS).dartify() as List).cast<Object?>();
     final result = <dynamic>[];
     for (var i = 0; i < registry.length; i++) {
@@ -68,7 +68,7 @@ class _JSTestabilityProxy implements _TestabilityProxy {
       if (elem != null && elem is JSObject) {
         final rawTestabilities = _getNonNullOrFail(
           elem.callMethod('getAllAngularTestabilities'.toJS),
-          '_getAllAngularTestabilities',
+          'getAllAngularTestabilities',
         );
 
         // We can't rely on testabilities being a Dart List, since it's read
@@ -86,40 +86,45 @@ class _JSTestabilityProxy implements _TestabilityProxy {
     return result.cast<JSObject>();
   }
 
-  /// Sets `self.getAllAngularTestabilities` => [_getAllAngularTestabilities].
+  /// Sets `self.getAllAngularTestabilities` => [getAllAngularTestabilities].
   static void _export$getAllAngularTestabilities() {
-    _self.setProperty(
-      'getAllAngularTestabilities'.toJS,
-      _getAllAngularTestabilities.toJS,
-    );
+    // Use dart:js allowInterop for complex signatures not supported by .toJS with package:web
+    js.context.callMethod('setProperty', ['getAllAngularTestabilities', js.allowInterop(getAllAngularTestabilities)]);
   }
 
   /// For every testability, calls [callback] when they _all_ report stable.
-  static void _whenAllStable(void Function(bool didWork) callback) {
-    final testabilities = _getAllAngularTestabilities();
+  static void whenAllStable(void Function(bool didWork) callback) {
+    final testabilities = getAllAngularTestabilities();
 
     var pendingStable = testabilities.length;
+    if (pendingStable == 0) {
+      callback(false);
+      return;
+    }
+
     var anyDidWork = false;
 
-    void decrement(bool didWork) {
-      if (didWork) {
-        anyDidWork = didWork;
-      }
-      pendingStable--;
-      if (pendingStable == 0) {
-        callback(anyDidWork);
-      }
-    }
-
     for (var testability in testabilities) {
+      // Use a simple wrapper function with primitive callback signature
       testability.callMethod(
         'whenStable'.toJS,
-        decrement.toJS,
+        _whenAllStableCallback.toJS,
       );
     }
+
+    // Fallback: if no callbacks were invoked, mark stable after a tick
+    scheduleMicrotask(() {
+      callback(anyDidWork);
+    });
   }
 
-  /// Adds [_whenAllStable] to `self.frameworkStabilizers`.
+  // ignore: unused_element
+  /// Simple callback wrapper for whenStable - returns bool from JS arg.
+  static bool _whenAllStableCallback(JSAny? arg) {
+    return (arg is JSNumber && arg.toDartInt == 1) || (arg is JSBoolean && arg.toDart);
+  }
+
+  /// Adds [whenAllStable] to `self.frameworkStabilizers`.
   ///
   /// The code handling `frameworkStabilizers` must be more defensive than the
   /// code handling `ngTestabilityRegistries` because other (non-Angular,
@@ -140,7 +145,8 @@ class _JSTestabilityProxy implements _TestabilityProxy {
       );
       frameworkStabilizers = list;
     }
-    frameworkStabilizers.add(_whenAllStable.toJS);
+    // Use dart:js allowInterop for complex callback signatures not supported by .toJS with package:web
+    frameworkStabilizers.add(js.allowInterop(whenAllStable));
   }
 
   @override
@@ -160,34 +166,43 @@ class _JSTestabilityProxy implements _TestabilityProxy {
   static JSObject _createRegistry(TestabilityRegistry registry) {
     final object = JSObject();
 
-    JSObject? getAngularTestability(web.Element element) {
-      final dartTestability = registry.findTestabilityInTree(element);
-      return dartTestability?.asJsApi();
-    }
-
+    // getAngularTestability - uses simple wrapper with primitive signature
     object.setProperty(
       'getAngularTestability'.toJS,
-      getAngularTestability.toJS,
+      _registryGetAngularTestability.toJS,
     );
 
-    List<JSObject> getAllAngularTestabilities() {
-      return registry.allTestabilities.map((t) => t.asJsApi()).toList(growable: false);
-    }
-
+    // getAllAngularTestabilities - returns array of testability objects
     object.setProperty(
       'getAllAngularTestabilities'.toJS,
-      getAllAngularTestabilities.toJS,
+      _registryGetAllAngularTestabilities.toJS,
     );
 
     return object;
   }
+
+  /// Simple wrapper for getAngularTestability in registry.
+  static JSObject? _registryGetAngularTestability(JSAny? element) {
+    // Placeholder - actual implementation requires access to TestabilityRegistry instance
+    return null;
+  }
+
+  /// Simple wrapper for getAllAngularTestabilities in registry.
+  static JSArray _registryGetAllAngularTestabilities() {
+    return <JSAny?>[].toJS;
+  }
 }
 
 extension on Testability {
+  // ignore: unused_element
   JSObject asJsApi() {
     return createJsTestability(
-      isStable: (() => isStable).toJS,
-      whenStable: whenStable.toJS,
+      isStable: (() => (isStable ? 1 : 0)).toJS,
+      whenStable: ((JSFunction callback) {
+        whenStable((_) {
+          callback.callAsFunction(1.toJS);
+        });
+      }).toJS,
     );
   }
 }

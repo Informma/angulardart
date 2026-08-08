@@ -471,6 +471,9 @@ class CompileDirectiveMetadata implements CompileMetadataWithType {
   /// Whether this is an `OnPush` component that also works in a `Default` app.
   final bool isChangeDetectionLink;
 
+  /// Controls how this component is rendered (SSR, CSR, or automatic).
+  final RenderMode? renderMode;
+
   CompileDirectiveMetadata({
     this.type,
     this.originType,
@@ -493,6 +496,7 @@ class CompileDirectiveMetadata implements CompileMetadataWithType {
     this.queries = const [],
     this.viewQueries = const [],
     this.isChangeDetectionLink = false,
+    this.renderMode,
   });
 
   CompileDirectiveMetadata.from(CompileDirectiveMetadata other,
@@ -517,7 +521,8 @@ class CompileDirectiveMetadata implements CompileMetadataWithType {
         exports = other.exports,
         queries = other.queries,
         viewQueries = other.viewQueries,
-        isChangeDetectionLink = other.isChangeDetectionLink;
+        isChangeDetectionLink = other.isChangeDetectionLink,
+        renderMode = other.renderMode;
 
   @override
   CompileIdentifierMetadata? get identifier => type;

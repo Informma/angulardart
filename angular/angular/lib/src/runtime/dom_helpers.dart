@@ -10,6 +10,9 @@ import 'package:web/web.dart' as web;
 
 import 'package:meta/dart2js.dart' as dart2js;
 
+import 'render_factory.dart';
+import 'render_node.dart';
+
 /// https://developer.mozilla.org/en-US/docs/Web/API/Document/createTextNode
 web.Text _createTextNode(String text) => web.Text(text);
 
@@ -42,6 +45,10 @@ var domRootRendererIsDirty = false;
 /// For [element]s not guaranteed to be HTML, see [updateClassBindingNonHtml].
 @dart2js.noInline
 void updateClassBinding(web.HTMLElement element, String className, bool isAdd) {
+  if (renderFactory.isServerMode) {
+    _updateClassBindingOnRenderNode(element, className, isAdd);
+    return;
+  }
   if (isAdd) {
     element.classList.add(className);
   } else {
@@ -58,11 +65,20 @@ void updateClassBinding(web.HTMLElement element, String className, bool isAdd) {
 /// Dart2JS emits slightly more optimized cost in [updateClassBinding].
 @dart2js.noInline
 void updateClassBindingNonHtml(web.Element element, String className, bool isAdd) {
+  if (renderFactory.isServerMode) {
+    _updateClassBindingOnRenderNode(element, className, isAdd);
+    return;
+  }
   if (isAdd) {
     element.classList.add(className);
   } else {
     element.classList.remove(className);
   }
+}
+
+/// Updates class binding on a ServerRenderNode via toggleClass.
+void _updateClassBindingOnRenderNode(dynamic element, String className, bool isAdd) {
+  (element as RenderNode).toggleClass(className, isAdd);
 }
 
 /// Updates [attribute] on [element] to reflect [value].
@@ -282,3 +298,81 @@ void insertNodesAsSibling(List<web.Node> nodes, web.Node sibling) {
     insertNodesBefore(nodes, parentOfSibling, nextSibling);
   }
 }
+
+// ============================================================================
+// RenderNode-based helpers (Phase 2: SSR support)
+// Ces fonctions sont utilisées par le template compiler pour générer du code
+// compatible à la fois avec le DOM réel et le rendu HTML string.
+// ============================================================================
+
+/// Crée un nœud de type élément via [renderFactory].
+@dart2js.noInline
+dynamic createRenderElement(String tagName) {
+  return renderFactory.createElement(tagName);
+}
+
+/// Crée un nœud texte via [renderFactory].
+@dart2js.noInline
+dynamic createRenderText(String content) {
+  return renderFactory.createText(content);
+}
+
+/// Crée un nœud commentaire (ancre) via [renderFactory].
+@dart2js.noInline
+dynamic createRenderAnchor() {
+  return renderFactory.createComment();
+}
+
+/// Ajoute un enfant à un RenderNode.
+@dart2js.noInline
+void appendRenderChild(dynamic parent, dynamic child) {
+  if (parent is RenderNode && child is RenderNode) {
+    parent.appendChild(child);
+  } else if (parent is web.Node && child is web.Node) {
+    parent.append(child);
+  }
+}
+
+/// Met à jour le texte d'un RenderNode.
+@dart2js.noInline
+void updateRenderText(dynamic node, String value) {
+  if (node is RenderNode) {
+    node.setText(value);
+  } else if (node is web.Text) {
+    node.data = value;
+  }
+}
+
+/// Met à jour une classe CSS sur un RenderNode.
+@dart2js.noInline
+void updateRenderClass(dynamic node, String className, bool enabled) {
+  if (node is RenderNode) {
+    node.setClass(className, enabled);
+  } else if (node is web.HTMLElement) {
+    if (enabled) {
+      node.classList.add(className);
+    } else {
+      node.classList.remove(className);
+    }
+  }
+}
+
+/// Met à jour un attribut sur un RenderNode.
+@dart2js.noInline
+void updateRenderAttribute(dynamic node, String name, String? value) {
+  if (node is RenderNode) {
+    if (value == null) {
+      // Pour RenderNode, on ne peut pas supprimer les attributs facilement.
+      // Ignorer côté serveur.
+    } else {
+      node.setAttribute(name, value);
+    }
+  } else if (node is web.Element) {
+    if (value == null) {
+      node.removeAttribute(name);
+    } else {
+      node.setAttribute(name, value);
+    }
+  }
+}
+

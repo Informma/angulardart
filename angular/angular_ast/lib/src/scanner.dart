@@ -1208,11 +1208,11 @@ class NgScanner {
 }
 
 /// For consistency purposes:
-///   Element `Open` indicates <blah>
-///   Element `Close` indicates </blah>
+///   Element `Open` indicates a tag opening (`<blah>`).
+///   Element `Close` indicates a tag closing (`</blah>`).
 ///
-/// Start indicates the left bracket (< or </)
-/// End indicates the right bracket (> or />)
+/// Start indicates the left bracket (opening angle bracket or `< /`).
+/// End indicates the right bracket (closing angle bracket `>` or `/ >`).
 enum NgScannerState {
   hasError,
   isEndOfFile,

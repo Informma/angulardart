@@ -159,11 +159,15 @@ class _UpdateStatementsVisitor
   @override
   o.Statement visitPropertyBinding(ir.PropertyBinding propertyBinding,
       [o.Expression? renderValue]) {
-    return o.importExpr(DomHelpers.setProperty).callFn([
-      renderNode!.toReadExpr(),
-      o.literal(propertyBinding.name),
-      renderValue!,
-    ]).toStmt();
+    // Phase 3 (SSR): Use RenderNode.setProperty() directly for SSR compatibility.
+    // Both BrowserRenderNode and ServerRenderNode implement setProperty().
+    return renderNode!
+        .toReadExpr()
+        .callMethod('setProperty', [
+          o.literal(propertyBinding.name),
+          renderValue!,
+        ])
+        .toStmt();
   }
 
   // TODO(b/110433960): Should probably use renderValue instead of currValExpr.

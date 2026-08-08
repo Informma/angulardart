@@ -19,6 +19,7 @@ library;
 import 'package:meta/meta_meta.dart';
 
 import 'change_detection_constants.dart';
+import 'render_mode.dart';
 import 'typed.dart';
 import 'view.dart';
 import 'visibility.dart';
@@ -351,6 +352,16 @@ class Component extends Directive {
   /// - [ViewEncapsulation.ShadowDom] - uses native Shadow DOM (if supported).
   final ViewEncapsulation encapsulation;
 
+  /// Controls how this component is rendered (SSR, CSR, or automatic).
+  ///
+  /// Defaults to [RenderMode.automatic], which renders server-side when a
+  /// server context is detected and client-side otherwise.
+  ///
+  /// Use [RenderMode.client] for components that should never be rendered
+  /// on the server (e.g., user dashboards with sensitive data).
+  /// Use [RenderMode.server] to force SSR rendering even in hybrid mode.
+  final RenderMode renderMode;
+
   const Component({
     required String selector,
     String? exportAs,
@@ -368,6 +379,7 @@ class Component extends Directive {
     this.directiveTypes = const [],
     this.pipes = const [],
     this.encapsulation = ViewEncapsulation.Emulated,
+    this.renderMode = RenderMode.automatic,
   }) : super(
           selector: selector,
           exportAs: exportAs,

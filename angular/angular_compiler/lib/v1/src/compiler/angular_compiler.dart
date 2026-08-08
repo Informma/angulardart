@@ -106,6 +106,7 @@ class AngularCompiler {
       encapsulation: _encapsulation(componentWithDirs),
       styles: componentWithDirs.component.template!.styles,
       styleUrls: componentWithDirs.component.template!.styleUrls,
+      renderMode: componentWithDirs.component.renderMode ?? RenderMode.automatic,
       views: [
         _componentView(componentWithDirs),
         _hostView(componentWithDirs.component)

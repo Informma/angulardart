@@ -3,6 +3,7 @@ import 'package:web/web.dart' as web;
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/core/linker/app_view_utils.dart';
 import 'package:angulardart/src/runtime/dom_helpers.dart';
+import 'package:angulardart/src/runtime/render_factory.dart';
 import 'package:angulardart/src/utilities.dart';
 
 /// Clears all component styles from the DOM.
@@ -162,6 +163,7 @@ class ComponentStyles {
   /// Writes styles from this instance to [document.head] as a `<style>` tag.
   @dart2js.noInline
   void _appendStyles() {
+    if (renderFactory.isServerMode) return;
     final target = <String>[];
     if (isDevMode) {
       target.add('/* From: $_componentUrl*/');

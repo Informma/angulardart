@@ -19,6 +19,7 @@ export 'src/di_tokens.dart';
 export 'src/directives.dart';
 export 'src/is_dev_mode.dart';
 export 'src/lifecycle_hooks.dart';
+export 'src/render_mode.dart';
 export 'src/typed.dart';
 export 'src/unsafe_cast.dart';
 export 'src/view.dart';

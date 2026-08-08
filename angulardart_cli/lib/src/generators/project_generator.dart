@@ -10,12 +10,14 @@ class ProjectGenerator extends Generator {
   final String description;
   final ComponentGenerator component;
   final bool seo;
+  final bool ssr;
 
   ProjectGenerator._(
     this.name,
     this.description,
     this.component,
     this.seo,
+    this.ssr,
     String destinationFolder,
   ) : super(destinationFolder);
 
@@ -24,6 +26,7 @@ class ProjectGenerator extends Generator {
     String destinationFolder,
     EntityName componentClassName, {
     bool seo = false,
+    bool ssr = false,
   }) {
     final projectDir = path.join(destinationFolder, projectName.underscored);
     final component = ComponentGenerator(
@@ -35,6 +38,7 @@ class ProjectGenerator extends Generator {
       projectName.spaced,
       component,
       seo,
+      ssr,
       projectDir,
     );
   }
@@ -45,6 +49,7 @@ class ProjectGenerator extends Generator {
       'name': name,
       'description': description,
       'seo': seo,
+      'ssr': ssr,
       'component': {
         'selector': component.selector,
         'className': component.className,
@@ -54,7 +59,7 @@ class ProjectGenerator extends Generator {
 
     await writeFromTemplate(
       path.join(destinationFolder, 'pubspec.yaml'),
-      seo ? Templates.projectPubspecSeo : Templates.projectPubspec,
+      seo ? Templates.projectPubspecSeo : (ssr ? Templates.projectPubspecSsr : Templates.projectPubspec),
       context,
     );
     await writeStatic(
@@ -63,7 +68,7 @@ class ProjectGenerator extends Generator {
     );
     await writeStatic(
       path.join(destinationFolder, 'build.yaml'),
-      Templates.projectBuildYaml,
+      ssr ? Templates.projectBuildYamlSsr : Templates.projectBuildYaml,
     );
     await writeStatic(
       path.join(destinationFolder, '.gitignore'),
@@ -71,11 +76,24 @@ class ProjectGenerator extends Generator {
     );
     await writeFromTemplate(
       path.join(destinationFolder, 'web', 'index.html'),
-      seo ? Templates.projectIndexHtmlSeo : Templates.projectIndexHtml,
+      seo ? Templates.projectIndexHtmlSeo : (ssr ? Templates.projectIndexHtmlSsr : Templates.projectIndexHtml),
       context,
     );
+
     if (seo) {
-      // SEO projects: main() is in app_component.dart, no separate main.dart needed
+      // SEO projects: main() is in app_component.dart
+    } else if (ssr) {
+      await writeFromTemplate(
+        path.join(destinationFolder, 'web', 'main.dart'),
+        Templates.projectMainDartSsr,
+        context,
+      );
+      await writeFromTemplate(
+        path.join(destinationFolder, 'web', 'main.server.dart'),
+        Templates.projectMainServerDartFixed,
+        context,
+      );
+      await _generateServerBin(context);
     } else {
       await writeFromTemplate(
         path.join(destinationFolder, 'web', 'main.dart'),
@@ -83,6 +101,7 @@ class ProjectGenerator extends Generator {
         context,
       );
     }
+
     await writeStatic(
       path.join(destinationFolder, 'web', 'styles.css'),
       Templates.projectStyles,
@@ -98,6 +117,13 @@ class ProjectGenerator extends Generator {
         Templates.projectMainDartSeo,
         context,
       );
+    } else if (ssr) {
+      await component.generate();
+      await writeFromTemplate(
+        path.join(destinationFolder, 'README.md'),
+        Templates.projectReadmeSsr,
+        context,
+      );
     } else {
       await component.generate();
     }
@@ -110,8 +136,23 @@ class ProjectGenerator extends Generator {
     if (seo) {
       print('  dart run build_runner build --release');
       print('  dart run angulardart_prerender');
+    } else if (ssr) {
+      print('  # Dveloppement (client uniquement) :');
+      print('  dart run build_runner serve');
+      print('  # Build SSR :');
+      print('  dart run build_runner build -d web/main.server.dart');
+      print('  dart bin/server.dart');
     } else {
       print('  dart run build_runner serve');
     }
+  }
+
+  Future<void> _generateServerBin(Map<String, dynamic> context) async {
+    final binDir = path.join(destinationFolder, 'bin');
+    await writeFromTemplate(
+      path.join(binDir, 'server.dart'),
+      Templates.projectMainServerDartFixed,
+      context,
+    );
   }
 }

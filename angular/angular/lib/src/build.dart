@@ -33,7 +33,7 @@ const _templateExtension = '.template.dart';
 const _outlineExtension = '.outline.template.dart';
 
 /// Generates a temporary `.ng_placeholder` file for the compiler to use.
-Builder templatePlaceholder(_) => const Placeholder();
+Builder templatePlaceholder(BuilderOptions _) => const Placeholder();
 
 /// Generates additional required Dart files for AngularDart.
 ///

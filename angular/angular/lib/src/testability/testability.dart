@@ -1,7 +1,6 @@
 library angular.src.testability;
 
 import 'dart:async';
-import 'dart:js' as js;
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:web/web.dart' as web;

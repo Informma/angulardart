@@ -1,3 +1,4 @@
+// ignore_for_file: dangling_library_doc_comments
 /// NOTE: As of 2020-08-12, this library is DEPRECATED.
 ///
 /// The actual deprecation notice is on the user-visible import located in

@@ -86,10 +86,16 @@ class _JSTestabilityProxy implements _TestabilityProxy {
     return result.cast<JSObject>();
   }
 
+
+
+
   /// Sets `self.getAllAngularTestabilities` => [getAllAngularTestabilities].
   static void _export$getAllAngularTestabilities() {
-    // Use dart:js allowInterop for complex signatures not supported by .toJS with package:web
-    js.context.callMethod('setProperty', ['getAllAngularTestabilities', js.allowInterop(getAllAngularTestabilities)]);
+    globalContext.callMethod(
+      'setProperty'.toJS,
+      'getAllAngularTestabilities'.toJS,
+      (() => getAllAngularTestabilities()).toJS,
+    );
   }
 
   /// For every testability, calls [callback] when they _all_ report stable.
@@ -145,9 +151,20 @@ class _JSTestabilityProxy implements _TestabilityProxy {
       );
       frameworkStabilizers = list;
     }
-    // Use dart:js allowInterop for complex callback signatures not supported by .toJS with package:web
-    frameworkStabilizers.add(js.allowInterop(whenAllStable));
+    frameworkStabilizers.add(_frameworkStabilizerCallback);
   }
+
+  static final JSFunction _frameworkStabilizerCallback = ((JSAny? callback) {
+    whenAllStable((bool didWork) {
+      if (callback is JSFunction) {
+        callback.callAsFunction(didWork.toJS);
+      }
+    });
+  }).toJS;
+
+
+
+
 
   @override
   Testability? findTestabilityInTree(

@@ -1,0 +1,13 @@
+name: angulardart_example_hello_world
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  angulardart: ^9.2.1
+
+dev_dependencies:
+  build_runner: '>=2.16.0 <3.0.0'
+  build_test: '>=3.0.0 <4.0.0'
+  build_web_compilers: '>=4.8.0 <5.0.0'
+  lints: '>=6.0.0 <7.0.0'

@@ -1,5 +1,5 @@
 name: angulardart_seo
-version: 1.2.6
+version: 1.2.7
 description: SEO and meta tag management for AngularDart applications.
 repository: https://github.com/flutterdocteur/angulardart/tree/main/angulardart_seo
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues
@@ -20,7 +20,7 @@ platforms:
 
 dependencies:
   angulardart: '>=9.0.0 <10.0.0'
-  web: '>=1.0.0 <1.1.0'
+  web: '>=0.5.0 <1.0.0'
   meta: '>=1.15.0 <2.0.0'
 
 dev_dependencies:

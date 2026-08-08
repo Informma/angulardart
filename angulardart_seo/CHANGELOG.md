@@ -1,4 +1,7 @@
-## 1.2.6
+## 1.2.7
+
+- Fix: Constrain package:web to >=0.5.0 <1.0.0 (1.x uses dart:js_interop incompatible with our codebase)
+
 
 - Fix: Constrain package:web to <1.1.0 (1.1.x removed JS interop methods .toJS, jsify)
 

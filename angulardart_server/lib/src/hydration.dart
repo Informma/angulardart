@@ -26,7 +26,7 @@
 /// ```
 import 'dart:async';
 
-import 'package:web/web.dart' as web;
+import 'dom_apis.dart';
 
 import 'package:angulardart/angulardart.dart'
     show RenderFactory, HydrateRenderFactory, ApplicationRef, ComponentRef, ComponentFactory, Injector, InjectorFactory;
@@ -37,7 +37,7 @@ Future<ComponentRef<Object>> hydrateApplication<T extends Object>(
   ComponentFactory<T> componentFactory, {
   InjectorFactory? createInjector,
 }) async {
-  final htmlElement = web.document.documentElement;
+  final htmlElement = document.documentElement;
   final isServerRendered = htmlElement?.getAttribute('ng-server-context') == 'ssr';
 
   if (!isServerRendered) {
@@ -88,16 +88,16 @@ void _injectEncapsulatedStyles(HydrateRenderFactory hydrateFactory) {
   if (collectedStyles.isEmpty) return;
 
   // Crer un lment <style> et l'ajouter dans le <head>
-  final styleEl = web.document.createElement('style') as web.HTMLStyleElement;
+  final styleEl = document.createElement('style') as DomHTMLStyleElement;
   styleEl.id = 'ng-ssr-styles';
   styleEl.textContent = collectedStyles.join('\n');
 
-  final head = web.document.head;
+  final head = document.head;
   if (head != null) {
     head.append(styleEl);
   } else {
     // Fallback : ajouter au body si head n'est pas encore disponible
-    web.document.body?.append(styleEl);
+    document.body?.append(styleEl);
   }
 }
 

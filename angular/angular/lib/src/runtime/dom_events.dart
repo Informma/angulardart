@@ -1,9 +1,9 @@
-import 'package:web/web.dart' as web;
 
 import 'js_interop.dart';
 
-import 'package:angulardart/src/core/zone/ng_zone.dart';
+import 'dom_apis.dart';
 
+import 'package:angulardart/src/core/zone/ng_zone.dart';
 /// Provides a runtime implementation for "native" DOM events on elements.
 class EventManager {
   /// Plugin layers that are supported.
@@ -18,9 +18,9 @@ class EventManager {
 
   /// Adds an event listener to [element] for [name] to invoke [callback].
   void addEventListener(
-    web.Element element,
+    DomElement element,
     String name,
-    void Function(web.Event) callback,
+    void Function(DomEvent) callback,
   ) {
     if (_keyEvents.supports(name)) {
       // Run the actual DOM event (i.e. "keydown" or "keyup") outside of the
@@ -75,9 +75,9 @@ class _KeyEventsHandler {
   static bool _supports(String name) => name.contains(_delimiter);
 
   void addEventListener(
-    web.Element element,
+    DomElement element,
     String name,
-    void Function(web.Event) callback,
+    void Function(DomEvent) callback,
   ) {
     assert(_supports(name), 'Should never be called before "supports".');
     final parsed = _cache[name];
@@ -86,8 +86,8 @@ class _KeyEventsHandler {
       return;
     }
 
-    final _keyEventHandler = (web.Event event) {
-      if (event is web.KeyboardEvent && parsed.matches(event)) {
+    final _keyEventHandler = (DomEvent event) {
+      if (event is DomKeyboardEvent && parsed.matches(event)) {
         callback(event);
       }
     };
@@ -138,7 +138,7 @@ class _ParsedEvent {
   const _ParsedEvent(this.domEventName, this.keyAndModifiers);
 
   /// Returns whether [event] matches [keyAndModifiers].
-  bool matches(web.KeyboardEvent event) {
+  bool matches(DomKeyboardEvent event) {
     final key = _keyCodeNames[event.keyCode];
     if (key == null) {
       return false;
@@ -241,7 +241,7 @@ const _keyCodeNames = {
 };
 
 /// Determines whether a given modifier key name is currently active.
-final _modifiers = <String, bool Function(web.KeyboardEvent)>{
+final _modifiers = <String, bool Function(DomKeyboardEvent)>{
   'alt': (event) => event.altKey,
   'control': (event) => event.ctrlKey,
   'meta': (event) => event.metaKey,

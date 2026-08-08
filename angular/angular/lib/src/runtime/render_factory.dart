@@ -17,7 +17,7 @@
 /// // ... construction du DOM virtuel ...
 /// String html = (rootNode as ServerRenderNode).toHtml();
 /// ```
-import 'package:web/web.dart' as web;
+import 'dom_apis.dart';
 
 import 'browser_render_node.dart';
 import 'render_node.dart';
@@ -63,44 +63,9 @@ class RenderFactory {
       return ServerRenderNode(tagName.toLowerCase());
     }
     // Mode navigateur : crée un vrai élément DOM
-    final doc = web.document;
-    web.Element element;
+    final doc = document;
 
-    switch (tagName.toLowerCase()) {
-      case 'div':
-        element = doc.createElement('div') as web.HTMLDivElement;
-      case 'span':
-        element = doc.createElement('span') as web.HTMLSpanElement;
-      case 'a':
-        element = doc.createElement('a') as web.HTMLAnchorElement;
-      case 'img':
-        element = doc.createElement('img') as web.HTMLImageElement;
-      case 'input':
-        element = doc.createElement('input') as web.HTMLInputElement;
-      case 'button':
-        element = doc.createElement('button') as web.HTMLButtonElement;
-      case 'select':
-        element = doc.createElement('select') as web.HTMLSelectElement;
-      case 'textarea':
-        element = doc.createElement('textarea') as web.HTMLTextAreaElement;
-      case 'ul':
-        element = doc.createElement('ul') as web.HTMLUListElement;
-      case 'ol':
-        element = doc.createElement('ol') as web.HTMLOListElement;
-      case 'li':
-        element = doc.createElement('li') as web.HTMLLIElement;
-      case 'p':
-        element = doc.createElement('p') as web.HTMLParagraphElement;
-      case 'h1':
-      case 'h2':
-      case 'h3':
-      case 'h4':
-      case 'h5':
-      case 'h6':
-        element = doc.createElement(tagName.toLowerCase()) as web.HTMLElement;
-      default:
-        element = doc.createElement(tagName);
-    }
+    final element = doc.createElement(tagName);
 
     return BrowserRenderNode(element);
   }

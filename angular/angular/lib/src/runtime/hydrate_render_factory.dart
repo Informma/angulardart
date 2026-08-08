@@ -12,7 +12,7 @@
 ///    une map `[ngId -> Element]`.
 /// 3. Quand le code gnr appelle [createElement], la factory lookup l'lment
 ///    existant au lieu d'en crer un nouveau.
-import 'package:web/web.dart' as web;
+import 'dom_apis.dart';
 
 import 'browser_render_node.dart';
 import 'render_factory.dart';
@@ -25,14 +25,14 @@ import 'server_render_node.dart';
 /// [createComment] pour rutiliser les nuds DOM existants au lieu d'en crer
 /// de nouveaux.
 class HydrateRenderFactory extends RenderFactory {
-  final web.Document _doc;
-  final Map<String, web.Element> _elementMap = {};
-  final Map<String, web.Text> _textNodeMap = {};
+  final DomDocument _doc;
+  final Map<String, DomElement> _elementMap = {};
+  final Map<String, DomText> _textNodeMap = {};
   int _nextId = 0;
 
   /// Crée une nouvelle instance et scanne le DOM pour construire la map.
   factory HydrateRenderFactory() {
-    final doc = web.document;
+    final doc = document;
     final factory = HydrateRenderFactory._(doc);
     factory._scanDom();
     return factory;
@@ -66,8 +66,8 @@ class HydrateRenderFactory extends RenderFactory {
   }
 
   /// Parcourt récursivement tous les nœuds enfants.
-  void _walkNodes(web.Node node) {
-    if (node is web.Element) {
+  void _walkNodes(DomNode node) {
+    if (node is DomElement) {
       final idStr = node.getAttribute('data-ng-id');
       if (idStr != null) {
         _elementMap[idStr] = node;
@@ -94,40 +94,40 @@ class HydrateRenderFactory extends RenderFactory {
     }
 
     // Fallback : créer un nouvel élément si pas trouvé (incohérence SSR/CSR)
-    final doc = web.document;
-    web.Element element;
+    final doc = document;
+    DomElement element;
     switch (tagName.toLowerCase()) {
       case 'div':
-        element = doc.createElement('div') as web.HTMLDivElement;
+        element = doc.createElement('div');
       case 'span':
-        element = doc.createElement('span') as web.HTMLSpanElement;
+        element = doc.createElement('span');
       case 'a':
-        element = doc.createElement('a') as web.HTMLAnchorElement;
+        element = doc.createElement('a');
       case 'img':
-        element = doc.createElement('img') as web.HTMLImageElement;
+        element = doc.createElement('img');
       case 'input':
-        element = doc.createElement('input') as web.HTMLInputElement;
+        element = doc.createElement('input');
       case 'button':
-        element = doc.createElement('button') as web.HTMLButtonElement;
+        element = doc.createElement('button');
       case 'select':
-        element = doc.createElement('select') as web.HTMLSelectElement;
+        element = doc.createElement('select');
       case 'textarea':
-        element = doc.createElement('textarea') as web.HTMLTextAreaElement;
+        element = doc.createElement('textarea');
       case 'ul':
-        element = doc.createElement('ul') as web.HTMLUListElement;
+        element = doc.createElement('ul');
       case 'ol':
-        element = doc.createElement('ol') as web.HTMLOListElement;
+        element = doc.createElement('ol');
       case 'li':
-        element = doc.createElement('li') as web.HTMLLIElement;
+        element = doc.createElement('li');
       case 'p':
-        element = doc.createElement('p') as web.HTMLParagraphElement;
+        element = doc.createElement('p');
       case 'h1':
       case 'h2':
       case 'h3':
       case 'h4':
       case 'h5':
       case 'h6':
-        element = doc.createElement(tagName.toLowerCase()) as web.HTMLElement;
+        element = doc.createElement(tagName.toLowerCase());
       default:
         element = doc.createElement(tagName);
     }

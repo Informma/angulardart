@@ -1,0 +1,40 @@
+targets:
+  $default:
+    builders:
+      angulardart:
+        generate_for:
+          include:
+            - "lib/**/*.dart"
+            - "test/**/*.dart"
+
+builders:
+  angulardart:
+    import: "package:angulardart/src/build.dart"
+    builder_factories:
+      - templatePlaceholder
+      - templateCompiler
+      - stylesheetCompiler
+    auto_apply: dependents
+    applies_builders:
+      - "angulardart|placeholder_cleanup"
+      - "angulardart|component_source_cleanup"
+    is_optional: true
+    required_inputs:
+      - ".css"
+    build_extensions:
+      .css:
+        - ".css.dart"
+        - ".css.shim.dart"
+      .dart:
+        - ".template.dart"
+post_process_builders:
+  placeholder_cleanup:
+    import: "package:angulardart/src/build.dart"
+    builder_factory: "placeholderCleanup"
+  component_source_cleanup:
+    import: "package:angulardart/src/build.dart"
+    builder_factory: "componentSourceCleanup"
+    defaults:
+      generate_for: ["lib/**"]
+      release_options:
+        enabled: true

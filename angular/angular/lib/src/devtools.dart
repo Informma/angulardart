@@ -3,9 +3,8 @@ library angular.src.devtools;
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:web/web.dart' as web;
-
 import 'devtools/inspector.dart';
+import 'runtime/dom_apis.dart';
 import 'utilities.dart';
 
 export 'devtools/inspector.dart';
@@ -40,7 +39,7 @@ void enableDevTools() {
 ///
 /// This method should be used to register elements that are not contained by
 /// the app's root component.
-void registerContentRoot(web.Element element) {
+void registerContentRoot(DomElement element) {
   if (isDevToolsEnabled) {
     Inspector.instance.registerContentRoot(element);
   }

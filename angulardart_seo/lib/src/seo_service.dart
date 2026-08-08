@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:web/web.dart';
+import 'dom_apis.dart';
 
 import 'package:angulardart/angulardart.dart';
 import 'package:meta/meta.dart';

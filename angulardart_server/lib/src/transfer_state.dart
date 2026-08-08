@@ -19,7 +19,7 @@
 /// ```
 import 'dart:convert';
 
-import 'package:web/web.dart' as web;
+import 'dom_apis.dart';
 
 class TransferState {
   static const _keyPrefix = 'ng-transfer-state:';
@@ -62,7 +62,7 @@ class TransferState {
   /// Recherche un lment `<script id="ng-transfer-state" type="application/json">`
   /// dans le document et parse son contenu pour peupler [_state].
   static void fromHtml() {
-    final scriptEl = web.document.getElementById('ng-transfer-state');
+    final scriptEl = document.getElementById('ng-transfer-state');
     if (scriptEl == null) return;
 
     final textContent = scriptEl.textContent?.trim();

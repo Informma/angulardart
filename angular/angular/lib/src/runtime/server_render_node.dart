@@ -3,7 +3,7 @@
 /// Utilise un [StringBuffer] pour accumuler le HTML au lieu de manipuler le DOM.
 /// Ce fichier est autonome et ne dpends pas de angulardart_server pour viter
 /// des dpendances circulaires.
-import 'package:web/web.dart' as web;
+import 'dom_apis.dart';
 
 import 'render_node.dart';
 
@@ -15,7 +15,7 @@ class ServerRenderNode implements RenderNode {
 
   /// Map des IDs de nuds vers les lments DOM ct client.
   /// Rempli par [HydrateRenderFactory] pendant l'hydration.
-  static final Map<String, web.Element> ngIdMap = {};
+  static final Map<String, DomElement> ngIdMap = {};
 
   /// Styles encapsuls collects pendant le rendu serveur.
   /// Format: `selector { ...rules }`

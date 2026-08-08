@@ -6,7 +6,7 @@ library angular.src.runtime.dom_helpers;
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:web/web.dart' as web;
+import 'dom_apis.dart';
 
 import 'package:meta/dart2js.dart' as dart2js;
 
@@ -14,10 +14,10 @@ import 'render_factory.dart';
 import 'render_node.dart';
 
 /// https://developer.mozilla.org/en-US/docs/Web/API/Document/createTextNode
-web.Text _createTextNode(String text) => web.Text(text);
+DomText _createTextNode(String text) => DomText(text);
 
 /// https://developer.mozilla.org/en-US/docs/Web/API/Document/createComment
-web.Comment _createComment() => web.Comment();
+DomComment _createComment() => DomComment();
 
 /// Set to `true` when Angular modified the DOM.
 ///
@@ -44,7 +44,7 @@ var domRootRendererIsDirty = false;
 ///
 /// For [element]s not guaranteed to be HTML, see [updateClassBindingNonHtml].
 @dart2js.noInline
-void updateClassBinding(web.HTMLElement element, String className, bool isAdd) {
+void updateClassBinding(DomHTMLElement element, String className, bool isAdd) {
   if (renderFactory.isServerMode) {
     _updateClassBindingOnRenderNode(element, className, isAdd);
     return;
@@ -64,7 +64,7 @@ void updateClassBinding(web.HTMLElement element, String className, bool isAdd) {
 ///
 /// Dart2JS emits slightly more optimized cost in [updateClassBinding].
 @dart2js.noInline
-void updateClassBindingNonHtml(web.Element element, String className, bool isAdd) {
+void updateClassBindingNonHtml(DomElement element, String className, bool isAdd) {
   if (renderFactory.isServerMode) {
     _updateClassBindingOnRenderNode(element, className, isAdd);
     return;
@@ -86,7 +86,7 @@ void _updateClassBindingOnRenderNode(dynamic element, String className, bool isA
 /// If [value] is `null`, this implicitly _removes_ [attribute] from [element].
 @dart2js.noInline
 void updateAttribute(
-  web.Element element,
+  DomElement element,
   String attribute,
   String? value,
 ) {
@@ -101,7 +101,7 @@ void updateAttribute(
 /// Similar to [updateAttribute], but supports name-spaced attributes.
 @dart2js.noInline
 void updateAttributeNS(
-  web.Element element,
+  DomElement element,
   String namespace,
   String attribute,
   String? value,
@@ -121,7 +121,7 @@ void updateAttributeNS(
 /// the attribute should be removed) nor does it set [domRootRendererIsDirty].
 @dart2js.noInline
 void setAttribute(
-  web.Element element,
+  DomElement element,
   String attribute, [
   String value = '',
 ]) {
@@ -146,7 +146,7 @@ JSAny? _toJsValue(Object? value) {
 
 @dart2js.tryInline
 void setProperty(
-  web.Element element,
+  DomElement element,
   String property,
   Object? value,
 ) {
@@ -193,7 +193,7 @@ void setProperty(
 /// c = z6(d, '!')
 /// ```
 @dart2js.noInline
-web.Text createText(String contents) {
+DomText createText(String contents) {
   return _createTextNode(contents);
 }
 
@@ -201,38 +201,38 @@ web.Text createText(String contents) {
 ///
 /// This is an optimization to reduce code size for a common operation.
 @dart2js.noInline
-web.Text appendText(web.Node parent, String text) {
-  return parent.append(createText(text)) as web.Text;
+DomText appendText(DomNode parent, String text) {
+  return parent.appendChild(createText(text)) as DomText;
 }
 
 /// Returns a new [Comment] node with empty contents.
 ///
 /// This is an optimization to reduce code size for a common operation.
 @dart2js.noInline
-web.Comment createAnchor() => _createComment();
+DomComment createAnchor() => _createComment();
 
 /// Appends and returns a new empty [Comment] to a [parent] node.
 ///
 /// This is an optimization to reduce code size for a common operation.
 @dart2js.noInline
-web.Comment appendAnchor(web.Node parent) {
-  return parent.append(_createComment()) as web.Comment;
+DomComment appendAnchor(DomNode parent) {
+  return parent.appendChild(_createComment()) as DomComment;
 }
 
 /// Appends and returns a new empty [DivElement] to a [parent] node.
 ///
 /// This is an optimization to reduce code size for a common operation.
 @dart2js.noInline
-web.HTMLDivElement appendDiv(web.Document doc, web.Node parent) {
-  return parent.append(doc.createElement('div')) as web.HTMLDivElement;
+DomElement appendDiv(DomDocument doc, DomNode parent) {
+  return parent.appendChild(doc.createElement('div')) as DomElement;
 }
 
 /// Appends and returns a new empty [SpanElement] to a [parent] node.
 ///
 /// This is an optimization to reduce code size for a common operation.
 @dart2js.noInline
-web.HTMLSpanElement appendSpan(web.Document doc, web.Node parent) {
-  return parent.append(doc.createElement('span')) as web.HTMLSpanElement;
+DomElement appendSpan(DomDocument doc, DomNode parent) {
+  return parent.appendChild(doc.createElement('span')) as DomElement;
 }
 
 /// Appends and returns a new empty [Element] to a [parent] node.
@@ -241,16 +241,16 @@ web.HTMLSpanElement appendSpan(web.Document doc, web.Node parent) {
 ///
 /// This is an optimization to reduce code size for a common operation.
 @dart2js.noInline
-T appendElement<T extends web.Element>(
-  web.Document doc,
-  web.Node parent,
+T appendElement<T extends DomElement>(
+  DomDocument doc,
+  DomNode parent,
   String tagName,
 ) {
   // <T extends Element> allows the pattern:
   // HtmlElement e = appendElement(doc, parent, 'foo')
   //
   // ... without gratituous use of unsafeCast or casts in general.
-  return parent.append(doc.createElement(tagName)) as T;
+  return parent.appendChild(doc.createElement(tagName)) as T;
 }
 
 /// Inserts [nodes] into the DOM before [sibling].
@@ -259,7 +259,7 @@ T appendElement<T extends web.Element>(
 /// to extra type and runtime checks that are not necessary for our generated
 /// code.
 @dart2js.noInline
-void insertNodesBefore(List<web.Node> nodes, web.Node parent, web.Node sibling) {
+void insertNodesBefore(List<DomNode> nodes, DomNode parent, DomNode sibling) {
   for (var i = 0, l = nodes.length; i < l; i++) {
     parent.insertBefore(nodes[i], sibling);
   }
@@ -267,15 +267,15 @@ void insertNodesBefore(List<web.Node> nodes, web.Node parent, web.Node sibling) 
 
 /// Appends [nodes] into the DOM inside of [parent].
 @dart2js.noInline
-void appendNodes(List<web.Node> nodes, web.Node parent) {
+void appendNodes(List<DomNode> nodes, DomNode parent) {
   for (var i = 0, l = nodes.length; i < l; i++) {
-    parent.append(nodes[i]);
+    parent.appendChild(nodes[i]);
   }
 }
 
 /// Removes [nodes] from the DOM.
 @dart2js.noInline
-void removeNodes(List<web.Node> nodes) {
+void removeNodes(List<DomNode> nodes) {
   for (var i = 0, l = nodes.length; i < l; i++) {
     final node = nodes[i];
     node.parentNode?.removeChild(node);
@@ -286,7 +286,7 @@ void removeNodes(List<web.Node> nodes) {
 ///
 /// **NOTE**: This was previously called `_moveNodesAfterSibling`.
 @dart2js.noInline
-void insertNodesAsSibling(List<web.Node> nodes, web.Node sibling) {
+void insertNodesAsSibling(List<DomNode> nodes, DomNode sibling) {
   final parentOfSibling = sibling.parentNode;
   if (nodes.isEmpty || parentOfSibling == null) {
     return;
@@ -328,8 +328,8 @@ dynamic createRenderAnchor() {
 void appendRenderChild(dynamic parent, dynamic child) {
   if (parent is RenderNode && child is RenderNode) {
     parent.appendChild(child);
-  } else if (parent is web.Node && child is web.Node) {
-    parent.append(child);
+  } else if (parent is DomNode && child is DomNode) {
+    parent.appendChild(child);
   }
 }
 
@@ -338,7 +338,7 @@ void appendRenderChild(dynamic parent, dynamic child) {
 void updateRenderText(dynamic node, String value) {
   if (node is RenderNode) {
     node.setText(value);
-  } else if (node is web.Text) {
+  } else if (node is DomText) {
     node.data = value;
   }
 }
@@ -348,7 +348,7 @@ void updateRenderText(dynamic node, String value) {
 void updateRenderClass(dynamic node, String className, bool enabled) {
   if (node is RenderNode) {
     node.setClass(className, enabled);
-  } else if (node is web.HTMLElement) {
+  } else if (node is DomHTMLElement) {
     if (enabled) {
       node.classList.add(className);
     } else {
@@ -367,7 +367,7 @@ void updateRenderAttribute(dynamic node, String name, String? value) {
     } else {
       node.setAttribute(name, value);
     }
-  } else if (node is web.Element) {
+  } else if (node is DomElement) {
     if (value == null) {
       node.removeAttribute(name);
     } else {

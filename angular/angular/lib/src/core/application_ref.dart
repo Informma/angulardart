@@ -10,9 +10,10 @@
 library;
 
 import 'dart:async';
-import 'package:web/web.dart' as web;
 
 import 'package:meta/dart2js.dart' as dart2js;
+
+import '../runtime/dom_apis.dart';
 import 'package:angulardart/src/core/exception_handler.dart';
 import 'package:angulardart/src/devtools.dart';
 import 'package:angulardart/src/di/injector.dart';
@@ -109,8 +110,8 @@ class ApplicationRef extends ChangeDetectionHost {
       // Skip DOM operations in server mode - the component tree is built
       // with ServerRenderNode instances that accumulate HTML strings.
       if (!renderFactory.isServerMode) {
-        final existing = web.document.querySelector(componentFactory.selector);
-        web.Element? replacement;
+        final existing = document.querySelector(componentFactory.selector);
+        DomElement? replacement;
         if (existing != null) {
           final newElement = component.location;
           // For app shards using bootstrapStatic, transfer element id
@@ -122,7 +123,7 @@ class ApplicationRef extends ChangeDetectionHost {
           replacement = newElement;
           existing.replaceWith(replacement);
         } else {
-          web.document.body!.append(component.location);
+          document.body!.append(component.location);
         }
         final injector = component.injector;
         final testability = injector.provideTypeOptional<Testability>(
@@ -159,7 +160,7 @@ class ApplicationRef extends ChangeDetectionHost {
     return unsafeCast(run(() {
       final component = componentFactory.create(_injector);
       // Find existing SSR element by selector - do NOT replace it
-      final existing = web.document.querySelector(componentFactory.selector);
+      final existing = document.querySelector(componentFactory.selector);
       if (existing != null) {
         // Keep the existing SSR element, just ensure proper positioning
         final newElement = component.location;
@@ -170,7 +171,7 @@ class ApplicationRef extends ChangeDetectionHost {
         existing.replaceWith(newElement);
       } else {
         // Fallback: append to body if no SSR element found
-        web.document.body!.append(component.location);
+        document.body!.append(component.location);
       }
       final injector = component.injector;
       final testability = injector.provideTypeOptional<Testability>(
@@ -187,7 +188,7 @@ class ApplicationRef extends ChangeDetectionHost {
     }));
   }
 
-  void _loadedRootComponent(ComponentRef<void> component, web.Element? node) {
+  void _loadedRootComponent(ComponentRef<void> component, DomElement? node) {
     if (isDevToolsEnabled) {
       Inspector.instance.registerContentRoot(component.location);
     }

@@ -91,10 +91,17 @@ class _JSTestabilityProxy implements _TestabilityProxy {
 
   /// Sets `self.getAllAngularTestabilities` => [getAllAngularTestabilities].
   static void _export$getAllAngularTestabilities() {
+    // dart2js cannot convert functions returning List<JSObject> via .toJS.
+    // We use a wrapper that returns JSArray instead, which is compatible with
+    // the .toJS conversion. The returned array contains the same JSObjects
+    // but wrapped in a JSArray which dart2js can handle.
     globalContext.callMethod(
       'setProperty'.toJS,
       'getAllAngularTestabilities'.toJS,
-      (() => getAllAngularTestabilities()).toJS,
+      (() {
+        final testabilities = getAllAngularTestabilities();
+        return testabilities.toJS;
+      }).toJS,
     );
   }
 

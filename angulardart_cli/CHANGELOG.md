@@ -1,3 +1,8 @@
+## 1.1.1
+
+- Fix: removed invalid empty abbreviation on `--ssr` flag (fixes crash on startup)
+- Fix: use wide version notation for all dependencies per project conventions
+
 ## 1.1.0
 
 - Add: SSR project scaffolding with `ngdart new --ssr` flag

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+- Docs: Added AngularDart Reborn banner and dynamic pub badge to README
+
 ## 1.0.2
 
 - Fix: Use public API exports instead of internal paths, add LICENSE

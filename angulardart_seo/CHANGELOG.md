@@ -1,3 +1,7 @@
+## 1.2.1
+
+- Docs: Added AngularDart Reborn banner and dynamic pub badge to README
+
 ## 1.2.0
 
 - Add: SSR SEO optimization for AngularDart applications

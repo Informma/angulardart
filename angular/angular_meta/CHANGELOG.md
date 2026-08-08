@@ -1,3 +1,7 @@
+## 1.2.2
+
+- Docs: Added AngularDart Reborn banner and dynamic pub badge to README
+
 ## 1.2.1
 
 - Fix: Republish with corrected exports (ComponentFactory, ComponentRef) and public API imports

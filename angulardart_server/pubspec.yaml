@@ -23,7 +23,7 @@ dependencies:
   angulardart_meta: '>=1.0.0 <2.0.0'
   angulardart_router: '>=5.1.0 <6.0.0'
   collection: '>=1.18.0 <2.0.0'
-  web: '>=1.0.0 <2.0.0'
+  web: '>=1.0.0 <1.1.0'
   meta: '>=1.15.0 <2.0.0'
 
 dev_dependencies:

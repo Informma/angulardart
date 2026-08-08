@@ -1,4 +1,7 @@
-## 6.2.7
+## 6.2.8
+
+- Fix: Constrain package:web to <1.1.0 (1.1.x removed JS interop methods .toJS, jsify)
+
 
 - Fix: Template compiler UPDATE phase — ensure form directives work correctly with RenderNode helpers in SSR mode
 

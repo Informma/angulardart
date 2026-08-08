@@ -1,4 +1,7 @@
-## 1.2.5
+## 1.2.6
+
+- Fix: Constrain package:web to <1.1.0 (1.1.x removed JS interop methods .toJS, jsify)
+
 
 - Fix: Template compiler compatibility — ensure SEO service works with RenderNode helpers in SSR
 

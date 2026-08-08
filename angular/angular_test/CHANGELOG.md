@@ -1,4 +1,7 @@
-## 6.2.5
+## 6.2.6
+
+- Fix: Constrain package:web to <1.1.0 (1.1.x removed JS interop methods .toJS, jsify)
+
 
 - Fix: fixture.dart — cast location to web.Node, simplify rootElement getter
 - Fix: bootstrap.dart — cast componentRef.location to web.Node for append()

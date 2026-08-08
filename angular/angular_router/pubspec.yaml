@@ -4,7 +4,7 @@ issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://angulardartreborn.com
 documentation: https://angulardartreborn.com/guide
 description: Client-side routing library for AngularDart with path-based navigation, route guards, lazy loading, and URL strategies.
-version: 5.2.6
+version: 5.2.7
 topics:
   - angular
   - router
@@ -20,7 +20,7 @@ platforms:
 dependencies:
   angulardart: '>=9.0.0 <10.0.0'
   collection: '>=1.18.0 <2.0.0'
-  web: '>=1.0.0 <1.2.0'
+  web: '>=1.0.0 <1.1.0'
   meta: '>=1.15.0 <2.0.0'
 dev_dependencies:
   angulardart_compiler: '>=5.0.0 <6.0.0'

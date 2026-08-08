@@ -1,4 +1,7 @@
-## 5.2.6
+## 5.2.7
+
+- Fix: Constrain package:web to <1.1.0 (1.1.x removed JS interop methods .toJS, jsify)
+
 
 - Fix: router_link_list_test.dart — use NgTestBed instead of direct ComponentFactory.create()
 - Fix: issue_748_hash_location_strategy_test.dart — ViewChild type from HTMLElement? to dynamic

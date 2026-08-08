@@ -1,4 +1,7 @@
-## 1.0.8
+## 1.0.9
+
+- Fix: Constrain package:web to <1.1.0 (1.1.x removed JS interop methods .toJS, jsify)
+
 
 - Fix: Template compiler UPDATE phase — use RenderNodeHelpers.addRenderEventListener() for SSR-compatible event listeners
 - Fix: Ensure hydration works with new appendRenderChild helper in template compiler

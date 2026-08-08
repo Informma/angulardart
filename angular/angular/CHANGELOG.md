@@ -1,4 +1,7 @@
-## 9.2.6
+## 9.2.7
+
+- Fix: Constrain package:web to <1.1.0 (1.1.x removed JS interop methods .toJS, jsify)
+
 
 - Fix: Template compiler UPDATE phase — use RenderNodeHelpers.addRenderEventListener() instead of direct DOM calls
 - Fix: TextBinding.element getter for template compiler compatibility

@@ -1,3 +1,9 @@
+## 1.1.0
+
+- **BREAKING**: Migrate from `dart:html` to `package:web` for DOM types
+- Add: SSR rendering support with conditional platform imports (browser_dom_apis.dart, native_dom_apis.dart)
+- Fix: Zero errors/warnings/infos in dart analyze --fatal-infos
+
 # Changelog
 
 ## 1.0.5

@@ -1,3 +1,9 @@
+## 5.3.0
+
+- **BREAKING**: Migrate from `dart:html` to `package:web` for DOM types
+- Add: SSR rendering support with conditional platform imports (browser_dom_apis.dart, native_dom_apis.dart)
+- Fix: Zero errors/warnings/infos in dart analyze --fatal-infos
+
 ## 5.2.2
 
 - Fix: Restore pub.dev score to 150+ points (+60 pts)

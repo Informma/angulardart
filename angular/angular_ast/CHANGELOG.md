@@ -1,3 +1,9 @@
+## 3.3.0
+
+- **BREAKING**: Migrate from `dart:html` to `package:web` for DOM types
+- Add: SSR rendering support with conditional platform imports (browser_dom_apis.dart, native_dom_apis.dart)
+- Fix: Angular brackets in doc comments (`unintended_html_in_doc_comment`)
+
 ## 3.2.1
 
 - Fix: Republish to ensure SSR runtime symbols are properly exported

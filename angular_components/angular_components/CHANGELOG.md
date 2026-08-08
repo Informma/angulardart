@@ -1,3 +1,9 @@
+## 3.1.0
+
+- **BREAKING**: Migrate from `dart:html` to `package:web` for DOM types
+- Add: SSR rendering support with conditional platform imports (browser_dom_apis.dart, native_dom_apis.dart)
+- Fix: Zero errors/warnings/infos in dart analyze --fatal-infos
+
 ## 3.0.5
 
 - Docs: Added related packages section linking to angulardart_seo and angulardart_prerender guides

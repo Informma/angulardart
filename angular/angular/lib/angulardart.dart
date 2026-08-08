@@ -132,6 +132,7 @@ export 'src/runtime/render_factory.dart'
 export 'src/runtime/hydrate_render_factory.dart'
     show HydrateRenderFactory;
 export 'src/runtime/server_render_node.dart' show ServerRenderNode;
+export 'src/core/linker/component_factory.dart' show ComponentFactory, ComponentRef;
 export 'src/security/safe_html.dart'
     show SafeHtml, SafeStyle, SafeUrl, SafeResourceUrl;
 // TODO(b/116697059): Move to a testonly=1 library.

@@ -28,13 +28,10 @@ import 'dart:async';
 
 import 'package:web/web.dart' as web;
 
-import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/angulardart.dart'
+    show RenderFactory, HydrateRenderFactory, ApplicationRef, ComponentRef, ComponentFactory, Injector, InjectorFactory;
 import 'package:angulardart/src/bootstrap/run.dart' show appInjector;
-import 'package:angulardart/src/runtime/render_factory.dart' show RenderFactory;
 import 'package:angulardart_server/src/transfer_state.dart';
-
-import 'package:angulardart/src/runtime/hydrate_render_factory.dart'
-    show HydrateRenderFactory;
 
 Future<ComponentRef<Object>> hydrateApplication<T extends Object>(
   ComponentFactory<T> componentFactory, {

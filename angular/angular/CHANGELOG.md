@@ -1,3 +1,9 @@
+## 9.2.6
+
+- Fix: Template compiler UPDATE phase — use RenderNodeHelpers.addRenderEventListener() instead of direct DOM calls
+- Fix: TextBinding.element getter for template compiler compatibility
+- Fix: dom_helpers.dart — add addRenderEventListener helper for SSR-compatible event listeners
+
 ## 9.2.5
 
 - Fix: Template compiler runtime — add RenderNodeHelpers.addRenderEventListener() for SSR-compatible event listeners

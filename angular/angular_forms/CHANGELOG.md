@@ -1,3 +1,7 @@
+## 6.2.6
+
+- Fix: Template compiler compatibility — ensure form directives work with RenderNode helpers
+
 ## 6.2.5
 
 - Fix: package:web constraint updated to <1.2.0

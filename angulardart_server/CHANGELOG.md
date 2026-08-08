@@ -1,3 +1,8 @@
+## 1.0.8
+
+- Fix: Template compiler UPDATE phase — use RenderNodeHelpers.addRenderEventListener() for SSR-compatible event listeners
+- Fix: Ensure hydration works with new appendRenderChild helper in template compiler
+
 ## 1.0.7
 
 - Fix: package:web constraint updated to <1.2.0

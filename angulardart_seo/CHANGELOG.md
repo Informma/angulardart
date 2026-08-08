@@ -1,3 +1,7 @@
+## 1.2.5
+
+- Fix: Template compiler compatibility — ensure SEO service works with RenderNode helpers in SSR
+
 ## 1.2.4
 
 - Fix: package:web constraint updated to <1.2.0

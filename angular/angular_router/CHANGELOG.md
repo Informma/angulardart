@@ -1,3 +1,8 @@
+## 5.2.6
+
+- Fix: router_link_list_test.dart — use NgTestBed instead of direct ComponentFactory.create()
+- Fix: issue_748_hash_location_strategy_test.dart — ViewChild type from HTMLElement? to dynamic
+
 ## 5.2.5
 
 - Fix: router_link_list_test.dart — use NgTestBed instead of direct ComponentFactory.create()

@@ -1,3 +1,9 @@
+## 5.2.5
+
+- Fix: router_link_list_test.dart — use NgTestBed instead of direct ComponentFactory.create()
+- Fix: issue_748_hash_location_strategy_test.dart — ViewChild type from HTMLElement? to dynamic
+- Fix: package:web constraint updated to <1.2.0
+
 ## 5.2.4
 
 - Migrate from `dart:html` to `package:web` for DOM types

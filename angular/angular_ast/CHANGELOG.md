@@ -1,3 +1,7 @@
+## 3.2.3
+
+- Fix: Update `package:web` constraint to `<1.2.0` for compatibility with latest SDK
+
 ## 3.2.2
 - **BREAKING**: Migrate from `dart:html` to `package:web` for DOM types
 - Add: SSR rendering support with conditional platform imports (browser_dom_apis.dart, native_dom_apis.dart)

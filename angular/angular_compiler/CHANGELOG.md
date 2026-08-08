@@ -1,3 +1,9 @@
+## 5.2.4
+
+- Fix: Template compiler UPDATE phase — use RenderNodeHelpers.addRenderEventListener for SSR compatibility
+- Fix: Use appendRenderChild helper instead of direct .appendChild() in compile_view.dart
+- Fix: Add RenderNodeHelpers and RenderNodeUpdateHelpers identifiers for template compiler
+
 ## 5.2.3
 
 - Migrate from `dart:html` to `package:web` for DOM types

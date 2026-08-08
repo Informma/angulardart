@@ -1,3 +1,7 @@
+## 3.0.7
+
+- Fix: package:web constraint updated to <1.2.0
+
 ## 3.0.6
 
 - Migrate from `dart:html` to `package:web` for DOM types

@@ -1,3 +1,9 @@
+## 6.2.5
+
+- Fix: fixture.dart — cast location to web.Node, simplify rootElement getter
+- Fix: bootstrap.dart — cast componentRef.location to web.Node for append()
+- Fix: package:web constraint updated to <1.2.0
+
 ## 6.2.4
 
 - Migrate from `dart:html` to `package:web` for DOM types

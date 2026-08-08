@@ -1,3 +1,10 @@
+## 9.2.5
+
+- Fix: Template compiler runtime — add RenderNodeHelpers.addRenderEventListener() for SSR-compatible event listeners
+- Fix: TextBinding.element getter for template compiler compatibility
+- Fix: dom_helpers.dart — add addRenderEventListener helper for SSR compatibility
+- Fix: package:web constraint updated to <1.2.0
+
 ## 9.2.4
 
 - Migrate from `dart:html` to `package:web` for DOM types

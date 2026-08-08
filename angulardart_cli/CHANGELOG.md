@@ -1,5 +1,7 @@
-## 1.0.16
+## 1.1.0
 
+- Add: SSR project scaffolding with `ngdart new --ssr` flag
+- Add: Hybrid rendering template generation
 - Docs: Documented `ngdart new --seo` and `angulardart seo init` commands, added SEO/prerender to Related Packages
 
 ## 1.0.15

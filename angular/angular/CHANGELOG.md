@@ -1,3 +1,12 @@
+## 9.2.0
+
+- Add: Server-side rendering (SSR) support with `ServerRenderNode` and hydration markers
+- Add: Hybrid rendering mode (`RenderMode.server`, `RenderMode.client`, `RenderMode.automatic`) per component
+- Add: `hydrateApplication()` for client-side DOM reuse after SSR
+- Add: `TransferState` for server-to-client state transfer
+- Add: Browser render node abstraction layer
+- Improve: Testability system with WASM-compatible JS interop
+
 ## 9.0.12
 
 - **BREAKING**: Migrate from `package:js` to `dart:js_interop` (WASM-compatible JS interop)

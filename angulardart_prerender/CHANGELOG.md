@@ -1,5 +1,7 @@
-## 1.0.5
+## 1.2.0
 
+- Add: SSR prerendering support for AngularDart applications
+- Add: Integration with `angulardart_server` for hybrid rendering
 - Docs: Added integration section with angulardart_seo, updated features list with SEO/canonical/prerendered marker details
 
 ## 1.0.4

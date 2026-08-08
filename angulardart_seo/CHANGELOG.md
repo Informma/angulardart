@@ -1,5 +1,7 @@
-## 1.0.5
+## 1.2.0
 
+- Add: SSR SEO optimization for AngularDart applications
+- Add: Integration with `angulardart_server` and `angulardart_prerender`
 - Docs: Added integration section with angulardart_prerender explaining how the two packages work together
 
 ## 1.0.4

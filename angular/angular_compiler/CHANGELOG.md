@@ -1,3 +1,9 @@
+## 5.2.0
+
+- Add: SSR rendering support with `RenderMode` enum integration
+- Add: Server-side template compilation with hydration markers
+- Add: Hybrid rendering mode detection in component visitor
+
 ## 5.0.5
 
 - Fix: Use wide version notation for all dev_dependencies (build_runner, mockito, lints, test)

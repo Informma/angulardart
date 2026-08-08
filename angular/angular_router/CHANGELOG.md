@@ -1,5 +1,6 @@
-## 5.1.0
+## 5.2.0
 
+- Add: Compatibility with SSR and hybrid rendering modes
 - Fix: Use wide version notation for all dev_dependencies (async, mockito, lints)
 
 ## 5.0.9

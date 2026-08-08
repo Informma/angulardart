@@ -1,3 +1,9 @@
+## 1.2.0
+
+- Add: `RenderMode` enum (server, client, automatic) for hybrid rendering support
+- Add: `renderMode` parameter to `@Component` annotation
+- Add: `Visibility` class for component visibility control
+
 ## 1.0.3
 
 - Fix: Use wide version notation for `meta` dependency (`>=1.15.0 <2.0.0`)

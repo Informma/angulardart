@@ -1,3 +1,9 @@
+## 3.2.0
+
+- Add: SSR rendering support (ServerRenderNode, hydration markers)
+- Fix: Angular brackets in doc comments (`unintended_html_in_doc_comment`)
+- Fix: Missing type annotations on hash functions (`strict_top_level_inference`)
+
 ## 3.1.3
 
 - Fix: Use wide version notation for all dependencies and dev_dependencies

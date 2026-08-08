@@ -1,3 +1,7 @@
+## 3.2.1
+
+- Fix: Republish to ensure SSR runtime symbols are properly exported
+
 ## 3.2.0
 
 - Add: SSR rendering support (ServerRenderNode, hydration markers)

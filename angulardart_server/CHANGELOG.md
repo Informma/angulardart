@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- Fix: Use public API exports instead of internal paths, add LICENSE
+
 ## 1.0.1
 
 - Add: Server-side rendering (SSR) support with `PlatformServerRef`

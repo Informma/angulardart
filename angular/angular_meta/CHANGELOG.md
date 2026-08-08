@@ -1,3 +1,7 @@
+## 1.2.1
+
+- Fix: Republish with corrected exports (ComponentFactory, ComponentRef) and public API imports
+
 ## 1.2.0
 
 - Add: `RenderMode` enum (server, client, automatic) for hybrid rendering support

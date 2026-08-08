@@ -1,3 +1,7 @@
+## 6.2.1
+
+- Fix: Republish for compatibility with corrected angulardart 9.2.1
+
 ## 6.2.0
 
 - Add: Compatibility with SSR and hybrid rendering modes

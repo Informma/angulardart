@@ -1,3 +1,7 @@
+## 5.2.1
+
+- Fix: Republish with corrected RenderMode integration
+
 ## 5.2.0
 
 - Add: SSR rendering support with `RenderMode` enum integration

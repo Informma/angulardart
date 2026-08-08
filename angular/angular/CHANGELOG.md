@@ -1,3 +1,7 @@
+## 9.2.1
+
+- Fix: Add missing exports (ComponentFactory, ComponentRef) and RenderMode to public API
+
 ## 9.2.0
 
 - Add: Server-side rendering (SSR) support with `ServerRenderNode` and hydration markers

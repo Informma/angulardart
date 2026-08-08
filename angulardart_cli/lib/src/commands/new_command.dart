@@ -32,7 +32,6 @@ class NewProjectCommand extends NgDartCommand {
           help: 'Add SEO and prerendering support.',
           defaultsTo: false)
       ..addFlag('ssr',
-          abbr: '',
           help: 'Add server-side rendering support.',
           defaultsTo: false);
   }

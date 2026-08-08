@@ -1,3 +1,14 @@
+![AngularDart Server banner](https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png)
+
+<p align="center">
+  <a href="https://angulardartreborn.com">
+    <img src="https://img.shields.io/badge/website-angulardartreborn.com-blue" alt="Website" />
+  </a>
+  <a href="https://pub.dev/packages/angulardart_server">
+    <img src="https://img.shields.io/pub/v/angulardart_server" alt="pub package" />
+  </a>
+</p>
+
 # angulardart_server
 
 Server-side rendering (SSR) and hybrid rendering for AngularDart applications.

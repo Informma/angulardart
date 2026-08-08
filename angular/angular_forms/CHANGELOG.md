@@ -1,3 +1,7 @@
+## 6.2.3
+
+- Fix: constrain package:web to <1.1.0 (JSAny/JSObject types removed in web 1.1.x)
+
 ## 6.2.2
 
 - Fix: Restore pub.dev score to 150+ points (+30 pts)

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5
+
+- Fix: constrain package:web to <1.1.0 (JSAny/JSObject types removed in web 1.1.x)
+
 ## 1.0.4
 
 - Fix: constrain package:web to <1.1.0 (JSAny/JSObject types removed in web 1.1.x)
@@ -7,6 +11,10 @@
 ## 1.0.3
 
 - Docs: Added AngularDart Reborn banner and dynamic pub badge to README
+
+## 1.0.5
+
+- Fix: constrain package:web to <1.1.0 (JSAny/JSObject types removed in web 1.1.x)
 
 ## 1.0.4
 

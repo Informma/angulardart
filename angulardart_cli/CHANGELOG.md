@@ -1,3 +1,12 @@
+## 1.2.1
+
+- Fix: `web/main.server.dart` now generated as a proper AngularDart entry point (exports `appComponentFactory`) instead of HTTP server code
+- Fix: `bin/server.dart` imports from `../web/main.template.dart` and uses `ng.appComponentFactory` correctly
+- Fix: added `package:web` dependency to SSR project template for DOM access in `main.dart`
+- Fix: build_runner command corrected from `build -d web/main.server.dart` to `build web/main.server.dart`
+- Fix: escaped single quotes and UTF-8 characters properly in generated Dart string literals
+- Fix: corrected broken French accents in SSR README (côté, reçoit, réutilise, accède)
+
 ## 1.2.0
 
 - Add: `ngdart generate-stubs` command to auto-generate `.template.dart` stubs for AOT compilation

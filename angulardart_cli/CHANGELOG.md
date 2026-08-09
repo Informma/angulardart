@@ -1,3 +1,7 @@
+## 1.4.2
+
+- Fix: SSR template uses relative import `../lib/{{component.targetName}}.dart` so the angulardart builder can find and generate NgFactory
+
 ## 1.4.1
 
 - Fix: SSR template now includes the component inline in main.dart so the angulardart builder can find and generate NgFactory (matches hello_world_ssr example pattern)

@@ -318,7 +318,7 @@ dependencies:
   angulardart: '>=9.0.0 <10.0.0'
   shelf: '>=1.0.0 <2.0.0'
   angulardart_server: '>=1.2.0 <2.0.0'
-  web: '>=0.5.0 <2.0.0'
+  web: '>=0.5.0 <1.0.0'
 
 dev_dependencies:
   build_runner: '>=2.16.0 <3.0.0'
@@ -366,9 +366,9 @@ void main() async {
       web.window.document.documentElement?.getAttribute('ng-server-context') == 'ssr';
 
   if (isServerRendered) {
-    await hydrateApplication(ng.{{component.className}}NgFactory);
+    await hydrateApplication(ng.AppComponentNgFactory);
   } else {
-    runApp(ng.{{component.className}}NgFactory);
+    runApp(ng.AppComponentNgFactory);
   }
 }
 
@@ -441,7 +441,7 @@ import '../web/main.template.dart' as ng;
 
 /// Point d'entre du serveur HTTP SSR.
 ///
-/// Compilez avec : dart run build_runner build web/main.server.dart
+/// Compilez avec : dart run build_runner build web
 /// Puis lancez : dart bin/server.dart
 Future<void> main() async {
   final server = platformServer();
@@ -496,7 +496,11 @@ dart run build_runner serve
 
 ```bash
 dart pub get
+ngdart generate-stubs
+dart run build_runner clean
 dart run build_runner build web
+# Copier les templates générés vers web/ (workaround pour bug build_runner)
+for f in .dart_tool/build/generated/*/web/*.template.dart; do cp "\$f" web/ 2>/dev/null || true; done
 dart bin/server.dart
 ```
 

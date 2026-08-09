@@ -1,3 +1,8 @@
+## 1.2.2
+
+- Fix: SSR template now requires angulardart_server >=1.2.0 (fixes missing textContent/id DOM properties)
+- Fix: build_runner command corrected from `build web/main.server.dart` to `build web` in usage instructions
+
 ## 1.2.1
 
 - Fix: `web/main.server.dart` now generated as a proper AngularDart entry point (exports `appComponentFactory`) instead of HTTP server code

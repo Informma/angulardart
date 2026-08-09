@@ -1,6 +1,9 @@
+## 1.3.1
+
+- Fix: SSR template now uses package import instead of relative path so the builder can find and generate AppComponentNgFactory
+
 ## 1.3.0
 
-- Fix: SSR template now imports the component file so the builder can find and generate AppComponentNgFactory
 - Fix: SSR template now requires angulardart_server >=1.2.0 (fixes missing textContent/id DOM properties)
 - Fix: build_runner command corrected from `build web/main.server.dart` to `build web` in usage instructions
 

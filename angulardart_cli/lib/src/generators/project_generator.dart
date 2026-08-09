@@ -118,6 +118,10 @@ class ProjectGenerator extends Generator {
         context,
       );
     } else if (ssr) {
+      await writeStatic(
+        path.join(destinationFolder, 'web', 'app_component.html'),
+        Templates.projectAppComponentHtmlSsr,
+      );
       await writeFromTemplate(
         path.join(destinationFolder, 'README.md'),
         Templates.projectReadmeSsr,

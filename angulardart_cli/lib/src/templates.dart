@@ -94,6 +94,8 @@ class {{className}} {
 <h1>Hello {{name}}</h1>
 <%={{ }}=%>''';
 
+  static const projectAppComponentHtmlSsr = '<h1>Hello {{name}}</h1>';
+
   static const directiveDart = '''
 import 'package:angulardart/angulardart.dart';
 
@@ -372,7 +374,7 @@ void main() async {
 
 @Component(
   selector: '{{component.selector}}',
-  templateUrl: '{{component.targetName}}.html',
+  templateUrl: 'app_component.html',
 )
 class {{component.className}} {
   var name = 'AngularDart';

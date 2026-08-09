@@ -1,3 +1,8 @@
+## 1.5.0
+
+- Fix: SSR template now uses correct structure — component inline in web/main.dart with HTML in web/app_component.html (matches hello_world_ssr example exactly)
+- Add: `web/app_component.html` generated for SSR projects instead of lib/ files
+
 ## 1.4.3
 
 - Fix: SSR template puts component inline in main.dart (matches hello_world_ssr example, avoids build system recursion bugs)

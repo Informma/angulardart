@@ -357,6 +357,8 @@ dev_dependencies:
 import 'package:angulardart_server/angulardart_server.dart';
 import 'package:web/web.dart' as web;
 // ignore: uri_has_not_been_generated
+import '../lib/{{component.targetName}}.dart';
+// ignore: uri_has_not_been_generated
 import 'main.template.dart' as ng;
 
 void main() async {

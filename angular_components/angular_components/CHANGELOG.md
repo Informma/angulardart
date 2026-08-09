@@ -1,3 +1,7 @@
+## 3.2.0
+
+- Fix: Various component fixes (deferred_content, menu_item_affix_list, material_popup, simple_html, imperative_view)
+
 ## 3.1.0
 
 - Add: Fine-grained browser/vm platform split files for AOT native compilation support

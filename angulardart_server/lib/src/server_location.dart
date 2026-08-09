@@ -4,7 +4,6 @@
 /// Toutes les mthodes de navigation (pushState, replaceState, etc.) sont no-op
 /// car non applicables ct serveur.
 import 'package:angulardart_router/angulardart_router.dart';
-import 'dom_apis.dart';
 
 class ServerPlatformLocation implements PlatformLocation {
   final String _url;
@@ -15,16 +14,19 @@ class ServerPlatformLocation implements PlatformLocation {
   String? getBaseHrefFromDOM() => '';
 
   @override
-  void onPopState(void Function(DomEvent) fn) {}
+  void onPopState(void Function(RouterEvent) fn) {}
 
   @override
-  void onHashChange(void Function(DomEvent) fn) {}
+  void onHashChange(void Function(RouterEvent) fn) {}
 
   @override
   String get pathname {
     final uri = Uri.parse(_url);
     return uri.path.isEmpty ? '/' : uri.path;
   }
+
+  @override
+  set pathname(String value) {}
 
   @override
   String get search => Uri.parse(_url).query;

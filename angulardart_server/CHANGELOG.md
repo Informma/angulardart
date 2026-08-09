@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Fix: ServerPlatformLocation now correctly implements PlatformLocation interface (pathname setter, RouterEvent types)
+
 ## 1.1.0
 
 - Add: Fine-grained browser/vm platform split files for AOT native compilation support

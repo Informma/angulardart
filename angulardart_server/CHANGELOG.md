@@ -1,3 +1,9 @@
+## 1.1.0
+
+- Add: Fine-grained browser/vm platform split files for AOT native compilation support
+- Add: `ngdart generate-stubs` CLI command to auto-generate `.template.dart` stubs
+- Add: SSR test suite (89 tests passing) and comprehensive user documentation
+
 ## 1.0.10
 
 - Fix: Constrain package:web to >=0.5.0 <1.0.0 (1.x uses dart:js_interop incompatible with our codebase)

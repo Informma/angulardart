@@ -1,3 +1,8 @@
+## 3.1.0
+
+- Add: Fine-grained browser/vm platform split files for AOT native compilation support
+- Add: `ngdart generate-stubs` CLI command to auto-generate `.template.dart` stubs
+
 ## 3.0.7
 
 - Fix: package:web constraint updated to <1.2.0

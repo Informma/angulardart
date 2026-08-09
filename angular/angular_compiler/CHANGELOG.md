@@ -1,3 +1,8 @@
+## 5.3.0
+
+- Add: Fine-grained browser/vm platform split files for AOT native compilation support
+- Add: `ngdart generate-stubs` CLI command to auto-generate `.template.dart` stubs
+
 ## 5.2.5
 
 - Fix: Template compiler UPDATE phase — use RenderNodeHelpers.addRenderEventListener for SSR compatibility

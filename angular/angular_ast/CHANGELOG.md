@@ -1,3 +1,9 @@
+## 3.3.0
+
+- Add: Fine-grained browser/vm platform split files for AOT native compilation support
+- Add: `ngdart generate-stubs` CLI command to auto-generate `.template.dart` stubs
+- Add: SSR test suite (89 tests passing) and comprehensive user documentation
+
 ## 3.2.4
 
 - Fix: Template compiler compatibility — ensure AST visitor works with RenderNode helpers in SSR mode

@@ -4,12 +4,10 @@
 /// explicit JS wrapping—DDC handles the conversion automatically.
 library;
 
-import 'package:web/web.dart' as web;
-
 extension JsStringExtension on String {
   /// On DDC/VM, returns the string as-is. DDC handles JS conversion automatically.
   dynamic get js => this;
 }
 
 /// Helper function to convert an event listener callback for DDC/VM.
-dynamic toJsEventListener(void Function(web.Event) fn) => fn;
+dynamic toJsEventListener(void Function(dynamic) fn) => fn;

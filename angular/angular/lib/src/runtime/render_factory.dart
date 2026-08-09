@@ -19,7 +19,7 @@
 /// ```
 import 'dom_apis.dart';
 
-import 'browser_render_node.dart';
+import 'browser_render_node.dart' if (dart.library.io) 'browser_render_node_vm.dart';
 import 'render_node.dart';
 import 'server_render_node.dart';
 

@@ -15,8 +15,10 @@ screenshots:
     path: logo.png
 environment:
   sdk: '>=3.0.0 <4.0.0'
+
 platforms:
   web:
+
 dependencies:
   angulardart: '>=9.0.0 <10.0.0'
   meta: '>=1.15.0 <2.0.0'

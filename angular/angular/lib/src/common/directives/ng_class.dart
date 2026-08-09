@@ -1,8 +1,8 @@
-import 'package:web/web.dart' as web;
-
 import 'package:angulardart/src/core/change_detection/differs/default_iterable_differ.dart';
 import 'package:angulardart/src/core/change_detection/differs/default_keyvalue_differ.dart';
 import 'package:angulardart/src/meta.dart';
+
+import 'ng_class_dom_apis.dart' if (dart.library.io) 'ng_class_dom_apis_vm.dart';
 
 /// The [NgClass] directive conditionally adds and removes CSS classes on an
 /// HTML element based on an expression's evaluation result.
@@ -53,10 +53,7 @@ import 'package:angulardart/src/meta.dart';
   selector: '[ngClass]',
 )
 class NgClass implements DoCheck, OnDestroy {
-  // Separator used to split string to parts - can be any number of
-  // whitespaces, new lines or tabs.
-  static final _separator = RegExp(r'\s+');
-  final web.Element? _ngEl;
+  final DomElement? _ngEl;
 
   DefaultIterableDiffer? _iterableDiffer;
   DefaultKeyValueDiffer? _keyValueDiffer;
@@ -175,22 +172,6 @@ class NgClass implements DoCheck, OnDestroy {
     if (className.isEmpty) return;
     var el = _ngEl;
     if (el == null) return;
-    var classList = (el as web.HTMLElement).classList;
-    if (className.contains(' ')) {
-      var classes = className.split(_separator);
-      for (var i = 0, len = classes.length; i < len; i++) {
-        if (enabled) {
-          classList.add(classes[i]);
-        } else {
-          classList.remove(classes[i]);
-        }
-      }
-    } else {
-      if (enabled) {
-        classList.add(className);
-      } else {
-        classList.remove(className);
-      }
-    }
+    updateClassList(el, className, enabled);
   }
 }

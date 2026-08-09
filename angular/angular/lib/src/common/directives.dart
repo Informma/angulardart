@@ -17,7 +17,7 @@ export 'directives/safe_html_directive.dart' show SafeHtmlDirective;
 /// A collection of Angular core directives, such as [NgFor] and [NgIf].
 ///
 /// This collection is primarily provided for legacy/compatibility, and it is
-/// preferred to instead define exactly what directives you need/use in your
+/// preferred to instead define exactly the directives you need/use in your
 /// `directives: [ ... ]` list instead.
 const coreDirectives = [
   NgClass,

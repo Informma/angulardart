@@ -1,23 +1,4 @@
-import 'package:web/web.dart' as web;
+library;
 
-final _urlParsingNode = web.HTMLAnchorElement();
-web.Element? _baseElement;
-
-String? baseHrefFromDOM() {
-  var href = _getBaseElementHref();
-  if (href == null) {
-    return null;
-  }
-  return _relativePath(href);
-}
-
-String? _getBaseElementHref() {
-  _baseElement ??= web.document.querySelector('base');
-  return _baseElement?.getAttribute('href');
-}
-
-String _relativePath(String url) {
-  _urlParsingNode.href = url;
-  var pathname = _urlParsingNode.pathname;
-  return (pathname.isEmpty || pathname[0] == '/') ? pathname : '/$pathname';
-}
+export '../router_types.dart';
+export 'base_href_browser.dart' if (dart.library.io) 'base_href_vm.dart';

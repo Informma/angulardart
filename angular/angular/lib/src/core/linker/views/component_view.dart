@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:web/web.dart' as web;
+import 'view_dom_apis.dart' if (dart.library.io) 'view_dom_apis_vm.dart';
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:meta/meta.dart';
@@ -47,14 +47,14 @@ abstract class ComponentView<T extends Object> extends RenderView {
   late final ComponentStyles componentStyles;
 
   /// The root element of this component, created from its selector.
-  /// In browser mode this wraps a [web.HTMLElement], in SSR mode it's a [RenderNode].
+  /// In browser mode this wraps a [ViewHTMLElement], in SSR mode it's a [RenderNode].
   dynamic _rootElement;
 
   /// The native DOM element (browser only). Returns null in SSR mode.
-  web.HTMLElement? get nativeRootElement =>
-      _rootElement is web.HTMLElement ? _rootElement as web.HTMLElement : null;
+  ViewHTMLElement? get nativeRootElement =>
+      _rootElement is ViewHTMLElement ? _rootElement as ViewHTMLElement : null;
 
-  /// Sets the root element. Accepts both [web.HTMLElement] and [RenderNode].
+  /// Sets the root element. Accepts both [ViewHTMLElement] and [RenderNode].
   set rootElement(dynamic value) {
     _rootElement = value;
   }
@@ -128,7 +128,7 @@ abstract class ComponentView<T extends Object> extends RenderView {
   @dart2js.noInline
   dynamic initViewRoot() {
     final hostElement = rootElement;
-    if (hostElement is web.HTMLElement) {
+    if (hostElement is ViewHTMLElement) {
       componentStyles.addHostShimClassHtmlElement(hostElement);
     } else if (hostElement != null) {
       // SSR mode: RenderNode - shim class handled via setProperty
@@ -230,7 +230,7 @@ abstract class ComponentView<T extends Object> extends RenderView {
 
   @dart2js.noInline
   @override
-  void updateChildClass(web.HTMLElement element, String newClass) {
+  void updateChildClass(ViewHTMLElement element, String newClass) {
     if (identical(element, rootElement)) {
       componentStyles.updateChildClassForHostHtmlElement(element, newClass);
       final parent = parentView;
@@ -244,7 +244,7 @@ abstract class ComponentView<T extends Object> extends RenderView {
 
   @dart2js.noInline
   @override
-  void updateChildClassNonHtml(web.Element element, String newClass) {
+  void updateChildClassNonHtml(ViewElement element, String newClass) {
     if (identical(element, rootElement)) {
       componentStyles.updateChildClassForHost(element, newClass);
       final parent = parentView;

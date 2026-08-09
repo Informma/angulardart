@@ -14,7 +14,7 @@
 ///    existant au lieu d'en crer un nouveau.
 import 'dom_apis.dart';
 
-import 'browser_render_node.dart';
+import 'browser_render_node.dart' if (dart.library.io) 'browser_render_node_vm.dart';
 import 'render_factory.dart';
 import 'render_node.dart';
 import 'server_render_node.dart';
@@ -95,42 +95,43 @@ class HydrateRenderFactory extends RenderFactory {
 
     // Fallback : créer un nouvel élément si pas trouvé (incohérence SSR/CSR)
     final doc = document;
-    DomElement element;
+    Object? node;
     switch (tagName.toLowerCase()) {
       case 'div':
-        element = doc.createElement('div');
+        node = doc.createElement('div');
       case 'span':
-        element = doc.createElement('span');
+        node = doc.createElement('span');
       case 'a':
-        element = doc.createElement('a');
+        node = doc.createElement('a');
       case 'img':
-        element = doc.createElement('img');
+        node = doc.createElement('img');
       case 'input':
-        element = doc.createElement('input');
+        node = doc.createElement('input');
       case 'button':
-        element = doc.createElement('button');
+        node = doc.createElement('button');
       case 'select':
-        element = doc.createElement('select');
+        node = doc.createElement('select');
       case 'textarea':
-        element = doc.createElement('textarea');
+        node = doc.createElement('textarea');
       case 'ul':
-        element = doc.createElement('ul');
+        node = doc.createElement('ul');
       case 'ol':
-        element = doc.createElement('ol');
+        node = doc.createElement('ol');
       case 'li':
-        element = doc.createElement('li');
+        node = doc.createElement('li');
       case 'p':
-        element = doc.createElement('p');
+        node = doc.createElement('p');
       case 'h1':
       case 'h2':
       case 'h3':
       case 'h4':
       case 'h5':
       case 'h6':
-        element = doc.createElement(tagName.toLowerCase());
+        node = doc.createElement(tagName.toLowerCase());
       default:
-        element = doc.createElement(tagName);
+        node = doc.createElement(tagName);
     }
+    final element = node as DomElement;
 
     // Marquer avec l'ID pour les enfants à venir
     element.setAttribute('data-ng-id', id);

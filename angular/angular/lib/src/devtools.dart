@@ -1,46 +1,10 @@
-library angular.src.devtools;
-
-import 'dart:js_interop';
-import 'dart:js_interop_unsafe';
-
-import 'devtools/inspector.dart';
-import 'runtime/dom_apis.dart';
-import 'utilities.dart';
-
-export 'devtools/inspector.dart';
-export 'devtools/model.dart';
-
-/// Whether developer tools are enabled.
+/// Platform-agnostic devtools API for AngularDart.
 ///
-/// This is always false in release mode.
-bool get isDevToolsEnabled => isDevMode && _isDevToolsEnabled;
-bool _isDevToolsEnabled = false;
+/// On web platforms (dart2js/dart2wasm), provides full developer tools support
+/// with JavaScript interop for debugging.
+///
+/// On native/AOT platforms (server-side rendering), provides no-op stubs since
+/// devtools require `dart:js_interop` which is not available on VM.
+library;
 
-/// Enables developer tools if in development mode.
-///
-/// Calling this method in release mode has no effect.
-///
-/// {@category DevTools}
-void enableDevTools() {
-  if (isDevMode) {
-    _isDevToolsEnabled = true;
-    globalContext.setProperty(
-      'getAngularComponentElement'.toJS,
-      Inspector.instance.getComponentElement.toJS,
-    );
-    globalContext.setProperty(
-      'getAngularComponentIdForNode'.toJS,
-      Inspector.instance.getComponentIdForNode.toJS,
-    );
-  }
-}
-
-/// Registers [element] as an additional location to search for components.
-///
-/// This method should be used to register elements that are not contained by
-/// the app's root component.
-void registerContentRoot(DomElement element) {
-  if (isDevToolsEnabled) {
-    Inspector.instance.registerContentRoot(element);
-  }
-}
+export 'devtools_web.dart' if (dart.library.io) 'devtools_vm.dart';

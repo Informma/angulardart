@@ -1,6 +1,4 @@
 
-import 'package:web/web.dart' as web;
-
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_router/angulardart_router.dart';
@@ -61,10 +59,10 @@ class FakePlatformLocation implements BrowserPlatformLocation {
   }
 
   @override
-  void onPopState(void Function(web.Event) fn) {}
+  void onPopState(void Function(RouterEvent) fn) {}
 
   @override
-  void onHashChange(void Function(web.Event) fn) {}
+  void onHashChange(void Function(RouterEvent) fn) {}
 
   @override
   void forward() {}

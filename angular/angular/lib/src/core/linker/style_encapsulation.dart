@@ -1,4 +1,4 @@
-import 'package:web/web.dart' as web;
+import 'linker_dom_apis.dart' if (dart.library.io) 'linker_dom_apis_vm.dart';
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/core/linker/app_view_utils.dart';
@@ -116,22 +116,22 @@ class ComponentStyles {
   ) = _UnscopedComponentStyles;
 
   /// Adds a CSS shim class to [element].
-  void addContentShimClass(web.Element element) {
+  void addContentShimClass(LinkerElement element) {
     updateClassBindingNonHtml(element, _contentPrefix, true);
   }
 
   /// An optimized variant of [addShimClass] for [HtmlElement]s.
-  void addContentShimClassHtmlElement(web.HTMLElement element) {
+  void addContentShimClassHtmlElement(LinkerHTMLElement element) {
     updateClassBinding(element, _contentPrefix, true);
   }
 
   /// Adds a CSS shim class to [element].
-  void addHostShimClass(web.Element element) {
+  void addHostShimClass(LinkerElement element) {
     updateClassBindingNonHtml(element, _hostPrefix, true);
   }
 
   /// An optimized variant of [addHostShimClass] for [HtmlElement]s.
-  void addHostShimClassHtmlElement(web.HTMLElement element) {
+  void addHostShimClassHtmlElement(LinkerHTMLElement element) {
     updateClassBinding(element, _hostPrefix, true);
   }
 
@@ -142,25 +142,25 @@ class ComponentStyles {
   }
 
   /// Applies the correct content shimming to [element] for [newClass].
-  void updateChildClass(web.Element element, String newClass) {
+  void updateChildClass(LinkerElement element, String newClass) {
     // NOTE: We do not use .className=, because that would fail for SvgElement.
     updateAttribute(element, 'class', '$newClass $_contentPrefix');
   }
 
   /// An optimized variant of [updateChildClass] for [HtmlElement]s.
-  void updateChildClassHtmlElement(web.HTMLElement element, String newClass) {
+  void updateChildClassHtmlElement(LinkerHTMLElement element, String newClass) {
     element.className = '$newClass $_contentPrefix';
   }
 
   /// Applies the correct host shimming to [element] for [newClass].
-  void updateChildClassForHost(web.Element element, String newClass) {
+  void updateChildClassForHost(LinkerElement element, String newClass) {
     // NOTE: We do not use .className=, because that would fail for SvgElement.
     updateAttribute(element, 'class', '$newClass $_hostPrefix');
   }
 
   /// An optimized variant of [updateChildClassForHost] for [HtmlElement]s.
   void updateChildClassForHostHtmlElement(
-    web.HTMLElement element,
+    LinkerHTMLElement element,
     String newClass,
   ) {
     element.className = '$newClass $_hostPrefix';
@@ -176,7 +176,7 @@ class ComponentStyles {
     }
     final styles = _flattenStyles(_styles, target, _componentId).join();
     final styleElement =
-        web.document.createElement('style') as web.HTMLStyleElement;
+        linkerDocument.createElement('style') as LinkerHTMLStyleElement;
     styleElement.textContent = styles;
     if (isDevMode) {
       // Remove style element from the DOM on hot restart.
@@ -184,7 +184,7 @@ class ComponentStyles {
         styleElement.remove();
       });
     }
-    web.document.head!.append(styleElement);
+    linkerDocument.head!.append(styleElement);
   }
 }
 
@@ -195,22 +195,22 @@ class _UnscopedComponentStyles extends ComponentStyles {
   ) : super._(styles, componentUrl);
 
   @override
-  void addContentShimClass(web.Element element) {
+  void addContentShimClass(LinkerElement element) {
     // Intentionally left blank; unscoped syles do not apply shim classes.
   }
 
   @override
-  void addContentShimClassHtmlElement(web.HTMLElement element) {
+  void addContentShimClassHtmlElement(LinkerHTMLElement element) {
     // Intentionally left blank; unscoped syles do not apply shim classes.
   }
 
   @override
-  void addHostShimClass(web.Element element) {
+  void addHostShimClass(LinkerElement element) {
     // Intentionally left blank; unscoped syles do not apply shim classes.
   }
 
   @override
-  void addHostShimClassHtmlElement(web.HTMLElement element) {
+  void addHostShimClassHtmlElement(LinkerHTMLElement element) {
     // Intentionally left blank; unscoped syles do not apply shim classes.
   }
 
@@ -220,19 +220,19 @@ class _UnscopedComponentStyles extends ComponentStyles {
   }
 
   @override
-  void updateChildClass(web.Element element, String newClass) {
+  void updateChildClass(LinkerElement element, String newClass) {
     // Straight applies the class without any prefixing.
     // NOTE: We do not use .className=, because that would fail for SvgElement.
     updateAttribute(element, 'class', newClass);
   }
 
   @override
-  void updateChildClassHtmlElement(web.HTMLElement element, String newClass) {
+  void updateChildClassHtmlElement(LinkerHTMLElement element, String newClass) {
     element.className = newClass;
   }
 
   @override
-  void updateChildClassForHost(web.Element element, String newClass) {
+  void updateChildClassForHost(LinkerElement element, String newClass) {
     // Straight applies the class without any prefixing.
     // NOTE: We do not use .className=, because that would fail for SvgElement.
     updateAttribute(element, 'class', newClass);
@@ -240,7 +240,7 @@ class _UnscopedComponentStyles extends ComponentStyles {
 
   @override
   void updateChildClassForHostHtmlElement(
-    web.HTMLElement element,
+    LinkerHTMLElement element,
     String newClass,
   ) {
     // Straight applies the class without any prefixing.

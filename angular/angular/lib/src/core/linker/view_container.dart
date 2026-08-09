@@ -1,4 +1,4 @@
-import 'package:web/web.dart' as web;
+import '../../runtime/dom_apis.dart';
 
 import 'package:meta/meta.dart';
 import 'package:angulardart/src/di/injector.dart' show Injector;
@@ -21,7 +21,7 @@ class ViewContainer extends ComponentLoader implements ViewContainerRef {
   final int index;
   final int? parentIndex;
   final View? parentView;
-  final web.Node nativeElement;
+  final DomNode nativeElement;
 
   List<DynamicView>? nestedViews;
 
@@ -217,7 +217,7 @@ class ViewContainer extends ComponentLoader implements ViewContainerRef {
     return result;
   }
 
-  web.Node? _findRenderNode(List<DynamicView> views, int index) {
+  DomNode? _findRenderNode(List<DynamicView> views, int index) {
     return index > 0
         ? views[index - 1].viewFragment!.findLastDomNode()
         : nativeElement;

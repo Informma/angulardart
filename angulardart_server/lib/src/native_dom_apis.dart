@@ -3,9 +3,16 @@ library;
 
 /// Internal stub element implementation.
 class _DomElementStub implements DomElement {
-  @override final String tagName;
+  final String tagName;
+  String? _textContent;
+  String _id = '';
+  
   _DomElementStub(this.tagName);
   
+  @override String? get textContent => _textContent;
+  @override set textContent(String? value) => _textContent = value;
+  @override String get id => _id;
+  @override set id(String value) => _id = value;
   @override String? getAttribute(String name) => null;
   @override void setAttribute(String name, String value) {}
   @override void append(DomElement child) {}
@@ -28,6 +35,10 @@ class DomDocument {
 /// Platform-specific element stub.
 abstract class DomElement {
   String get tagName;
+  String? get textContent;
+  set textContent(String? value);
+  String get id;
+  set id(String value);
   String? getAttribute(String name);
   void setAttribute(String name, String value);
   void append(DomElement child);
@@ -35,8 +46,9 @@ abstract class DomElement {
 
 /// Platform-specific HTML style element stub.
 class DomHTMLStyleElement implements DomElement {
-  @override final String tagName = 'style';
+  final String tagName = 'style';
   String? _textContent;
+  String _id = '';
   
   DomHTMLStyleElement();
   
@@ -44,8 +56,10 @@ class DomHTMLStyleElement implements DomElement {
   @override void setAttribute(String name, String value) {}
   @override void append(DomElement child) {}
 
-  String get textContent => _textContent ?? '';
-  set textContent(String value) => _textContent = value;
+  @override String get textContent => _textContent ?? '';
+  @override set textContent(String? value) => _textContent = value;
+  @override String get id => _id;
+  @override set id(String value) => _id = value;
 }
 
 /// Platform-specific event stub.

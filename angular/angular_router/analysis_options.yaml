@@ -7,3 +7,6 @@ analyzer:
     invalid_assignment: ignore
     return_of_invalid_type: ignore
     return_of_invalid_type_from_closure: ignore
+  language:
+    # Allow _browser.dart files to import web even though it's not in dependencies
+    # These files are only included on browser platforms via conditional exports

@@ -1,4 +1,4 @@
-import 'package:web/web.dart' as web;
+import 'linker_dom_apis.dart' if (dart.library.io) 'linker_dom_apis_vm.dart';
 
 import '../../runtime/js_interop.dart';
 
@@ -21,9 +21,9 @@ class AppViewUtils {
 }
 
 /// Creates a document fragment from [trustedHtml].
-web.DocumentFragment createTrustedHtml(String trustedHtml) {
+LinkerDocumentFragment createTrustedHtml(String trustedHtml) {
   final template =
-      web.document.createElement('template') as web.HTMLTemplateElement;
+      linkerDocument.createElement('template') as LinkerHTMLTemplateElement;
   template.innerHTML = trustedHtml.js;
   return template.content;
 }

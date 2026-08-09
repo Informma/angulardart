@@ -3,8 +3,7 @@
 /// that expect to only run on the command-line VM.
 library angular.src.runtime.dom_helpers;
 
-import 'dart:js_interop';
-import 'dart:js_interop_unsafe';
+import 'event_listener.dart' if (dart.library.io) 'event_listener_vm.dart';
 
 import 'dom_apis.dart';
 
@@ -69,10 +68,13 @@ void updateClassBindingNonHtml(DomElement element, String className, bool isAdd)
     _updateClassBindingOnRenderNode(element, className, isAdd);
     return;
   }
-  if (isAdd) {
-    element.classList.add(className);
-  } else {
-    element.classList.remove(className);
+  final classList = element.classList;
+  if (classList != null) {
+    if (isAdd) {
+      classList.add(className);
+    } else {
+      classList.remove(className);
+    }
   }
 }
 
@@ -135,13 +137,8 @@ void setAttribute(
 /// ```js
 /// e.disabled = true;
 /// ```
-/// Helper to convert a Dart value to a JS value for dynamic property setting.
-JSAny? _toJsValue(Object? value) {
-  if (value == null) return null;
-  if (value is String) return value.toJS;
-  if (value is num) return value.toJS;
-  if (value is bool) return value.toJS;
-  return value as JSAny?;
+dynamic _toDartValue(Object? value) {
+  return value;
 }
 
 @dart2js.tryInline
@@ -150,7 +147,7 @@ void setProperty(
   String property,
   Object? value,
 ) {
-  (element as JSObject).setProperty(property.toJS, _toJsValue(value));
+  (element as dynamic)[property] = _toDartValue(value);
 }
 
 /// Creates a [Text] node with the provided [contents].
@@ -400,11 +397,12 @@ void updateRenderTabIndex(dynamic node, int? value) {
 
 /// Ajoute un écouteur d'événement sur un RenderNode ou Element.
 @dart2js.noInline
-void addRenderEventListener(dynamic target, String type, JSFunction fn) {
+void addRenderEventListener(dynamic target, String type, void Function(DomEvent) fn) {
+  final wrapped = wrapForEventListener(fn);
   if (target is DomElement) {
-    target.addEventListener(type, fn);
+    target.addEventListener(type, wrapped);
   } else if (target is RenderNode && target.nativeNode is DomElement) {
-    (target.nativeNode as DomElement).addEventListener(type, fn);
+    (target.nativeNode as DomElement).addEventListener(type, wrapped);
   }
 }
 

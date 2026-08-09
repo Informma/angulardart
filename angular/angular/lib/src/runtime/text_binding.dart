@@ -2,7 +2,7 @@ import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/runtime/check_binding.dart';
 
 import 'interpolate.dart';
-import 'browser_render_node.dart';
+import 'browser_render_node.dart' if (dart.library.io) 'browser_render_node_vm.dart';
 import 'render_node.dart';
 
 /// Wraps an HTML [Text] node, implementing change detection to make updating

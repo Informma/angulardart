@@ -149,16 +149,39 @@ web.Event createKeyboardEvent(
   bool shiftKey = false,
   bool metaKey = false,
 }) {
-  return web.KeyboardEvent(
-    type,
-    web.KeyboardEventInit(
-      bubbles: true,
-      cancelable: true,
-      keyCode: keyCode,
-      ctrlKey: ctrlKey,
-      altKey: altKey,
-      shiftKey: shiftKey,
-      metaKey: metaKey,
-    ),
+  return _MockKeyboardEvent(
+    type: type,
+    keyCode: keyCode,
+    ctrlKey: ctrlKey,
+    altKey: altKey,
+    shiftKey: shiftKey,
+    metaKey: metaKey,
   );
+}
+
+class _MockKeyboardEvent {
+  _MockKeyboardEvent({
+    required this.type,
+    required this.keyCode,
+    required this.ctrlKey,
+    required this.altKey,
+    required this.shiftKey,
+    required this.metaKey,
+  });
+
+  final String type;
+  final int keyCode;
+  final bool ctrlKey;
+  final bool altKey;
+  final bool shiftKey;
+  final bool metaKey;
+  bool get bubbles => true;
+  bool get cancelable => true;
+  bool get composed => true;
+  dynamic get detail => null;
+  web.EventTarget? get target => null;
+  web.EventTarget? get currentTarget => null;
+  void preventDefault() {}
+  void stopPropagation() {}
+  void stopImmediatePropagation() {}
 }

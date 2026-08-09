@@ -1,8 +1,7 @@
-import 'package:web/web.dart' as web;
-
 import 'package:angulardart/src/meta.dart';
 
 import '../../core/change_detection/differs/default_keyvalue_differ.dart';
+import 'ng_style_dom_apis.dart' if (dart.library.io) 'ng_style_dom_apis_vm.dart';
 
 /// The `NgStyle` directive changes an element's style based on the bound style
 /// expression:
@@ -59,7 +58,7 @@ import '../../core/change_detection/differs/default_keyvalue_differ.dart';
   selector: '[ngStyle]',
 )
 class NgStyle implements DoCheck {
-  final web.Element? _ngElement;
+  final DomElement? _ngElement;
   Map<String, String?>? _rawStyle;
   DefaultKeyValueDiffer? _differ;
 
@@ -86,9 +85,6 @@ class NgStyle implements DoCheck {
   }
 
   void _setProperty(KeyValueChangeRecord record) {
-    (_ngElement as web.HTMLElement?)?.style.setProperty(
-      unsafeCast(record.key),
-      unsafeCast(record.currentValue),
-    );
+    setStyleProperty(_ngElement, unsafeCast(record.key), unsafeCast(record.currentValue));
   }
 }

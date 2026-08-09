@@ -1,0 +1,115 @@
+library angular.src.testability;
+
+import 'dart:async';
+
+import 'package:meta/meta.dart';
+import 'package:angulardart/src/core/zone/ng_zone.dart';
+import 'package:angulardart/src/runtime/web_types.dart';
+
+import 'js_impl.dart' show JSTestabilityProxy, TestabilityProxy;
+
+/// Provides testing hooks also accessible via JavaScript APIs in the browser.
+///
+/// Use [whenStable] to register callbacks that fire when the application
+/// becomes stable (no pending change detection cycles).
+///
+/// {@category Testing}
+@sealed
+class Testability {
+  final NgZone _ngZone;
+
+  Testability(this._ngZone);
+
+  List<void Function(bool didAsyncWork)>? _callWhenStable;
+
+  /// Registers [callback] to be invoked when change detection is completed.
+  ///
+  /// The parameter, `didAsyncWork`, is `true` when invoked as a result of
+  /// change detection being complete, and `false` if, upon registration, the
+  /// app was _already_ stable, triggering the [callback].
+  ///
+  /// This is commonly referred to as _stable_, that-is that the DOM
+  /// representation of the app is synchronized with the Dart data and template
+  /// models, and no more changes are (currently) epected.
+  void whenStable(void Function(bool didAsyncWork) callback) {
+    // TODO(b/168535057): Change this to `void Function()` instead.
+    _storeCallback(callback);
+    _runCallbacksIfStable(false);
+  }
+
+  void _storeCallback(void Function(bool didAsyncWork) callback) {
+    final callWhenStable = _callWhenStable;
+    if (callWhenStable == null) {
+      _watchForStability(callback);
+    } else {
+      callWhenStable.add(callback);
+    }
+  }
+
+  void _watchForStability(void Function(bool didAsyncWork) callback) {
+    _callWhenStable = [callback];
+    _ngZone.runOutsideAngular(() {
+      _ngZone.onTurnDone.listen((_) {
+        // Wait until the end of the event loop before checking stability.
+        scheduleMicrotask(() => _runCallbacksIfStable(true));
+      });
+    });
+  }
+
+  /// Whether the framework is no longer anticipating change detection.
+  ///
+  /// See [whenStable] for details.
+  bool get isStable => !_ngZone.isRunning && !_ngZone.hasPendingMacrotasks;
+
+  void _runCallbacksIfStable(bool didWork) {
+    if (!isStable) {
+      // Wait until this function is called again (it will be).
+    } else {
+      // Schedule the callback in a new microtask so this never is synchronous.
+      scheduleMicrotask(() => _runCallbacks(didWork));
+    }
+  }
+
+  void _runCallbacks(bool didWork) {
+    final callbacks = _callWhenStable!;
+    while (callbacks.isNotEmpty) {
+      // TODO(b/168535057): Remove `didWork`.
+      callbacks.removeLast()(didWork);
+    }
+  }
+}
+
+/// A global registry of [Testability] instances given an app root element.
+class TestabilityRegistry {
+  final _appRoots = <DomElement, Testability>{};
+
+  TestabilityProxy? _proxy;
+
+  /// Used to eagerly initialize the JS-interop bits before the app is ready.
+  ///
+  /// TODO(b/168535057): Figure out why this is necessary.
+  void initializeEagerly() {
+    _proxy ??= JSTestabilityProxy();
+    _proxy!.addToWindow(this);
+  }
+
+  /// Associate [appRoot] with the provided [testability] instance.
+  void registerApplication(DomElement appRoot, Testability testability) {
+    // TODO(b/168535057): Figure out why eager initialization is necessary.
+    initializeEagerly();
+    _appRoots[appRoot] = testability;
+  }
+
+  /// Returns the registered testability instance for [appRoot], or `null`.
+  Testability? testabilityFor(DomElement appRoot) => _appRoots[appRoot];
+
+  /// Returns all testability instances registered.
+  Iterable<Testability> get allTestabilities => _appRoots.values;
+
+  /// Walks the DOM [tree] looking for a registered [Testability] instance.
+  ///
+  /// TODO(b/168535057): Is this functionality actually necessary?
+  Testability? findTestabilityInTree(DomElement? tree) {
+    return _proxy?.findTestabilityInTree(this, tree);
+  }
+}

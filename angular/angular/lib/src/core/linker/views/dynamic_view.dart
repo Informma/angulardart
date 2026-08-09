@@ -1,4 +1,4 @@
-import 'package:web/web.dart' as web;
+import 'view_dom_apis.dart' if (dart.library.io) 'view_dom_apis_vm.dart';
 
 import 'package:angulardart/src/core/linker/view_container.dart';
 import 'package:angulardart/src/core/linker/view_fragment.dart';
@@ -16,7 +16,7 @@ abstract class DynamicView implements View, ViewRef {
 
   /// Appends this view's root DOM nodes as siblings after [node].
   // TODO(b/132109599): replace with single static method or function.
-  void addRootNodesAfter(web.Node node);
+  void addRootNodesAfter(ViewNode node);
 
   /// Removes this view's root DOM nodes from their parent [ViewContainer].
   // TODO(b/132109599): replace with single static method or function.

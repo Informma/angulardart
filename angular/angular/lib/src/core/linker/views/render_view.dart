@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:web/web.dart' as web;
+import 'view_dom_apis.dart' if (dart.library.io) 'view_dom_apis_vm.dart';
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/core/linker/app_view_utils.dart';
@@ -65,7 +65,7 @@ abstract class RenderView extends View {
   /// discriminator to determine which parts of the template are mapped to
   /// what parts of the DOM.
   @dart2js.noInline
-  void project(web.Element target, int index) {
+  void project(ViewElement target, int index) {
     // TODO(b/132111830): Determine why this would be out of bounds.
     final projectedNodesByContentIndex = projectedNodes;
     if (index >= projectedNodesByContentIndex.length) {
@@ -127,8 +127,8 @@ abstract class RenderView extends View {
   ///   change detection strategy.
   ///
   /// Returns a function compatible with `package:web`'s `EventTarget.addEventListener`.
-  void Function(web.Event) eventHandler0(void Function() handler) {
-    return (web.Event event) {
+  void Function(ViewEvent) eventHandler0(void Function() handler) {
+    return (ViewEvent event) {
       markForCheck();
       appViewUtils.eventManager.zone.runGuarded(handler);
     };
@@ -160,8 +160,8 @@ abstract class RenderView extends View {
   /// known type.
   ///
   /// Returns a function compatible with `package:web`'s `EventTarget.addEventListener`.
-  void Function(web.Event) eventHandler1<F>(void Function(F) handler) {
-    return (web.Event event) {
+  void Function(ViewEvent) eventHandler1<F>(void Function(F) handler) {
+    return (ViewEvent event) {
       markForCheck();
       appViewUtils.eventManager.zone.runGuarded(
         () => handler(unsafeCast<F>(event)),
@@ -185,7 +185,7 @@ abstract class RenderView extends View {
 
   /// Equivalent to [addShimE], but optimized for [HtmlElement].
   @dart2js.tryInline
-  void addShimC(web.HTMLElement element) {
+  void addShimC(ViewHTMLElement element) {
     componentStyles.addContentShimClassHtmlElement(element);
   }
 
@@ -197,7 +197,7 @@ abstract class RenderView extends View {
   /// This should only be used for SVG or custom elements. For a plain
   /// [HtmlElement], use [addShimC] instead.
   @dart2js.tryInline
-  void addShimE(web.Element element) {
+  void addShimE(ViewElement element) {
     componentStyles.addContentShimClass(element);
   }
 
@@ -208,13 +208,13 @@ abstract class RenderView extends View {
   ///
   /// For example, through the `[class]="..."` or `[attr.class]="..."` syntax.
   @dart2js.noInline
-  void updateChildClass(web.HTMLElement element, String newClass) {
+  void updateChildClass(ViewHTMLElement element, String newClass) {
     componentStyles.updateChildClassHtmlElement(element, newClass);
   }
 
   /// Similar to [updateChildClass], for an [element] not guaranteed to be HTML.
   @dart2js.noInline
-  void updateChildClassNonHtml(web.Element element, String newClass) {
+  void updateChildClassNonHtml(ViewElement element, String newClass) {
     componentStyles.updateChildClass(element, newClass);
   }
 }

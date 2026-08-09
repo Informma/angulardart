@@ -1,15 +1,8 @@
-import 'package:web/web.dart' as web;
-
-import 'package:angulardart/src/core/linker/views/render_view.dart';
-
-/// Base class for helpers generated for some classes annotated with @Directive.
+/// Platform-agnostic DirectiveChangeDetector base class.
 ///
-/// When a `@Directive`-annotated class has one or more `@HostBinding()`s those
-/// bindings and/or are hoisted into the [detectHostChanges] method of this
-/// class, and are re-used across the different call sites.
-abstract class DirectiveChangeDetector {
-  /// Implements `detectChanges()`-like logic but for the directive instance.
-  ///
-  /// Currently, this implements and updates `@HostBinding()`s only.
-  void detectHostChanges(RenderView view, web.Element hostElement);
-}
+/// Provides the base class for helpers generated for @Directive-annotated classes.
+/// On browser platforms, uses [package:web] types for DOM access.
+/// On native/AOT platforms (SSR), uses stub implementations.
+library;
+
+export 'directive_change_detector_browser.dart' if (dart.library.io) 'directive_change_detector_vm.dart';

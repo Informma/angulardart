@@ -75,7 +75,7 @@ export 'src/core/change_detection.dart';
 export 'src/core/exception_handler.dart' show ExceptionHandler;
 export 'src/core/linker.dart';
 export 'src/core/zone/ng_zone.dart' show NgZone, UncaughtError;
-export 'src/devtools.dart' show enableDevTools, registerContentRoot;
+export 'src/devtools.dart' if (dart.library.io) 'src/devtools_vm.dart';
 export 'src/di/errors.dart' show InjectionError, NoProviderError;
 export 'src/di/injector.dart' show Injector, InjectorFactory;
 export 'src/di/injector/runtime.dart' show ReflectiveInjector;
@@ -136,4 +136,4 @@ export 'src/core/linker/component_factory.dart' show ComponentFactory, Component
 export 'src/security/safe_html.dart'
     show SafeHtml, SafeStyle, SafeUrl, SafeResourceUrl;
 // TODO(b/116697059): Move to a testonly=1 library.
-export 'src/testability.dart' show Testability, TestabilityRegistry;
+export 'src/testability.dart' if (dart.library.io) 'src/testability_vm.dart';

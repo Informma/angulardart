@@ -324,7 +324,7 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
     ListBuilder<InspectorNode> result,
   ) {
     final currentNode = treeWalker.currentNode;
-    final data = _nodeToData[currentNode];
+    final data = currentNode != null ? _nodeToData[currentNode as Object] : null;
 
     void collectChildNodes(ListBuilder<InspectorNode> b) {
       for (var node = treeWalker.firstChild();
@@ -386,7 +386,7 @@ invocations. Please contact angulardart-eng@ if you encounter this error.
     List<Map<String, Object>> result,
   ) {
     final currentNode = treeWalker.currentNode;
-    final componentView = _nodeToData[currentNode]?.componentView;
+    final componentView = currentNode != null ? _nodeToData[currentNode as Object]?.componentView : null;
     final children = componentView != null ? <Map<String, Object>>[] : result;
     for (var node = treeWalker.firstChild();
         node != null;

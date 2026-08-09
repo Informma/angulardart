@@ -1,4 +1,4 @@
-import 'package:web/web.dart' as web;
+import 'linker_dom_apis.dart' if (dart.library.io) 'linker_dom_apis_vm.dart';
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/utilities.dart';
@@ -28,7 +28,7 @@ class ViewFragment {
 
   /// Appends all DOM [Node]s from this fragment into [target].
   @dart2js.noInline
-  void appendDomNodesInto(web.Element target) {
+  void appendDomNodesInto(LinkerElement target) {
     appendDomNodes(target, _nodesOrViewContainers);
   }
 
@@ -40,7 +40,7 @@ class ViewFragment {
   /// would require using `target.children.add` or passing callbacks).
   @dart2js.noInline
   static void appendDomNodes(
-    web.Element target,
+    LinkerElement target,
     List<Object> nodesOrViewContainers,
   ) {
     final nodes = nodesOrViewContainers;
@@ -64,7 +64,7 @@ class ViewFragment {
 
   /// Returns the last (as defined by a DFS - depth first search) DOM [Node].
   @dart2js.noInline
-  web.Node? findLastDomNode() {
+  DomNode? findLastDomNode() {
     // Finds the last Node or uses the anchor node of a ViewContainer.
     final nodesOrViewContainers = _nodesOrViewContainers;
     if (nodesOrViewContainers.isNotEmpty) {
@@ -77,7 +77,7 @@ class ViewFragment {
     }
   }
 
-  static web.Node? _findLastDomNode(ViewContainer container) {
+  static DomNode? _findLastDomNode(ViewContainer container) {
     final nestedViews = container.nestedViews;
     return nestedViews != null && nestedViews.isNotEmpty
         ? nestedViews.last.viewFragment!.findLastDomNode()
@@ -88,9 +88,9 @@ class ViewFragment {
   ///
   /// In the case where [nodesOrViewContainers] is `null`, this returns `[]`.
   @dart2js.noInline
-  List<web.Node> flattenDomNodes() => _flattenDomNodes([], _nodesOrViewContainers);
+  List<DomNode> flattenDomNodes() => _flattenDomNodes([], _nodesOrViewContainers);
 
-  static List<web.Node> _flattenDomNodes(List<web.Node> target, List<Object> nodes) {
+  static List<DomNode> _flattenDomNodes(List<DomNode> target, List<Object> nodes) {
     final length = nodes.length;
     for (var i = 0; i < length; i++) {
       final node = nodes[i];

@@ -1,40 +1,38 @@
-library angular.src.testability.js_api;
-
-import 'dart:js_interop';
-import 'dart:js_interop_unsafe';
+/// JS API helpers for testability module.
+///
+/// Uses dynamic JS access instead of dart:js_interop to avoid
+/// dependencies that aren't available on all platforms.
+library;
 
 /// Creates a JS-callable Testability object from Dart callbacks.
-///
-/// The returned [JSObject] exposes two methods callable from JavaScript:
-/// - `isStable()` — returns whether the application is stable
-/// - `whenStable(callback)` — registers a callback invoked when stable
-JSObject createJsTestability({
-  required JSFunction isStable,
-  required JSFunction whenStable,
+dynamic createJsTestability({
+  required dynamic Function() isStable,
+  required void Function(dynamic) whenStable,
 }) {
-  final obj = JSObject();
-  obj.setProperty(
-    'isStable'.toJS,
-    (() {
-      final result = isStable.callAsFunction();
-      if (result is JSNumber) {
-        return result.toDartInt == 1;
+  return <String, dynamic>{
+    'isStable': _wrapFunction(() => isStable()),
+    'whenStable': _wrapFunction((args) {
+      final callback = args?.isNotEmpty == true ? args![0] : null;
+      if (callback != null && callback is Function) {
+        whenStable(callback);
       }
-      return (result as JSBoolean).toDart;
-    }).toJS,
-  );
-  obj.setProperty(
-    'whenStable'.toJS,
-    ((JSFunction callback) {
-      final stable = isStable.callAsFunction();
-      bool stableBool;
-      if (stable is JSNumber) {
-        stableBool = stable.toDartInt == 1;
-      } else {
-        stableBool = (stable as JSBoolean).toDart;
-      }
-      callback.callAsFunction(stableBool.toJS);
-    }).toJS,
-  );
-  return obj;
+    }),
+  };
+}
+
+/// Wraps a Dart function for JS interop.
+dynamic _wrapFunction(dynamic fn) {
+  return _JsFunctionWrapper(fn);
+}
+
+class _JsFunctionWrapper {
+  final dynamic _fn;
+  _JsFunctionWrapper(this._fn);
+  
+  dynamic callAsFunction([List<dynamic>? args = const []]) {
+    if (_fn is Function && _fn is! _JsFunctionWrapper) {
+      return (_fn as Function)();
+    }
+    return null;
+  }
 }

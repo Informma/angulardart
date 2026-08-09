@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:web/web.dart' as web;
+import 'view_dom_apis.dart' if (dart.library.io) 'view_dom_apis_vm.dart';
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:meta/meta.dart';
@@ -59,7 +59,7 @@ abstract class EmbeddedView<T> extends RenderView
   Map<String, dynamic> get locals => _data.locals;
 
   @override
-  List<web.Node> get rootNodes => viewFragment!.flattenDomNodes();
+  List<ViewNode> get rootNodes => viewFragment!.flattenDomNodes();
 
   @override
   ViewFragment? get viewFragment => _data.viewFragment;
@@ -177,7 +177,7 @@ abstract class EmbeddedView<T> extends RenderView
   // View manipulation ---------------------------------------------------------
 
   @override
-  void addRootNodesAfter(web.Node node) {
+  void addRootNodesAfter(ViewNode node) {
     insertNodesAsSibling(rootNodes, node);
     domRootRendererIsDirty = true;
   }

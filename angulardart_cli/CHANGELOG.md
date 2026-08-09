@@ -1,3 +1,7 @@
+## 1.4.3
+
+- Fix: SSR template puts component inline in main.dart (matches hello_world_ssr example, avoids build system recursion bugs)
+
 ## 1.4.2
 
 - Fix: SSR template uses relative import `../lib/{{component.targetName}}.dart` so the angulardart builder can find and generate NgFactory

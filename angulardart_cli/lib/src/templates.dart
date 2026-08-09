@@ -316,6 +316,7 @@ dependencies:
   angulardart: '>=9.0.0 <10.0.0'
   shelf: '>=1.0.0 <2.0.0'
   angulardart_server: '>=1.0.0 <2.0.0'
+  web: '>=0.5.0 <2.0.0'
 
 dev_dependencies:
   build_runner: '>=2.16.0 <3.0.0'
@@ -325,8 +326,8 @@ dev_dependencies:
   test: '>=1.31.0 <2.0.0'
 ''';
 
-  static const projectBuildYamlSsr = '''targets:
-  \$default:
+  static const projectBuildYamlSsr = r'''targets:
+  $default:
     builders:
       build_web_compilers|entrypoint:
         generate_for:
@@ -354,12 +355,13 @@ dev_dependencies:
 
   static const projectMainDartSsr = '''import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_server/angulardart_server.dart';
+import 'package:web/web.dart' as web;
 // ignore: uri_has_not_been_generated
 import 'main.template.dart' as ng;
 
 void main() async {
   final isServerRendered =
-      window.document.documentElement?.getAttribute('ng-server-context') == 'ssr';
+      web.window.document.documentElement?.getAttribute('ng-server-context') == 'ssr';
 
   if (isServerRendered) {
     await hydrateApplication(ng.AppComponentNgFactory);
@@ -370,50 +372,77 @@ void main() async {
 ''';
 
   static const projectMainServerDart = '''import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
+import '../web/main.template.dart' as ng;
 
 /// Point d'entre du serveur HTTP SSR.
 ///
-/// Compilez avec : dart run build_runner build -d web/main.server.dart
-/// Puis lancez : dart bin/server.dart
-void main() async {
-  final server = platformServer();
-
-  await HttpServer.bind('localhost', 4000);
-
-  print('Serveur SSR d'angulardart en cours d'exécution sur http://localhost:4000');
-
-  // Note : cette structure doit être corrigée car HttpServer.bind retourne un Future<HttpServer>
-}
-''';
-
-  static const projectMainServerDartFixed = '''import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:angulardart_server/angulardart_server.dart';
-// ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
-
-/// Point d'entre du serveur HTTP SSR.
-///
-/// Compilez avec : dart run build_runner build -d web/main.server.dart
+/// Compilez avec : dart run build_runner build web/main.server.dart
 /// Puis lancez : dart bin/server.dart
 Future<void> main() async {
   final server = platformServer();
 
   await HttpServer.bind('localhost', 4000).then((httpServer) {
-    print('Serveur SSR angulardart en cours d'exécution sur http://localhost:4000');
+    print('Serveur SSR angulardart en cours d\\'exécution sur http://localhost:4000');
 
     httpServer.listen((request) async {
       try {
         final html = await server.renderApplication(
-          ng.AppComponentNgFactory,
+          ng.appComponentFactory,
+          url: request.uri.toString(),
+        );
+
+        request.response
+          ..headers.contentType = ContentType.html
+          ..write(html)
+          ..close();
+      } catch (e, st) {
+        print('Erreur lors du rendu : \$e');
+        print(st);
+        request.response
+          ..statusCode = HttpStatus.internalServerError
+          ..write('<h1>Erreur serveur</h1>')
+          ..close();
+      }
+    });
+  });
+}
+''';
+
+  static const projectMainServerDartEntry = '''import 'package:angulardart/angulardart.dart';
+
+// ignore: uri_has_not_been_generated
+import 'main.template.dart' as ng;
+
+/// Retourne le factory du composant racine pour le rendu server-side.
+ComponentFactory<Object> get appComponentFactory =>
+    ng.AppComponentNgFactory;
+''';
+
+  static const projectMainServerDartFixed = '''import 'dart:async';
+import 'dart:io';
+
+import 'package:angulardart_server/angulardart_server.dart';
+// ignore: uri_has_not_been_generated
+import '../web/main.template.dart' as ng;
+
+/// Point d'entre du serveur HTTP SSR.
+///
+/// Compilez avec : dart run build_runner build web/main.server.dart
+/// Puis lancez : dart bin/server.dart
+Future<void> main() async {
+  final server = platformServer();
+
+  await HttpServer.bind('localhost', 4000).then((httpServer) {
+    print('Serveur SSR angulardart en cours d\\'exécution sur http://localhost:4000');
+
+    httpServer.listen((request) async {
+      try {
+        final html = await server.renderApplication(
+          ng.appComponentFactory,
           url: request.uri.toString(),
         );
 
@@ -436,7 +465,7 @@ Future<void> main() async {
 
   static const projectReadmeSsr = '''# {{name}}
 
-Application AngularDart avec rendu ct serveur (SSR).
+Application AngularDart avec rendu côté serveur (SSR).
 
 ## Structure
 
@@ -457,11 +486,11 @@ dart run build_runner serve
 
 ```bash
 dart pub get
-dart run build_runner build -d web/main.server.dart
+dart run build_runner build web/main.server.dart
 dart bin/server.dart
 ```
 
-Le serveur d'angulardart sera disponible sur http://localhost:4000
+Le serveur AngularDart sera disponible sur http://localhost:4000
 
 ## Hydration
 
@@ -469,10 +498,10 @@ Lorsqu'un visiteur accède `http://localhost:4000` :
 
 1. Le serveur rend le composant AngularDart en HTML string via SSR
 2. Le HTML contient les marqueurs `data-ng-id` pour l'hydration
-3. Le client reoit le HTML pr-render et active l'application avec hydration
-4. L'application client rutilise le DOM existant (pas de re-rendu)
+3. Le client reçoit le HTML pré-rendu et active l'application avec hydration
+4. L'application client réutilise le DOM existant (pas de re-rendu)
 
-Lorsqu'un visiteur accde via un navigateur direct (sans SSR) :
+Lorsqu'un visiteur accède via un navigateur direct (sans SSR) :
 - Rendu client-side normal via `runApp()`
 ''';
 }

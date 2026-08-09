@@ -70,7 +70,8 @@ class DeferredContentDirective implements OnDestroy {
           // This isn't in DomService.schedule{Read,Write} because
           // it needs to work with components that aren't scheduled.
           // ignore: unnecessary_cast
-          var dimensions = (content as web.HTMLElement).getBoundingClientRect();
+           // ignore: invalid_runtime_check_with_js_interop_types
+           var dimensions = (content as web.HTMLElement).getBoundingClientRect();
           _placeholder.style
             ..width = '${dimensions.width}px'
             ..height = '${dimensions.height}px';

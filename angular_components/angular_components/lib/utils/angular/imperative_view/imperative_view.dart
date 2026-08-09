@@ -94,7 +94,8 @@ class AcxImperativeViewUtils {
       var viewRef = viewContainer.createEmbeddedView(templateRef);
       for (final rootNode in viewRef.rootNodes) {
         // ignore: unnecessary_cast
-        intoDomElement.appendChild(rootNode as web.Node);
+        // ignore: invalid_runtime_check_with_js_interop_types
+    intoDomElement.appendChild(rootNode as web.Node);
       }
       return ImperativeViewRef._(viewRef, () {
         var index = viewContainer.indexOf(viewRef);

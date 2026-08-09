@@ -341,7 +341,8 @@ class MaterialPopupComponent extends Object
     _zIndex = _zIndexer.pop();
     var view = _viewContainer.createEmbeddedView(templateRef!);
     for (var node in view.rootNodes) {
-      _overlayRef!.overlayElement.append(node as JSAny);
+      // ignore: invalid_runtime_check_with_js_interop_types
+    _overlayRef!.overlayElement.append(node as JSAny);
     }
     _updateOverlayCssClass();
     _viewInitialized = true;

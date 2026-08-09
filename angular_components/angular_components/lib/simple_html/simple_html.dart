@@ -129,7 +129,7 @@ abstract class _SimpleHtmlBase implements OnDestroy {
 
         if (_cachedTargetElement == null) return;
 
-        _cachedTargetElement!.innerHTML = value.toJS;
+        _cachedTargetElement!.innerHTML = value.toJS as dynamic;
 
         _domService.scheduleRead(() {
           final links = _cachedTargetElement!.querySelectorAll(_triggerSelector);

@@ -140,7 +140,7 @@ class ProjectGenerator extends Generator {
       print('  # Dveloppement (client uniquement) :');
       print('  dart run build_runner serve');
       print('  # Build SSR :');
-      print('  dart run build_runner build web/main.server.dart');
+      print('  dart run build_runner build web');
       print('  dart bin/server.dart');
     } else {
       print('  dart run build_runner serve');

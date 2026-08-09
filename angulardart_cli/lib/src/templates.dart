@@ -315,7 +315,7 @@ environment:
 dependencies:
   angulardart: '>=9.0.0 <10.0.0'
   shelf: '>=1.0.0 <2.0.0'
-  angulardart_server: '>=1.0.0 <2.0.0'
+  angulardart_server: '>=1.2.0 <2.0.0'
   web: '>=0.5.0 <2.0.0'
 
 dev_dependencies:
@@ -486,7 +486,7 @@ dart run build_runner serve
 
 ```bash
 dart pub get
-dart run build_runner build web/main.server.dart
+dart run build_runner build web
 dart bin/server.dart
 ```
 

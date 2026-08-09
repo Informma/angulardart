@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Fix: Add missing `textContent` and `id` properties to DomElement/DomHTMLStyleElement in native_dom_apis.dart (required for SSR hydration)
+
 ## 1.1.1
 
 - Fix: ServerPlatformLocation now correctly implements PlatformLocation interface (pathname setter, RouterEvent types)

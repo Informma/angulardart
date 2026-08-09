@@ -1,3 +1,8 @@
+## 1.2.0
+
+- Add: `ngdart generate-stubs` command to auto-generate `.template.dart` stubs for AOT compilation
+- Fix: _findRepoRoot() now works from any directory in the monorepo (no longer depends on .dart_tool/)
+
 ## 1.1.3
 
 - Fix: package:web constraint updated to <1.2.0

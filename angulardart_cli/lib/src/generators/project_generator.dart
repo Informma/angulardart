@@ -118,7 +118,6 @@ class ProjectGenerator extends Generator {
         context,
       );
     } else if (ssr) {
-      await component.generate();
       await writeFromTemplate(
         path.join(destinationFolder, 'README.md'),
         Templates.projectReadmeSsr,

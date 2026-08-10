@@ -1,3 +1,8 @@
+## 3.2.1
+
+- Fix: Various component fixes (deferred_content, menu_item_affix_list, material_popup, simple_html, imperative_view)
+- Fix: analysis_options.yaml files no longer depend on deleted parent analysis_options.yaml
+
 ## 3.2.0
 
 - Fix: Various component fixes (deferred_content, menu_item_affix_list, material_popup, simple_html, imperative_view)

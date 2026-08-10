@@ -7,9 +7,9 @@ import 'location_strategy_vm.dart' show LocationStrategy, appBaseHref;
 import 'location.dart' show Location;
 
 @Injectable()
-class VmPathLocationStrategy implements LocationStrategy {
+class PathLocationStrategy implements LocationStrategy {
   late final String _baseHref;
-  VmPathLocationStrategy(dynamic platformLocation, [@Optional() @Inject(appBaseHref) String? href]) {
+  PathLocationStrategy(dynamic platformLocation, [@Optional() @Inject(appBaseHref) String? href]) {
     if (href == null) throw ArgumentError('No base href set.');
     _baseHref = href;
   }

@@ -7,7 +7,7 @@ import 'platform_location_vm.dart' show PlatformLocation;
 
 
 @Injectable()
-class VmPlatformLocation implements PlatformLocation {
+class BrowserPlatformLocation implements PlatformLocation {
   @override String? getBaseHrefFromDOM() => null;
   @override void onPopState(void Function(RouterEvent) fn) {}
   @override void onHashChange(void Function(RouterEvent) fn) {}

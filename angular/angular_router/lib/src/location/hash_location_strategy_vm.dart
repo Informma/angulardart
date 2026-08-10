@@ -6,9 +6,9 @@ import '../router_types.dart';
 import 'location_strategy_vm.dart' show LocationStrategy, appBaseHref;
 
 @Injectable()
-class VmHashLocationStrategy implements LocationStrategy {
+class HashLocationStrategy implements LocationStrategy {
   final String _baseHref;
-  VmHashLocationStrategy(dynamic platformLocation, [@Optional() @Inject(appBaseHref) String? baseHref]) : _baseHref = baseHref ?? '';
+  HashLocationStrategy(dynamic platformLocation, [@Optional() @Inject(appBaseHref) String? baseHref]) : _baseHref = baseHref ?? '';
   @override void onPopState(void Function(RouterEvent) fn) {}
   @override String getBaseHref() => _baseHref;
   @override String hash() => '';

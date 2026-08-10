@@ -30,13 +30,3 @@ dev_dependencies:
   lints: '>=6.0.0 <7.0.0'
   test: '>=1.31.0 <2.0.0'
 
-dependency_overrides:
-  angulardart:
-    path: ../angular/angular
-  angulardart_meta:
-    path: ../angular/angular_meta
-  angulardart_ast:
-    path: ../angular/angular_ast
-  angulardart_compiler:
-    path: ../angular/angular_compiler
-

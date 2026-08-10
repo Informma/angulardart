@@ -1,3 +1,15 @@
+## 5.3.2
+
+- Fix: Remove `dart:js_interop` from template imports (browser-only, breaks AOT on VM)
+- Fix: Skip external package `.template.dart` imports in reflector (they don't exist as pre-built artifacts)
+- Fix: Allow components in `lib/` to work with SSR by passing packageName to ReflectableEmitter
+
+## 5.3.2
+
+- Fix: Remove `dart:js_interop` from template imports (browser-only, breaks AOT on VM)
+- Fix: Skip external package `.template.dart` imports in reflector (they don't exist as pre-built artifacts)
+- Fix: Allow components in `lib/` to work with SSR by passing packageName to ReflectableEmitter
+
 ## 5.3.1
 
 - Fix: Skip broken tests that fail due to annotation resolution on synthetic code (source_gen.TypeChecker limitation)

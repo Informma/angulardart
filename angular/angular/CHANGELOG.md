@@ -1,3 +1,7 @@
+## 9.3.2
+
+- Fix: Rename NgZone._internal to NgZone.internal for subclass accessibility
+
 ## 9.3.1
 
 - Fix: analysis_options.yaml files no longer depend on deleted parent analysis_options.yaml

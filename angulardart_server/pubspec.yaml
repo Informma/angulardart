@@ -16,7 +16,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  angulardart: '>=9.0.0 <10.0.0'
+  angulardart: '>=9.3.2 <10.0.0'
   angulardart_meta: '>=1.0.0 <2.0.0'
   angulardart_router: '>=5.1.0 <6.0.0'
   collection: '>=1.18.0 <2.0.0'

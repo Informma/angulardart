@@ -24,6 +24,7 @@ String buildGeneratedCode(
     outputs.reflectableOutput,
     LibraryReader(element),
     allocator: allocator,
+    currentPackage: CompileContext.current.packageName,
   );
 
   // Write the input file as an import and an export.

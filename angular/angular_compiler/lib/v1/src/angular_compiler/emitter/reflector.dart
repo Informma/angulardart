@@ -8,26 +8,29 @@ import '../analyzer/di/tokens.dart';
 import '../analyzer/link.dart';
 import '../analyzer/reflector.dart';
 
-/// Generates `.dart` source code given a [ReflectableOutput].
-class ReflectableEmitter {
-  static const _package = 'package:angulardart';
+  /// Generates `.dart` source code given a [ReflectableOutput].
+  class ReflectableEmitter {
+    static const _package = 'package:angulardart';
 
-  /// Where the runtime `reflector.dart` is located.
-  final String reflectorSource;
+    /// Where the runtime `reflector.dart` is located.
+    final String reflectorSource;
 
-  final Allocator _allocator;
-  final ReflectableOutput _output;
+    final Allocator _allocator;
+    final ReflectableOutput _output;
 
-  /// The library that is being analyzed currently.
-  final LibraryReader _library;
+    /// The library that is being analyzed currently.
+    final LibraryReader _library;
 
-  DartEmitter? _dartEmitter;
-  late LibraryBuilder _libraryBuilder;
-  late BlockBuilder _initReflectorBody;
-  late StringSink _importBuffer;
-  late StringSink _initReflectorBuffer;
+    /// Package name of the current compilation unit (for lib/ component support).
+    final String? currentPackage;
 
-  Reference _ngRef(String symbol) => refer('_ngRef.$symbol');
+    DartEmitter? _dartEmitter;
+    late LibraryBuilder _libraryBuilder;
+    late BlockBuilder _initReflectorBody;
+    late StringSink _importBuffer;
+    late StringSink _initReflectorBuffer;
+
+    Reference _ngRef(String symbol) => refer('_ngRef.$symbol');
 
   // Classes and functions we need to refer to in generated (runtime) code.
   Reference get _registerComponent => _ngRef('registerComponent');
@@ -44,6 +47,7 @@ class ReflectableEmitter {
     this._library, {
     Allocator? allocator,
     this.reflectorSource = '$_package/src/reflector.dart',
+    required this.currentPackage,
   }) : _allocator = allocator ?? Allocator.none;
 
   /// Whether we have one or more URLs that need `initReflector` called on them.
@@ -188,14 +192,14 @@ class ReflectableEmitter {
     }
     var counter = 0;
     for (final url in _output.urlsNeedingInitReflector) {
-      // Generates:
-      //
-      // import "<url>" as _refN;
-      //
-      // void initReflector() {
-      //   ...
-      //   _refN.initReflector();
-      // }
+      // Skip package .template.dart imports from external packages - they don't
+      // exist as pre-built artifacts and are only needed for legacy
+      // ReflectiveInjector support. But allow the project's own package templates
+      // so that components defined in lib/ work with SSR.
+      if (_isBrowserOnlyUrl(url)) {
+        counter++;
+        continue;
+      }
       final name = '_ref$counter';
       _libraryBuilder.directives.add(Directive.import(url, as: name));
       _initReflectorBody.addExpression(
@@ -203,6 +207,23 @@ class ReflectableEmitter {
       );
       counter++;
     }
+  }
+
+  /// Returns true if the given URL is a package .template.dart from an external
+  /// package that doesn't exist as a pre-built artifact.
+  bool _isBrowserOnlyUrl(String url) {
+    if (!url.endsWith('.template.dart') || !url.startsWith('package:')) {
+      return false;
+    }
+    // Extract the package name from the URL: package:<name>/...
+    final match = RegExp(r'^package:([^/]+)/').firstMatch(url);
+    if (match == null) return true;
+    final importedPackage = match.group(1)!;
+    // Only skip external packages, not the project's own package
+    if (currentPackage != null && importedPackage == currentPackage) {
+      return false;
+    }
+    return true;
   }
 
   void _registerMetadataForClass(ReflectableClass clazz) {

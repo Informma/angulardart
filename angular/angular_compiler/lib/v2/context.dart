@@ -194,6 +194,7 @@ abstract class CompileContext {
       enableDevTools: enableDevTools,
       isNullSafe: isNullSafe,
       path: libraryPath.toRelativeUrl(),
+      packageName: libraryPath.package,
       policyExceptionsPerFiles: policyExceptions,
       policyExceptionsPerPackages: policyExceptionsInPackages,
     );
@@ -219,6 +220,9 @@ abstract class CompileContext {
 
   /// Path of the file being compiled.
   String get path;
+
+  /// Package name of the library currently being compiled.
+  String? get packageName;
 
   // TODO(b/170758395): Move `BuildError` to v2 and type these `<BuildError>`.
 
@@ -273,6 +277,9 @@ class _LibraryCompileContext implements CompileContext {
   @override
   final String path;
 
+  @override
+  final String? packageName;
+
   /// Whether `--define=ENABLE_DEVTOOLS=true` was passed during compilation.
   final bool enableDevTools;
 
@@ -281,6 +288,7 @@ class _LibraryCompileContext implements CompileContext {
 
   _LibraryCompileContext({
     required this.path,
+    required this.packageName,
     required this.policyExceptionsPerFiles,
     required this.policyExceptionsPerPackages,
     required this.enableDevTools,
@@ -368,10 +376,16 @@ class _TestCompileContext implements CompileContext {
   @override
   final bool validateMissingDirectives;
 
+  @override
+  final String? packageName;
+
+  // ignore: unused_element_parameter - needed for CompileContext interface consistency
   const _TestCompileContext({
     this.emitNullSafeCode = true,
     this.isDevToolsEnabled = false,
     this.validateMissingDirectives = true,
+    // ignore: unused_element_parameter
+    this.packageName,
   });
 
   @override

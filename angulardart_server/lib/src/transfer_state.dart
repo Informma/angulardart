@@ -43,6 +43,29 @@ class TransferState {
   /// Vrifie si une cl existe dans l'tat transfr.
   static bool has<T>(String key) => _state.containsKey(_keyPrefix + key);
 
+  /// Retourne toutes les valeurs dont la cl correspond au prfixe donn.
+  ///
+  /// Utile pour extraire des donnes SEO depuis [TransferState] ct serveur.
+  /// Les cls retournes sont sans le prfixe `ng-transfer-state:`.
+  ///
+  /// Exemple :
+  /// ```dart
+  /// final seoData = TransferState.getByPrefix('seo:');
+  /// // Retourne {'title': 'My Page', 'meta:description': 'Description...'}
+  /// ```
+  static Map<String, Object?> getByPrefix(String prefix) {
+    final result = <String, Object?>{};
+    final searchKey = _keyPrefix + prefix;
+    for (final entry in _state.entries) {
+      if (entry.key.startsWith(searchKey)) {
+        // Remove the ng-transfer-state: prefix to return clean keys.
+        final cleanKey = entry.key.substring(_keyPrefix.length);
+        result[cleanKey] = entry.value;
+      }
+    }
+    return result;
+  }
+
   /// Gnre le script HTML injecter dans la page pour transfrer l'tat
   /// du serveur vers le client.
   static String toScript() {

@@ -72,6 +72,36 @@ class PlatformServerRef {
       parentInjector: parentInjector,
     );
 
+    // Extract SEO data from TransferState for SSR meta tags.
+    final seoData = _extractSeoFromTransferState();
+    final titleTag = seoData['title'] != null
+        ? '  <title>${_escapeHtml(seoData['title'] as String)}</title>\n'
+        : '';
+    final metaTags = seoData.entries
+        .where((e) => e.key.startsWith('meta:'))
+        .map((e) {
+          final name = e.key.substring(5); // Remove 'meta:' prefix
+          return '  <meta name="$name" content="${_escapeHtml(e.value as String)}">';
+        })
+        .join('\n');
+    final ogTags = seoData.entries
+        .where((e) => e.key.startsWith('og:'))
+        .map((e) {
+          final property = e.key.substring(3); // Remove 'og:' prefix
+          return '  <meta property="og:$property" content="${_escapeHtml(e.value as String)}">';
+        })
+        .join('\n');
+    final twitterTags = seoData.entries
+        .where((e) => e.key.startsWith('twitter:'))
+        .map((e) {
+          final name = e.key.substring(8); // Remove 'twitter:' prefix
+          return '  <meta name="twitter:$name" content="${_escapeHtml(e.value as String)}">';
+        })
+        .join('\n');
+    final canonicalTag = seoData['canonical'] != null
+        ? '  <link rel="canonical" href="${_escapeHtml(seoData['canonical'] as String)}">\n'
+        : '';
+
     final transferScript = TransferState.toScript();
 
     return '''<!DOCTYPE html>
@@ -79,13 +109,28 @@ class PlatformServerRef {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AngularDart App</title>
+$titleTag$metaTags$ogTags$twitterTags$canonicalTag
 $transferScript
 </head>
 <body>
 ${componentHtml}
 </body>
 </html>''';
+  }
+
+  /// Extracts SEO metadata from TransferState keys prefixed with 'seo:'.
+  Map<String, dynamic> _extractSeoFromTransferState() {
+    return TransferState.getByPrefix('seo:') as Map<String, dynamic>;
+  }
+
+  /// Escapes HTML special characters in a string.
+  String _escapeHtml(String input) {
+    return input
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#x27;');
   }
 
   Future<void> _renderComponentToBuilder<T extends Object>(

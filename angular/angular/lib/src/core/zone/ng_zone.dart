@@ -33,10 +33,10 @@ class NgZone {
   final _pendingTimers = <_WrappedTimer>[];
 
   /// Default constructor - creates a new NgZone instance.
-  NgZone() : this._internal();
+  NgZone() : this.internal();
 
-  /// Internal constructor for subclasses.
-  NgZone._internal() {
+  /// Constructor for subclasses that need custom zone behavior.
+  NgZone.internal() {
     _innerZone = _createInnerZone(
       _outerZone,
       handleUncaughtError: _handleUncaughtError,

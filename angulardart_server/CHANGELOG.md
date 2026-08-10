@@ -1,3 +1,7 @@
+## 1.2.2
+
+- Fix: Add explicit constructor to ServerNgZone to call generative superclass constructor (fixes non_generative_implicit_constructor error)
+
 ## 1.2.1
 
 - Fix: Remove dependency_overrides with path: dependencies (violates pub.dev policy)

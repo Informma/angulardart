@@ -7,6 +7,8 @@ import 'dart:async';
 import 'package:angulardart/src/core/zone/ng_zone.dart' show NgZone;
 
 class ServerNgZone extends NgZone {
+  ServerNgZone() : super.internal();
+
   @override
   R run<R>(R Function() callback) => callback();
 

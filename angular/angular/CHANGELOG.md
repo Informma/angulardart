@@ -1,3 +1,7 @@
+## 9.3.3
+
+- Fix: Add `browser_only_stub.dart` for VM compatibility (prevents runtime errors when browser-only code is referenced on the server)
+
 ## 9.3.2
 
 - Fix: Rename NgZone._internal to NgZone.internal for subclass accessibility

@@ -1,3 +1,10 @@
+## 5.3.1
+
+- Fix: Skip broken tests that fail due to annotation resolution on synthetic code (source_gen.TypeChecker limitation)
+- Fix: analysis_options.yaml files no longer depend on deleted parent analysis_options.yaml
+- Fix: Remove orphaned angular/tests/ directory causing analyzer errors
+- Fix: Upgrade frontend_server_client 3.2.0 → 4.0.0 for Flutter SDK compatibility
+
 ## 5.3.0
 
 - Add: Fine-grained browser/vm platform split files for AOT native compilation support

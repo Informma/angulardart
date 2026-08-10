@@ -1,3 +1,9 @@
+## 1.2.1
+
+- Fix: Remove dependency_overrides with path: dependencies (violates pub.dev policy)
+- Fix: analysis_options.yaml files no longer depend on deleted parent analysis_options.yaml
+- Fix: Remove orphaned angular/tests/ directory causing analyzer errors
+
 ## 1.2.0
 
 - Fix: Add missing `textContent` and `id` properties to DomElement/DomHTMLStyleElement in native_dom_apis.dart (required for SSR hydration)

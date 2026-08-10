@@ -1,3 +1,8 @@
+## 9.3.1
+
+- Fix: analysis_options.yaml files no longer depend on deleted parent analysis_options.yaml
+- Fix: Remove orphaned angular/tests/ directory causing analyzer errors
+
 ## 9.3.0
 
 - Add: Fine-grained browser/vm platform split files for AOT native compilation support

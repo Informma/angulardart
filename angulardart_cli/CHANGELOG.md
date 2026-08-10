@@ -1,3 +1,13 @@
+## 1.7.0
+
+- Add: `--hybrid` flag to `ngdart new` (mutually exclusive with --ssr and --seo)
+- Add: `ngdart add ssr` — adds SSR to an existing project (idempotent)
+- Add: `ngdart add hybrid` — adds hybrid SSR + routing + RenderMode (idempotent)
+- Add: 13 new hybrid templates (pubspec, index.html, main.dart, server entry, 4 components, data service, readme)
+- Add: platform_dom*.dart templates for conditional browser/VM imports
+- Add: `_generateHybridComponents()` writes components with RenderMode in lib/
+- Fix: `ngdart generate-stubs` auto-copies templates from lib/ AND web/ + creates hybrid component stubs
+
 ## 1.6.1
 
 - Fix: SSR template now works end-to-end — component inline in web/main.dart, HTML in web/app_component.html, templates copied from build output

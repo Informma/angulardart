@@ -1,3 +1,7 @@
+## 1.2.3
+
+- Fix: Improve TransferState serialization and platform_server for SSR compatibility
+
 ## 1.2.2
 
 - Fix: Add explicit constructor to ServerNgZone to call generative superclass constructor (fixes non_generative_implicit_constructor error)

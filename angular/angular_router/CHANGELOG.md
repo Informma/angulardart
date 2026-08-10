@@ -1,3 +1,7 @@
+## 5.3.2
+
+- Fix: Align VM stub class names (VmPathLocationStrategy → PathLocationStrategy, etc.)
+
 ## 5.3.1
 
 - Fix: analysis_options.yaml files no longer depend on deleted parent analysis_options.yaml

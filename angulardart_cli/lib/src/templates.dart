@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   angulardart: '>=9.0.0 <10.0.0'
+  web: '>=1.0.0 <2.0.0'
 
 dev_dependencies:
   build_runner: '>=2.16.0 <3.0.0'
@@ -142,6 +143,7 @@ dependencies:
   angulardart: '>=9.0.0 <10.0.0'
   angulardart_router: '>=5.0.0 <6.0.0'
   angulardart_seo: '>=1.0.0 <2.0.0'
+  web: '>=1.0.0 <2.0.0'
 
 dev_dependencies:
   build_runner: '>=2.16.0 <3.0.0'
@@ -317,7 +319,7 @@ environment:
 dependencies:
   angulardart: '>=9.0.0 <10.0.0'
   angulardart_server: '>=1.2.0 <2.0.0'
-  web: '>=0.5.0 <1.0.0'
+  web: '>=1.0.0 <2.0.0'
 
 dev_dependencies:
   build_runner: '>=2.16.0 <3.0.0'
@@ -539,7 +541,7 @@ dependencies:
   angulardart: '>=9.0.0 <10.0.0'
   angulardart_router: '>=5.0.0 <6.0.0'
   angulardart_server: '>=1.2.0 <2.0.0'
-  web: '>=0.5.0 <1.0.0'
+  web: '>=1.0.0 <2.0.0'
 
 dev_dependencies:
   build_runner: '>=2.16.0 <3.0.0'
@@ -754,7 +756,7 @@ dependencies:
   angulardart_router: '>=5.0.0 <6.0.0'
   angulardart_server: '>=1.2.0 <2.0.0'
   angulardart_seo: '>=1.0.0 <2.0.0'
-  web: '>=0.5.0 <1.0.0'
+  web: '>=1.0.0 <2.0.0'
 
 dev_dependencies:
   build_runner: '>=2.16.0 <3.0.0'

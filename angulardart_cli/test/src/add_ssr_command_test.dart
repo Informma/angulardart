@@ -65,7 +65,7 @@ class AddSsrTestHarness {
     if (!pubspecContent.contains('web:')) {
       pubspecContent = pubspecContent.replaceFirst(
         'angulardart_server:',
-        "angulardart_server: '>=1.2.0 <2.0.0'\n  web: '>=0.5.0 <1.0.0'",
+        "angulardart_server: '>=1.2.0 <2.0.0'\n  web: '>=1.0.0 <2.0.0'",
       );
       messages.add('  Added web');
     }
@@ -361,7 +361,7 @@ dependencies:
 
       final pubspec = File('${project.path}/pubspec.yaml').readAsStringSync();
       expect(pubspec, contains("angulardart_server: '>=1.2.0 <2.0.0'"));
-      expect(pubspec, contains("web: '>=0.5.0 <1.0.0'"));
+      expect(pubspec, contains("web: '>=1.0.0 <2.0.0'"));
     });
 
     test('updates build.yaml to include main.server.dart', () async {

@@ -75,7 +75,7 @@ class AddHybridCommand extends NgDartCommand {
     if (!pubspecContent.contains('web:')) {
       pubspecContent = pubspecContent.replaceFirst(
         'angulardart_server:',
-        "angulardart_server: '>=1.2.0 <2.0.0'\n  web: '>=0.5.0 <1.0.0'",
+        "angulardart_server: '>=1.2.0 <2.0.0'\n  web: '>=1.0.0 <2.0.0'",
       );
       print('  Added web');
     }

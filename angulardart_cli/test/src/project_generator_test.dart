@@ -429,4 +429,340 @@ void main() {
       expect(countValidDartFiles(projectDir), greaterThan(0));
     });
   });
+
+  group('ProjectGenerator - Hybrid project', () {
+    late Directory tempDir;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('ngdart_hybrid_project_test_');
+    });
+
+    tearDownAll(() async {
+      if (tempDir.existsSync()) {
+        await tempDir.delete(recursive: true);
+      }
+    });
+
+    test('creates Hybrid pubspec with all dependencies', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/pubspec.yaml').readAsStringSync();
+      expect(content, contains("angulardart: '>="));
+      expect(content, contains('>=9.0.0 <10.0.0'));
+      expect(content, contains('angulardart_router'));
+      expect(content, contains('angulardart_server'));
+    });
+
+    test('creates Hybrid main.dart with hydration + routing', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/web/main.dart').readAsStringSync();
+      expect(content, contains('package:angulardart_server/angulardart_server.dart'));
+      expect(content, contains('package:angulardart_router/angulardart_router.dart'));
+      expect(content, contains('hydrateApplication'));
+      expect(content, contains('runApp'));
+      expect(content, contains('routerProviders'));
+    });
+
+    test('creates Hybrid main.server.dart', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      expect(
+        File('${tempDir.path}/hybrid_app/web/main.server.dart').existsSync(),
+        isTrue,
+      );
+    });
+
+    test('creates Hybrid bin/server.dart', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      expect(
+        File('${tempDir.path}/hybrid_app/bin/server.dart').existsSync(),
+        isTrue,
+      );
+    });
+
+    test('creates Hybrid platform_dom files', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      expect(
+        File('${tempDir.path}/hybrid_app/lib/platform_dom.dart').existsSync(),
+        isTrue,
+      );
+      expect(
+        File('${tempDir.path}/hybrid_app/lib/platform_dom_browser.dart').existsSync(),
+        isTrue,
+      );
+      expect(
+        File('${tempDir.path}/hybrid_app/lib/platform_dom_vm.dart').existsSync(),
+        isTrue,
+      );
+    });
+
+    test('creates Hybrid component files in lib/', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      expect(
+        File('${tempDir.path}/hybrid_app/lib/home_component.dart').existsSync(),
+        isTrue,
+      );
+      expect(
+        File('${tempDir.path}/hybrid_app/lib/about_component.dart').existsSync(),
+        isTrue,
+      );
+      expect(
+        File('${tempDir.path}/hybrid_app/lib/dashboard_component.dart').existsSync(),
+        isTrue,
+      );
+    });
+
+    test('creates Hybrid component HTML files', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      expect(
+        File('${tempDir.path}/hybrid_app/lib/home_component.html').existsSync(),
+        isTrue,
+      );
+      expect(
+        File('${tempDir.path}/hybrid_app/lib/about_component.html').existsSync(),
+        isTrue,
+      );
+      expect(
+        File('${tempDir.path}/hybrid_app/lib/dashboard_component.html').existsSync(),
+        isTrue,
+      );
+    });
+
+    test('creates Hybrid data_service.dart', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      expect(
+        File('${tempDir.path}/hybrid_app/lib/data_service.dart').existsSync(),
+        isTrue,
+      );
+    });
+
+    test('HomeComponent has RenderMode.server', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/lib/home_component.dart').readAsStringSync();
+      expect(content, contains("renderMode: RenderMode.server"));
+    });
+
+    test('DashboardComponent has RenderMode.client', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/lib/dashboard_component.dart').readAsStringSync();
+      expect(content, contains("renderMode: RenderMode.client"));
+    });
+
+    test('AboutComponent has no explicit renderMode (automatic)', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/lib/about_component.dart').readAsStringSync();
+      expect(content, isNot(contains("renderMode")));
+    });
+
+    test('Hybrid index.html has base href', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/web/index.html').readAsStringSync();
+      expect(content, contains('<base href="/">'));
+      expect(content, contains('ng-client-context="csr"'));
+    });
+
+    test('Hybrid project has expected file count', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_structure_test'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      int countFiles(Directory dir) {
+        int count = 0;
+        for (final entity in dir.listSync(recursive: true)) {
+          if (entity is File) count++;
+        }
+        return count;
+      }
+
+      final projectDir = Directory('${tempDir.path}/hybrid_structure_test');
+      expect(projectDir.existsSync(), isTrue);
+      // Expected files: pubspec.yaml, analysis_options.yaml, build.yaml, .gitignore, README.md,
+      // web/index.html, web/main.dart, web/main.server.dart, web/styles.css = 9
+      // lib/home_component.dart, lib/home_component.html, lib/about_component.dart,
+      // lib/about_component.html, lib/dashboard_component.dart, lib/dashboard_component.html,
+      // lib/data_service.dart, lib/platform_dom.dart, lib/platform_dom_browser.dart,
+      // lib/platform_dom_vm.dart = 10
+      // bin/server.dart = 1
+      // Total = 20
+      expect(countFiles(projectDir), equals(20));
+    });
+
+    test('Hybrid main.dart imports component templates from lib/', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/web/main.dart').readAsStringSync();
+      expect(content, contains("import 'home_component.template.dart'"));
+      expect(content, contains("import 'about_component.template.dart'"));
+      expect(content, contains("import 'dashboard_component.template.dart'"));
+    });
+
+    test('Hybrid pubspec uses wide version constraints', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/pubspec.yaml').readAsStringSync();
+      final lines = content.split('\n');
+      for (final line in lines) {
+        if (line.contains(':') && !line.trim().startsWith('#')) {
+          expect(
+            line,
+            isNot(contains('^')),
+            reason: 'Should use wide constraints not caret: $line',
+          );
+        }
+      }
+    });
+
+    test('Hybrid main.dart uses router-outlet with routes', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/web/main.dart').readAsStringSync();
+      expect(content, contains('<router-outlet [routes]="routes">'));
+      expect(content, contains("RouteDefinition(path: '/',"));
+      expect(content, contains("RouteDefinition(path: '/about',"));
+      expect(content, contains("RouteDefinition(path: '/dashboard',"));
+    });
+
+    test('Hybrid main.dart uses @GenerateInjector with routerProviders', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/web/main.dart').readAsStringSync();
+      expect(content, contains('@GenerateInjector([routerProviders])'));
+    });
+
+    test('Hybrid main.dart uses TransferState', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/lib/home_component.dart').readAsStringSync();
+      expect(content, contains("TransferState.set"));
+    });
+
+    test('Hybrid main.dart uses DataService', () async {
+      final generator = ProjectGenerator(
+        EntityName('hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/hybrid_app/lib/home_component.dart').readAsStringSync();
+      expect(content, contains("final DataService _data"));
+    });
+  });
 }

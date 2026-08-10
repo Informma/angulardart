@@ -380,5 +380,121 @@ void main() {
             reason: 'Missing from SEO pubspec: $dep');
       }
     });
+
+    test('all Dart templates import angulardart_server', () {
+      final dartTemplates = [
+        Templates.projectMainDartHybrid,
+        Templates.projectHomeComponentDart,
+      ];
+      for (final template in dartTemplates) {
+        expect(
+          template,
+          contains('package:angulardart_server/angulardart_server.dart'),
+          reason: 'Template should import angulardart_server',
+        );
+      }
+    });
+
+    test('all Dart templates use consistent version constraints with SSR pubspec', () {
+      final baseDeps = [
+        '>=9.0.0 <10.0.0', // angulardart
+        '>=2.16.0 <3.0.0', // build_runner
+        '>=4.8.0 <5.0.0', // build_web_compilers
+      ];
+      for (final dep in baseDeps) {
+        expect(Templates.projectPubspecSsr, contains(dep),
+            reason: 'Missing from SSR pubspec: $dep');
+        expect(Templates.projectPubspecHybrid, contains(dep),
+            reason: 'Missing from Hybrid pubspec: $dep');
+      }
+    });
+
+    test('all pubspec templates use consistent SDK constraint', () {
+      final sdkConstraint = "sdk: '>=3.0.0 <4.0.0'";
+      expect(Templates.projectPubspecSsr, contains(sdkConstraint));
+      expect(Templates.projectPubspecHybrid, contains(sdkConstraint));
+    });
+
+    test('projectMainDartHybrid imports router package', () {
+      expect(Templates.projectMainDartHybrid,
+          contains('package:angulardart_router/angulardart_router.dart'));
+    });
+
+    test('projectMainDartHybrid uses hydrateApplication and runApp', () {
+      expect(Templates.projectMainDartHybrid, contains('hydrateApplication'));
+      expect(Templates.projectMainDartHybrid, contains('runApp'));
+    });
+
+    test('projectIndexHtmlHybrid has base href and ng-client-context', () {
+      expect(Templates.projectIndexHtmlHybrid, contains('<base href="/">'));
+      expect(Templates.projectIndexHtmlHybrid, contains('ng-client-context="csr"'));
+    });
+
+    test('projectHomeComponentDart uses RenderMode.server', () {
+      expect(Templates.projectHomeComponentDart, contains("renderMode: RenderMode.server"));
+    });
+
+    test('projectDashboardComponentDart uses RenderMode.client', () {
+      expect(Templates.projectDashboardComponentDart, contains("renderMode: RenderMode.client"));
+    });
+
+    test('projectAboutComponentDart has no explicit renderMode', () {
+      expect(Templates.projectAboutComponentDart, isNot(contains("renderMode")));
+    });
+
+    test('projectDataServiceDart uses @Injectable', () {
+      expect(Templates.projectDataServiceDart, contains("@Injectable()"));
+    });
+
+    test('projectMainDartHybrid renders mustache placeholders correctly', () {
+      final template = Template(
+        Templates.projectMainDartHybrid,
+        htmlEscapeValues: false,
+      );
+      final rendered = template.renderString({
+        'name': 'my_hybrid_app',
+        'platformDomImportStatement': "import 'package:my_hybrid_app/platform_dom.dart' as platform_dom;",
+        'component': {
+          'className': 'AppComponent',
+          'selector': 'app-root',
+          'targetName': 'app_component',
+        },
+      });
+      expect(rendered, contains("import 'package:my_hybrid_app/platform_dom.dart' as platform_dom;"));
+      expect(rendered, contains('AppComponentNgFactory'));
+    });
+
+    test('projectPubspecHybrid contains all hybrid dependencies', () {
+      final content = Templates.projectPubspecHybrid;
+      expect(content, contains("angulardart: '>="));
+      expect(content, contains('>=9.0.0 <10.0.0'));
+      expect(content, contains('angulardart_router'));
+      expect(content, contains('>=5.0.0 <6.0.0'));
+      expect(content, contains('angulardart_server'));
+      expect(content, contains('>=1.2.0 <2.0.0'));
+      expect(content, contains("web: '>="));
+    });
+
+    test('Hybrid templates use consistent version constraints with non-Hybrid pubspec', () {
+      final lines = Templates.projectPubspecHybrid.split('\n');
+      for (final line in lines) {
+        if (line.contains(':') && !line.trim().startsWith('#')) {
+          expect(
+            line,
+            isNot(contains('^')),
+            reason: 'Should use wide constraints not caret: $line',
+          );
+        }
+      }
+    });
+
+    test('projectMainDartHybrid uses @GenerateInjector with routerProviders', () {
+      expect(Templates.projectMainDartHybrid, contains('@GenerateInjector([routerProviders])'));
+    });
+
+    test('projectHomeComponentHtml is static HTML without Mustache vars', () {
+      // This template is written via writeStatic, so it should not contain Mustache {{ }} syntax
+      expect(Templates.projectHomeComponentHtml, isNot(contains('{{')));
+    });
   });
 }

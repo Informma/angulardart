@@ -15,7 +15,7 @@ class NewProjectCommand extends NgDartCommand {
 
   @override
   String get invocation =>
-      'ngdart new <project_name> [--path <path>] [--root-component <Name>] [--ssr]';
+      'ngdart new <project_name> [--path <path>] [--root-component <Name>] [--ssr] [--seo] [--hybrid]';
 
   NewProjectCommand() {
     argParser
@@ -29,10 +29,13 @@ class NewProjectCommand extends NgDartCommand {
           defaultsTo: 'AppComponent')
       ..addFlag('seo',
           abbr: 's',
-          help: 'Add SEO and prerendering support.',
+          help: 'Add SEO and prerendering support. Can be combined with --ssr.',
           defaultsTo: false)
       ..addFlag('ssr',
-          help: 'Add server-side rendering support.',
+          help: 'Add server-side rendering support (no routing). Can be combined with --seo.',
+          defaultsTo: false)
+      ..addFlag('hybrid',
+          help: 'Add hybrid SSR + routing + RenderMode support.',
           defaultsTo: false);
   }
 
@@ -40,6 +43,7 @@ class NewProjectCommand extends NgDartCommand {
   String get _rootComponent => argResults!['root-component'] as String;
   bool get _seo => argResults!['seo'] as bool;
   bool get _ssr => argResults!['ssr'] as bool;
+  bool get _hybrid => argResults!['hybrid'] as bool;
 
   @override
   Future<void> runCommand() async {
@@ -51,8 +55,8 @@ class NewProjectCommand extends NgDartCommand {
     final projectName = EntityName(rest.first);
     final rootComponentName = EntityName(_rootComponent);
 
-    if (_ssr && _seo) {
-      throw UsageException('Cannot use both --ssr and --seo flags together.', usage);
+    if (_hybrid && _ssr) {
+      throw UsageException('Cannot use both --hybrid and --ssr flags together (--hybrid implies SSR).', usage);
     }
 
     await ProjectGenerator(
@@ -61,6 +65,7 @@ class NewProjectCommand extends NgDartCommand {
       rootComponentName,
       seo: _seo,
       ssr: _ssr,
+      hybrid: _hybrid,
     ).generate();
   }
 }

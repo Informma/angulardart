@@ -4,6 +4,7 @@ import 'commands/new_command.dart';
 import 'commands/generate_command.dart';
 import 'commands/seo_command.dart';
 import 'commands/generate_stubs_command.dart';
+import 'commands/add_command.dart';
 
 class NgDartCommandRunner extends CommandRunner<void> {
   NgDartCommandRunner()
@@ -11,6 +12,7 @@ class NgDartCommandRunner extends CommandRunner<void> {
     addCommand(NewProjectCommand());
     addCommand(GenerateCommand());
     addCommand(SeoCommand());
+    addCommand(AddCommand());
     addCommand(GenerateStubsCommand());
   }
 }

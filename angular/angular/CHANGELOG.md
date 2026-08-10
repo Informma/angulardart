@@ -1,3 +1,8 @@
+## 9.3.4
+
+- Fix: SSR - TextBinding utilise maintenant `renderFactory.createText()` au lieu de `BrowserRenderNode.text()` pour respecter le mode serveur
+- Fix: Compiler n'importe plus `platform_dom_browser.template.dart` pour les fichiers sans contenu Angular (@Component, @Directive, @Injectable)
+
 ## 9.3.3
 
 - Fix: Add `browser_only_stub.dart` for VM compatibility (prevents runtime errors when browser-only code is referenced on the server)

@@ -1,3 +1,7 @@
+## 1.3.1
+
+- Fix: Align with angulardart 9.3.4 SSR fixes (no direct changes, dependency update)
+
 ## 1.3.0
 
 - Add: Server-aware SeoService — detects SSR mode via `_head == null` on VM

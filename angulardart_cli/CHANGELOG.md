@@ -1,3 +1,13 @@
+## 1.7.2
+
+### Corrections
+
+- **SSR** : Correction complète du pipeline SSR pour la VM
+  - Compilateur : Ne génère plus d'imports vers `platform_dom_browser.template.dart` pour les fichiers sans contenu Angular
+  - TextBinding : Utilise maintenant `renderFactory.createText()` au lieu de `BrowserRenderNode.text()`
+  - Templates CLI : Utilisent `platform_dom.dart` avec imports conditionnels
+- **E2E** : Correction du bug dans `e2e_integration_test.dart` (build web/main.server.dart → build web)
+
 ## 1.7.1
 
 ### Corrections

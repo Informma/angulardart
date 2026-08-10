@@ -1,3 +1,7 @@
+## 1.2.4
+
+- Fix: Align with angulardart 9.3.4 SSR fixes (TextBinding now uses renderFactory.createText())
+
 ## 1.2.3
 
 - Fix: Improve TransferState serialization and platform_server for SSR compatibility

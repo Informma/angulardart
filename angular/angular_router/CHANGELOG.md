@@ -1,3 +1,7 @@
+## 5.3.3
+
+- Fix: Align with angulardart 9.3.4 SSR fixes (no direct changes, dependency update)
+
 ## 5.3.2
 
 - Fix: Align VM stub class names (VmPathLocationStrategy → PathLocationStrategy, etc.)

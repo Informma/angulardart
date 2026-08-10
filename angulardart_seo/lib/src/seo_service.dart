@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dom_apis.dart';
 
 import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_server/angulardart_server.dart' show TransferState;
 import 'package:meta/meta.dart';
 
 import 'meta_tag.dart';
@@ -54,6 +55,35 @@ class SeoService {
   /// Stream of SEO changes for testing or analytics.
   Stream<SeoChange> get changes => _changesController.stream;
 
+  /// Whether this instance is running on the server (VM).
+  bool get isServer => _head == null;
+
+  /// Static storage for server-side SEO data.
+  ///
+  /// Keys follow the pattern: 'seo:<type>:<name>' or 'seo:<property>'.
+  /// Example: 'seo:title', 'seo:meta:description', 'seo:og:title'.
+  static final Map<String, String> _serverMeta = {};
+
+  /// Returns a copy of all server-side SEO metadata.
+  ///
+  /// This is used by [platform_server.dart] to inject meta tags
+  /// into the SSR HTML output.
+  static Map<String, String> get serverMeta => Map.unmodifiable(_serverMeta);
+
+  /// Clears all server-side SEO data.
+  ///
+  /// Should be called between requests on the server.
+  static void clearServerMeta() {
+    _serverMeta.clear();
+  }
+
+  /// Stores a value in the server-side meta map with the given key prefix.
+  void _storeServerMeta(String key, String value) {
+    if (_head == null) {
+      _serverMeta[key] = value;
+    }
+  }
+
   SeoService() : _head = window.document.head;
 
   // ============================================================================
@@ -68,12 +98,17 @@ class SeoService {
   /// The title is displayed in the browser tab and used by search engines
   /// as the title of the search result.
   ///
+  /// On the server, this also stores the title in [TransferState] so that
+  /// [platform_server.dart] can inject it into the SSR HTML output.
+  ///
   /// Example:
   /// ```dart
   /// seoService.setTitle('My Page Title');
   /// ```
   void setTitle(String title) {
     _document.title = title;
+    _storeServerMeta('seo:title', title);
+    TransferState.set('seo:title', title);
     _changesController.add(SeoChange.title(title));
   }
 
@@ -86,12 +121,17 @@ class SeoService {
   /// If a meta tag with the same name already exists, it will be updated.
   /// Otherwise, a new meta tag will be created.
   ///
+  /// On the server, this also stores the meta tag in [TransferState] so that
+  /// [platform_server.dart] can inject it into the SSR HTML output.
+  ///
   /// Example:
   /// ```dart
   /// seoService.setMeta('description', 'My page description');
   /// seoService.setMeta('keywords', 'angular, dart, seo');
   /// ```
   void setMeta(String name, String content) {
+    _storeServerMeta('seo:meta:$name', content);
+    TransferState.set('seo:meta:$name', content);
     _setMetaTag(MetaTag.name(name: name, content: content));
   }
 
@@ -131,6 +171,8 @@ class SeoService {
   /// Open Graph tags are used by social media platforms (Facebook, LinkedIn, etc.)
   /// to display rich previews of your content.
   ///
+  /// On the server, this also stores the tag in [TransferState].
+  ///
   /// Example:
   /// ```dart
   /// seoService.setOgTag('title', 'My Page Title');
@@ -138,6 +180,8 @@ class SeoService {
   /// seoService.setOgTag('image', 'https://example.com/image.jpg');
   /// ```
   void setOgTag(String property, String content) {
+    _storeServerMeta('seo:og:$property', content);
+    TransferState.set('seo:og:$property', content);
     _setMetaTag(OpenGraphTag(property: property, content: content));
   }
 
@@ -193,6 +237,8 @@ class SeoService {
   ///
   /// Twitter Card tags are used by Twitter to display rich previews of your content.
   ///
+  /// On the server, this also stores the tag in [TransferState].
+  ///
   /// Example:
   /// ```dart
   /// seoService.setTwitterTag('card', 'summary_large_image');
@@ -200,6 +246,8 @@ class SeoService {
   /// seoService.setTwitterTag('image', 'https://example.com/image.jpg');
   /// ```
   void setTwitterTag(String name, String content) {
+    _storeServerMeta('seo:twitter:$name', content);
+    TransferState.set('seo:twitter:$name', content);
     _setMetaTag(TwitterCardTag(name: name, content: content));
   }
 
@@ -244,11 +292,15 @@ class SeoService {
   /// The canonical URL tells search engines which URL is the preferred one
   /// for this page, helping to prevent duplicate content issues.
   ///
+  /// On the server, this also stores the URL in [TransferState].
+  ///
   /// Example:
   /// ```dart
   /// seoService.setCanonical('https://example.com/my-page');
   /// ```
   void setCanonical(String url) {
+    _storeServerMeta('seo:canonical', url);
+    TransferState.set('seo:canonical', url);
     _setLinkTag(LinkTag.canonical(url));
   }
 
@@ -337,18 +389,24 @@ class SeoService {
   ///
   /// The robots meta tag tells search engines how to crawl and index the page.
   ///
+  /// On the server, this also stores the value in [TransferState].
+  ///
   /// Example:
   /// ```dart
   /// seoService.setRobots('index, follow');
   /// seoService.setRobots('noindex, nofollow');
   /// ```
   void setRobots(String robots) {
-    setMeta('robots', robots);
+    _storeServerMeta('seo:meta:robots', robots);
+    TransferState.set('seo:meta:robots', robots);
+    _setMetaTag(MetaTag.name(name: 'robots', content: robots));
   }
 
   /// Sets the Googlebot-specific robots meta tag.
   void setGooglebot(String robots) {
-    setMeta('googlebot', robots);
+    _storeServerMeta('seo:meta:googlebot', robots);
+    TransferState.set('seo:meta:googlebot', robots);
+    _setMetaTag(MetaTag.name(name: 'googlebot', content: robots));
   }
 
   // ============================================================================
@@ -359,6 +417,8 @@ class SeoService {
   ///
   /// JSON-LD is used by search engines to understand the content of your page
   /// and display rich snippets in search results.
+  ///
+  /// On the server, this also stores the JSON-LD data in [TransferState].
   ///
   /// Example:
   /// ```dart
@@ -374,19 +434,26 @@ class SeoService {
   /// ```
   void setJsonLd(JsonLd jsonLd) {
     final id = jsonLd.id ?? 'default';
+
+    // Store JSON-LD in TransferState for server-side rendering.
+    _storeServerMeta('seo:jsonld:$id', _mapToJsonString(jsonLd.data));
+    TransferState.set('seo:jsonld:$id', _mapToJsonString(jsonLd.data));
+
     final key = 'jsonld-$id';
 
     // Remove existing tag if present.
     _jsonLdTags[key]?.remove();
 
-    // Create new script tag.
-    final script = _document.createElement('script') as HTMLScriptElement
-      ..type = 'application/ld+json'
-      ..id = key
-      ..text = _mapToJsonString(jsonLd.data);
+    // Create new script tag (only on browser).
+    if (_head != null) {
+      final script = _document.createElement('script') as HTMLScriptElement
+        ..type = 'application/ld+json'
+        ..id = key
+        ..text = _mapToJsonString(jsonLd.data);
 
-    _head?.append(script);
-    _jsonLdTags[key] = script;
+      _head!.append(script);
+      _jsonLdTags[key] = script;
+    }
     _changesController.add(SeoChange.jsonLdSet(id));
   }
 
@@ -415,6 +482,9 @@ class SeoService {
   ///
   /// This is a convenience method that sets the title, description,
   /// Open Graph tags, and Twitter Card tags all at once.
+  ///
+  /// On the server, all values are also stored in [TransferState] so that
+  /// [platform_server.dart] can inject them into the SSR HTML output.
   ///
   /// Example:
   /// ```dart
@@ -464,7 +534,7 @@ class SeoService {
   /// Removes all SEO tags managed by this service.
   ///
   /// This is useful when navigating away from a page to clean up
-  /// the head element.
+  /// the head element. On the server, also clears [TransferState].
   void clearAll() {
     // Clear title (reset to default).
     _document.title = '';
@@ -486,6 +556,11 @@ class SeoService {
       element.remove();
     }
     _jsonLdTags.clear();
+
+    // On server, also clear the local server meta storage.
+    if (_head == null) {
+      SeoService.clearServerMeta();
+    }
 
     _changesController.add(const SeoChange.allCleared());
   }

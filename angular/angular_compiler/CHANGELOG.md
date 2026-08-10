@@ -1,3 +1,8 @@
+## 5.3.3
+
+- Fix: Skip browser-only platform files (`*_browser.dart`) when resolving reflector dependencies on native/VM builds
+- Fix: Detect conditional exports and prevent direct imports to `_browser.template.dart` in generated templates
+
 ## 5.3.2
 
 - Fix: Remove `dart:js_interop` from template imports (browser-only, breaks AOT on VM)

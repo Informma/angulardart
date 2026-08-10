@@ -217,14 +217,33 @@ class ReflectableReader {
     if (!uri.contains('.')) {
       return false;
     }
+
+    // Skip browser-only platform files on native/VM builds.
+    // These are typically named *_browser.dart and export package:web or other
+    // browser-specific packages that don't compile on the VM.
+    final isBrowserOnlyFile = uri.contains('_browser') ||
+        uri.endsWith('_browser.dart');
+
     final outputUri = _withOutputExtension(uri);
     try {
       if (!(await isLibrary(outputUri) || await hasInput(uri))) {
         return false;
       }
+
+      // If targetLibrary couldn't be resolved (null), it's likely a conditional
+      // export. In that case, skip browser-only files on native builds.
+      if (targetLibrary == null) {
+        if (isBrowserOnlyFile) {
+          return false;
+        }
+        // For non-browser files with no target library, assume they need reflector
+        // to be safe (legacy behavior).
+        return true;
+      }
+
       // Skip files that don't have Angular content to avoid importing
       // browser-only packages (like package:web) on the VM
-      if (targetLibrary != null && !_hasAngularContent(targetLibrary)) {
+      if (!_hasAngularContent(targetLibrary)) {
         return false;
       }
       return true;

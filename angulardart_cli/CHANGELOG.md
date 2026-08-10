@@ -1,3 +1,10 @@
+## 1.7.3
+
+### Corrections
+
+- **SSR** : Post-traitement des `.template.dart` dans `generate-stubs` pour supprimer les imports browser-only (`*_browser.template.dart`)
+- **SSR** : Ajout d'un stub de sécurité pour `platform_dom.template.dart` des projets utilisateurs
+
 ## 1.7.2
 
 ### Corrections

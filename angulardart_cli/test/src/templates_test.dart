@@ -431,19 +431,19 @@ void main() {
     });
 
     test('projectHomeComponentDart uses RenderMode.server', () {
-      expect(Templates.projectHomeComponentDart, contains("renderMode: RenderMode.server"));
+      expect(Templates.projectHomeComponentDart, contains('renderMode: RenderMode.server'));
     });
 
     test('projectDashboardComponentDart uses RenderMode.client', () {
-      expect(Templates.projectDashboardComponentDart, contains("renderMode: RenderMode.client"));
+      expect(Templates.projectDashboardComponentDart, contains('renderMode: RenderMode.client'));
     });
 
     test('projectAboutComponentDart has no explicit renderMode', () {
-      expect(Templates.projectAboutComponentDart, isNot(contains("renderMode")));
+      expect(Templates.projectAboutComponentDart, isNot(contains('renderMode')));
     });
 
     test('projectDataServiceDart uses @Injectable', () {
-      expect(Templates.projectDataServiceDart, contains("@Injectable()"));
+      expect(Templates.projectDataServiceDart, contains('@Injectable()'));
     });
 
     test('projectMainDartHybrid renders mustache placeholders correctly', () {

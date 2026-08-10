@@ -38,7 +38,7 @@ class AddHybridTestHarness {
       );
     }
 
-    if (pubspecContent.contains("angulardart_server:") && pubspecContent.contains("angulardart_router:")) {
+    if (pubspecContent.contains('angulardart_server:') && pubspecContent.contains('angulardart_router:')) {
       messages.add('Hybrid SSR is already enabled in this project.');
       return;
     }
@@ -509,7 +509,7 @@ dependencies:
       await AddHybridTestHarness().run(projectDir: project);
 
       final homeContent = File('${project.path}/lib/home_component.dart').readAsStringSync();
-      expect(homeContent, contains("renderMode: RenderMode.server"));
+      expect(homeContent, contains('renderMode: RenderMode.server'));
     });
 
     test('DashboardComponent has RenderMode.client', () async {
@@ -518,7 +518,7 @@ dependencies:
       await AddHybridTestHarness().run(projectDir: project);
 
       final dashboardContent = File('${project.path}/lib/dashboard_component.dart').readAsStringSync();
-      expect(dashboardContent, contains("renderMode: RenderMode.client"));
+      expect(dashboardContent, contains('renderMode: RenderMode.client'));
     });
 
     test('AboutComponent has no explicit renderMode (automatic)', () async {
@@ -527,7 +527,7 @@ dependencies:
       await AddHybridTestHarness().run(projectDir: project);
 
       final aboutContent = File('${project.path}/lib/about_component.dart').readAsStringSync();
-      expect(aboutContent, isNot(contains("renderMode")));
+      expect(aboutContent, isNot(contains('renderMode')));
     });
 
     test('is idempotent - does not duplicate changes', () async {

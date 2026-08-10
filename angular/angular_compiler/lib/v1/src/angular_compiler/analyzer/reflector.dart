@@ -174,7 +174,7 @@ class ReflectableReader {
           ? (import.uri as DirectiveUriWithRelativeUriString).relativeUriString
           : '';
       futures.add(() async {
-        if (await _needsInitReflector(uri, import.prefix)) {
+        if (await _needsInitReflector(uri, import.prefix, import.importedLibrary)) {
           var outputUri = uri;
           if (!outputUri.endsWith(outputExtension)) {
             outputUri = _withOutputExtension(outputUri);
@@ -189,7 +189,7 @@ class ReflectableReader {
           ? (export.uri as DirectiveUriWithRelativeUriString).relativeUriString
           : '';
       futures.add(() async {
-        if (await _needsInitReflector(uri, null)) {
+        if (await _needsInitReflector(uri, null, export.exportedLibrary)) {
           var outputUri = uri;
           if (!outputUri.endsWith(outputExtension)) {
             outputUri = _withOutputExtension(outputUri);
@@ -206,6 +206,7 @@ class ReflectableReader {
   Future<bool> _needsInitReflector(
     String uri,
     PrefixFragment? prefix,
+    LibraryElement? targetLibrary,
   ) async {
     if (prefix != null && prefix.isDeferred) {
       return false;
@@ -218,11 +219,34 @@ class ReflectableReader {
     }
     final outputUri = _withOutputExtension(uri);
     try {
-      return await isLibrary(outputUri) || await hasInput(uri);
+      if (!(await isLibrary(outputUri) || await hasInput(uri))) {
+        return false;
+      }
+      // Skip files that don't have Angular content to avoid importing
+      // browser-only packages (like package:web) on the VM
+      if (targetLibrary != null && !_hasAngularContent(targetLibrary)) {
+        return false;
+      }
+      return true;
     } catch (e) {
       throw BuildError.withoutContext(
           'Could not parse URI. Additional information:\n$e\n');
     }
+  }
+
+  /// Returns true if the library contains any Angular annotations
+  /// (@Component, @Directive, or @Injectable).
+  bool _hasAngularContent(LibraryElement lib) {
+    for (final unit in _allUnits(lib)) {
+      for (final type in unit.element.classes) {
+        if ($Component.firstAnnotationOfExact(type) != null ||
+            $Directive.firstAnnotationOfExact(type) != null ||
+            $Injectable.firstAnnotationOfExact(type) != null) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   bool _shouldRecordFactory(ClassElement element) =>

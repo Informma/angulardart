@@ -358,13 +358,13 @@ dev_dependencies:
 
   static const projectMainDartSsr = '''import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_server/angulardart_server.dart';
-import 'package:web/web.dart' as web;
+import 'package:{{name}}/platform_dom.dart' as platform_dom;
 // ignore: uri_has_not_been_generated
 import 'main.template.dart' as ng;
 
 void main() async {
   final isServerRendered =
-      web.window.document.documentElement?.getAttribute('ng-server-context') == 'ssr';
+      (platform_dom.window as dynamic).document.documentElement?.getAttribute('ng-server-context') == 'ssr';
 
   if (isServerRendered) {
     await hydrateApplication(ng.AppComponentNgFactory);
@@ -397,7 +397,7 @@ import 'dart:io';
 
 import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
-import '../web/main.server.template.dart' as ng;
+import '../web/main.server.dart' as ng;
 
 /// Point d'entre du serveur HTTP SSR.
 ///

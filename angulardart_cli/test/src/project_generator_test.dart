@@ -600,7 +600,7 @@ void main() {
       await generator.generate();
 
       final content = File('${tempDir.path}/hybrid_app/lib/home_component.dart').readAsStringSync();
-      expect(content, contains("renderMode: RenderMode.server"));
+      expect(content, contains('renderMode: RenderMode.server'));
     });
 
     test('DashboardComponent has RenderMode.client', () async {
@@ -613,7 +613,7 @@ void main() {
       await generator.generate();
 
       final content = File('${tempDir.path}/hybrid_app/lib/dashboard_component.dart').readAsStringSync();
-      expect(content, contains("renderMode: RenderMode.client"));
+      expect(content, contains('renderMode: RenderMode.client'));
     });
 
     test('AboutComponent has no explicit renderMode (automatic)', () async {
@@ -626,7 +626,7 @@ void main() {
       await generator.generate();
 
       final content = File('${tempDir.path}/hybrid_app/lib/about_component.dart').readAsStringSync();
-      expect(content, isNot(contains("renderMode")));
+      expect(content, isNot(contains('renderMode')));
     });
 
     test('Hybrid index.html has base href', () async {
@@ -749,7 +749,7 @@ void main() {
       await generator.generate();
 
       final content = File('${tempDir.path}/hybrid_app/lib/home_component.dart').readAsStringSync();
-      expect(content, contains("TransferState.set"));
+      expect(content, contains('TransferState.set'));
     });
 
     test('Hybrid main.dart uses DataService', () async {
@@ -762,7 +762,7 @@ void main() {
       await generator.generate();
 
       final content = File('${tempDir.path}/hybrid_app/lib/home_component.dart').readAsStringSync();
-      expect(content, contains("final DataService _data"));
+      expect(content, contains('final DataService _data'));
     });
   });
 }

@@ -53,6 +53,9 @@ class AddSsrTestHarness {
 
     messages.add('Adding SSR support...');
 
+    // Extract project name for platform_dom import
+    final nameMatch = RegExp(r'^name:\s*(.+)$', multiLine: true).firstMatch(pubspecContent);
+
     // 1. Modify pubspec.yaml
     if (!pubspecContent.contains('angulardart_server:')) {
       pubspecContent = pubspecContent.replaceFirst(
@@ -114,11 +117,14 @@ class AddSsrTestHarness {
       final injectorName = injectorMatch?.group(1);
 
       String newMain;
+      final hasPlatformImport = mainContent.contains("import 'platform_dom.dart'") ||
+          mainContent.contains("import '/platform_dom.dart'");
+
       if (injectorName != null) {
         final cleanFactory = factoryArg.replaceFirst(', createInjector: $injectorName', '').trim();
         newMain = '''void main() async {
   final isServerRendered =
-      web.window.document.documentElement?.getAttribute('ng-server-context') == 'ssr';
+      (platform_dom.window as dynamic).document.documentElement?.getAttribute('ng-server-context') == 'ssr';
 
   if (isServerRendered) {
     await hydrateApplication($cleanFactory, createInjector: $injectorName);
@@ -129,7 +135,7 @@ class AddSsrTestHarness {
       } else {
         newMain = '''void main() async {
   final isServerRendered =
-      web.window.document.documentElement?.getAttribute('ng-server-context') == 'ssr';
+      (platform_dom.window as dynamic).document.documentElement?.getAttribute('ng-server-context') == 'ssr';
 
   if (isServerRendered) {
     await hydrateApplication($factoryArg);
@@ -147,15 +153,14 @@ class AddSsrTestHarness {
 
       // Add imports
       final hasServerImport = mainContent.contains("import 'package:angulardart_server/");
-      final hasWebImport = mainContent.contains("import 'package:web/web.dart' as web") ||
-          mainContent.contains("import 'dart:js_interop' as web");
 
       if (!hasServerImport) {
         mainContent = "import 'package:angulardart_server/angulardart_server.dart';\n$mainContent";
       }
 
-      if (!hasWebImport) {
-        mainContent = "import 'package:web/web.dart' as web;\n$mainContent";
+      if (!hasPlatformImport) {
+        final projectName = nameMatch?.group(1)?.trim() ?? 'my_app';
+        mainContent = "import 'package:$projectName/platform_dom.dart' as platform_dom;\n$mainContent";
       }
 
       await mainFile.writeAsString(mainContent);
@@ -407,7 +412,7 @@ dependencies:
       expect(mainDart, contains('hydrateApplication'));
       expect(mainDart, contains("getAttribute('ng-server-context')"));
       expect(mainDart, contains("import 'package:angulardart_server/angulardart_server.dart'"));
-      expect(mainDart, contains("import 'package:web/web.dart' as web"));
+      expect(mainDart, contains("import 'package:test_app/platform_dom.dart' as platform_dom"));
     });
 
     test('preserves createInjector in main.dart transformation', () async {

@@ -179,7 +179,7 @@ void main() {
 Future<void> _runBuildRunner(String examplePath) async {
   final result = await Process.run(
     'dart',
-    ['run', 'build_runner', 'build', 'web/main.server.dart'],
+    ['run', 'build_runner', 'build', 'web'],
     workingDirectory: examplePath,
     runInShell: true,
   );

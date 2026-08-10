@@ -1,3 +1,13 @@
+## 1.7.1
+
+### Corrections
+
+- **SSR** : Correction des templates pour utiliser `platform_dom.dart` au lieu d'importer directement `package:web/web.dart`
+  - `projectMainDartSsr` : import conditionnel via `platform_dom.dart`
+  - `projectMainServerDartFixed` : import `main.server.dart` au lieu de `main.server.template.dart`
+  - `add_ssr_command` : ne plus ajouter l'import direct `package:web`
+  - Correction des tests associés
+
 ## 1.7.0
 
 - Add: `--hybrid` flag to `ngdart new` (mutually exclusive with --ssr and --seo)

@@ -7,25 +7,30 @@ import 'dom_apis.dart';
 
 import 'render_node.dart';
 
+/// Contexte de rendu ct serveur, isol par request (single-threaded event loop).
+class ServerRenderContext {
+  int counter = 0;
+  final Map<String, DomElement> ngIdMap = {};
+  final List<String> collectedStyles = <String>[];
+}
+
+/// Contexte de rendu courant pour la request en cours.
+ServerRenderContext? _currentContext;
+
 class ServerRenderNode implements RenderNode {
   final String tagName;
 
-  /// Compteur global unique pour les IDs de nuds (hydration).
-  static int _globalCounter = 0;
+  /// Retourne le contexte de rendu pour la request courante.
+  static ServerRenderContext _getContext() {
+    if (_currentContext == null) {
+      throw StateError('ServerRenderNode must be used within a server rendering context. Call ServerRenderNode.reset() first.');
+    }
+    return _currentContext!;
+  }
 
-  /// Map des IDs de nuds vers les lments DOM ct client.
-  /// Rempli par [HydrateRenderFactory] pendant l'hydration.
-  static final Map<String, DomElement> ngIdMap = {};
-
-  /// Styles encapsuls collects pendant le rendu serveur.
-  /// Format: `selector { ...rules }`
-  static final List<String> collectedStyles = <String>[];
-
-  /// Rinitialise les tats globaux (appeler entre chaque request ct serveur).
+  /// Rinitialise les tats globaux pour une nouvelle request ct serveur.
   static void reset() {
-    _globalCounter = 0;
-    ngIdMap.clear();
-    collectedStyles.clear();
+    _currentContext = ServerRenderContext();
   }
 
   final Map<String, String> _attrs = {};
@@ -80,7 +85,8 @@ class ServerRenderNode implements RenderNode {
   @override
   void markAsServerRendered({String? contentId}) {
     if (_ngId != null) return; // dj marqu
-    _ngId = _globalCounter++;
+    final ctx = _getContext();
+    _ngId = ctx.counter++;
     _attrs['data-ng-id'] = '$_ngId';
     if (contentId != null) {
       _attrs['data-ng-content-id'] = contentId;

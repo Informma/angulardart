@@ -352,6 +352,8 @@ class Identifiers {
   static final htmlElement =
       CompileIdentifierMetadata(name: 'Element', moduleUrl: 'package:web/src/dom/dom.dart');
   static final elementToken = identifierToken(htmlElement);
+  static final domElement =
+      CompileIdentifierMetadata(name: 'DomElement', moduleUrl: 'package:angulardart/src/runtime/web_types.dart');
   static final htmlHtmlElement =
       CompileIdentifierMetadata(name: 'HTMLElement', moduleUrl: 'package:web/src/dom/html.dart');
   static final htmlElementToken = identifierToken(htmlHtmlElement);

@@ -21,7 +21,7 @@ dependencies:
   angulardart_router: '>=5.1.0 <6.0.0'
   collection: '>=1.18.0 <2.0.0'
   meta: '>=1.15.0 <2.0.0'
-  web: '>=0.5.0 <2.0.0'
+  web: '>=0.5.0 <1.0.0'
 
 dev_dependencies:
   angulardart_test: '>=6.0.0 <7.0.0'

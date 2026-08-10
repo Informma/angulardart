@@ -1,4 +1,4 @@
-include: ../analysis_options.yaml
+include: package:lints/recommended.yaml
 
 analyzer:
   errors:
@@ -7,6 +7,7 @@ analyzer:
     invalid_assignment: ignore
     return_of_invalid_type: ignore
     return_of_invalid_type_from_closure: ignore
+    uri_has_not_been_generated: ignore
   language:
     # Allow _browser.dart files to import web even though it's not in dependencies
     # These files are only included on browser platforms via conditional exports

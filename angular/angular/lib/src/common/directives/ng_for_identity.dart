@@ -37,8 +37,8 @@ class NgForIdentity<T> {
       return;
     }
     if (_template == null || _container == null) return;
-    final template = _template!;
-    final container = _container!;
+    final template = _template;
+    final container = _container;
     var i = 0;
     for (final element in elements) {
       final view = container.createEmbeddedView(template);

@@ -58,7 +58,7 @@ void main() {
       final existing = web.document.createElement('hello-component')..textContent = 'Loading...';
       web.document.body!.append(existing);
       final comp = appRef.bootstrap(ng.createHelloComponentFactory());
-      expect(comp.location.textContent, 'Hello World');
+      expect((comp.location as dynamic).textContent, 'Hello World');
       expect(
         web.document.body!.querySelector('hello-component'),
         same(comp.location),
@@ -67,7 +67,7 @@ void main() {
 
     test('create a new element if missing from the DOM', () {
       final comp = appRef.bootstrap(ng.createHelloComponentFactory());
-      expect(comp.location.textContent, 'Hello World');
+      expect((comp.location as dynamic).textContent, 'Hello World');
       expect(
         web.document.body!.querySelector('hello-component'),
         same(comp.location),

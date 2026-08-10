@@ -316,7 +316,6 @@ environment:
 
 dependencies:
   angulardart: '>=9.0.0 <10.0.0'
-  shelf: '>=1.0.0 <2.0.0'
   angulardart_server: '>=1.2.0 <2.0.0'
   web: '>=0.5.0 <1.0.0'
 
@@ -381,47 +380,6 @@ class {{component.className}} {
 }
 ''';
 
-  static const projectMainServerDart = '''import 'dart:async';
-import 'dart:io';
-
-import 'package:angulardart_server/angulardart_server.dart';
-// ignore: uri_has_not_been_generated
-import '../web/main.template.dart' as ng;
-
-/// Point d'entre du serveur HTTP SSR.
-///
-/// Compilez avec : dart run build_runner build web/main.server.dart
-/// Puis lancez : dart bin/server.dart
-Future<void> main() async {
-  final server = platformServer();
-
-  await HttpServer.bind('localhost', 4000).then((httpServer) {
-    print('Serveur SSR angulardart en cours d\\'exécution sur http://localhost:4000');
-
-    httpServer.listen((request) async {
-      try {
-        final html = await server.renderApplication(
-          ng.appComponentFactory,
-          url: request.uri.toString(),
-        );
-
-        request.response
-          ..headers.contentType = ContentType.html
-          ..write(html)
-          ..close();
-      } catch (e, st) {
-        print('Erreur lors du rendu : \$e');
-        print(st);
-        request.response
-          ..statusCode = HttpStatus.internalServerError
-          ..write('<h1>Erreur serveur</h1>')
-          ..close();
-      }
-    });
-  });
-}
-''';
-
   static const projectMainServerDartEntry = '''import 'package:angulardart/angulardart.dart';
 
 // ignore: uri_has_not_been_generated
@@ -437,7 +395,7 @@ import 'dart:io';
 
 import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
-import '../web/main.template.dart' as ng;
+import '../web/main.server.template.dart' as ng;
 
 /// Point d'entre du serveur HTTP SSR.
 ///

@@ -14,6 +14,7 @@ export 'src/directives/router_link_directive.dart' show RouterLink;
 export 'src/directives/router_outlet_directive.dart' show RouterOutlet;
 export 'src/lifecycle.dart';
 export 'src/location.dart';
+export 'src/router_types.dart';
 export 'src/route_definition.dart' show RouteDefinition;
 export 'src/route_path.dart' show RoutePath;
 export 'src/router/navigation_params.dart' show NavigationParams;

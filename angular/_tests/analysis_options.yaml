@@ -1,4 +1,4 @@
-include: ../analysis_options.yaml
+include: package:lints/recommended.yaml
 
 analyzer:
   errors:
@@ -7,3 +7,5 @@ analyzer:
     invalid_assignment: ignore
     return_of_invalid_type: ignore
     non_bool_condition: ignore
+    uri_has_not_been_generated: ignore
+    deprecated_member_use: ignore

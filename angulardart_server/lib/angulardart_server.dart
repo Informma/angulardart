@@ -24,3 +24,4 @@ export 'src/platform_server.dart' show platformServer, PlatformServerRef;
 export 'package:angulardart_meta/angulardart_meta.dart' show RenderMode;
 export 'src/transfer_state.dart' show TransferState;
 export 'src/hydration.dart' show hydrateApplication;
+export 'src/server_zone.dart' show ServerNgZone;

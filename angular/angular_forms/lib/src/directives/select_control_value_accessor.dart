@@ -101,7 +101,7 @@ class NgSelectOption implements OnDestroy {
   late final String id;
   NgSelectOption(@Optional() web.HTMLElement? element, @Optional() @Host() this._select)
       : _element = element as web.HTMLOptionElement? {
-    if (_select != null) id = _select!._registerOption();
+    if (_select != null) id = _select._registerOption();
   }
 
   @Input('ngValue')

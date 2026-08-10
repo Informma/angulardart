@@ -171,15 +171,16 @@ web.KeyboardEvent createKeyboardEvent(
   bool shiftKey = false,
   bool metaKey = false,
 }) {
-  return web.KeyboardEvent(type,
+  var event = web.KeyboardEvent(type,
     web.KeyboardEventInit(
       keyCode: keyCode,
-      ctrlKey: ctrlKey,
-      altKey: altKey,
-      shiftKey: shiftKey,
-      metaKey: metaKey,
-      bubbles: true,
-      cancelable: true,
     ),
   );
+  // package:web 0.5.x KeyboardEvent doesn't expose modifier key setters
+  // on the extension type API, so we use dynamic to set them via JS interop
+  if (ctrlKey) (event as dynamic).setProperty('ctrlKey', true);
+  if (altKey) (event as dynamic).setProperty('altKey', true);
+  if (shiftKey) (event as dynamic).setProperty('shiftKey', true);
+  if (metaKey) (event as dynamic).setProperty('metaKey', true);
+  return event;
 }

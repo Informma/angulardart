@@ -141,7 +141,7 @@ class NgFor implements DoCheck {
     // easier to consume than current.
 
     if (_viewContainer == null || _templateRef == null) return;
-    final viewContainer = _viewContainer!;
+    final viewContainer = _viewContainer;
     final templateRef = _templateRef!;
 
     final insertTuples = <_RecordViewTuple>[];

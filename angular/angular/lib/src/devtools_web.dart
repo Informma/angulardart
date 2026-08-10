@@ -1,8 +1,7 @@
 library angular.src.devtools;
 
-// TODO: Re-enable devtools JS interop when dart:js_interop types are compatible
-// import 'dart:js_interop';
-// import 'dart:js_interop_unsafe';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'devtools/inspector.dart';
 import 'runtime/dom_apis.dart';
@@ -23,20 +22,17 @@ bool _isDevToolsEnabled = false;
 ///
 /// {@category DevTools}
 void enableDevTools() {
-  // Devtools JS interop is disabled for now to allow AOT compilation
-  // The devtools functionality requires dart:js_interop compatible types
-  // which are not available with our abstract DomHTMLElement type.
-  // if (isDevMode) {
-  //   final inspector = Inspector.instance;
-  //   globalContext.setProperty(
-  //     'getAngularComponentElement'.toJS,
-  //     ((int id) => inspector.getComponentElement(id)).toJS,
-  //   );
-  //   globalContext.setProperty(
-  //     'getAngularComponentIdForNode'.toJS,
-  //     ((dynamic node, String groupName) => inspector.getComponentIdForNode(node as dynamic, groupName)).toJS,
-  //   );
-  // }
+  if (isDevMode) {
+    final inspector = Inspector.instance;
+    globalContext.setProperty(
+      'getAngularComponentElement'.toJS,
+      ((int id) => inspector.getComponentElement(id) as JSAny?).toJS,
+    );
+    globalContext.setProperty(
+      'getAngularComponentIdForNode'.toJS,
+      ((JSAny? node, String groupName) => inspector.getComponentIdForNode(node as DomNode, groupName)).toJS,
+    );
+  }
 }
 
 /// Registers [element] as an additional location to search for components.

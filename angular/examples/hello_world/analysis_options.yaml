@@ -1,9 +1,10 @@
-include: ../../analysis_options.yaml
+include: package:lints/recommended.yaml
 
 analyzer:
   errors:
     # False positive related to missing .template.dart files
     argument_type_not_assignable: ignore
+    uri_has_not_been_generated: ignore
 
 linter:
   rules:

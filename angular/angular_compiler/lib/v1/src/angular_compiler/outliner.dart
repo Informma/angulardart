@@ -6,7 +6,6 @@ import 'analyzer.dart';
 import 'outliner/collect_type_parameters.dart';
 
 const _angularImports = '''
-import 'package:web/web.dart' as _html;
 import 'package:angulardart/angulardart.dart' as _ng;
 import 'package:angulardart/src/core/change_detection/directive_change_detector.dart' as _ng;
 import 'package:angulardart/src/core/linker/views/component_view.dart' as _ng;
@@ -172,7 +171,7 @@ class $changeDetectorName$typeParameters extends _ng.DirectiveChangeDetector {
   external $directiveType get instance;
   external void deliverChanges();
   external $changeDetectorName($directiveType instance);
-  external void detectHostChanges(_ng.RenderView view, _html.Element hostElement);
+  external void detectHostChanges(_ng.RenderView view, dynamic hostElement);
 }
 ''');
       }

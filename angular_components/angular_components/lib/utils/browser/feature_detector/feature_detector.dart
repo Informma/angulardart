@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:js_interop';
-import 'dart:js_util' as js_util;
+import 'dart:js_interop_unsafe';
 
 import 'package:web/web.dart' as web;
 
@@ -64,11 +64,11 @@ final bool isFirefox = web.window.navigator.userAgent.contains('Firefox/');
 final bool isEdge = web.window.navigator.userAgent.contains('Edge/');
 
 bool _hasGlobalProperty(String property) {
-  final val = js_util.getProperty<JSAny?>(globalContext, property);
+  final val = globalContext.getProperty(property.toJS);
   return val != null;
 }
 
 bool _hasElementProperty(web.Element element, String property) {
-  final val = js_util.getProperty<JSAny?>(element, property);
+  final val = (element as JSObject).getProperty(property.toJS);
   return val != null;
 }

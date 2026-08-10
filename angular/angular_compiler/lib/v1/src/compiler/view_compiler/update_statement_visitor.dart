@@ -297,7 +297,7 @@ class _UpdateStatementsVisitor
       o.importExpr(RenderNodeHelpers.addRenderEventListener).callFn([
         renderNode?.toReadExpr() ?? appViewInstance!,
         o.literal(nativeEvent.name),
-        renderValue!.prop('toJS'),
+        renderValue!,
       ]).toStmt();
 }
 

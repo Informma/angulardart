@@ -1,3 +1,9 @@
+## 1.6.0
+
+- Fix: SSR template now works end-to-end — component inline in web/main.dart, HTML in web/app_component.html, templates copied from build output
+- Fix: `ngdart generate-stubs` creates web/main.template.dart stub and no longer conflicts with build_runner
+- Fix: Constrained `package:web` to `<1.0.0` (1.x uses incompatible JS interop)
+
 ## 1.5.0
 
 - Fix: SSR template now uses correct structure — component inline in web/main.dart with HTML in web/app_component.html (matches hello_world_ssr example exactly)

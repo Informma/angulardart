@@ -29,6 +29,12 @@ class HydrateRenderFactory extends RenderFactory {
   final Map<String, DomElement> _elementMap = {};
   final Map<String, DomText> _textNodeMap = {};
   int _nextId = 0;
+  ServerRenderContext? _serverRenderContext;
+
+  /// Configure le contexte de rendu serveur pour l'hydration.
+  void setServerRenderContext(ServerRenderContext context) {
+    _serverRenderContext = context;
+  }
 
   /// Crée une nouvelle instance et scanne le DOM pour construire la map.
   factory HydrateRenderFactory() {
@@ -165,7 +171,14 @@ class HydrateRenderFactory extends RenderFactory {
   }
 
   /// Retourne les styles encapsulés collectés pendant le rendu serveur.
-  List<String> get collectedStyles => ServerRenderNode.collectedStyles;
+  List<String> get collectedStyles {
+    final ctx = _serverRenderContext;
+    if (ctx == null) return <String>[];
+    return ctx.collectedStyles;
+  }
+
+  /// Retourne le contexte de rendu serveur courant.
+  ServerRenderContext? get serverRenderContext => _serverRenderContext;
 
   /// Indique si l'hydration est possible (DOM ssr détecté).
   bool get hasServerDom => _elementMap.isNotEmpty;

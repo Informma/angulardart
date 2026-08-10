@@ -1,15 +1,17 @@
-@JS()
-
-library;
-
 import 'dart:async';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 import 'package:web/web.dart' as web;
 
-import 'package:js/js.dart';
 import 'package:test/test.dart';
 import 'package:angulardart/angulardart.dart';
 
 import 'run_app_test.template.dart' as ng;
+
+extension type JsTestability._(JSObject _) implements JSObject {
+  external bool isStable();
+  external void whenStable(JSFunction fn);
+}
 
 /// A set of functional tests for the bootstrapping process.
 void main() {
@@ -37,18 +39,19 @@ void main() {
   /// **NOTE**: We will use the JS API, since that is how users access it.
   void verifyTestability() {
     expect(component.injector.get(Testability), isNotNull);
-    var jsTestability = getAngularTestability(
+    final jsTestability = getAngularTestability(
       rootDomContainer.children.item(0)!,
     );
     expect(getAllAngularTestabilities(), isNot(hasLength(0)));
     expect(jsTestability.isStable(), isTrue, reason: 'Expected stability');
-    jsTestability.whenStable(allowInterop(expectAsync1((didWork) {
+    final callback = expectAsync1((bool didWork) {
       expect(didWork, isFalse, reason: 'Immediate invocation (no work)');
 
       Future(expectAsync0(() {
         verifyDomAndStyles(innerText: 'Hello Universe!');
       }));
-    })));
+    });
+    jsTestability.whenStable(callback.toJS);
     runInApp(() => HelloWorldComponent.doAsyncTaskAndThenRename('Universe'));
   }
 
@@ -191,14 +194,8 @@ class StubExceptionHandler implements ExceptionHandler {
   }
 }
 
-@JS()
-external JsTestability getAngularTestability(web.Element e);
+JsTestability getAngularTestability(web.Element e) =>
+    globalContext.callMethod('getAngularTestability'.toJS, e) as JsTestability;
 
-@JS()
-external List<JsTestability> getAllAngularTestabilities();
-
-@JS()
-abstract class JsTestability {
-  external bool isStable();
-  external void whenStable(void Function(bool didWork) fn);
-}
+JSArray getAllAngularTestabilities() =>
+    globalContext.callMethod('getAllAngularTestabilities'.toJS) as JSArray;

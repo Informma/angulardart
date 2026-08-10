@@ -3,7 +3,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
-import 'package:source_gen/source_gen.dart';
+import 'package:source_gen/source_gen.dart' as source_gen;
 import 'package:angulardart_compiler/v1/cli.dart';
 import 'package:angulardart_compiler/v2/analyzer.dart';
 import 'package:angulardart_compiler/v2/context.dart';
@@ -11,6 +11,59 @@ import 'package:angulardart_compiler/v2/context.dart';
 import '../common.dart';
 import '../types.dart';
 import 'tokens.dart';
+
+/// Safely checks if an annotation exists on an element by checking metadata
+/// directly (without computing constant values), handling cases where the
+/// analyzer cannot resolve the annotation class in synthetic code.
+bool _hasAnnotation(source_gen.TypeChecker checker, Element element) {
+  try {
+    // First try the standard approach with throwOnUnresolved: false
+    if (checker.hasAnnotationOfExact(element, throwOnUnresolved: false)) {
+      return true;
+    }
+  } catch (_) {}
+
+  // If that fails (e.g., unresolved type references in synthetic code),
+  // fall back to checking metadata annotations directly by their element.
+  try {
+    final metadata = element.metadata;
+    for (final annotation in metadata.annotations) {
+      // Get the element referenced by this annotation (e.g., Host constructor)
+      final annElement = annotation.element;
+      if (annElement != null && checker.isExactly(annElement)) {
+        return true;
+      }
+    }
+  } catch (_) {}
+  return false;
+}
+
+/// Safely gets an annotation from an element, handling cases where the analyzer
+/// cannot resolve the annotation constant value.
+DartObject? _getAnnotation(source_gen.TypeChecker checker, Element element) {
+  try {
+    final result = checker.firstAnnotationOfExact(
+      element,
+      throwOnUnresolved: false,
+    );
+    if (result != null) return result;
+  } catch (_) {}
+
+  // Fall back to checking metadata annotations directly by their element.
+  try {
+    final metadata = element.metadata;
+    for (final annotation in metadata.annotations) {
+      final annElement = annotation.element;
+      if (annElement != null && checker.isExactly(annElement)) {
+        // Try to get the full annotation value, but return null on failure
+        try {
+          return annotation.computeConstantValue();
+        } catch (_) {}
+      }
+    }
+  } catch (_) {}
+  return null;
+}
 
 /// Support for reading and parsing a class or function's "dependencies".
 ///
@@ -71,22 +124,23 @@ class DependencyReader {
     final positional = <DependencyElement>[];
     for (final object in dependencies) {
       var tokenObject = object;
-      final reader = ConstantReader(object);
+      final reader = source_gen.ConstantReader(object);
       var metadata = const <DartObject>[];
       if (reader.isList) {
         tokenObject = reader.listValue.first;
         metadata = reader.listValue.sublist(1);
       }
-      bool hasMeta(TypeChecker checker) =>
+      bool hasMeta(source_gen.TypeChecker checker) =>
           metadata.any((m) => checker.isExactlyType(m.type!));
-      final isOptional = hasMeta($Optional);
+      final isOptional = _hasAnnotation($Optional, element) ||
+          (metadata.isNotEmpty && hasMeta($Optional));
       positional.add(
         DependencyElement(
           _tokenReader.parseTokenObject(tokenObject),
-          host: hasMeta($Host),
+          host: metadata.isNotEmpty && hasMeta($Host),
           optional: isOptional,
-          self: hasMeta($Self),
-          skipSelf: hasMeta($SkipSelf),
+          self: metadata.isNotEmpty && hasMeta($Self),
+          skipSelf: metadata.isNotEmpty && hasMeta($SkipSelf),
         ),
       );
     }
@@ -99,9 +153,12 @@ class DependencyReader {
   ) {
     final positional = <DependencyElement>[];
     for (final parameter in parameters) {
-      final isRequired = $Optional.firstAnnotationOfExact(parameter) == null;
-      final hasInjectToken = $Inject.firstAnnotationOfExact(parameter) != null;
-      final hasOpaqueToken = $OpaqueToken.firstAnnotationOf(parameter) != null;
+      final isRequired =
+          _hasAnnotation($Optional, parameter) == false;
+      final hasInjectToken =
+          _getAnnotation($Inject, parameter) != null;
+      final hasOpaqueToken =
+          _getAnnotation($OpaqueToken, parameter) != null;
       bool isRequiredButNotInjectable() =>
           parameter.isOptionalPositional &&
           isRequired &&
@@ -119,10 +176,10 @@ class DependencyReader {
             type: hasInjectToken || hasOpaqueToken
                 ? _tokenReader.parseTokenType(parameter)
                 : null,
-            host: $Host.firstAnnotationOfExact(parameter) != null,
+            host: _hasAnnotation($Host, parameter),
             optional: !isRequired,
-            self: $Self.firstAnnotationOfExact(parameter) != null,
-            skipSelf: $SkipSelf.firstAnnotationOfExact(parameter) != null,
+            self: _hasAnnotation($Self, parameter),
+            skipSelf: _hasAnnotation($SkipSelf, parameter),
           ),
         );
       }

@@ -1,4 +1,3 @@
-import 'dart:js_interop';
 import 'package:web/web.dart' as web;
 
 import 'package:test/test.dart';
@@ -36,21 +35,21 @@ void main() {
     final testBed = NgTestBed(ng.createUnsafeHtmlComponentFactory());
     final testFixture = await testBed.create();
     final div = testFixture.rootElement.querySelector('div')!;
-    expect((div.innerHTML as JSString).toDart, 'some <p>text</p>');
+    expect(div.innerHTML, 'some <p>text</p>');
     await testFixture.update((component) {
       component.html = 'ha <script>evil()</script>';
     });
-    expect((div.innerHTML as JSString).toDart, 'ha ');
+    expect(div.innerHTML, 'ha ');
     await testFixture.update((component) {
       component.html = 'also <img src="x" onerror="evil()"> evil';
     });
-    expect((div.innerHTML as JSString).toDart, 'also <img src="x"> evil');
+    expect(div.innerHTML, 'also <img src="x"> evil');
     await testFixture.update((component) {
       final srcdoc = '<div></div><script></script>';
       component.html = 'also <iframe srcdoc="$srcdoc"> content</iframe>';
     });
     expect(
-      (div.innerHTML as JSString).toDart,
+      div.innerHTML,
       'also ',
     );
   }, tags: 'fails-on-ci');

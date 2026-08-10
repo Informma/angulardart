@@ -10,7 +10,6 @@ dependencies:
   build: ^4.0.0
   build_test: ^3.0.0
   glob: ^2.0.0
-  js: ^0.7.0
   logging: ^1.0.0
 
   # Actual valid dependencies required.
@@ -35,4 +34,16 @@ dev_dependencies:
   term_glyph: ^1.2.0
 
 dependency_overrides:
+  angulardart:
+    path: ../angular
+  angulardart_ast:
+    path: ../angular_ast
+  angulardart_compiler:
+    path: ../angular_compiler
+  angulardart_forms:
+    path: ../angular_forms
+  angulardart_router:
+    path: ../angular_router
+  angulardart_test:
+    path: ../angular_test
   web: '>=0.5.0 <1.0.0'

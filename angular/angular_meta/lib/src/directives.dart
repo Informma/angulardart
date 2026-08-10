@@ -29,7 +29,7 @@ import 'visibility.dart';
 ///
 /// <?code-excerpt "docs/attribute-directives/lib/src/highlight_directive_1.dart"?>
 /// ```dart
-/// import 'dart:html';
+/// import 'package:web/web.dart';
 ///
 /// import 'package:angulardart/angulardart.dart';
 ///
@@ -409,7 +409,7 @@ class Pipe {
 ///
 /// > **NOTE**: `@Attribute` is not affected by any updates to attributes to the
 /// > host element (including the `[attr.*]` template syntax, or imperative
-/// > updates to the DOM using `dart:html`).
+/// > updates to the DOM using `package:web`).
 ///
 /// ### Example
 ///

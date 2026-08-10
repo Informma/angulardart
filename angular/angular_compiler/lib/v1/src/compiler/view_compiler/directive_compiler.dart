@@ -132,12 +132,13 @@ class DirectiveCompiler {
   static o.ClassMethod _detectHostChanges(List<o.Statement> statements) {
     // We create a method that can detect a host RenderView/rootElement.
     //
-    // void detectHostChanges(RenderView view, Element el) { ... }
+    // void detectHostChanges(RenderView view, DomElement el) { ... }
+    final domType = o.importType(Identifiers.domElement);
     return o.ClassMethod(
       'detectHostChanges',
       [
         o.FnParam('view', o.importType(Views.renderView)),
-        o.FnParam('el', o.importType(Identifiers.htmlElement)),
+        o.FnParam('el', domType),
       ],
       statements,
     );

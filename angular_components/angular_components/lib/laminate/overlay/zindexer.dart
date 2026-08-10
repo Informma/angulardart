@@ -2,17 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@JS()
-library;
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:js/js.dart';
-
-@JS('acxZIndex')
-external int get _currentZIndex;
-
-@JS('acxZIndex')
-external set _currentZIndex(int value);
 
 /// The layout tools will monotonically increment the zIndex for hoverable
 /// elements.
@@ -24,6 +17,12 @@ const int hoverableAutoIncrement = 1000;
 @Injectable()
 class ZIndexer {
   static ZIndexer? _currentInstance;
+
+  static int get _currentZIndex =>
+      (globalContext.getProperty('acxZIndex'.toJS) as JSNumber).toDartInt;
+
+  static set _currentZIndex(int value) =>
+      globalContext.setProperty('acxZIndex'.toJS, value.toJS);
 
   static void _initZIndex() {
     _currentZIndex = hoverableAutoIncrement;

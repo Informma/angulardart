@@ -10,7 +10,10 @@ import 'dart:math' as math;
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart/src/core/application_ref.dart' show ApplicationRef, internalCreateApplicationRef;
 import 'package:angulardart/src/di/injector.dart';
+import 'package:angulardart_router/angulardart_router.dart' show PlatformLocation;
 
+import 'server_location.dart';
+import 'server_zone.dart';
 import 'transfer_state.dart';
 import '_html_builder.dart';
 
@@ -98,11 +101,12 @@ ${componentHtml}
       return;
     }
 
-    final zone = NgZone();
+    final zone = ServerNgZone();
     late ApplicationRef applicationRef;
 
     final baseParent = parentInjector ?? Injector.empty();
     final baseInjector = _createServerBaseInjector(
+      url: url ?? '',
       appId: appId,
       parentInjector: baseParent,
     );
@@ -144,6 +148,7 @@ ${componentHtml}
   }
 
   Injector _createServerBaseInjector({
+    required String url,
     String? appId,
     required Injector parentInjector,
   }) {
@@ -151,6 +156,7 @@ ${componentHtml}
       APP_ID: appId ?? _createRandomAppId(),
       ExceptionHandler: const ExceptionHandler(),
       ComponentLoader: const ComponentLoader(),
+      PlatformLocation: () => ServerPlatformLocation(url),
     }, parentInjector);
   }
 

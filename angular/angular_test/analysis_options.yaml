@@ -1,4 +1,4 @@
-include: ../analysis_options.yaml
+include: package:lints/recommended.yaml
 
 analyzer:
   errors:
@@ -6,3 +6,5 @@ analyzer:
     argument_type_not_assignable: ignore
     unchecked_use_of_nullable_value: ignore
     invalid_assignment: ignore
+    uri_has_not_been_generated: ignore
+    deprecated_member_use: ignore

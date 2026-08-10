@@ -140,12 +140,23 @@ class TokenReader {
   ///
   /// Uses the type definition, unless `@Inject` is specified.
   TokenElement parseTokenParameter(FormalParameterElement element) {
-    final constTypeOrToken =
-        $Inject.firstAnnotationOfExact(element)?.getField('token') ??
-            $OpaqueToken.firstAnnotationOf(element);
-    return constTypeOrToken != null
-        ? parseTokenObject(constTypeOrToken, element)
-        : parseTokenType(element);
+    DartObject? constTypeOrToken;
+    try {
+      constTypeOrToken = $Inject.firstAnnotationOfExact(element);
+    } catch (_) {}
+    if (constTypeOrToken != null) {
+      final tokenField = constTypeOrToken.getField('token');
+      if (tokenField != null) {
+        return parseTokenObject(tokenField, element);
+      }
+    }
+    try {
+      final opaqueToken = $OpaqueToken.firstAnnotationOf(element);
+      if (opaqueToken != null) {
+        return parseTokenObject(opaqueToken, element);
+      }
+    } catch (_) {}
+    return parseTokenType(element);
   }
 
   /// Returns the type of [element] as a [TokenElement].

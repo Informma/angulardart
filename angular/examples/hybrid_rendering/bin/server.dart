@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
-import '../web/main.template.dart' as ng;
+import '../web/main.server.dart' as ng;
 
 /// Serveur HTTP SSR pour l'exemple hybrid_rendering.
 ///
-/// Compilation : dart run build_runner build -d web/main.server.dart
+/// Compilation : dart run build_runner build web
 /// Exécution :   dart bin/server.dart
 Future<void> main() async {
   final server = platformServer();
@@ -17,8 +17,8 @@ Future<void> main() async {
 
     httpServer.listen((request) async {
       try {
-        final html = await server.renderApplication<Object>(
-          ng.AppRootComponentNgFactory,
+        final html = await server.renderApplication(
+          ng.appComponentFactory,
           url: request.uri.toString(),
         );
 

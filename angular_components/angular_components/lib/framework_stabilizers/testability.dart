@@ -2,20 +2,16 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@JS()
-library;
-
 import 'dart:async';
 
-import 'package:js/js.dart';
+import 'package:web/web.dart' as web;
 
 import 'framework_stabilizers.dart';
 
 export 'framework_stabilizers.dart' show FrameworkStabilizer, IsStableCallback;
 
-// We are getting the URL from JS land because Dart's URI.base is more expensive
-@JS('window.location.href')
-external String get _url;
+/// We are getting the URL from JS land because Dart's URI.base is more expensive
+String get _url => web.window.location.href;
 
 /// Check if the enableTestabilities URL parameter is set to true.
 final bool testabilitiesEnabled = _url.contains('enableTestabilities');

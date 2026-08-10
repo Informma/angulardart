@@ -2,10 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@JS()
-library;
-
-import 'package:js/js.dart';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 /// Function provided by a framework to register an [IsStableCallback] that is
 /// invoked by the framework when it reaches a stable state.
@@ -17,24 +15,22 @@ typedef FrameworkStabilizer = void Function(IsStableCallback callback);
 typedef IsStableCallback = void Function(bool didWork, String name);
 
 // frameworkStabilizers is a property of the window object.
-@JS('frameworkStabilizers')
-// ignore: unused_element
-external List get _frameworkStabilizersJs;
-
-@JS('frameworkStabilizers')
-// ignore: unused_element
-external set _frameworkStabilizersJs(List values);
+JSArray _getFrameworkStabilizers() {
+  final val = globalContext.getProperty('frameworkStabilizers'.toJS);
+  if (val == null || val.isUndefined) {
+    final arr = <JSAny>[].toJS;
+    globalContext.setProperty('frameworkStabilizers'.toJS, arr);
+    return arr;
+  }
+  return val as JSArray;
+}
 
 /// Provides a set of helper functions for frameworks to register and deregister
 /// stabilizing functions. These functions will be called by tests, whenever
 /// they require the page to be stable before they can perform the next action.
 class FrameworkStabilizers {
-  static final Map<int, dynamic> _idToFrameworkStabilizer = {};
+  static final Map<int, JSFunction> _idToFrameworkStabilizer = {};
   static int _nextId = 0;
-
-  static List get _frameworkStabilizers {
-    return _frameworkStabilizersJs;
-  }
 
   /// Add a stabilize function for a framework.
   ///
@@ -53,21 +49,29 @@ class FrameworkStabilizers {
   /// The id returned by [add] can be used to remove the [FrameworkStabilizer]
   /// with [remove].
   static int add(FrameworkStabilizer fn) {
-    var wrappedFn = allowInterop(fn);
+    var jsFn = fn.toJS;
     var id = _nextId++;
-    _idToFrameworkStabilizer[id] = wrappedFn;
-    _frameworkStabilizers.add(wrappedFn);
+    _idToFrameworkStabilizer[id] = jsFn;
+    _getFrameworkStabilizers().callMethod('push'.toJS, jsFn);
     return id;
   }
 
   /// Removes the [FrameworkStabilizer] identified by [id].
   static bool remove(int id) {
-    var wrappedFn = _idToFrameworkStabilizer.remove(id);
-    return wrappedFn == null ? false : _frameworkStabilizers.remove(wrappedFn);
+    var jsFn = _idToFrameworkStabilizer.remove(id);
+    if (jsFn == null) return false;
+    final arr = _getFrameworkStabilizers();
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i] == jsFn) {
+        arr.callMethod('splice'.toJS, i.toJS, 1.toJS);
+        return true;
+      }
+    }
+    return false;
   }
 
   static void removeAll() {
     _idToFrameworkStabilizer.clear();
-    _frameworkStabilizers.clear();
+    globalContext.setProperty('frameworkStabilizers'.toJS, <JSAny>[].toJS);
   }
 }

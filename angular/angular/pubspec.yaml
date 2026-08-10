@@ -18,7 +18,7 @@ screenshots:
     path: logo.png
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
 
 dependencies:
   built_collection: '>=5.1.0 <6.0.0'

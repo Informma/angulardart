@@ -32,10 +32,11 @@ class NgZone {
   var _pendingMicrotasks = 0;
   final _pendingTimers = <_WrappedTimer>[];
 
-  factory NgZone() = NgZone._;
+  /// Default constructor - creates a new NgZone instance.
+  NgZone() : this._internal();
 
-  // Prevents inheritance.
-  NgZone._() {
+  /// Internal constructor for subclasses.
+  NgZone._internal() {
     _innerZone = _createInnerZone(
       _outerZone,
       handleUncaughtError: _handleUncaughtError,

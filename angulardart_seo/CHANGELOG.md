@@ -1,3 +1,10 @@
+## 1.3.0
+
+- Add: Server-aware SeoService — detects SSR mode via `_head == null` on VM
+- Add: `static Map<String, String> _serverMeta` for storing SEO data during server rendering
+- Add: All SEO methods now use `TransferState.set()` for SSR compatibility (setTitle, setMeta, setOgTag, setTwitterTag, setCanonical, setRobots, setJsonLd)
+- Fix: `_storeServerMeta()` stores in both _serverMeta AND TransferState when on server
+
 ## 1.2.7
 
 - Fix: Constrain package:web to >=0.5.0 <1.0.0 (1.x uses dart:js_interop incompatible with our codebase)

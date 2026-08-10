@@ -1,0 +1,10 @@
+<h1>Dashboard</h1>
+<p>This component is <strong>never rendered on the server</strong> (RenderMode.client).</p>
+
+<div class="counter-box">
+  <h2>Client-Side Counter: <%= counter %></h2>
+  <button on-click="increment()">+ Increment</button>
+  <button on-click="reset()">Reset</button>
+</div>
+
+<p class="note">This interactive widget only works on the client side.</p>

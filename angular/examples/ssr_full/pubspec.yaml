@@ -1,0 +1,30 @@
+name: examples_ssr_full
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  angulardart: '>=9.0.0 <10.0.0'
+  angulardart_router: '>=5.0.0 <6.0.0'
+  angulardart_server: '>=1.2.0 <2.0.0'
+  angulardart_forms: '>=6.0.0 <7.0.0'
+  web: '>=0.5.0 <1.0.0'
+
+dev_dependencies:
+  build_runner: '>=2.16.0 <3.0.0'
+  build_web_compilers: '>=4.8.0 <5.0.0'
+  lints: '>=6.0.0 <7.0.0'
+
+dependency_overrides:
+  angulardart:
+    path: ../../angular
+  angulardart_server:
+    path: ../../../angulardart_server
+  angulardart_meta:
+    path: ../../../angular/angular_meta
+  angulardart_compiler:
+    path: ../../../angular/angular_compiler
+  angulardart_router:
+    path: ../../../angular/angular_router
+  angulardart_forms:
+    path: ../../../angular/angular_forms

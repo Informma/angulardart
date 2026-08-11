@@ -1,3 +1,9 @@
+## 9.3.6
+
+- Fix: `browser_dom_apis_browser.dart` implémente maintenant les wrappers complets pour tous les types DOM (`DomDocument`, `DomElement`, `DomHTMLElement`, etc.) au lieu de casts échouants
+- Fix: Les styles CSS inline et fichiers `.css` fonctionnent correctement côté navigateur (plus d'erreur `_DomElementStub` vs `DomHTMLStyleElement`)
+- Fix: `document.createElement('style')` retourne maintenant un vrai élément `<style>` du navigateur
+
 ## 9.3.5
 
 - Fix: `browser_dom_apis_browser.dart` fournit maintenant le vrai document/window du navigateur via `package:web` (au lieu de stubs)

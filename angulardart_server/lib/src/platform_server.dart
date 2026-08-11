@@ -9,7 +9,9 @@ import 'dart:math' as math;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart/src/core/application_ref.dart' show ApplicationRef, internalCreateApplicationRef;
+import 'package:angulardart/src/core/linker/app_view_utils.dart' show AppViewUtils, appViewUtils;
 import 'package:angulardart/src/di/injector.dart';
+import 'package:angulardart/src/runtime/dom_events.dart' show EventManager;
 import 'package:angulardart_router/angulardart_router.dart' show PlatformLocation;
 
 import 'server_location.dart';
@@ -162,6 +164,10 @@ ${componentHtml}
     }, baseInjector);
 
     applicationRef = internalCreateApplicationRef(zone, appGlobalInjector);
+
+    // Initialize appViewUtils for scoped styles support (mirrors browser bootstrap)
+    final serverAppId = appId ?? 'a${math.Random().nextInt(0x100000).toRadixString(36)}';
+    appViewUtils = AppViewUtils(serverAppId, EventManager(zone));
 
     // Enable server mode so the component tree is built with ServerRenderNode
     renderFactory.useServerMode();

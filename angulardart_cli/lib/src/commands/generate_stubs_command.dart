@@ -297,7 +297,7 @@ void initReflector() {}
     for (final entity in sourceDir.listSync()) {
       if (entity is File) {
         final fileName = path.basename(entity.path);
-        if (!fileName.endsWith('.template.dart')) continue;
+        if (!fileName.endsWith('.template.dart') && !fileName.endsWith('.css.shim.dart')) continue;
 
         final targetFile = File(path.join(targetDir, fileName));
         final content = await entity.readAsString();

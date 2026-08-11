@@ -131,6 +131,7 @@ class DashboardComponentNgFactory {
 
     // Copy generated .template.dart files from build_runner output to project directories.
     // Only copy templates from the project's own package, not from dependencies.
+    int copiedCount = 0;
     final dartToolBuild = Directory(path.join(projectDir, '.dart_tool', 'build', 'generated'));
     if (dartToolBuild.existsSync() && packageName != null) {
       final projectGeneratedDir = Directory(path.join(dartToolBuild.path, packageName));
@@ -140,7 +141,7 @@ class DashboardComponentNgFactory {
 
         // Copy lib/ templates to project's lib/
         if (Directory(generatedLib).existsSync()) {
-          await _copyTemplatesRecursive(
+          copiedCount += await _copyTemplatesRecursive(
             Directory(generatedLib),
             path.join(projectDir, 'lib'),
           );
@@ -148,7 +149,7 @@ class DashboardComponentNgFactory {
 
         // Copy web/ templates to project's web/
         if (Directory(generatedWeb).existsSync()) {
-          await _copyTemplatesRecursive(
+          copiedCount += await _copyTemplatesRecursive(
             Directory(generatedWeb),
             path.join(projectDir, 'web'),
           );
@@ -157,6 +158,10 @@ class DashboardComponentNgFactory {
         print('Warning: No generated output found for package "$packageName" in .dart_tool/build/generated/');
       }
     }
+
+    // Update the created counter with the number of files copied by _copyTemplatesRecursive.
+    // These are new files that were written to disk (not existing files that were skipped).
+    created += copiedCount;
 
     // Post-process: remove browser-only .template.dart files and fix imports.
     // This is necessary because the Angular compiler generates direct imports
@@ -260,7 +265,8 @@ void initReflector() {}
     }
   }
 
-  Future<void> _copyTemplatesRecursive(Directory sourceDir, String targetDir) async {
+  Future<int> _copyTemplatesRecursive(Directory sourceDir, String targetDir) async {
+    int count = 0;
     await Directory(targetDir).create(recursive: true);
 
     for (final entity in sourceDir.listSync()) {
@@ -274,12 +280,15 @@ void initReflector() {}
         if (!targetFile.existsSync() || targetFile.readAsBytesSync().length != content.length) {
           await targetFile.writeAsString(content);
           print('Copied: ${path.relative(targetFile.path, from: Directory.current.path)}');
+          count++;
         }
       } else if (entity is Directory) {
         final subDirName = path.basename(entity.path);
-        await _copyTemplatesRecursive(entity, path.join(targetDir, subDirName));
+        count += await _copyTemplatesRecursive(entity, path.join(targetDir, subDirName));
       }
     }
+
+    return count;
   }
 }
 

@@ -1,3 +1,9 @@
+## 1.7.6
+
+### Corrections
+
+- **SSR** : `_copyTemplatesRecursive` met maintenant à jour le compteur de fichiers copiés (affiché dans le résumé final)
+
 ## 1.7.5
 
 ### Corrections

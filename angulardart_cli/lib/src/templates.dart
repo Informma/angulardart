@@ -433,7 +433,7 @@ Future<void> main() async {
 }
 ''';
 
-  static const projectReadmeSsr = '''# {{name}}
+   static const projectReadmeSsr = '''# {{name}}
 
 Application AngularDart avec rendu côté serveur (SSR).
 
@@ -459,8 +459,6 @@ dart pub get
 ngdart generate-stubs
 dart run build_runner clean
 dart run build_runner build web
-# Copier les templates générés vers web/ (workaround pour bug build_runner)
-for f in .dart_tool/build/generated/*/web/*.template.dart; do cp "\$f" web/ 2>/dev/null || true; done
 dart bin/server.dart
 ```
 
@@ -951,7 +949,7 @@ generate_robots: true
 base_url: 'https://example.com'
 ''';
 
-  static const projectReadmeSsrSeo = r'''# {{name}}
+   static const projectReadmeSsrSeo = r'''# {{name}}
 
 Application AngularDart avec rendu côté serveur (SSR) + SEO.
 
@@ -981,9 +979,6 @@ dart pub get
 ngdart generate-stubs
 dart run build_runner clean
 dart run build_runner build web
-# Copier les templates générés vers lib/ et web/
-for f in .dart_tool/build/generated/*/lib/*.template.dart; do cp "$f" lib/ 2>/dev/null || true; done
-for f in .dart_tool/build/generated/*/web/*.template.dart; do cp "$f" web/ 2>/dev/null || true; done
 dart bin/server.dart
 ```
 
@@ -993,9 +988,6 @@ dart bin/server.dart
 dart pub get
 ngdart generate-stubs
 dart run build_runner build web
-# Copier les templates
-for f in .dart_tool/build/generated/*/lib/*.template.dart; do cp "$f" lib/ 2>/dev/null || true; done
-for f in .dart_tool/build/generated/*/web/*.template.dart; do cp "$f" web/ 2>/dev/null || true; done
 dart run angulardart_prerender
 ```
 

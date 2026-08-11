@@ -1,3 +1,12 @@
+## 1.7.5
+
+### Corrections
+
+- **SSR** : `generate-stubs` ne copie plus que les templates du package du projet, pas ceux des dépendances (évite de polluer `lib/`)
+- **SSR** : Les stubs pour `home_component`, `about_component`, `dashboard_component` ne sont créés que si le fichier `.dart` source correspondant existe
+- **SSR** : Suppression de l'écriture dans `angular/examples/hello_world_ssr/lib/platform_dom.template.dart` (modifiait le framework)
+- **CLI** : Les README générés pour les projets SSR/hybride n'incluent plus les boucles `for` copiant tous les templates des dépendances
+
 ## 1.7.4
 
 ### Corrections

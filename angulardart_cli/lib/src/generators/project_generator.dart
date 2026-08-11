@@ -201,6 +201,7 @@ class ProjectGenerator extends Generator {
       print('  dart run build_runner serve');
       print('  # Build SSR :');
       print('  dart run build_runner build web');
+      print('  ngdart generate-stubs');
       print('  dart bin/server.dart');
     } else if (seo) {
       print('  # Build SEO :');

@@ -66,6 +66,7 @@ class PlatformServerRef {
     required String url,
     String? appId,
     Injector? parentInjector,
+    List<String>? stylesheets,
   }) async {
     final componentHtml = await renderComponent(
       componentFactory,
@@ -106,6 +107,11 @@ class PlatformServerRef {
 
     final transferScript = TransferState.toScript();
 
+    // Generate stylesheet link tags
+    final stylesheetLinks = (stylesheets ?? [])
+        .map((url) => '  <link rel="stylesheet" href="$url">')
+        .join('\n');
+
     return '''<!DOCTYPE html>
 <html lang="en" ng-server-context="ssr">
 <head>
@@ -113,6 +119,7 @@ class PlatformServerRef {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 $titleTag$metaTags$ogTags$twitterTags$canonicalTag
 $transferScript
+$stylesheetLinks
 </head>
 <body>
 ${componentHtml}

@@ -1,6 +1,7 @@
 /// Browser platform HTML sanitizer using local DOM types.
 library;
 
+import '../runtime/browser_dom_apis_browser.dart' as browser show document;
 import '../runtime/js_interop_web_browser.dart';
 import '../runtime/web_types.dart';
 
@@ -20,7 +21,7 @@ const _dangerousAttrPrefixes = <String>{'on'};
 /// Sanitizes the given unsafe, untrusted HTML fragment, and returns HTML text
 /// that is safe to add to the DOM in a browser environment.
 String? sanitizeHtmlInternal(String value) {
-  final template = document.createElement('template') as DomHTMLTemplateElement;
+  final template = browser.document.createElement('template') as DomHTMLTemplateElement;
   template.innerHTML = value.js;
   _sanitizeNode(template.content);
   return template.innerHTML.toString();

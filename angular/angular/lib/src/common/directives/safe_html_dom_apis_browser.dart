@@ -1,6 +1,7 @@
 /// Browser platform DOM APIs for SafeHtmlDirective.
 library;
 
+import '../../runtime/browser_dom_apis_browser.dart' as browser show document;
 import '../../runtime/js_interop_web_browser.dart';
 import '../../runtime/web_types.dart' as dom;
 
@@ -18,7 +19,7 @@ void setElementInnerHtml(DomElement? element, String value) {
 /// Renders trusted HTML content into an element using a template.
 void renderTrustedHtml(DomElement? element, String value) {
   if (element == null) return;
-  final template = dom.document.createElement('template') as dom.DomHTMLTemplateElement;
+  final template = browser.document.createElement('template') as dom.DomHTMLTemplateElement;
   template.innerHTML = value;
   element.innerHTML = ''.js;
   element.append(template.content);

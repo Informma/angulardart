@@ -1,3 +1,10 @@
+## 9.3.5
+
+- Fix: `browser_dom_apis_browser.dart` fournit maintenant le vrai document/window du navigateur via `package:web` (au lieu de stubs)
+- Fix: `linkerDocument`, `document` et `window` utilisent les vrais objets DOM navigateur pour que les styles CSS fonctionnent correctement
+- Fix: `safe_html_dom_apis_browser.dart` et `html_sanitizer_browser.dart` utilisent le vrai document navigateur
+- Add: `package:web` ajouté comme dépendance de `angulardart`
+
 ## 9.3.4
 
 - Fix: SSR - TextBinding utilise maintenant `renderFactory.createText()` au lieu de `BrowserRenderNode.text()` pour respecter le mode serveur

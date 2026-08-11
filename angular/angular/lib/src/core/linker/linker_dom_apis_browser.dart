@@ -5,6 +5,7 @@
 library;
 
 import '../../runtime/web_types.dart';
+import '../../runtime/browser_dom_apis_browser.dart' as browser;
 
 export '../../runtime/web_types.dart';
 
@@ -23,5 +24,5 @@ typedef LinkerHTMLTemplateElement = DomHTMLTemplateElement;
 /// Platform-specific document fragment type.
 typedef LinkerDocumentFragment = DomDocumentFragment;
 
-/// Returns the global document object.
-DomDocument get linkerDocument => document;
+/// Returns the global browser document object for linker operations.
+DomDocument get linkerDocument => browser.document;

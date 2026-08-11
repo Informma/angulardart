@@ -1,3 +1,8 @@
+## 1.3.0
+
+- Add: Initialize `appViewUtils` in server-side rendering to support scoped styles (`styleUrls`) in components
+- Fix: `ngdart generate-stubs` now copies `.css.shim.dart` files for proper CSS encapsulation on VM
+
 ## 1.2.4
 
 - Fix: Align with angulardart 9.3.4 SSR fixes (TextBinding now uses renderFactory.createText())

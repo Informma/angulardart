@@ -1,3 +1,9 @@
+## 1.7.4
+
+### Corrections
+
+- **SSR** : `generate-stubs` copie maintenant les fichiers `.css.shim.dart` pour le encapsulation CSS côté VM
+
 ## 1.7.3
 
 ### Corrections

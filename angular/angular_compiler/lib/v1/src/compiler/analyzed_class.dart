@@ -327,6 +327,9 @@ class _TypeResolver extends ast.AstVisitor<DartType, dynamic> {
   DartType visitLiteralList(ast.LiteralList ast, context) => _dynamicType;
 
   @override
+  DartType visitLiteralMap(ast.LiteralMap ast, context) => _dynamicType;
+
+  @override
   DartType visitMethodCall(ast.MethodCall ast, context) {
     var receiverType = ast.receiver.visit(this, context);
     return _lookupMethodReturnType(receiverType, ast.name);

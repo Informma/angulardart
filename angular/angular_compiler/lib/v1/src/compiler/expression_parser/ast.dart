@@ -8,8 +8,8 @@ abstract class AST {
 
 /// Represents a "named" expression, i.e. in the format of `name: expression`.
 ///
-/// This format is utilized in Dart for both map-literals (no longer supported
-/// in Angular Dart) and function calls with named arguments.
+/// This format is utilized in Dart for function calls with named arguments.
+/// Map literals are represented by [LiteralMap] instead.
 ///
 /// ```
 /// NamedExpr('foo', LiteralPrimitive('bar')) // foo: 'bar'
@@ -365,6 +365,29 @@ class LiteralList extends AST {
       visitor.visitLiteralList(this, context);
 }
 
+/// Represents a map literal expression.
+///
+/// ```
+/// // {'special': isSpecial, 'active': isActive}
+/// LiteralMap([
+///   [LiteralPrimitive('special'), VariableRead('isSpecial')],
+///   [LiteralPrimitive('active'), VariableRead('isActive')],
+/// ])
+/// ```
+class LiteralMap extends AST {
+  /// Entries of the map, each a `[key, value]` pair.
+  final List<List<AST>> entries;
+
+  LiteralMap(this.entries);
+
+  @override
+  R visit<R, C, CO extends C>(
+    AstVisitor<R, C?> visitor, [
+    CO? context,
+  ]) =>
+      visitor.visitLiteralMap(this, context);
+}
+
 /// Represents converting a result or multiple results explicitly to a [String].
 ///
 /// ```
@@ -585,6 +608,7 @@ abstract class AstVisitor<R, C> {
   R visitKeyedWrite(KeyedWrite ast, C context);
   R visitLiteralPrimitive(LiteralPrimitive ast, C context);
   R visitLiteralList(LiteralList ast, C context);
+  R visitLiteralMap(LiteralMap ast, C context);
   R visitMethodCall(MethodCall ast, C context);
   R visitNamedExpr(NamedExpr ast, C context);
   R visitPipe(BindingPipe ast, C context);
@@ -669,6 +693,14 @@ class RecursiveAstVisitor<C> implements AstVisitor<void, C> {
   }
 
   @override
+  void visitLiteralMap(LiteralMap ast, C context) {
+    for (final entry in ast.entries) {
+      entry[0].visit(this, context);
+      entry[1].visit(this, context);
+    }
+  }
+
+  @override
   void visitMethodCall(MethodCall ast, C context) {
     ast.receiver.visit(this, context);
     visitAll(ast.args, context);
@@ -742,6 +774,13 @@ class AstTransformer implements AstVisitor<AST, void> {
   @override
   AST visitLiteralList(LiteralList ast, _) =>
       LiteralList(_visitAll(ast.elements));
+
+  @override
+  AST visitLiteralMap(LiteralMap ast, _) => LiteralMap(
+        ast.entries
+            .map((entry) => [entry[0].visit(this), entry[1].visit(this)])
+            .toList(),
+      );
 
   @override
   AST visitPropertyRead(PropertyRead ast, _) =>

@@ -309,6 +309,17 @@ class _AstToExpressionVisitor
       o.literalArr(_visitAll(ast.elements, false /*visitingRoot */));
 
   @override
+  o.Expression visitLiteralMap(compiler_ast.LiteralMap ast, _) =>
+      o.literalMap(ast.entries
+          .map(
+            (entry) => [
+              entry[0].visit(this, false /* visitingRoot */),
+              entry[1].visit(this, false /* visitingRoot */),
+            ],
+          )
+          .toList());
+
+  @override
   o.Expression visitMethodCall(compiler_ast.MethodCall ast, _) {
     var args = _visitAll(ast.args, false /*visitingRoot */);
     var namedArgs =

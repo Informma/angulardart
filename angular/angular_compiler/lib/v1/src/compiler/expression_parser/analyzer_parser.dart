@@ -516,6 +516,33 @@ class _AngularSubsetVisitor extends GeneralizingAstVisitor<ast.AST> {
   }
 
   @override
+  ast.AST visitSetOrMapLiteral(SetOrMapLiteral astNode) {
+    final elements = astNode.elements;
+    // `isMap`/`isSet` are only resolved after type inference, which never runs
+    // here, so determine the kind syntactically from the entries.
+    final isMap =
+        elements.isEmpty || elements.any((element) => element is MapLiteralEntry);
+    if (!isMap) {
+      return _notSupported('Set literals are not supported.', astNode);
+    }
+    return ast.LiteralMap(
+      elements.map((element) {
+        if (element is! MapLiteralEntry) {
+          return _notSupported(
+            'Spread and conditional elements are not supported in map '
+            'literals.',
+            element,
+          );
+        }
+        return [
+          element.key.accept(this)!,
+          element.value.accept(this)!,
+        ];
+      }).toList(),
+    );
+  }
+
+  @override
   ast.AST visitBinaryExpression(BinaryExpression astNode) {
     switch (astNode.operator.type) {
       case TokenType.PLUS:

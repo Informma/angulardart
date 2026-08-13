@@ -135,6 +135,27 @@ class InjectorReader {
     }
   }
 
+  /// Maps a browser-specific definition URL to its conditional re-export URL.
+  ///
+  /// The framework convention is that browser-only implementations live in
+  /// `X_browser.dart` and are re-exported by a sibling `X.dart` using a
+  /// conditional export:
+  ///
+  /// ```dart
+  /// export 'X_browser.dart' if (dart.library.io) 'X_vm.dart';
+  /// ```
+  ///
+  /// Generated injectors must reference the conditional re-export (not the
+  /// `_browser.dart` definition) so the emitted code is also valid when
+  /// compiled for the native/AOT VM (server-side rendering), where `dart:html`
+  /// is unavailable and the `X_vm.dart` stub is resolved instead.
+  static String? _resolveBrowserReExport(String? url) {
+    if (url == null || !url.endsWith('_browser.dart')) {
+      return url;
+    }
+    return '${url.substring(0, url.length - '_browser.dart'.length)}.dart';
+  }
+
   /// Creates a codegen reference to [symbol] in [url].
   ///
   /// Compares against [doNotScope], which is usually the current library. This
@@ -271,7 +292,10 @@ class InjectorReader {
           index,
           provider.token,
           _tokenToIdentifier(provider.token),
-          _referSafe(provider.useClass.symbol, provider.useClass.import),
+          _referSafe(
+            provider.useClass.symbol,
+            _resolveBrowserReExport(provider.useClass.import),
+          ),
           (name?.isNotEmpty ?? false) ? name : null,
           _computeDependencies(provider.dependencies.positional),
           provider.isMulti,

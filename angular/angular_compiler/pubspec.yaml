@@ -23,7 +23,6 @@ platforms:
 
 dependencies:
   analyzer: ^13.0.0
-  angulardart: '>=9.4.0 <10.0.0'
   angulardart_ast: '>=3.4.0 <4.0.0'
   angulardart_meta: '>=1.3.0 <2.0.0'
   args: ^2.5.0
@@ -42,6 +41,7 @@ dependencies:
   stack_trace: ^1.11.0
 
 dev_dependencies:
+  angulardart: '>=9.0.0 <10.0.0'
   build_runner: ^2.16.0
   mockito: ^5.4.0
   lints: ^6.0.0

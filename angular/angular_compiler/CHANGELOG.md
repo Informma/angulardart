@@ -1,3 +1,7 @@
+## 5.4.1
+
+- fix: restaurer les contraintes larges `package_config >=2.2.0 <4.0.0` et `analyzer >=13.0.0 <15.0.0` (la contrainte `^2.2.0` forçait le backtrack de `angulardart` vers 9.3.6, cassant les apps neuves).
+
 ## 5.4.0
 
 - Génération de templates RenderNode (`createRenderElement`, `appendRenderChild`) + fix génération des shim classes CSS (`addShimC`/`addShimE`).

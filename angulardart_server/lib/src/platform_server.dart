@@ -18,6 +18,7 @@ import 'server_location.dart';
 import 'server_zone.dart';
 import 'transfer_state.dart';
 import '_html_builder.dart';
+import 'index_shell_web.dart' if (dart.library.io) 'index_shell_vm.dart';
 
 /// Instance globale de la plateforme serveur.
 PlatformServerRef? _globalServerInstance;
@@ -61,12 +62,18 @@ class PlatformServerRef {
   }
 
   /// Rend une application complète avec routing.
+  ///
+  /// If the project's `web/index.html` can be found on disk it is used as the
+  /// HTML shell: the rendered component is injected in place of the root
+  /// element, and the `<head>` (stylesheets, client bootstrap script, SEO
+  /// tags) is preserved. Otherwise a minimal HTML shell is produced.
   Future<String> renderApplication<T extends Object>(
     ComponentFactory<T> componentFactory, {
     required String url,
     String? appId,
     Injector? parentInjector,
     List<String>? stylesheets,
+    String? indexPath,
   }) async {
     final componentHtml = await renderComponent(
       componentFactory,
@@ -75,7 +82,22 @@ class PlatformServerRef {
       parentInjector: parentInjector,
     );
 
-    // Extract SEO data from TransferState for SSR meta tags.
+    // Scoped component styles collected during the server render.
+    final collectedStyles = ServerRenderNode.collectedStyles;
+
+    // Prefer the real app shell (index.html) so that CSS links, the client
+    // bootstrap script, and any SEO/transfer tags are preserved.
+    final shell = readIndexHtmlFile(indexPath ?? 'web/index.html');
+    if (shell != null) {
+      return _injectIntoShell(
+        shell,
+        componentHtml,
+        componentFactory.selector,
+        collectedStyles,
+      );
+    }
+
+    // Fallback: minimal shell (kept for environments without an index.html).
     final seoData = _extractSeoFromTransferState();
     final titleTag = seoData['title'] != null
         ? '  <title>${_escapeHtml(seoData['title'] as String)}</title>\n'
@@ -112,6 +134,10 @@ class PlatformServerRef {
         .map((url) => '  <link rel="stylesheet" href="$url">')
         .join('\n');
 
+    final collectedStyleTag = collectedStyles.isEmpty
+        ? ''
+        : '  <style id="ng-ssr-styles">${collectedStyles.join('\n')}</style>\n';
+
     return '''<!DOCTYPE html>
 <html lang="en" ng-server-context="ssr">
 <head>
@@ -120,11 +146,68 @@ class PlatformServerRef {
 $titleTag$metaTags$ogTags$twitterTags$canonicalTag
 $transferScript
 $stylesheetLinks
-</head>
+$collectedStyleTag</head>
 <body>
 ${componentHtml}
 </body>
 </html>''';
+  }
+
+  /// Injects [componentHtml] (and any [collectedStyles]) into [shell], the
+  /// project's `index.html`.
+  String _injectIntoShell(
+    String shell,
+    String componentHtml,
+    String selector,
+    List<String> collectedStyles,
+  ) {
+    var html = shell;
+
+    // Mark the page as server-rendered so the client hydrates instead of
+    // re-bootstrapping.
+    if (html.contains('ng-client-context')) {
+      html = html
+          .replaceAll('ng-client-context="csr"', 'ng-server-context="ssr"')
+          .replaceAll("ng-client-context='csr'", "ng-server-context='ssr'");
+    } else {
+      html = html.replaceFirstMapped(
+        RegExp('<html\\b', caseSensitive: false),
+        (m) => '${m[0]} ng-server-context="ssr"',
+      );
+    }
+
+    // Inject the scoped component styles into <head>.
+    if (collectedStyles.isNotEmpty) {
+      final styleTag =
+          '<style id="ng-ssr-styles">${collectedStyles.join('\n')}</style>';
+      html = html.replaceFirstMapped(
+        RegExp('</head>', caseSensitive: false),
+        (m) => '$styleTag${m[0]}',
+      );
+    }
+
+    // Replace the root element placeholder with the rendered component.
+    final escaped = RegExp.escape(selector);
+    final selfClosing =
+        RegExp('<$escaped\\b[^>]*/>', caseSensitive: false);
+    final openClose = RegExp(
+      '<$escaped\\b[^>]*>\\s*</$escaped>',
+      caseSensitive: false,
+      dotAll: true,
+    );
+    if (selfClosing.hasMatch(html)) {
+      html = html.replaceFirst(selfClosing, componentHtml);
+    } else if (openClose.hasMatch(html)) {
+      html = html.replaceFirst(openClose, componentHtml);
+    } else {
+      // Fallback: append into <body> if no placeholder found.
+      html = html.replaceFirstMapped(
+        RegExp('</body>', caseSensitive: false),
+        (m) => '$componentHtml${m[0]}',
+      );
+    }
+
+    return html;
   }
 
   /// Extracts SEO metadata from TransferState keys prefixed with 'seo:'.

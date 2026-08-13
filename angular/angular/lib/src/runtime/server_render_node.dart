@@ -31,6 +31,24 @@ class ServerRenderNode implements RenderNode {
     _currentContext = ServerRenderContext();
   }
 
+  /// Collects a component style string for the current server render.
+  ///
+  /// Component styles are normally appended to `document.head` on the browser;
+  /// on the server they are collected here so [renderApplication] can inject
+  /// them into the `<head>` of the rendered page.
+  static void collectStyle(String css) {
+    final context = _currentContext;
+    if (context != null) {
+      context.collectedStyles.add(css);
+    }
+  }
+
+  /// Returns the styles collected during the current server render.
+  static List<String> get collectedStyles {
+    final context = _currentContext;
+    return context == null ? const <String>[] : context.collectedStyles;
+  }
+
   final Map<String, String> _attrs = {};
   final Map<String, String> _styles = {};
   final List<MapEntry<String, bool>> _classes = [];

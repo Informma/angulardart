@@ -2,7 +2,9 @@ import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/core/linker/app_view_utils.dart';
 import 'package:angulardart/src/runtime/dom_apis.dart';
 import 'package:angulardart/src/runtime/dom_helpers.dart';
+import 'package:angulardart/src/runtime/render_factory.dart';
 import 'package:angulardart/src/runtime/render_node.dart';
+import 'package:angulardart/src/runtime/server_render_node.dart';
 import 'package:angulardart/src/utilities.dart';
 
 /// Clears all component styles from the DOM.
@@ -180,6 +182,14 @@ class ComponentStyles {
       target.add('/* From: $_componentUrl*/');
     }
     final styles = _flattenStyles(_styles, target, _componentId).join();
+    if (renderFactory.isServerMode) {
+      // Server-side rendering: collect the styles so they can be injected into
+      // the `<head>` of the rendered HTML (no DOM to append a `<style>` to).
+      if (styles.isNotEmpty) {
+        ServerRenderNode.collectStyle(styles);
+      }
+      return;
+    }
     final styleElement = createStyleElement(styles);
     if (isDevMode) {
       // Remove style element from the DOM on hot restart.

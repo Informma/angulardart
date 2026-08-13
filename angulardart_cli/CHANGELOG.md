@@ -1,3 +1,7 @@
+## 1.9.0
+
+- feat: les templates `bin/server.dart` (SSR) servent les assets statiques (`styles.css`, `main.dart.js`, ...) depuis `web/` et `.dart_tool/build/generated/<pkg>/web/`.
+
 ## 1.8.0
 
 - Ajout commandes `add ssr`/`add hybrid`/`add seo`, `seo init`, `generate-stubs` + flags `--ssr`/`--hybrid`/`--seo` sur `ngdart new` (templates base `dart:html`).

@@ -1,5 +1,5 @@
 name: angulardart_cli
-version: 1.8.0
+version: 1.9.0
 description: CLI scaffolding tool for AngularDart (Dart 3 compatible)
 repository: https://github.com/flutterdocteur/angulardart/tree/main/angulardart_cli
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues

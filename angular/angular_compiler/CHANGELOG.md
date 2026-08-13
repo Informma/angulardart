@@ -1,3 +1,7 @@
+## 5.5.0
+
+- feat: ré-ajouter le support des map literals dans les expressions de template (ex. `[ngClass]="{'special': isSpecial}"`, `[ngStyle]="{'font-weight': isBold ? 'bold' : 'normal'}"`).
+
 ## 5.4.1
 
 - fix: restaurer les contraintes larges `package_config >=2.2.0 <4.0.0` et `analyzer >=13.0.0 <15.0.0` (la contrainte `^2.2.0` forçait le backtrack de `angulardart` vers 9.3.6, cassant les apps neuves).

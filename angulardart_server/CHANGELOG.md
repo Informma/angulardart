@@ -1,3 +1,7 @@
+## 1.4.1
+
+- fix: `renderApplication` lit `web/index.html` comme shell HTML complet (injection du composant rendu, bascule `ng-server-context="ssr"`, injection des styles scopés dans `<head>`) au lieu d'un shell minimal.
+
 ## 1.4.0
 
 - Conversion `package:web` → `dart:html` (`browser_dom_apis.dart`) + contraintes alignées sur la ligne 9.4.0.

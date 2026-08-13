@@ -1,5 +1,5 @@
 name: angulardart_server
-version: 1.4.0
+version: 1.4.1
 description: Server-side rendering (SSR) and hybrid rendering for AngularDart applications.
 repository: https://github.com/flutterdocteur/angulardart/tree/main/angulardart_server
 issue_tracker: https://github.com/flutterdocteur/angulardart/issues
@@ -16,7 +16,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  angulardart: '>=9.4.0 <10.0.0'
+  angulardart: '>=9.4.1 <10.0.0'
   angulardart_meta: '>=1.3.0 <2.0.0'
   angulardart_router: '>=5.4.0 <6.0.0'
   collection: '>=1.18.0 <2.0.0'

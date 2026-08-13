@@ -188,6 +188,10 @@ ${componentHtml}
       rethrow;
     }
 
+    // Wait for async work triggered during bootstrap (e.g. the router's
+    // initial navigation) to settle before capturing the rendered HTML.
+    await zone.stabilize();
+
     // Capture the rendered HTML from the root ServerRenderNode
     final rootElement = componentRef.location as dynamic;
     if (rootElement is ServerRenderNode) {
@@ -210,11 +214,13 @@ ${componentHtml}
     String? appId,
     required Injector parentInjector,
   }) {
+    // Expose l'URL de la requête au router (via ServerPlatformLocation).
+    ServerPlatformLocation.setCurrentUrl(url);
     return Injector.map({
       APP_ID: appId ?? _createRandomAppId(),
       ExceptionHandler: const ExceptionHandler(),
       ComponentLoader: const ComponentLoader(),
-      PlatformLocation: () => ServerPlatformLocation(url),
+      PlatformLocation: () => ServerPlatformLocation(),
     }, parentInjector);
   }
 

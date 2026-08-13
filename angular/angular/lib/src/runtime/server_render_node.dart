@@ -36,6 +36,7 @@ class ServerRenderNode implements RenderNode {
   final List<MapEntry<String, bool>> _classes = [];
   final StringBuffer _content = StringBuffer();
   final List<ServerRenderNode> _children = [];
+  ServerRenderNode? _parent;
   int? _ngId;
 
   ServerRenderNode(this.tagName);
@@ -43,10 +44,51 @@ class ServerRenderNode implements RenderNode {
   /// Retourne l'ID unique de ce nud pour l'hydration.
   int? get ngId => _ngId;
 
+  /// Nœud parent (miroir de `Node.parentNode`), utilisé par les helpers DOM
+  /// génériques comme `insertNodesAsSibling`.
+  ServerRenderNode? get parentNode => _parent;
+
+  /// Prochain nœud frère (miroir de `Node.nextNode`), utilisé par
+  /// `insertNodesAsSibling`.
+  ServerRenderNode? get nextNode {
+    final parent = _parent;
+    if (parent == null) return null;
+    final siblings = parent._children;
+    final index = siblings.indexOf(this);
+    if (index < 0 || index >= siblings.length - 1) return null;
+    return siblings[index + 1];
+  }
+
+  /// Ajoute un enfant (miroir de `Node.append`).
+  void append(dynamic node) {
+    appendChild(node as ServerRenderNode);
+  }
+
+  /// Insère [child] avant [sibling] (miroir de `Node.insertBefore`).
+  void insertBefore(dynamic child, dynamic sibling) {
+    final node = child as ServerRenderNode;
+    node._parent = this;
+    if (sibling is ServerRenderNode) {
+      final index = _children.indexOf(sibling);
+      if (index >= 0) {
+        _children.insert(index, node);
+        return;
+      }
+    }
+    _children.add(node);
+  }
+
+  /// Retire ce nœud de son parent (miroir de `Node.remove`).
+  void remove() {
+    _parent?._children.remove(this);
+    _parent = null;
+  }
+
   /// Ajoute un enfant.
   @override
   void appendChild(RenderNode child) {
     if (child is ServerRenderNode) {
+      child._parent = this;
       _children.add(child);
     } else {
       throw UnsupportedError('Cannot append a non-ServerRenderNode in server mode');

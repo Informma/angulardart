@@ -41,6 +41,11 @@ class Inspector {
   /// No-op on native/AOT builds.
   void registerContentRoot(dynamic element) {}
 
+  /// Records the latest [value] assigned to input [name] on [directive].
+  ///
+  /// No-op on native/AOT builds.
+  void recordInput(Object directive, String name, Object? value) {}
+
   /// Returns `null`; component inspection is unavailable on native/AOT builds.
   dynamic getComponentElement(int id) => null;
 

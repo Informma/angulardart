@@ -1,7 +1,10 @@
-/// Zone sans changement automatique dtection pour le serveur.
+/// Zone de rendu serveur.
 ///
-/// Ct serveur, on rend une fois puis on arr te. Pas besoin de zone interne
-/// avec interception des microtaches comme ct client.
+/// Contrairement au navigateur, il n'y a pas de boucle d'événements continue :
+/// le serveur rend une fois puis s'arrête. Cette zone hérite néanmoins du
+/// suivi des microtâches/macrotâches du [NgZone] de base afin que les
+/// opérations asynchrones (navigation du routeur, `ngOnInit` async, ...)
+/// puissent être attendues avant de capturer le HTML.
 import 'dart:async';
 
 import 'package:angulardart/src/core/zone/ng_zone.dart' show NgZone;
@@ -9,27 +12,18 @@ import 'package:angulardart/src/core/zone/ng_zone.dart' show NgZone;
 class ServerNgZone extends NgZone {
   ServerNgZone() : super.internal();
 
-  @override
-  R run<R>(R Function() callback) => callback();
+  /// Attend que la zone soit stable : plus aucune microtâche ni macrotâche
+  /// en attente (borné pour éviter une boucle infinie en cas de timer
+  /// périodique).
+  Future<void> stabilize() async {
+    var turns = 0;
+    while ((hasPendingMicrotasks || hasPendingMacrotasks) && turns < 100) {
+      await Future<void>.delayed(Duration.zero);
+      turns++;
+    }
+  }
 
   @override
-  void runGuarded(void Function() callback) => callback();
-
-  @override
-  R runOutsideAngular<R>(R Function() callback) => callback();
-
-  @override
-  Stream<void> get onMicrotaskEmpty => const Stream.empty();
-
-  @override
-  Stream<void> get onEventDone => const Stream.empty();
-
-  @override
-  bool get hasPendingMicrotasks => false;
-
-  @override
-  bool get hasPendingMacrotasks => false;
-
   void dispose() {
     super.dispose();
   }

@@ -1,6 +1,8 @@
 include: ../analysis_options.yaml
 
 analyzer:
+  exclude:
+    - "**/*.template.dart"
   errors:
     # False positives related to missing .template.dart files
     argument_type_not_assignable: ignore

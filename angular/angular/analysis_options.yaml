@@ -3,5 +3,6 @@ analyzer:
     - example/**
     - build/**
     - .dart_tool/**
+    - "**/*.template.dart"
   errors:
     deprecated_member_use: ignore

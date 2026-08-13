@@ -13,6 +13,9 @@ build/
 !angular/angular/lib/src/devtools/model.g.dart
 *.freezed.dart
 
+# Generated AOT templates copied into the examples (rebuilt on `build_runner build`)
+angular/examples/**/*.template.dart
+
 # Test coverage
 coverage/
 
@@ -53,3 +56,15 @@ doc/api/
 
 # Local development overrides
 pubspec_overrides.yaml
+
+# Local AI assistant planning docs (never committed)
+AGENTS.md
+PLAN_*.md
+DIAGNOSTIC_*.md
+PROMPT_*.md
+MIGRATION_PLAN.md
+TODO_PLAN.md
+GENERATE_STUBS.md
+
+# Local opencode tooling
+.opencode/

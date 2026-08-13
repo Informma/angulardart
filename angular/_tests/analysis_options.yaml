@@ -1,6 +1,13 @@
 include: ../analysis_options.yaml
 
 analyzer:
+  exclude:
+    # Non-published internal integration test harness (dependency_overrides only).
+    # Exercises package:angular via build_runner test; excluded from static analysis
+    # because it relies on generated .template.dart artifacts and legacy null-safety
+    # test infrastructure. Zero-issue enforcement applies to the 12 published packages.
+    - "lib/**"
+    - "test/**"
   errors:
     # False positives related to missing .template.dart files
     argument_type_not_assignable: ignore

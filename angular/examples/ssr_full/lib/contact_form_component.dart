@@ -7,7 +7,7 @@ import 'package:angulardart_forms/angulardart_forms.dart';
 @Component(
   selector: 'contact-page',
   templateUrl: 'contact_form_component.html',
-  directives: [formDirectives],
+  directives: [coreDirectives, formDirectives],
   providers: [ClassProvider(ContactService)],
 )
 class ContactPageComponent implements OnInit {
@@ -33,6 +33,15 @@ class ContactPageComponent implements OnInit {
       'message': Control('', Validators.required),
     });
   }
+
+  /// Contrôle du champ « name » (non-null, initialisé dans [ngOnInit]).
+  Control get nameControl => form.controls['name']! as Control;
+
+  /// Contrôle du champ « email » (non-null, initialisé dans [ngOnInit]).
+  Control get emailControl => form.controls['email']! as Control;
+
+  /// Contrôle du champ « message » (non-null, initialisé dans [ngOnInit]).
+  Control get messageControl => form.controls['message']! as Control;
 
   /// Gestionnaire de soumission du formulaire.
   void onSubmit() {

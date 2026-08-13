@@ -17,6 +17,8 @@ dev_dependencies:
 dependency_overrides:
   angulardart:
     path: ../../angular
+  angulardart_ast:
+    path: ../../../angular/angular_ast
   angulardart_server:
     path: ../../../angulardart_server
   angulardart_meta:

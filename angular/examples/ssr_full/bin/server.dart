@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
 import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
 import '../web/main.server.dart' as ng;
@@ -13,6 +15,10 @@ import '../web/main.server.dart' as ng;
 Future<void> main() async {
   final server = platformServer();
 
+  // Le `<base href>` n'existe pas sur la VM (pas de document) ; on le fournit
+  // explicitement pour que `PathLocationStrategy` puisse résoudre les routes.
+  final baseHrefInjector = Injector.map({appBaseHref: '/'});
+
   await HttpServer.bind('localhost', 4000).then((httpServer) {
     print('Serveur SSR AngularDart (exemple complet) en cours d\'exécution sur http://localhost:4000');
 
@@ -21,6 +27,7 @@ Future<void> main() async {
         final html = await server.renderApplication(
           ng.appComponentFactory,
           url: request.uri.toString(),
+          parentInjector: ng.appInjector(baseHrefInjector),
         );
 
         request.response

@@ -1,6 +1,9 @@
 include: package:lints/recommended.yaml
 
 analyzer:
+  exclude:
+    # Generated AOT templates are copied into lib/ and web/ for `dart bin/server.dart`.
+    - "**/*.template.dart"
   errors:
     uri_has_not_been_generated: ignore
     deprecated_member_use: ignore

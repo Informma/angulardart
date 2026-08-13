@@ -1,35 +1,29 @@
 <h1>Contact Us</h1>
 <p>Fill out the form below to get in touch.</p>
 
-<% if (submitted) { %>
-  <div class="success-message">Thank you! Your message has been sent successfully.</div>
-  <button on-click="resetForm()">Send another message</button>
-<% } else { %>
-  <form [control]="form" on-submit="onSubmit()" class="contact-form">
-    <div class="form-group">
-      <label for="name">Name *</label>
-      <input id="name" type="text" control-name="name" placeholder="Your name" />
-      <% if (!form.controls['name'].valid && form.controls['name'].dirty) { %>
-        <span class="error">Name is required.</span>
-      <% } %>
-    </div>
+<div class="success-message" *ngIf="submitted">
+  Thank you! Your message has been sent successfully.
+  <button (click)="resetForm()">Send another message</button>
+</div>
 
-    <div class="form-group">
-      <label for="email">Email *</label>
-      <input id="email" type="email" control-name="email" placeholder="your@email.com" />
-      <% if (!form.controls['email'].valid && form.controls['email'].dirty) { %>
-        <span class="error"><%= form.controls['email'].errors ? 'Invalid email format.' : 'Email is required.' %></span>
-      <% } %>
-    </div>
+<form *ngIf="!submitted" [ngFormModel]="form" (ngSubmit)="onSubmit()" class="contact-form">
+  <div class="form-group">
+    <label for="name">Name *</label>
+    <input id="name" type="text" ngControl="name" placeholder="Your name" />
+    <span class="error" *ngIf="!nameControl.valid && nameControl.dirty">Name is required.</span>
+  </div>
 
-    <div class="form-group">
-      <label for="message">Message *</label>
-      <textarea id="message" control-name="message" rows="5" placeholder="Your message..."></textarea>
-      <% if (!form.controls['message'].valid && form.controls['message'].dirty) { %>
-        <span class="error">Message is required.</span>
-      <% } %>
-    </div>
+  <div class="form-group">
+    <label for="email">Email *</label>
+    <input id="email" type="email" ngControl="email" placeholder="your@email.com" />
+    <span class="error" *ngIf="!emailControl.valid && emailControl.dirty">{{ emailControl.errors != null ? 'Invalid email format.' : 'Email is required.' }}</span>
+  </div>
 
-    <button type="submit" disabled="<%= !form.valid %>">Send Message</button>
-  </form>
-<% } %>
+  <div class="form-group">
+    <label for="message">Message *</label>
+    <textarea id="message" ngControl="message" rows="5" placeholder="Your message..."></textarea>
+    <span class="error" *ngIf="!messageControl.valid && messageControl.dirty">Message is required.</span>
+  </div>
+
+  <button type="submit" [disabled]="!form.valid">Send Message</button>
+</form>

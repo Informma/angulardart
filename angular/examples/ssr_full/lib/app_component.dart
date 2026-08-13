@@ -37,7 +37,5 @@ class AppComponent implements OnInit {
       RouteDefinition(path: '/contact', component: contact.ContactPageComponentNgFactory),
       RouteDefinition(path: '/dashboard', component: dashboard.DashboardPageComponentNgFactory),
     ];
-
-    _router.navigate('/');
   }
 }

@@ -11,6 +11,7 @@ import 'item_service.dart';
   selector: 'home-page',
   templateUrl: 'home_component.html',
   renderMode: RenderMode.server,
+  directives: [coreDirectives],
   providers: [ClassProvider(ItemService)],
   styles: [
     '''

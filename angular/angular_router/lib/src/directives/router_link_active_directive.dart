@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'dart:html';
 
 import 'package:collection/collection.dart';
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
+import 'package:angulardart/src/runtime/dom_helpers.dart';
 // ignore: implementation_imports
 import 'package:angulardart/src/utilities.dart';
 
@@ -26,7 +27,7 @@ import 'router_link_directive.dart';
   selector: '[routerLinkActive]',
 )
 class RouterLinkActive implements AfterViewInit, OnDestroy {
-  final Element _element;
+  final ElementRef _elementRef;
   final Router _router;
 
   late StreamSubscription<RouterState> _routeChanged;
@@ -35,7 +36,7 @@ class RouterLinkActive implements AfterViewInit, OnDestroy {
   @ContentChildren(RouterLink)
   List<RouterLink>? links;
 
-  RouterLinkActive(this._element, this._router);
+  RouterLinkActive(this._elementRef, this._router);
 
   @override
   void ngOnDestroy() => _routeChanged.cancel();
@@ -81,6 +82,9 @@ class RouterLinkActive implements AfterViewInit, OnDestroy {
         break;
       }
     }
-    _element.classes.toggleAll(_classes, isActive);
+    final el = _elementRef.nativeElement;
+    for (var className in _classes) {
+      updateClassBinding(el, className, isActive);
+    }
   }
 }

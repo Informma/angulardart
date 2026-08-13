@@ -1,7 +1,6 @@
-import 'dart:html';
-
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/core/linker/app_view_utils.dart';
+import 'package:angulardart/src/runtime/dom_apis.dart';
 import 'package:angulardart/src/runtime/dom_helpers.dart';
 import 'package:angulardart/src/runtime/render_node.dart';
 import 'package:angulardart/src/utilities.dart';
@@ -181,14 +180,14 @@ class ComponentStyles {
       target.add('/* From: $_componentUrl*/');
     }
     final styles = _flattenStyles(_styles, target, _componentId).join();
-    final styleElement = StyleElement()..text = styles;
+    final styleElement = createStyleElement(styles);
     if (isDevMode) {
       // Remove style element from the DOM on hot restart.
       debugOnClear(() {
         styleElement.remove();
       });
     }
-    document.head!.append(styleElement);
+    appendStyleElement(styleElement);
   }
 }
 

@@ -23,9 +23,9 @@
 /// ```
 library safe_html_directive;
 
-import 'dart:html';
-
 import 'package:angulardart/angulardart.dart';
+import 'package:angulardart/src/runtime/dom_apis.dart';
+import 'package:angulardart/src/runtime/render_node.dart';
 
 /// Directive that renders trusted HTML content without sanitization.
 ///
@@ -34,28 +34,32 @@ import 'package:angulardart/angulardart.dart';
 /// built-in sanitization.
 @Directive(selector: '[safeHtml]')
 class SafeHtmlDirective implements OnInit {
-  final HtmlElement? _element;
+  final ElementRef? _elementRef;
 
   /// The trusted HTML content to render.
   @Input()
   String? safeHtml;
 
   /// Creates a [SafeHtmlDirective] instance.
-  SafeHtmlDirective(@Optional() this._element);
+  SafeHtmlDirective(@Optional() this._elementRef);
 
   @override
   void ngOnInit() {
     final value = safeHtml;
+    final el = _elementRef?.nativeElement;
+    if (el == null) return;
+    if (el is RenderNode) {
+      // Server-side rendering: trusted HTML is written directly.
+      el.innerHtml = value ?? '';
+      return;
+    }
     if (value == null) {
-      _element?.innerHtml = '';
+      el.innerHtml = '';
     } else {
-      // Use NodeTreeSanitizer.trusted to bypass sanitization
-      final fragment = DocumentFragment.html(
-        value,
-        treeSanitizer: NodeTreeSanitizer.trusted,
-      );
-      _element?.innerHtml = '';
-      _element?.append(fragment);
+      // Use NodeTreeSanitizer.trusted to bypass sanitization.
+      final fragment = createTrustedHtml(value);
+      el.innerHtml = '';
+      el.append(fragment);
     }
   }
 }

@@ -45,3 +45,18 @@ DomDocumentFragment createTrustedHtml(String trustedHtml) {
     treeSanitizer: html.NodeTreeSanitizer.trusted,
   );
 }
+
+/// The platform-specific style element type (browser).
+typedef DomStyleElement = html.StyleElement;
+
+/// Creates a browser `<style>` element with [styles] as its text content.
+DomStyleElement createStyleElement(String styles) =>
+    html.StyleElement()..text = styles;
+
+/// Appends a `<style>` element to the document `<head>` (browser).
+void appendStyleElement(DomStyleElement element) {
+  html.document.head!.append(element);
+}
+
+/// Logs an error to the browser developer console.
+void consoleError(Object? message) => html.window.console.error(message);

@@ -45,6 +45,9 @@ class BrowserRenderNode implements RenderNode {
   void setAttribute(String name, String value) {}
 
   @override
+  void setStyle(String name, String? value) {}
+
+  @override
   void setClass(String className, bool enabled) {}
 
   @override

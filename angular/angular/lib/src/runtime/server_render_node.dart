@@ -32,6 +32,7 @@ class ServerRenderNode implements RenderNode {
   }
 
   final Map<String, String> _attrs = {};
+  final Map<String, String> _styles = {};
   final List<MapEntry<String, bool>> _classes = [];
   final StringBuffer _content = StringBuffer();
   final List<ServerRenderNode> _children = [];
@@ -59,6 +60,15 @@ class ServerRenderNode implements RenderNode {
   @override
   void setAttribute(String name, String value) {
     _attrs[name] = value;
+  }
+
+  @override
+  void setStyle(String name, String? value) {
+    if (value == null) {
+      _styles.remove(name);
+    } else {
+      _styles[name] = value;
+    }
   }
 
   @override
@@ -141,6 +151,10 @@ class ServerRenderNode implements RenderNode {
       final enabledClasses = _classes.where((e) => e.value).map((e) => e.key).toList();
       if (enabledClasses.isNotEmpty) {
         buffer.write(' class="${enabledClasses.join(' ')}"');
+      }
+
+      if (_styles.isNotEmpty) {
+        buffer.write(' style="${_styles.entries.map((e) => '${e.key}:${e.value}').join('; ')}"');
       }
 
       buffer.write('>');

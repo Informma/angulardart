@@ -9,9 +9,9 @@
 library angular.src.runtime.dom_helpers;
 
 import 'package:meta/dart2js.dart' as dart2js;
-import 'package:js/js_util.dart' as js_util;
 
 import 'dom_apis.dart';
+import 'dom_helpers_browser.dart' if (dart.library.io) 'dom_helpers_vm.dart';
 import 'render_factory.dart';
 import 'render_node.dart';
 
@@ -86,6 +86,23 @@ void updateClassBindingNonHtml(
       classList.remove(className);
     }
   }
+}
+
+/// Updates a style [property] on [element] to [value].
+///
+/// If [value] is `null`, the style property is removed.
+@dart2js.noInline
+void updateStyle(dynamic element, String property, String? value) {
+  if (element is RenderNode) {
+    element.setStyle(property, value);
+    return;
+  }
+  if (value == null) {
+    element.style.removeProperty(property);
+  } else {
+    element.style.setProperty(property, value);
+  }
+  domRootRendererIsDirty = true;
 }
 
 /// Updates [attribute] on [element] to reflect [value].
@@ -168,7 +185,7 @@ void setProperty(
     element.setProperty(property, value);
     return;
   }
-  js_util.setProperty(element, property, value);
+  setNativeProperty(element, property, value);
 }
 
 /// Creates a [Text] node with the provided [contents].

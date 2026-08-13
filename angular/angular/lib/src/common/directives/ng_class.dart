@@ -1,8 +1,8 @@
-import 'dart:html';
-
 import 'package:angulardart/src/core/change_detection/differs/default_iterable_differ.dart';
 import 'package:angulardart/src/core/change_detection/differs/default_keyvalue_differ.dart';
+import 'package:angulardart/src/core/linker/element_ref.dart';
 import 'package:angulardart/src/meta.dart';
+import 'package:angulardart/src/runtime/dom_helpers.dart';
 
 /// The [NgClass] directive conditionally adds and removes CSS classes on an
 /// HTML element based on an expression's evaluation result.
@@ -56,14 +56,14 @@ class NgClass implements DoCheck, OnDestroy {
   // Separator used to split string to parts - can be any number of
   // whitespaces, new lines or tabs.
   static final _separator = RegExp(r'\s+');
-  final Element? _ngEl;
+  final ElementRef? _elementRef;
 
   DefaultIterableDiffer? _iterableDiffer;
   DefaultKeyValueDiffer? _keyValueDiffer;
 
   List<String> _initialClasses = [];
   Object? _rawClass;
-  NgClass(@Optional() this._ngEl);
+  NgClass(@Optional() this._elementRef);
 
   @Input('class')
   set initialClasses(String? v) {
@@ -173,24 +173,15 @@ class NgClass implements DoCheck, OnDestroy {
   void _toggleClass(String className, bool enabled) {
     className = className.trim();
     if (className.isEmpty) return;
-    var el = _ngEl;
+    final el = _elementRef?.nativeElement;
     if (el == null) return;
-    var classList = el.classes;
     if (className.contains(' ')) {
-      var classes = className.split(_separator);
+      final classes = className.split(_separator);
       for (var i = 0, len = classes.length; i < len; i++) {
-        if (enabled) {
-          classList.add(classes[i]);
-        } else {
-          classList.remove(classes[i]);
-        }
+        updateClassBinding(el, classes[i], enabled);
       }
     } else {
-      if (enabled) {
-        classList.add(className);
-      } else {
-        classList.remove(className);
-      }
+      updateClassBinding(el, className, enabled);
     }
   }
 }

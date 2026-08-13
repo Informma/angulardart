@@ -1,6 +1,6 @@
-import 'dart:html';
-
+import 'package:angulardart/src/core/linker/element_ref.dart';
 import 'package:angulardart/src/meta.dart';
+import 'package:angulardart/src/runtime/dom_helpers.dart';
 
 import '../../core/change_detection/differs/default_keyvalue_differ.dart';
 
@@ -59,11 +59,11 @@ import '../../core/change_detection/differs/default_keyvalue_differ.dart';
   selector: '[ngStyle]',
 )
 class NgStyle implements DoCheck {
-  final Element? _ngElement;
+  final ElementRef? _elementRef;
   Map<String, String?>? _rawStyle;
   DefaultKeyValueDiffer? _differ;
 
-  NgStyle(@Optional() this._ngElement);
+  NgStyle(@Optional() this._elementRef);
 
   @Input('ngStyle')
   set rawStyle(Map<String, String?>? v) {
@@ -86,7 +86,10 @@ class NgStyle implements DoCheck {
   }
 
   void _setProperty(KeyValueChangeRecord record) {
-    _ngElement?.style.setProperty(
+    final el = _elementRef?.nativeElement;
+    if (el == null) return;
+    updateStyle(
+      el,
       unsafeCast(record.key),
       unsafeCast(record.currentValue),
     );

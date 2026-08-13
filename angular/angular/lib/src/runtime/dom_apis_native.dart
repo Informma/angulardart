@@ -54,3 +54,20 @@ dynamic createComment([String? data]) =>
 /// Never called on native builds.
 dynamic createTrustedHtml(String trustedHtml) =>
     throw UnsupportedError('DOM is not available on native platforms.');
+
+/// The platform-specific style element type (native stub).
+class DomStyleElement {
+  const DomStyleElement._();
+
+  /// No-op on native builds.
+  void remove() {}
+}
+
+/// Returns a stub style element for native/AOT builds.
+DomStyleElement createStyleElement(String styles) => const DomStyleElement._();
+
+/// No-op on native builds; styles are handled by the SSR server.
+void appendStyleElement(DomStyleElement element) {}
+
+/// Logs an error to the console on native/AOT builds.
+void consoleError(Object? message) => print(message);

@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:html'
-    show AnchorElement, Element, Event, KeyboardEvent, KeyCode, MouseEvent;
 
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
+import 'package:angulardart/src/runtime/render_node.dart';
 
 import '../location.dart' show Location;
 import '../router/navigation_params.dart';
@@ -28,21 +28,24 @@ class RouterLink implements OnDestroy {
   final Location _location;
   final String? _target;
 
-  StreamSubscription<KeyboardEvent>? _keyPressSubscription;
+  StreamSubscription<dynamic>? _keyPressSubscription;
   late String _routerLink;
   String? _cachedVisibleHref;
   Url? _cachedUrl;
+
+  static const int _enterKeyCode = 13;
 
   RouterLink(
     this._router,
     this._location,
     @Attribute('target') this._target,
-    Element element,
+    ElementRef elementRef,
   ) {
+    final element = elementRef.nativeElement;
     // The browser will synthesize a click event for anchor elements when they
     // receive an Enter key press. For other elements, we must manually add a
     // key press listener to ensure the link remains keyboard accessible.
-    if (element is! AnchorElement) {
+    if (element is! RenderNode && element.tagName.toLowerCase() != 'a') {
       _keyPressSubscription = element.onKeyPress.listen(_onKeyPress);
     }
   }
@@ -86,21 +89,23 @@ class RouterLink implements OnDestroy {
   }
 
   @HostListener('click')
-  void onClick(MouseEvent event) {
+  void onClick(dynamic event) {
     // Control-click (or Command-click) opens link in new tab.
-    if (event.ctrlKey || event.metaKey) return;
+    if (event.ctrlKey == true || event.metaKey == true) return;
     _trigger(event);
   }
 
-  void _onKeyPress(KeyboardEvent event) {
+  void _onKeyPress(dynamic event) {
     // Control-click (or Command-click) opens link in new tab.
-    if (event.keyCode != KeyCode.ENTER || event.ctrlKey || event.metaKey) {
+    if (event.keyCode != _enterKeyCode ||
+        event.ctrlKey == true ||
+        event.metaKey == true) {
       return;
     }
     _trigger(event);
   }
 
-  void _trigger(Event event) {
+  void _trigger(dynamic event) {
     // The presence of target="_blank" opens link in new tab.
     if (_target == null || _target == '_self') {
       event.preventDefault();

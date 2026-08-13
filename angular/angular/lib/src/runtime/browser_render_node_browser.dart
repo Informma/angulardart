@@ -60,6 +60,16 @@ class BrowserRenderNode implements RenderNode {
   }
 
   @override
+  void setStyle(String name, String? value) {
+    if (_isText || _isComment) return;
+    if (value == null) {
+      _element.style.removeProperty(name);
+    } else {
+      _element.style.setProperty(name, value);
+    }
+  }
+
+  @override
   void setClass(String className, bool enabled) {
     if (_isText || _isComment) return;
     if (enabled) {

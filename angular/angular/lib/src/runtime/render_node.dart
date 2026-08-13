@@ -40,6 +40,9 @@ abstract class RenderNode {
   /// Définit un attribut HTML.
   void setAttribute(String name, String value);
 
+  /// Définit une propriété de style CSS.
+  void setStyle(String name, String? value);
+
   /// Ajoute ou retire une classe CSS.
   void setClass(String className, bool enabled);
 

@@ -1,0 +1,8 @@
+targets:
+  $default:
+    builders:
+      angulardart:
+        generate_for:
+          exclude:
+            - "lib/*.dart"
+            - "lib/**/*.dart"

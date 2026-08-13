@@ -197,7 +197,20 @@ class ReflectableEmitter {
       //   _refN.initReflector();
       // }
       final name = '_ref$counter';
-      _libraryBuilder.directives.add(Directive.import(url, as: name));
+      final vmUrl = _output.conditionalVariants[url];
+      if (vmUrl != null) {
+        // Conditional import for files that use
+        // `export 'browser.dart' if (dart.library.io) 'vm.dart'`.
+        //
+        // Generates:
+        //
+        // import "<url>" if (dart.library.io) "<vmUrl>" as _refN;
+        _importBuffer.writeln(
+          "import '$url' if (dart.library.io) '$vmUrl' as $name;",
+        );
+      } else {
+        _libraryBuilder.directives.add(Directive.import(url, as: name));
+      }
       _initReflectorBody.addExpression(
         refer(name).property('initReflector').call([]),
       );

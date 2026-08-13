@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:analyzer/dart/analysis/features.dart';
+import 'package:analyzer/dart/analysis/utilities.dart' show parseString;
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
@@ -100,12 +103,18 @@ class ReflectableReader {
     var urlsNeedingInitReflector = const <String>[];
 
     // Only link to other ".initReflector" calls if either flag is enabled.
+    var conditionalVariants = const <String, String>{};
     if (recordInjectableFactories || recordComponentFactories) {
       urlsNeedingInitReflector = await _resolveNeedsReflector(library);
+      conditionalVariants = _resolveConditionalVariants(
+        library,
+        urlsNeedingInitReflector,
+      );
     }
 
     return ReflectableOutput(
       urlsNeedingInitReflector: urlsNeedingInitReflector,
+      conditionalVariants: conditionalVariants,
       registerClasses: registerClasses,
       registerFunctions: registerFunctions,
     );
@@ -203,6 +212,44 @@ class ReflectableReader {
     return results..sort();
   }
 
+  /// Detects conditional exports (`export 'a_browser.dart' if (dart.library.io)
+  /// 'a_vm.dart'`) and returns a map from the browser `.template.dart` URI to
+  /// its native/VM `.template.dart` counterpart.
+  ///
+  /// Only variants whose browser URI is already present in
+  /// [urlsNeedingInitReflector] are emitted, so the conditional import is only
+  /// generated for files that are actually linked.
+  Map<String, String> _resolveConditionalVariants(
+    LibraryElement library,
+    List<String> urlsNeedingInitReflector,
+  ) {
+    final variants = <String, String>{};
+    final source = library.firstFragment.source;
+    final content = source.contents.data;
+
+    final unit = parseString(
+      content: content,
+      featureSet: FeatureSet.latestLanguageVersion(),
+      throwIfDiagnostics: false,
+    ).unit;
+    for (final directive in unit.directives) {
+      if (directive is! NamespaceDirective) continue;
+      final browserUri = directive.uri.stringValue;
+      if (browserUri == null) continue;
+      for (final configuration in directive.configurations) {
+        // Only handle the native/VM condition used by the framework's
+        // conditional exports (`dart.library.io`).
+        if (configuration.name.toString() != 'dart.library.io') continue;
+        final vmUri = configuration.uri.stringValue;
+        if (vmUri == null) continue;
+        final browserTemplate = _withOutputExtension(browserUri);
+        if (!urlsNeedingInitReflector.contains(browserTemplate)) continue;
+        variants[browserTemplate] = _withOutputExtension(vmUri);
+      }
+    }
+    return variants;
+  }
+
   Future<bool> _needsInitReflector(
     String uri,
     PrefixFragment? prefix,
@@ -233,6 +280,15 @@ class ReflectableOutput {
   /// What `.template.dart` files need to be imported and linked to this file.
   final List<String> urlsNeedingInitReflector;
 
+  /// Maps a browser `.template.dart` URI to its native/VM `.template.dart`
+  /// counterpart, for files that use a conditional export
+  /// (`export 'a_browser.dart' if (dart.library.io) 'a_vm.dart'`).
+  ///
+  /// The browser URI is the one linked unconditionally (and present in
+  /// [urlsNeedingInitReflector]); the emitter turns it into a conditional
+  /// import so the VM resolves the native variant instead.
+  final Map<String, String> conditionalVariants;
+
   /// What `class` elements require registration in `initReflector`.
   final List<ReflectableClass> registerClasses;
 
@@ -242,22 +298,26 @@ class ReflectableOutput {
   @visibleForTesting
   const ReflectableOutput({
     this.urlsNeedingInitReflector = const [],
+    this.conditionalVariants = const {},
     this.registerClasses = const [],
     this.registerFunctions = const [],
   });
 
   static const _list = ListEquality<Object?>();
+  static const _map = MapEquality<String, String>();
 
   @override
   bool operator ==(Object other) =>
       other is ReflectableOutput &&
       _list.equals(urlsNeedingInitReflector, other.urlsNeedingInitReflector) &&
+      _map.equals(conditionalVariants, other.conditionalVariants) &&
       _list.equals(registerClasses, other.registerClasses) &&
       _list.equals(registerFunctions, other.registerFunctions);
 
   @override
   int get hashCode =>
       _list.hash(urlsNeedingInitReflector) ^
+      _map.hash(conditionalVariants) ^
       _list.hash(registerClasses) ^
       _list.hash(registerFunctions);
 
@@ -265,6 +325,7 @@ class ReflectableOutput {
   String toString() =>
       'ReflectableOutput ${{
         'urlsNeedingInitReflector': urlsNeedingInitReflector,
+        'conditionalVariants': conditionalVariants,
         'registerClasses': registerClasses,
         'registerFunctions': registerFunctions,
       }}';

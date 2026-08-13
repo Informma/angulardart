@@ -46,7 +46,7 @@ class TransferState {
   /// Retourne toutes les valeurs dont la cl correspond au prfixe donn.
   ///
   /// Utile pour extraire des donnes SEO depuis [TransferState] ct serveur.
-  /// Les cls retournes sont sans le prfixe `ng-transfer-state:`.
+  /// Les cls retournes sont sans les prfixes `ng-transfer-state:` et [prefix].
   ///
   /// Exemple :
   /// ```dart
@@ -58,8 +58,9 @@ class TransferState {
     final searchKey = _keyPrefix + prefix;
     for (final entry in _state.entries) {
       if (entry.key.startsWith(searchKey)) {
-        // Remove the ng-transfer-state: prefix to return clean keys.
-        final cleanKey = entry.key.substring(_keyPrefix.length);
+        // Remove the `ng-transfer-state:` and `prefix` prefixes to return
+        // clean keys (e.g. `seo:title` -> `title`).
+        final cleanKey = entry.key.substring(searchKey.length);
         result[cleanKey] = entry.value;
       }
     }

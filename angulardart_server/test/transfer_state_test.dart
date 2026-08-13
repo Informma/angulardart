@@ -201,5 +201,20 @@ void main() {
       final script = TransferState.toScript();
       expect(script, contains('null'));
     });
+
+    test('getByPrefix retourne les clés sans les préfixes', () {
+      TransferState.set('seo:title', 'My Page');
+      TransferState.set('seo:meta:description', 'Description...');
+      TransferState.set('other:value', 'ignored');
+
+      final seoData = TransferState.getByPrefix('seo:');
+
+      expect(seoData, {
+        'title': 'My Page',
+        'meta:description': 'Description...',
+      });
+      expect(seoData.containsKey('seo:title'), isFalse);
+      expect(seoData.containsKey('other:value'), isFalse);
+    });
   });
 }

@@ -1,7 +1,6 @@
-import 'dart:html';
-import 'dart:js_util' as js_util;
-
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
+import 'package:angulardart/src/runtime/dom_helpers.dart' show setProperty;
 import 'package:angulardart_forms/src/directives/shared.dart'
     show setElementDisabled;
 
@@ -33,9 +32,10 @@ const DEFAULT_VALUE_ACCESSOR = defaultValueAccessor;
 class DefaultValueAccessor extends Object
     with TouchHandler, ChangeHandler<String>
     implements ControlValueAccessor<dynamic> {
-  final HtmlElement? _element;
+  final dynamic _element;
 
-  DefaultValueAccessor(@Optional() this._element);
+  DefaultValueAccessor(@Optional() ElementRef? elementRef)
+      : _element = elementRef?.nativeElement;
 
   @HostListener('input', ['\$event.target.value'])
   void handleChange(String value) {
@@ -45,11 +45,11 @@ class DefaultValueAccessor extends Object
   @override
   void writeValue(value) {
     var normalizedValue = value ?? '';
-    js_util.setProperty(_element!, 'value', normalizedValue);
+    setProperty(_element, 'value', normalizedValue);
   }
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    setElementDisabled(_element!, isDisabled);
+    setElementDisabled(_element, isDisabled);
   }
 }

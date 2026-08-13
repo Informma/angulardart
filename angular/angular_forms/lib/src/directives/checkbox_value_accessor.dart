@@ -1,6 +1,6 @@
-import 'dart:html';
-
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
+import 'package:angulardart/src/runtime/dom_helpers.dart' show setProperty;
 
 import 'control_value_accessor.dart'
     show ChangeHandler, ControlValueAccessor, ngValueAccessor, TouchHandler;
@@ -30,10 +30,10 @@ const CHECKBOX_VALUE_ACCESSOR = checkboxValueAccessor;
 class CheckboxControlValueAccessor extends Object
     with TouchHandler, ChangeHandler<bool>
     implements ControlValueAccessor<bool> {
-  final InputElement? _element;
+  final dynamic _element;
 
-  CheckboxControlValueAccessor(@Optional() HtmlElement? element)
-      : _element = element as InputElement?;
+  CheckboxControlValueAccessor(@Optional() ElementRef? elementRef)
+      : _element = elementRef?.nativeElement;
 
   @HostListener('change', ['\$event.target.checked'])
   void handleChange(bool checked) {
@@ -42,11 +42,11 @@ class CheckboxControlValueAccessor extends Object
 
   @override
   void writeValue(bool value) {
-    _element!.checked = value;
+    setProperty(_element, 'checked', value);
   }
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    _element!.disabled = isDisabled;
+    setProperty(_element, 'disabled', isDisabled);
   }
 }

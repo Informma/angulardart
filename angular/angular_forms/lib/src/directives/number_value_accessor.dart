@@ -1,6 +1,6 @@
-import 'dart:html';
-
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
+import 'package:angulardart/src/runtime/dom_helpers.dart' show setProperty;
 
 import 'control_value_accessor.dart'
     show ChangeHandler, ControlValueAccessor, ngValueAccessor, TouchHandler;
@@ -29,9 +29,10 @@ const NUMBER_VALUE_ACCESSOR = numberValueAccessor;
 class NumberValueAccessor extends Object
     with TouchHandler, ChangeHandler<double?>
     implements ControlValueAccessor<Object?> {
-  final InputElement? _element;
+  final dynamic _element;
 
-  NumberValueAccessor(@Optional() HtmlElement? element) : _element = element as InputElement?;
+  NumberValueAccessor(@Optional() ElementRef? elementRef)
+      : _element = elementRef?.nativeElement;
 
   @HostListener('change', ['\$event.target.value'])
   @HostListener('input', ['\$event.target.value'])
@@ -41,11 +42,11 @@ class NumberValueAccessor extends Object
 
   @override
   void writeValue(value) {
-    _element?.value = '$value';
+    setProperty(_element, 'value', '$value');
   }
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    _element?.disabled = isDisabled;
+    setProperty(_element, 'disabled', isDisabled);
   }
 }

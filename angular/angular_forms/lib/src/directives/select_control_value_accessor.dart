@@ -1,6 +1,6 @@
-import 'dart:html';
-
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
+import 'package:angulardart/src/runtime/dom_helpers.dart' show setProperty;
 // ignore: implementation_imports
 import 'package:angulardart/src/utilities.dart';
 
@@ -45,13 +45,13 @@ String _extractId(String valueString) => valueString.split(':')[0];
 class SelectControlValueAccessor extends Object
     with TouchHandler, ChangeHandler<dynamic>
     implements ControlValueAccessor<Object?> {
-  final SelectElement? _element;
+  final dynamic _element;
   Object? value;
   final Map<String, Object?> _optionMap = <String, Object?>{};
   num _idCounter = 0;
 
-  SelectControlValueAccessor(@Optional() HtmlElement? element)
-      : _element = element as SelectElement?;
+  SelectControlValueAccessor(@Optional() ElementRef? elementRef)
+      : _element = elementRef?.nativeElement;
 
   @HostListener('change', ['\$event.target.value'])
   void handleChange(String value) {
@@ -62,12 +62,12 @@ class SelectControlValueAccessor extends Object
   void writeValue(Object? value) {
     this.value = value;
     var valueString = _buildValueString(_getOptionId(value), value);
-    _element?.value = valueString;
+    setProperty(_element, 'value', valueString);
   }
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    _element?.disabled = isDisabled;
+    setProperty(_element, 'disabled', isDisabled);
   }
 
   String _registerOption() => (_idCounter++).toString();
@@ -96,11 +96,11 @@ class SelectControlValueAccessor extends Object
   selector: 'option',
 )
 class NgSelectOption implements OnDestroy {
-  final OptionElement? _element;
+  final dynamic _element;
   final SelectControlValueAccessor? _select;
   late final String id;
-  NgSelectOption(@Optional() HtmlElement? element, @Optional() @Host() this._select)
-      : _element = element as OptionElement? {
+  NgSelectOption(@Optional() ElementRef? elementRef, @Optional() @Host() this._select)
+      : _element = elementRef?.nativeElement {
     if (_select != null) id = _select!._registerOption();
   }
 
@@ -121,7 +121,7 @@ class NgSelectOption implements OnDestroy {
   }
 
   void _setElementValue(String value) {
-    _element?.value = value;
+    setProperty(_element, 'value', value);
   }
 
   @override

@@ -1,7 +1,6 @@
-import 'dart:html';
-import 'dart:js_util' as js_util;
-
 import 'package:angulardart/angulardart.dart';
+// ignore: implementation_imports
+import 'package:angulardart/src/runtime/dom_helpers.dart' show setProperty;
 import 'package:angulardart_forms/src/directives/shared.dart'
     show setElementDisabled;
 
@@ -81,7 +80,7 @@ class RadioButtonState {
 class RadioControlValueAccessor extends Object
     with TouchHandler, ChangeHandler<RadioButtonState>
     implements ControlValueAccessor<RadioButtonState>, OnDestroy, OnInit {
-  final HtmlElement? _element;
+  final dynamic _element;
   final RadioControlRegistry? _registry;
   final Injector? _injector;
   RadioButtonState? _state;
@@ -90,7 +89,8 @@ class RadioControlValueAccessor extends Object
   @Input()
   String? name;
 
-  RadioControlValueAccessor(@Optional() this._element, @Optional() this._registry, @Optional() this._injector);
+  RadioControlValueAccessor(@Optional() ElementRef? elementRef, @Optional() this._registry, @Optional() this._injector)
+      : _element = elementRef?.nativeElement;
 
   @HostListener('change')
   void changeHandler() {
@@ -113,7 +113,7 @@ class RadioControlValueAccessor extends Object
   void writeValue(RadioButtonState? value) {
     _state = value;
     if (value?.checked ?? false) {
-      js_util.setProperty(_element as Object, 'checked', true);
+      setProperty(_element, 'checked', true);
     }
   }
 
@@ -123,6 +123,6 @@ class RadioControlValueAccessor extends Object
 
   @override
   void onDisabledChanged(bool isDisabled) {
-    setElementDisabled(_element as HtmlElement, isDisabled);
+    setElementDisabled(_element, isDisabled);
   }
 }

@@ -664,16 +664,16 @@ void main() {
       expect(projectDir.existsSync(), isTrue);
       // Expected files: pubspec.yaml, analysis_options.yaml, build.yaml, .gitignore, README.md,
       // web/index.html, web/main.dart, web/main.server.dart, web/styles.css = 9
-      // lib/home_component.dart, lib/home_component.html, lib/about_component.dart,
-      // lib/about_component.html, lib/dashboard_component.dart, lib/dashboard_component.html,
-      // lib/data_service.dart, lib/platform_dom.dart, lib/platform_dom_browser.dart,
-      // lib/platform_dom_vm.dart = 10
+      // lib/app_component.dart, lib/app_component.html, lib/home_component.dart,
+      // lib/home_component.html, lib/about_component.dart, lib/about_component.html,
+      // lib/dashboard_component.dart, lib/dashboard_component.html, lib/data_service.dart,
+      // lib/platform_dom.dart, lib/platform_dom_browser.dart, lib/platform_dom_vm.dart = 12
       // bin/server.dart = 1
-      // Total = 20
-      expect(countFiles(projectDir), equals(20));
+      // Total = 22
+      expect(countFiles(projectDir), equals(22));
     });
 
-    test('Hybrid main.dart imports component templates from lib/', () async {
+    test('Hybrid main.dart imports app_component from lib/', () async {
       final generator = ProjectGenerator(
         EntityName('hybrid_app'),
         tempDir.path,
@@ -683,9 +683,8 @@ void main() {
       await generator.generate();
 
       final content = File('${tempDir.path}/hybrid_app/web/main.dart').readAsStringSync();
-      expect(content, contains("import 'home_component.template.dart'"));
-      expect(content, contains("import 'about_component.template.dart'"));
-      expect(content, contains("import 'dashboard_component.template.dart'"));
+      expect(content, contains("import 'package:hybrid_app/app_component.template.dart' as app;"));
+      expect(content, contains('app.AppComponentNgFactory'));
     });
 
     test('Hybrid pubspec uses wide version constraints', () async {
@@ -710,7 +709,7 @@ void main() {
       }
     });
 
-    test('Hybrid main.dart uses router-outlet with routes', () async {
+    test('Hybrid app_component uses router-outlet with routes', () async {
       final generator = ProjectGenerator(
         EntityName('hybrid_app'),
         tempDir.path,
@@ -719,11 +718,14 @@ void main() {
       );
       await generator.generate();
 
-      final content = File('${tempDir.path}/hybrid_app/web/main.dart').readAsStringSync();
-      expect(content, contains('<router-outlet [routes]="routes">'));
-      expect(content, contains("RouteDefinition(path: '/',"));
-      expect(content, contains("RouteDefinition(path: '/about',"));
-      expect(content, contains("RouteDefinition(path: '/dashboard',"));
+      final dartContent = File('${tempDir.path}/hybrid_app/lib/app_component.dart').readAsStringSync();
+      expect(dartContent, contains("RouteDefinition(path: '/',"));
+      expect(dartContent, contains("RouteDefinition(path: '/about',"));
+      expect(dartContent, contains("RouteDefinition(path: '/dashboard',"));
+      expect(dartContent, isNot(contains('_router.navigate')));
+
+      final htmlContent = File('${tempDir.path}/hybrid_app/lib/app_component.html').readAsStringSync();
+      expect(htmlContent, contains('<router-outlet [routes]="routes">'));
     });
 
     test('Hybrid main.dart uses @GenerateInjector with routerProviders', () async {

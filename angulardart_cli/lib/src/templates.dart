@@ -192,11 +192,10 @@ class AppComponent implements OnInit {
   void ngOnInit() {
     _router.onRouteActivated.listen((_) {});
     routes = [
-      RouteDefinition(path: '/', component: ng.createHomeComponentFactory(), useAsDefault: true),
-      RouteDefinition(path: '/about', component: ng.createAboutComponentFactory()),
-      RouteDefinition(path: '/contact', component: ng.createContactComponentFactory()),
+      RouteDefinition(path: '/', component: ng.HomeComponentNgFactory, useAsDefault: true),
+      RouteDefinition(path: '/about', component: ng.AboutComponentNgFactory),
+      RouteDefinition(path: '/contact', component: ng.ContactComponentNgFactory),
     ];
-    _router.navigate('/');
   }
 }
 
@@ -430,6 +429,54 @@ Future<void> main() async {
 }
 ''';
 
+  static const projectMainServerDartRouting = '''import 'dart:async';
+import 'dart:io';
+
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+import 'package:angulardart_server/angulardart_server.dart';
+// ignore: uri_has_not_been_generated
+import '../web/main.server.dart' as ng;
+
+/// Point d'entre du serveur HTTP SSR (avec routing).
+///
+/// Compilez avec : dart run build_runner build web
+/// Puis lancez : dart bin/server.dart
+Future<void> main() async {
+  final server = platformServer();
+
+  // Le `<base href>` n'existe pas sur la VM (pas de document) ; on le fournit
+  // explicitement pour que `PathLocationStrategy` puisse résoudre les routes.
+  final baseHrefInjector = Injector.map({appBaseHref: '/'});
+
+  await HttpServer.bind('localhost', 4000).then((httpServer) {
+    print('Serveur SSR angulardart en cours d\\'exécution sur http://localhost:4000');
+
+    httpServer.listen((request) async {
+      try {
+        final html = await server.renderApplication(
+          ng.appComponentFactory,
+          url: request.uri.toString(),
+          parentInjector: ng.appInjector(baseHrefInjector),
+        );
+
+        request.response
+          ..headers.contentType = ContentType.html
+          ..write(html)
+          ..close();
+      } catch (e, st) {
+        print('Erreur lors du rendu : \$e');
+        print(st);
+        request.response
+          ..statusCode = HttpStatus.internalServerError
+          ..write('<h1>Erreur serveur</h1>')
+          ..close();
+      }
+    });
+  });
+}
+''';
+
    static const projectReadmeSsr = '''# {{name}}
 
 Application AngularDart avec rendu côté serveur (SSR).
@@ -566,24 +613,66 @@ import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
 {{platformDomImportStatement}}
 // ignore: uri_has_not_been_generated
-import 'home_component.template.dart' as home;
-// ignore: uri_has_not_been_generated
-import 'about_component.template.dart' as about;
-// ignore: uri_has_not_been_generated
-import 'dashboard_component.template.dart' as dashboard;
+import 'package:{{name}}/app_component.template.dart' as app;
 // ignore: uri_has_not_been_generated
 import 'main.template.dart' as ng;
 
 @GenerateInjector([routerProviders])
 final InjectorFactory appInjector = ng.appInjector\$Injector;
 
+void main() async {
+  final isServerRendered =
+      (platform_dom.window as dynamic).document.documentElement?.getAttribute('ng-server-context') == 'ssr';
+
+  if (isServerRendered) {
+    await hydrateApplication(app.{{component.className}}NgFactory, createInjector: appInjector);
+  } else {
+    runApp(app.{{component.className}}NgFactory, createInjector: appInjector);
+  }
+}''';
+
+  static const projectMainServerDartHybridEntry = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+import 'package:angulardart_server/angulardart_server.dart';
+
+// ignore: uri_has_not_been_generated
+import 'package:{{name}}/app_component.template.dart' as app;
+// ignore: uri_has_not_been_generated
+import 'main.server.template.dart' as ng;
+
+/// Retourne le factory du composant racine pour le rendu server-side.
+ComponentFactory<Object> get appComponentFactory =>
+    app.{{component.className}}NgFactory;
+
+/// Injecteur applicatif (routing) pour le rendu server-side.
+@GenerateInjector([
+  routerProviders,
+  ClassProvider(PlatformLocation, useClass: ServerPlatformLocation),
+  ValueProvider.forToken(appBaseHref, '/'),
+])
+final InjectorFactory appInjector = ng.appInjector\$Injector;
+''';
+
+  static const projectAppComponentDart = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+
+// ignore: uri_has_not_been_generated
+import 'home_component.template.dart' as home;
+// ignore: uri_has_not_been_generated
+import 'about_component.template.dart' as about;
+// ignore: uri_has_not_been_generated
+import 'dashboard_component.template.dart' as dashboard;
+
+/// Composant racine avec routing.
 @Component(
   selector: '{{component.selector}}',
-  template: '<nav><a [routerLink]="[\\'/\\']">Home</a> | <a [routerLink]="[\\'/about\\']">About</a> | <a [routerLink]="[\\'/dashboard\\']">Dashboard</a></nav><main><router-outlet [routes]="routes"></router-outlet></main>',
+  templateUrl: 'app_component.html',
   directives: [routerDirectives],
 )
 class {{component.className}} implements OnInit {
   final Router _router;
+
+  /// Configuration des routes de l'application.
   List<RouteDefinition> routes = [];
 
   {{component.className}}(this._router);
@@ -591,35 +680,22 @@ class {{component.className}} implements OnInit {
   @override
   void ngOnInit() {
     _router.onRouteActivated.listen((_) {});
+
     routes = [
       RouteDefinition(path: '/', component: home.HomeComponentNgFactory, useAsDefault: true),
       RouteDefinition(path: '/about', component: about.AboutComponentNgFactory),
       RouteDefinition(path: '/dashboard', component: dashboard.DashboardComponentNgFactory),
     ];
-    _router.navigate('/');
   }
 }
-
-void main() async {
-  final isServerRendered =
-      (platform_dom.window as dynamic).document.documentElement?.getAttribute('ng-server-context') == 'ssr';
-
-  if (isServerRendered) {
-    await hydrateApplication(ng.{{component.className}}NgFactory, createInjector: appInjector);
-  } else {
-    runApp(ng.{{component.className}}NgFactory, createInjector: appInjector);
-  }
-}''';
-
-  static const projectMainServerDartHybridEntry = '''import 'package:angulardart/angulardart.dart';
-
-// ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
-
-/// Retourne le factory du composant racine pour le rendu server-side.
-ComponentFactory<Object> get appComponentFactory =>
-    ng.AppComponentNgFactory;
 ''';
+
+  static const projectAppComponentHtml = '''<nav>
+  <a [routerLink]="['/']" routerLinkActive="active">Home</a> |
+  <a [routerLink]="['/about']" routerLinkActive="active">About</a> |
+  <a [routerLink]="['/dashboard']" routerLinkActive="active">Dashboard</a>
+</nav>
+<main><router-outlet [routes]="routes"></router-outlet></main>''';
 
   static const projectHomeComponentDart = '''import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_server/angulardart_server.dart';
@@ -794,24 +870,69 @@ import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
 {{platformDomImportStatement}}
 // ignore: uri_has_not_been_generated
-import 'home_component.template.dart' as home;
-// ignore: uri_has_not_been_generated
-import 'about_component.template.dart' as about;
-// ignore: uri_has_not_been_generated
-import 'contact_component.template.dart' as contact;
+import 'package:{{name}}/app_component.template.dart' as app;
 // ignore: uri_has_not_been_generated
 import 'main.template.dart' as ng;
 
 @GenerateInjector([routerProviders, SeoService, TitleService])
 final InjectorFactory appInjector = ng.appInjector\$Injector;
 
+void main() async {
+  final isServerRendered =
+      (platform_dom.window as dynamic).document.documentElement?.getAttribute('ng-server-context') == 'ssr';
+
+  if (isServerRendered) {
+    await hydrateApplication(app.{{component.className}}NgFactory, createInjector: appInjector);
+  } else {
+    runApp(app.{{component.className}}NgFactory, createInjector: appInjector);
+  }
+}''';
+
+  static const projectMainServerDartSsrSeoEntry = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+import 'package:angulardart_seo/angulardart_seo.dart';
+import 'package:angulardart_server/angulardart_server.dart';
+
+// ignore: uri_has_not_been_generated
+import 'package:{{name}}/app_component.template.dart' as app;
+// ignore: uri_has_not_been_generated
+import 'main.server.template.dart' as ng;
+
+/// Retourne le factory du composant racine pour le rendu server-side.
+ComponentFactory<Object> get appComponentFactory =>
+    app.{{component.className}}NgFactory;
+
+/// Injecteur applicatif (routing + SEO) pour le rendu server-side.
+@GenerateInjector([
+  routerProviders,
+  SeoService,
+  TitleService,
+  ClassProvider(PlatformLocation, useClass: ServerPlatformLocation),
+  ValueProvider.forToken(appBaseHref, '/'),
+])
+final InjectorFactory appInjector = ng.appInjector\$Injector;
+''';
+
+  static const projectAppComponentSsrSeoDart = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+
+// ignore: uri_has_not_been_generated
+import 'home_component.template.dart' as home;
+// ignore: uri_has_not_been_generated
+import 'about_component.template.dart' as about;
+// ignore: uri_has_not_been_generated
+import 'contact_component.template.dart' as contact;
+
+/// Composant racine avec routing.
 @Component(
   selector: '{{component.selector}}',
-  template: '<nav><a [routerLink]="[\\'/\\']">Home</a> | <a [routerLink]="[\\'/about\\']">About</a> | <a [routerLink]="[\\'/contact\\']">Contact</a></nav><main><router-outlet [routes]="routes"></router-outlet></main>',
+  templateUrl: 'app_component.html',
   directives: [routerDirectives],
 )
 class {{component.className}} implements OnInit {
   final Router _router;
+
+  /// Configuration des routes de l'application.
   List<RouteDefinition> routes = [];
 
   {{component.className}}(this._router);
@@ -819,35 +940,22 @@ class {{component.className}} implements OnInit {
   @override
   void ngOnInit() {
     _router.onRouteActivated.listen((_) {});
+
     routes = [
       RouteDefinition(path: '/', component: home.HomeComponentNgFactory, useAsDefault: true),
       RouteDefinition(path: '/about', component: about.AboutComponentNgFactory),
       RouteDefinition(path: '/contact', component: contact.ContactComponentNgFactory),
     ];
-    _router.navigate('/');
   }
 }
-
-void main() async {
-  final isServerRendered =
-      (platform_dom.window as dynamic).document.documentElement?.getAttribute('ng-server-context') == 'ssr';
-
-  if (isServerRendered) {
-    await hydrateApplication(ng.{{component.className}}NgFactory, createInjector: appInjector);
-  } else {
-    runApp(ng.{{component.className}}NgFactory, createInjector: appInjector);
-  }
-}''';
-
-  static const projectMainServerDartSsrSeoEntry = '''import 'package:angulardart/angulardart.dart';
-
-// ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
-
-/// Retourne le factory du composant racine pour le rendu server-side.
-ComponentFactory<Object> get appComponentFactory =>
-    ng.AppComponentNgFactory;
 ''';
+
+  static const projectAppComponentSsrSeoHtml = '''<nav>
+  <a [routerLink]="['/']" routerLinkActive="active">Home</a> |
+  <a [routerLink]="['/about']" routerLinkActive="active">About</a> |
+  <a [routerLink]="['/contact']" routerLinkActive="active">Contact</a>
+</nav>
+<main><router-outlet [routes]="routes"></router-outlet></main>''';
 
   static const projectSsrSeoHomeComponentDart = r'''import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_seo/angulardart_seo.dart';

@@ -204,64 +204,59 @@ void initReflector() {}
     final browserImportPattern = RegExp(r'import\s+[^\n;]*_browser\.template\.dart[^\n;]*');
 
     for (final entity in dir.listSync(recursive: true)) {
-      if (entity is File && entity.path.endsWith('.template.dart')) {
-        final content = await entity.readAsString();
-        final matches = browserImportPattern.allMatches(content).toList();
-
-        if (matches.isNotEmpty) {
-          // Remove all _browser.template.dart imports and their initReflector() calls
-          var newContent = content;
-
-          // Collect aliases to remove from the file
-          final aliasesToRemove = <String>{};
-
-          for (final match in matches) {
-            final matchedText = match.group(0)!;
-
-            // Extract the alias (_ref0, _ref1, etc.) if present - look for 'as XXX' pattern
-            final aliasMatch = RegExp(r'\bas\s+(\w+)').firstMatch(matchedText);
-
-            if (aliasMatch != null) {
-              aliasesToRemove.add(aliasMatch.group(1)!);
-            }
-
-            // Find the full line to remove (including newline)
-            final lineStart = content.substring(0, match.start).lastIndexOf('\n') + 1;
-            final lineEnd = content.indexOf('\n', match.end);
-            final endPos = lineEnd > 0 ? lineEnd : content.length;
-
-            // Remove the entire line (from start of line to next newline)
-            newContent = newContent.replaceRange(lineStart, endPos, '');
-          }
-
-          // Also remove any _refN.initReflector() calls for removed aliases
-          for (final alias in aliasesToRemove) {
-            final initReflectorPattern = RegExp(
-              r'\s*' + RegExp.escape(alias) + r'\.initReflector\(\);',
-            );
-            newContent = newContent.replaceAll(initReflectorPattern, '');
-
-            // Also remove the blank line before it if present
-            newContent = newContent.replaceAll(
-              '\n\n$alias.initReflector();',
-              '\n',
-            );
-          }
-
-          // Clean up extra blank lines (3+ consecutive newlines -> 2)
-          newContent = newContent.replaceAll(RegExp(r'\n{3,}'), '\n\n');
-
-          await entity.writeAsString(newContent);
-          print('Fixed: ${path.relative(entity.path, from: Directory.current.path)}');
-        }
-      } else if (entity is File && entity.path.contains('_browser.template.dart')) {
-        // Delete _browser.template.dart files - they're not needed on the VM
-        await entity.delete();
-        print('Deleted browser template: ${path.relative(entity.path, from: Directory.current.path)}');
-      } else if (entity is Directory) {
-        // Recurse into subdirectories
-        await _postProcessTemplatesForSsr(entity);
+      if (entity is! File || !entity.path.endsWith('.template.dart')) {
+        continue;
       }
+
+      final content = await entity.readAsString();
+      final matches = browserImportPattern.allMatches(content).toList();
+
+      if (matches.isEmpty) continue;
+
+      // Remove all _browser.template.dart imports and their initReflector() calls
+      var newContent = content;
+
+      // Collect aliases to remove from the file
+      final aliasesToRemove = <String>{};
+
+      for (final match in matches) {
+        final matchedText = match.group(0)!;
+
+        // Extract the alias (_ref0, _ref1, etc.) if present - look for 'as XXX' pattern
+        final aliasMatch = RegExp(r'\bas\s+(\w+)').firstMatch(matchedText);
+
+        if (aliasMatch != null) {
+          aliasesToRemove.add(aliasMatch.group(1)!);
+        }
+
+        // Find the full line to remove (including newline)
+        final lineStart = content.substring(0, match.start).lastIndexOf('\n') + 1;
+        final lineEnd = content.indexOf('\n', match.end);
+        final endPos = lineEnd > 0 ? lineEnd : content.length;
+
+        // Remove the entire line (from start of line to next newline)
+        newContent = newContent.replaceRange(lineStart, endPos, '');
+      }
+
+      // Also remove any _refN.initReflector() calls for removed aliases
+      for (final alias in aliasesToRemove) {
+        final initReflectorPattern = RegExp(
+          r'\s*' + RegExp.escape(alias) + r'\.initReflector\(\);',
+        );
+        newContent = newContent.replaceAll(initReflectorPattern, '');
+
+        // Also remove the blank line before it if present
+        newContent = newContent.replaceAll(
+          '\n\n$alias.initReflector();',
+          '\n',
+        );
+      }
+
+      // Clean up extra blank lines (3+ consecutive newlines -> 2)
+      newContent = newContent.replaceAll(RegExp(r'\n{3,}'), '\n\n');
+
+      await entity.writeAsString(newContent);
+      print('Fixed: ${path.relative(entity.path, from: Directory.current.path)}');
     }
   }
 

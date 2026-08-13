@@ -151,14 +151,26 @@ class AddHybridTestHarness {
     // 5. Create main.server.dart
     final mainServerFile = File(path.join(projectDir.path, 'web', 'main.server.dart'));
     if (!mainServerFile.existsSync()) {
-      const serverContent = '''import 'package:angulardart/angulardart.dart';
+      final serverContent = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+import 'package:angulardart_server/angulardart_server.dart';
 
 // ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
+import 'package:$projectName/app_component.template.dart' as app;
+// ignore: uri_has_not_been_generated
+import 'main.server.template.dart' as ng;
 
 /// Retourne le factory du composant racine pour le rendu server-side.
 ComponentFactory<Object> get appComponentFactory =>
-    ng.AppComponentNgFactory;
+    app.${className}NgFactory;
+
+/// Injecteur applicatif (routing) pour le rendu server-side.
+@GenerateInjector([
+  routerProviders,
+  ClassProvider(PlatformLocation, useClass: ServerPlatformLocation),
+  ValueProvider.forToken(appBaseHref, '/'),
+])
+final InjectorFactory appInjector = ng.appInjector\$Injector;
 ''';
       await mainServerFile.writeAsString(serverContent);
       messages.add('  Created web/main.server.dart');
@@ -169,7 +181,7 @@ ComponentFactory<Object> get appComponentFactory =>
     await binDir.create(recursive: true);
     final serverBin = File(path.join(binDir.path, 'server.dart'));
     if (!serverBin.existsSync()) {
-      await serverBin.writeAsString(Templates.projectMainServerDartFixed);
+      await serverBin.writeAsString(Templates.projectMainServerDartRouting);
       messages.add('  Created bin/server.dart');
     }
 
@@ -192,6 +204,21 @@ ComponentFactory<Object> get appComponentFactory =>
     }
 
     // 8. Create hybrid component files in lib/
+    final appComponentFile = File(path.join(libDir.path, 'app_component.dart'));
+    if (!appComponentFile.existsSync()) {
+      var appComponent = Templates.projectAppComponentDart;
+      appComponent = appComponent.replaceAll('{{component.className}}', className);
+      appComponent = appComponent.replaceAll('{{component.selector}}', selector);
+      await appComponentFile.writeAsString(appComponent);
+      messages.add('  Created lib/app_component.dart');
+    }
+
+    final appComponentHtmlFile = File(path.join(libDir.path, 'app_component.html'));
+    if (!appComponentHtmlFile.existsSync()) {
+      await appComponentHtmlFile.writeAsString(Templates.projectAppComponentHtml);
+      messages.add('  Created lib/app_component.html');
+    }
+
     final components = <String, String>{
       'home_component.dart': Templates.projectHomeComponentDart,
       'about_component.dart': Templates.projectAboutComponentDart,
@@ -425,15 +452,25 @@ dependencies:
       expect(mainDart, contains('routerProviders'));
     });
 
-    test('main.dart imports component templates from lib/', () async {
+    test('main.dart imports app_component template from lib/', () async {
       final project = _createBasicProject('${tempDir.path}/imports_test');
 
       await AddHybridTestHarness().run(projectDir: project);
 
       final mainDart = File('${project.path}/web/main.dart').readAsStringSync();
-      expect(mainDart, contains("import 'home_component.template.dart'"));
-      expect(mainDart, contains("import 'about_component.template.dart'"));
-      expect(mainDart, contains("import 'dashboard_component.template.dart'"));
+      expect(mainDart, contains("import 'package:test_app/app_component.template.dart' as app;"));
+      expect(mainDart, isNot(contains("import 'home_component.template.dart'")));
+    });
+
+    test('creates lib/app_component.dart with routing', () async {
+      final project = _createBasicProject('${tempDir.path}/app_component_test');
+
+      await AddHybridTestHarness().run(projectDir: project);
+
+      expect(File('${project.path}/lib/app_component.dart').existsSync(), isTrue);
+      final appComponent = File('${project.path}/lib/app_component.dart').readAsStringSync();
+      expect(appComponent, contains("RouteDefinition(path: '/',"));
+      expect(appComponent, isNot(contains('_router.navigate')));
     });
 
     test('main.dart uses platform_dom import', () async {

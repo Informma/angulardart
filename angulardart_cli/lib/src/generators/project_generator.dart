@@ -102,7 +102,7 @@ class ProjectGenerator extends Generator {
         Templates.projectMainServerDartSsrSeoEntry,
         context,
       );
-      await _generateServerBin(context);
+      await _generateServerBin(context, routing: true);
     } else if (seo) {
       // SEO projects: main() is in app_component.dart
     } else if (hybrid) {
@@ -116,7 +116,7 @@ class ProjectGenerator extends Generator {
         Templates.projectMainServerDartHybridEntry,
         context,
       );
-      await _generateServerBin(context);
+      await _generateServerBin(context, routing: true);
     } else if (ssr) {
       await writeFromTemplate(
         path.join(destinationFolder, 'web', 'main.dart'),
@@ -193,10 +193,7 @@ class ProjectGenerator extends Generator {
     print('Next steps:');
     print('  cd $name');
     print('  dart pub get');
-    if (seo) {
-      print('  dart run build_runner build --release');
-      print('  dart run angulardart_prerender');
-    } else if (hybrid || ssr) {
+    if (hybrid || ssr) {
       print('  # Développement (client uniquement) :');
       print('  dart run build_runner serve');
       print('  # Build SSR :');
@@ -212,11 +209,14 @@ class ProjectGenerator extends Generator {
     }
   }
 
-  Future<void> _generateServerBin(Map<String, dynamic> context) async {
+  Future<void> _generateServerBin(
+    Map<String, dynamic> context, {
+    bool routing = false,
+  }) async {
     final binDir = path.join(destinationFolder, 'bin');
     await writeFromTemplate(
       path.join(binDir, 'server.dart'),
-      Templates.projectMainServerDartFixed,
+      routing ? Templates.projectMainServerDartRouting : Templates.projectMainServerDartFixed,
       context,
     );
   }
@@ -239,6 +239,16 @@ class ProjectGenerator extends Generator {
 
   Future<void> _generateHybridComponents(Map<String, dynamic> context) async {
     final libDir = path.join(destinationFolder, 'lib');
+
+    await writeFromTemplate(
+      path.join(libDir, 'app_component.dart'),
+      Templates.projectAppComponentDart,
+      context,
+    );
+    await writeStatic(
+      path.join(libDir, 'app_component.html'),
+      Templates.projectAppComponentHtml,
+    );
 
     await writeFromTemplate(
       path.join(libDir, 'home_component.dart'),
@@ -278,19 +288,31 @@ class ProjectGenerator extends Generator {
     final libDir = path.join(destinationFolder, 'lib');
 
     await writeFromTemplate(
+      path.join(libDir, 'app_component.dart'),
+      Templates.projectAppComponentSsrSeoDart,
+      context,
+    );
+    await writeStatic(
+      path.join(libDir, 'app_component.html'),
+      Templates.projectAppComponentSsrSeoHtml,
+    );
+
+    await writeFromTemplate(
       path.join(libDir, 'home_component.dart'),
       Templates.projectSsrSeoHomeComponentDart,
       context,
     );
 
-    await writeStatic(
+    await writeFromTemplate(
       path.join(libDir, 'about_component.dart'),
       Templates.projectSsrSeoAboutComponentDart,
+      context,
     );
 
-    await writeStatic(
+    await writeFromTemplate(
       path.join(libDir, 'contact_component.dart'),
       Templates.projectSsrSeoContactComponentDart,
+      context,
     );
   }
 }

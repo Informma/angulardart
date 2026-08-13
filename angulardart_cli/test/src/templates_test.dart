@@ -514,6 +514,35 @@ void main() {
       expect(Templates.projectMainDartHybrid, contains('@GenerateInjector([routerProviders])'));
     });
 
+    test('projectMainDartHybrid has no hardcoded navigate', () {
+      expect(Templates.projectMainDartHybrid, isNot(contains('_router.navigate')));
+      expect(Templates.projectMainDartSsrSeo, isNot(contains('_router.navigate')));
+      expect(Templates.projectMainDartSeo, isNot(contains('_router.navigate')));
+    });
+
+    test('hybrid server entry provides routing injector for the VM', () {
+      expect(Templates.projectMainServerDartHybridEntry, contains('ServerPlatformLocation'));
+      expect(Templates.projectMainServerDartHybridEntry, contains('appBaseHref'));
+      expect(Templates.projectMainServerDartHybridEntry, contains("import 'main.server.template.dart' as ng;"));
+    });
+
+    test('ssr+seo server entry provides routing + SEO injector for the VM', () {
+      expect(Templates.projectMainServerDartSsrSeoEntry, contains('ServerPlatformLocation'));
+      expect(Templates.projectMainServerDartSsrSeoEntry, contains('SeoService'));
+    });
+
+    test('app component templates define routes without hardcoded navigate', () {
+      expect(Templates.projectAppComponentDart, contains("RouteDefinition(path: '/',"));
+      expect(Templates.projectAppComponentDart, isNot(contains('_router.navigate')));
+      expect(Templates.projectAppComponentSsrSeoDart, contains("RouteDefinition(path: '/contact',"));
+      expect(Templates.projectAppComponentSsrSeoDart, isNot(contains('_router.navigate')));
+    });
+
+    test('routing server bin passes parent injector with appBaseHref', () {
+      expect(Templates.projectMainServerDartRouting, contains('parentInjector: ng.appInjector(baseHrefInjector)'));
+      expect(Templates.projectMainServerDartRouting, contains("Injector.map({appBaseHref: '/'})"));
+    });
+
     test('projectHomeComponentHtml is static HTML without Mustache vars', () {
       // This template is written via writeStatic, so it should not contain Mustache {{ }} syntax
       expect(Templates.projectHomeComponentHtml, isNot(contains('{{')));

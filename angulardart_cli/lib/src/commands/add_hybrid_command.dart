@@ -177,14 +177,26 @@ class AddHybridCommand extends NgDartCommand {
     // 5. Create main.server.dart
     final mainServerFile = File('web/main.server.dart');
     if (!mainServerFile.existsSync()) {
-      const serverContent = '''import 'package:angulardart/angulardart.dart';
+      final serverContent = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+import 'package:angulardart_server/angulardart_server.dart';
 
 // ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
+import 'package:$projectName/app_component.template.dart' as app;
+// ignore: uri_has_not_been_generated
+import 'main.server.template.dart' as ng;
 
 /// Retourne le factory du composant racine pour le rendu server-side.
 ComponentFactory<Object> get appComponentFactory =>
-    ng.AppComponentNgFactory;
+    app.${comp['className']}NgFactory;
+
+/// Injecteur applicatif (routing) pour le rendu server-side.
+@GenerateInjector([
+  routerProviders,
+  ClassProvider(PlatformLocation, useClass: ServerPlatformLocation),
+  ValueProvider.forToken(appBaseHref, '/'),
+])
+final InjectorFactory appInjector = ng.appInjector\$Injector;
 ''';
       await mainServerFile.writeAsString(serverContent);
       print('  Created web/main.server.dart');
@@ -195,7 +207,7 @@ ComponentFactory<Object> get appComponentFactory =>
     await binDir.create(recursive: true);
     final serverBin = File('bin/server.dart');
     if (!serverBin.existsSync()) {
-      await serverBin.writeAsString(Templates.projectMainServerDartFixed);
+      await serverBin.writeAsString(Templates.projectMainServerDartRouting);
       print('  Created bin/server.dart');
     }
 
@@ -218,6 +230,21 @@ ComponentFactory<Object> get appComponentFactory =>
     }
 
     // 8. Create hybrid component files in lib/
+    final appComponentFile = File(path.join(libDir.path, 'app_component.dart'));
+    if (!appComponentFile.existsSync()) {
+      var appComponent = Templates.projectAppComponentDart;
+      appComponent = appComponent.replaceAll('{{component.className}}', comp['className']!);
+      appComponent = appComponent.replaceAll('{{component.selector}}', comp['selector']!);
+      await appComponentFile.writeAsString(appComponent);
+      print('  Created lib/app_component.dart');
+    }
+
+    final appComponentHtmlFile = File(path.join(libDir.path, 'app_component.html'));
+    if (!appComponentHtmlFile.existsSync()) {
+      await appComponentHtmlFile.writeAsString(Templates.projectAppComponentHtml);
+      print('  Created lib/app_component.html');
+    }
+
     final components = <String, String>{
       'home_component.dart': Templates.projectHomeComponentDart,
       'about_component.dart': Templates.projectAboutComponentDart,

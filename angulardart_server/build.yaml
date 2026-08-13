@@ -4,6 +4,5 @@ targets:
       angulardart:
         generate_for:
           exclude:
-            - "test/url_test.dart"
             - "lib/*.dart"
             - "lib/**/*.dart"

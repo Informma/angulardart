@@ -7,6 +7,8 @@ targets:
             - "lib/src/build.dart"
             - "lib/src/compiler/**"
             - "lib/src/source_gen/**"
+            - "lib/*.dart"
+            - "lib/**/*.dart"
 
 builders:
   angulardart:

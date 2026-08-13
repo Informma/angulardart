@@ -1,3 +1,7 @@
+## 9.4.0
+
+- Portage SSR/RenderNode sur base `dart:html` (rebase sur v8.2.0) : infrastructure `RenderNode`, `RenderFactory`/`HydrateRenderFactory`, bootstrap SSR, `ApplicationRef.hydrate`, testability split browser/vm.
+
 ## 8.2.0
 
 - fix: resolve all dart analyze warnings and info messages

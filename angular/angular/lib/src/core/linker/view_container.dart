@@ -1,7 +1,6 @@
-import 'dart:html';
-
 import 'package:meta/meta.dart';
 import 'package:angulardart/src/di/injector.dart' show Injector;
+import 'package:angulardart/src/runtime/dom_helpers.dart';
 import 'package:angulardart/src/utilities.dart';
 
 import 'component_factory.dart' show ComponentFactory, ComponentRef;
@@ -21,7 +20,7 @@ class ViewContainer extends ComponentLoader implements ViewContainerRef {
   final int index;
   final int? parentIndex;
   final View? parentView;
-  final Node nativeElement;
+  final dynamic nativeElement;
 
   List<DynamicView>? nestedViews;
 
@@ -33,7 +32,7 @@ class ViewContainer extends ComponentLoader implements ViewContainerRef {
   );
 
   @Deprecated('Use .nativeElement instead')
-  ElementRef get elementRef => ElementRef(nativeElement);
+  ElementRef get elementRef => ElementRef(unwrapNode(nativeElement));
 
   /// Returns the [ViewRef] for the View located in this container at the
   /// specified index.
@@ -217,7 +216,7 @@ class ViewContainer extends ComponentLoader implements ViewContainerRef {
     return result;
   }
 
-  Node? _findRenderNode(List<DynamicView> views, int index) {
+  dynamic _findRenderNode(List<DynamicView> views, int index) {
     return index > 0
         ? views[index - 1].viewFragment!.findLastDomNode()
         : nativeElement;

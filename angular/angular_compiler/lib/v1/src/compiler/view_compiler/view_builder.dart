@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart' show IterableExtension;
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart' hide unsafeCast;
 import 'package:angulardart_compiler/v1/cli.dart';
 import 'package:angulardart_compiler/v1/src/compiler/analyzed_class.dart';
 import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart'
@@ -8,7 +8,8 @@ import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart'
 import 'package:angulardart_compiler/v1/src/compiler/expression_parser/ast.dart';
 import 'package:angulardart_compiler/v1/src/compiler/expression_parser/parser.dart'
     show ExpressionParser;
-import 'package:angulardart_compiler/v1/src/compiler/identifiers.dart';
+import 'package:angulardart_compiler/v1/src/compiler/identifiers.dart'
+    show Identifiers, RenderNodeFactory, Views;
 import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart' as ir;
 import 'package:angulardart_compiler/v1/src/compiler/output/output_ast.dart' as o;
 import 'package:angulardart_compiler/v1/src/compiler/selector.dart';
@@ -245,10 +246,9 @@ class ViewBuilderVisitor implements TemplateAstVisitor<void, CompileElement> {
   }) {
     return NodeReference(
       _view.storage,
-      // Root elements of a component are always an HtmlElement.
-      isComponent
-          ? o.importType(Identifiers.htmlHtmlElement)
-          : o.importType(identifierFromTagName(ast.name)),
+      // Phase 3 (SSR): Use dynamic type for SSR compatibility.
+      // RenderNode-based helpers return BrowserRenderNode or ServerRenderNode.
+      null,
       nodeIndex,
     );
   }
@@ -614,11 +614,12 @@ o.Constructor _createComponentViewConstructor(CompileView view) {
     );
   }
   final rootElementRef = NodeReference.rootElement();
+  // Phase 3 (SSR): Use renderFactory.createElement() for SSR compatibility.
   final createRootElementExpr = o
-      .importExpr(Identifiers.htmlDocument)
+      .importExpr(RenderNodeFactory.renderFactory)
       .callMethod('createElement', [o.literal(tagName)]);
   final body = [
-    rootElementRef.toWriteStmt(unsafeCast(createRootElementExpr)),
+    rootElementRef.toWriteStmt(createRootElementExpr),
   ];
   // Write literal attribute values on element.
   view.component.hostAttributes.forEach((name, value) {

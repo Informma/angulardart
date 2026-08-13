@@ -1,7 +1,6 @@
 import 'dart:html';
 
 import 'package:angulardart/src/meta.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import '../../core/change_detection/differs/default_keyvalue_differ.dart';
 

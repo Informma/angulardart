@@ -91,7 +91,7 @@ Future<ComponentRef<E>> _runAndLoadComponent<E extends Object>(
   final componentRef = componentFactory.create(injector);
 
   Future<ComponentRef<E>> loadComponent() {
-    hostElement.append(componentRef.location);
+    hostElement.append(componentRef.location as Node);
     appRef.registerRootComponent(componentRef);
     return Future.value(componentRef);
   }

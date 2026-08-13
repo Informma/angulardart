@@ -1,3 +1,7 @@
+## 6.4.0
+
+- Compatibilité `angulardart` 9.4.0 (base `dart:html`).
+
 ## 5.2.0
 
 - fix: resolve all dart analyze warnings and info messages

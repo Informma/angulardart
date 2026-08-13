@@ -10,12 +10,13 @@
 library;
 
 import 'dart:async';
-import 'dart:html';
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/core/exception_handler.dart';
 import 'package:angulardart/src/devtools.dart';
 import 'package:angulardart/src/di/injector.dart';
+import 'package:angulardart/src/runtime/dom_apis.dart' show document;
+import 'package:angulardart/src/runtime/render_factory.dart';
 import 'package:angulardart/src/testability.dart';
 import 'package:angulardart/src/utilities.dart';
 
@@ -105,20 +106,77 @@ class ApplicationRef extends ChangeDetectionHost {
   ) {
     return unsafeCast(run(() {
       final component = componentFactory.create(_injector);
-      final existing = querySelector(componentFactory.selector);
-      Element? replacement;
+      if (!renderFactory.isServerMode) {
+        _bootstrapIntoDom(component, componentFactory.selector);
+      } else {
+        // In server mode, register the component for one-pass change detection
+        // without touching the DOM (the tree is built with ServerRenderNode).
+        _rootComponents.add(component);
+        registerChangeDetector(component.changeDetectorRef);
+        tick();
+      }
+      return component;
+    }));
+  }
+
+  void _bootstrapIntoDom<T extends Object>(
+    ComponentRef<T> component,
+    String selector,
+  ) {
+    final existing = document.querySelector(selector) as dynamic;
+    dynamic replacement;
+    if (existing != null) {
+      final newElement = component.location as dynamic;
+      // For app shards using bootstrapStatic, transfer element id
+      // from original node to allow hosting applications to locate loaded
+      // application root.
+      if (newElement.id.isEmpty) {
+        newElement.id = existing.id;
+      }
+      replacement = newElement;
+      existing.replaceWith(replacement);
+    } else {
+      document.body?.append(component.location as dynamic);
+    }
+    final injector = component.injector;
+    final testability = injector.provideTypeOptional<Testability>(
+      Testability,
+    );
+    if (testability != null) {
+      final registry = _injector.provideType<TestabilityRegistry>(
+        TestabilityRegistry,
+      );
+      registry.registerApplication(component.location as dynamic, testability);
+    }
+    _loadedRootComponent(component, replacement);
+  }
+
+  /// Hydrate an application that was server-side rendered.
+  ///
+  /// Unlike [bootstrap], this method reuses the existing DOM from SSR
+  /// instead of replacing it. The component's host element is found by
+  /// selector and kept in place, with bindings and event listeners attached.
+  ///
+  /// This enables fast initial page load (SSR) while maintaining full
+  /// interactivity on the client (CSR hydration).
+  ComponentRef<T> hydrate<T extends Object>(
+    ComponentFactory<T> componentFactory,
+  ) {
+    return unsafeCast(run(() {
+      final component = componentFactory.create(_injector);
+      // Find existing SSR element by selector - do NOT replace it.
+      final existing = document.querySelector(componentFactory.selector)
+          as dynamic;
       if (existing != null) {
-        final newElement = component.location;
-        // For app shards using bootstrapStatic, transfer element id
-        // from original node to allow hosting applications to locate loaded
-        // application root.
+        final newElement = component.location as dynamic;
         if (newElement.id.isEmpty) {
           newElement.id = existing.id;
         }
-        replacement = newElement;
-        existing.replaceWith(replacement);
+        // Replace placeholder with hydrated element but keep same position.
+        existing.replaceWith(newElement);
       } else {
-        document.body!.append(component.location);
+        // Fallback: append to body if no SSR element found.
+        document.body?.append(component.location as dynamic);
       }
       final injector = component.injector;
       final testability = injector.provideTypeOptional<Testability>(
@@ -128,21 +186,24 @@ class ApplicationRef extends ChangeDetectionHost {
         final registry = _injector.provideType<TestabilityRegistry>(
           TestabilityRegistry,
         );
-        registry.registerApplication(component.location, testability);
+        registry.registerApplication(component.location as dynamic, testability);
       }
-      _loadedRootComponent(component, replacement);
+      _loadedRootComponent(component, component.location as dynamic);
       return component;
     }));
   }
 
-  void _loadedRootComponent(ComponentRef<void> component, Element? node) {
+  void _loadedRootComponent(ComponentRef<void> component, Object? node) {
     if (isDevToolsEnabled) {
-      Inspector.instance.registerContentRoot(component.location);
+      Inspector.instance.registerContentRoot(component.location as dynamic);
     }
     _rootComponents.add(component);
     component.onDestroy(() {
       _destroyedRootComponent(component);
-      node?.remove();
+      final el = node;
+      if (el != null) {
+        (el as dynamic).remove();
+      }
     });
     registerChangeDetector(component.changeDetectorRef);
     tick();

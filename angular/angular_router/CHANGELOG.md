@@ -1,3 +1,7 @@
+## 5.4.0
+
+- Split conditionnel `platform_location`/`location_strategy`/`base_href` (browser/vm) + compatibilité `angulardart` 9.4.0.
+
 ## 4.2.0
 
 - fix: resolve all dart analyze warnings and info messages

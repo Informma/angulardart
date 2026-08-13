@@ -77,7 +77,7 @@ class AcxImperativeViewUtils {
         componentFactory, viewContainer,
         injector: injector ?? viewContainer.parentInjector);
     await _domService.onWrite();
-    intoDomElement.append(ref.location);
+    intoDomElement.append(ref.location as Node);
     return ref;
   }
 

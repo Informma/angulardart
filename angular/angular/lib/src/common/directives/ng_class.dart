@@ -3,7 +3,6 @@ import 'dart:html';
 import 'package:angulardart/src/core/change_detection/differs/default_iterable_differ.dart';
 import 'package:angulardart/src/core/change_detection/differs/default_keyvalue_differ.dart';
 import 'package:angulardart/src/meta.dart';
-import 'package:angulardart/src/utilities.dart';
 
 /// The [NgClass] directive conditionally adds and removes CSS classes on an
 /// HTML element based on an expression's evaluation result.

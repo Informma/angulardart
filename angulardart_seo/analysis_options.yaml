@@ -1,0 +1,7 @@
+analyzer:
+  exclude:
+    - example/**
+    - build/**
+    - .dart_tool/**
+  errors:
+    deprecated_member_use: ignore

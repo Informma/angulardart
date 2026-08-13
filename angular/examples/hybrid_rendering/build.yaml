@@ -1,0 +1,10 @@
+targets:
+  $default:
+    builders:
+      build_web_compilers|entrypoint:
+        generate_for:
+          - web/main.dart
+          - web/main.server.dart
+        release_options:
+          dart2js_args:
+            - -O4

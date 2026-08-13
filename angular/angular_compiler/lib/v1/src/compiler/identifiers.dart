@@ -13,6 +13,7 @@ const _ngIfUrl = '$_angularLib/src/common/directives/ng_if.dart';
 const _ngForUrl = '$_angularLib/src/common/directives/ng_for.dart';
 const _profileRuntimeModuleUrl = '$_angularLib/src/debug/profile_runtime.dart';
 const _debugInjectorModuleUrl = '$_angularLib/src/di/errors.dart';
+const _metaModuleUrl = 'package:angulardart_meta/angulardart_meta.dart';
 
 /// Identifiers for generating code that supports developer tooling.
 class DevTools {
@@ -55,6 +56,74 @@ class DomHelpers {
   static final appendDiv = _of('appendDiv');
   static final appendSpan = _of('appendSpan');
   static final appendElement = _of('appendElement');
+}
+
+/// Identifiers for RenderNode-based helpers (SSR template compiler).
+///
+/// These replace direct DOM manipulation with an abstraction that works on
+/// both browser (DOM) and server (HTML string) contexts.
+class RenderNodeHelpers {
+  const RenderNodeHelpers._();
+
+  static CompileIdentifierMetadata _of(String name) {
+    return CompileIdentifierMetadata(
+      name: name,
+      moduleUrl: '$_angularLib/src/runtime/dom_helpers.dart',
+    );
+  }
+
+  /// createRenderElement('div') -> creates element via renderFactory.
+  static final createRenderElement = _of('createRenderElement');
+
+  /// createRenderText('content') -> creates text node via renderFactory.
+  static final createRenderText = _of('createRenderText');
+
+  /// createRenderAnchor() -> creates comment anchor via renderFactory.
+  static final createRenderAnchor = _of('createRenderAnchor');
+
+  /// appendRenderChild(parent, child) -> appends child to parent.
+  static final appendRenderChild = _of('appendRenderChild');
+
+  /// addRenderEventListener(target, type, fn) -> adds event listener.
+  static final addRenderEventListener = _of('addRenderEventListener');
+
+  /// unwrapNode(node) -> returns the underlying native DOM node.
+  static final unwrapNode = _of('unwrapNode');
+}
+
+/// Identifiers for the global [RenderFactory] instance.
+class RenderNodeFactory {
+  const RenderNodeFactory._();
+
+  static final CompileIdentifierMetadata renderFactory =
+      CompileIdentifierMetadata(
+    name: 'renderFactory',
+    moduleUrl: '$_angularLib/src/runtime/render_factory.dart',
+  );
+}
+
+/// Identifiers for RenderNode-based update helpers (SSR template compiler).
+class RenderNodeUpdateHelpers {
+  const RenderNodeUpdateHelpers._();
+
+  static CompileIdentifierMetadata _of(String name) {
+    return CompileIdentifierMetadata(
+      name: name,
+      moduleUrl: '$_angularLib/src/runtime/dom_helpers.dart',
+    );
+  }
+
+  /// updateRenderClass(node, className, enabled).
+  static final updateRenderClass = _of('updateRenderClass');
+
+  /// updateRenderAttribute(node, name, value).
+  static final updateRenderAttribute = _of('updateRenderAttribute');
+
+  /// updateRenderStyle(node, name, value).
+  static final updateRenderStyle = _of('updateRenderStyle');
+
+  /// updateRenderTabIndex(node, value).
+  static final updateRenderTabIndex = _of('updateRenderTabIndex');
 }
 
 class StyleEncapsulation {
@@ -235,6 +304,8 @@ class Identifiers {
       moduleUrl: 'asset:angulardart/lib/src/core/linker/view_type.dart');
   static final changeDetectionStrategy = CompileIdentifierMetadata(
       name: 'ChangeDetectionStrategy', moduleUrl: _cdModuleUrl);
+  static final renderMode =
+      CompileIdentifierMetadata(name: 'RenderMode', moduleUrl: _metaModuleUrl);
   static final identical = CompileIdentifierMetadata(name: 'identical');
   static final profileSetup = CompileIdentifierMetadata(
       name: 'profileSetup', moduleUrl: _profileRuntimeModuleUrl);

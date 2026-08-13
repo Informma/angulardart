@@ -1,3 +1,7 @@
+## 5.4.0
+
+- Génération de templates RenderNode (`createRenderElement`, `appendRenderChild`) + fix génération des shim classes CSS (`addShimC`/`addShimE`).
+
 ## 4.1.0
 
 - fix: resolve all dart analyze warnings and info messages

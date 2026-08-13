@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html';
 
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:meta/meta.dart';
@@ -10,7 +9,6 @@ import 'package:angulardart/src/core/linker/view_fragment.dart';
 import 'package:angulardart/src/core/linker/view_ref.dart';
 import 'package:angulardart/src/meta.dart';
 import 'package:angulardart/src/runtime/dom_helpers.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import 'dynamic_view.dart';
 import 'render_view.dart';
@@ -60,7 +58,7 @@ abstract class EmbeddedView<T> extends RenderView
   Map<String, dynamic> get locals => _data.locals;
 
   @override
-  List<Node> get rootNodes => viewFragment!.flattenDomNodes();
+  List<dynamic> get rootNodes => viewFragment!.flattenDomNodes();
 
   @override
   ViewFragment? get viewFragment => _data.viewFragment;
@@ -178,7 +176,7 @@ abstract class EmbeddedView<T> extends RenderView
   // View manipulation ---------------------------------------------------------
 
   @override
-  void addRootNodesAfter(Node node) {
+  void addRootNodesAfter(dynamic node) {
     insertNodesAsSibling(rootNodes, node);
     domRootRendererIsDirty = true;
   }

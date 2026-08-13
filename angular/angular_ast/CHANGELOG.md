@@ -1,3 +1,7 @@
+## 3.4.0
+
+- Compatibilité avec la ligne 9.x (`angulardart_meta` split).
+
 ## 3.1.0
 
 - fix: resolve all dart analyze warnings and info messages

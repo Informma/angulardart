@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import 'di_tokens.dart';
+import 'unsafe_cast.dart';
 
 /// A marker that represents a lack-of-value for the `useValue` parameter.
 const Object noValueProvided = '__noValueProvided__';

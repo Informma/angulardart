@@ -10,7 +10,7 @@ void main() {
 
   final refersToOpaqueToken = TypeLink(
     'OpaqueToken',
-    'asset:angulardart/lib/src/meta/di_tokens.dart',
+    'asset:angulardart_meta/lib/src/di_tokens.dart',
     generics: [TypeLink.$object],
   );
 

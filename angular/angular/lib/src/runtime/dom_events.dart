@@ -1,6 +1,5 @@
-import 'dart:html';
-
 import 'package:angulardart/src/core/zone/ng_zone.dart';
+import 'package:angulardart/src/runtime/render_node.dart';
 
 /// Provides a runtime implementation for "native" DOM events on elements.
 class EventManager {
@@ -16,7 +15,7 @@ class EventManager {
 
   /// Adds an event listener to [element] for [name] to invoke [callback].
   void addEventListener(
-    Element element,
+    dynamic element,
     String name,
     void Function(Object) callback,
   ) {
@@ -33,7 +32,27 @@ class EventManager {
     // If the view compiler knows that a given event is a DOM event (i.e.
     // "click"), it will never be called into EventManager. But of course the
     // browser APIs change, so this is the final fallback.
-    element.addEventListener(name, callback);
+    _addEventListener(element, name, callback);
+  }
+
+  /// Resolves a [RenderNode] to its native DOM node; returns `null` on the
+  /// server where DOM events do not apply.
+  static dynamic _resolveEventTarget(dynamic element) {
+    if (element is RenderNode) {
+      final native = element.nativeNode;
+      return native is RenderNode ? null : native;
+    }
+    return element;
+  }
+
+  static void _addEventListener(
+    dynamic element,
+    String name,
+    void Function(Object) callback,
+  ) {
+    final target = _resolveEventTarget(element);
+    if (target == null) return;
+    target.addEventListener(name, callback);
   }
 }
 
@@ -73,7 +92,7 @@ class _KeyEventsHandler {
   static bool _supports(String name) => name.contains(_delimiter);
 
   void addEventListener(
-    Element element,
+    dynamic element,
     String name,
     void Function(Object) callback,
   ) {
@@ -85,8 +104,11 @@ class _KeyEventsHandler {
       return;
     }
 
-    element.addEventListener(parsed.domEventName, (event) {
-      if (event is KeyboardEvent && parsed.matches(event)) {
+    final target = EventManager._resolveEventTarget(element);
+    if (target == null) return;
+
+    target.addEventListener(parsed.domEventName, (event) {
+      if (parsed.matches(event)) {
         callback(event);
       }
     });
@@ -123,7 +145,7 @@ class _KeyEventsHandler {
 }
 
 class _ParsedEvent {
-  /// Actual event listened to via [Element.addEventListener].
+  /// Actual event listened to via `Element.addEventListener`.
   ///
   /// For example `'keydown'`.
   final String domEventName;
@@ -136,7 +158,7 @@ class _ParsedEvent {
   const _ParsedEvent(this.domEventName, this.keyAndModifiers);
 
   /// Returns whether [event] matches [keyAndModifiers].
-  bool matches(KeyboardEvent event) {
+  bool matches(dynamic event) {
     final key = _keyCodeNames[event.keyCode];
     if (key == null) {
       return false;
@@ -239,7 +261,7 @@ const _keyCodeNames = {
 };
 
 /// Determines whether a given modifier key name is currently active.
-final _modifiers = <String, bool Function(KeyboardEvent)>{
+final _modifiers = <String, bool Function(dynamic)>{
   'alt': (event) => event.altKey,
   'control': (event) => event.ctrlKey,
   'meta': (event) => event.metaKey,

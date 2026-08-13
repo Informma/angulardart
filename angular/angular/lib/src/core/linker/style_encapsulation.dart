@@ -3,6 +3,7 @@ import 'dart:html';
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:angulardart/src/core/linker/app_view_utils.dart';
 import 'package:angulardart/src/runtime/dom_helpers.dart';
+import 'package:angulardart/src/runtime/render_node.dart';
 import 'package:angulardart/src/utilities.dart';
 
 /// Clears all component styles from the DOM.
@@ -115,48 +116,61 @@ class ComponentStyles {
   ) = _UnscopedComponentStyles;
 
   /// Adds a CSS shim class to [element].
-  void addContentShimClass(Element element) {
+  void addContentShimClass(dynamic element) {
     updateClassBindingNonHtml(element, _contentPrefix, true);
   }
 
   /// An optimized variant of [addShimClass] for [HtmlElement]s.
-  void addContentShimClassHtmlElement(HtmlElement element) {
+  void addContentShimClassHtmlElement(dynamic element) {
     updateClassBinding(element, _contentPrefix, true);
   }
 
   /// Adds a CSS shim class to [element].
-  void addHostShimClass(Element element) {
+  void addHostShimClass(dynamic element) {
     updateClassBindingNonHtml(element, _hostPrefix, true);
   }
 
   /// An optimized variant of [addHostShimClass] for [HtmlElement]s.
-  void addHostShimClassHtmlElement(HtmlElement element) {
+  void addHostShimClassHtmlElement(dynamic element) {
     updateClassBinding(element, _hostPrefix, true);
   }
 
+  /// Adds the host shim class to a [RenderNode] (SSR compatibility).
+  void addHostShimClassRenderNode(dynamic node) {
+    updateClassBinding(node, _hostPrefix, true);
+  }
+
   /// Applies the correct content shimming to [element] for [newClass].
-  void updateChildClass(Element element, String newClass) {
+  void updateChildClass(dynamic element, String newClass) {
     // NOTE: We do not use .className=, because that would fail for SvgElement.
     updateAttribute(element, 'class', '$newClass $_contentPrefix');
   }
 
   /// An optimized variant of [updateChildClass] for [HtmlElement]s.
-  void updateChildClassHtmlElement(HtmlElement element, String newClass) {
-    element.className = '$newClass $_contentPrefix';
+  void updateChildClassHtmlElement(dynamic element, String newClass) {
+    if (element is RenderNode) {
+      updateAttribute(element, 'class', '$newClass $_contentPrefix');
+    } else {
+      element.className = '$newClass $_contentPrefix';
+    }
   }
 
   /// Applies the correct host shimming to [element] for [newClass].
-  void updateChildClassForHost(Element element, String newClass) {
+  void updateChildClassForHost(dynamic element, String newClass) {
     // NOTE: We do not use .className=, because that would fail for SvgElement.
     updateAttribute(element, 'class', '$newClass $_hostPrefix');
   }
 
   /// An optimized variant of [updateChildClassForHost] for [HtmlElement]s.
   void updateChildClassForHostHtmlElement(
-    HtmlElement element,
+    dynamic element,
     String newClass,
   ) {
-    element.className = '$newClass $_hostPrefix';
+    if (element is RenderNode) {
+      updateAttribute(element, 'class', '$newClass $_hostPrefix');
+    } else {
+      element.className = '$newClass $_hostPrefix';
+    }
   }
 
   /// Writes styles from this instance to [document.head] as a `<style>` tag.
@@ -185,39 +199,48 @@ class _UnscopedComponentStyles extends ComponentStyles {
   ) : super._(styles, componentUrl);
 
   @override
-  void addContentShimClass(Element element) {
+  void addContentShimClass(dynamic element) {
     // Intentionally left blank; unscoped syles do not apply shim classes.
   }
 
   @override
-  void addContentShimClassHtmlElement(HtmlElement element) {
+  void addContentShimClassHtmlElement(dynamic element) {
     // Intentionally left blank; unscoped syles do not apply shim classes.
   }
 
   @override
-  void addHostShimClass(Element element) {
+  void addHostShimClass(dynamic element) {
     // Intentionally left blank; unscoped syles do not apply shim classes.
   }
 
   @override
-  void addHostShimClassHtmlElement(HtmlElement element) {
+  void addHostShimClassHtmlElement(dynamic element) {
     // Intentionally left blank; unscoped syles do not apply shim classes.
   }
 
   @override
-  void updateChildClass(Element element, String newClass) {
+  void addHostShimClassRenderNode(dynamic node) {
+    // Intentionally left blank; unscoped styles do not apply shim classes.
+  }
+
+  @override
+  void updateChildClass(dynamic element, String newClass) {
     // Straight applies the class without any prefixing.
     // NOTE: We do not use .className=, because that would fail for SvgElement.
     updateAttribute(element, 'class', newClass);
   }
 
   @override
-  void updateChildClassHtmlElement(HtmlElement element, String newClass) {
-    element.className = newClass;
+  void updateChildClassHtmlElement(dynamic element, String newClass) {
+    if (element is RenderNode) {
+      updateAttribute(element, 'class', newClass);
+    } else {
+      element.className = newClass;
+    }
   }
 
   @override
-  void updateChildClassForHost(Element element, String newClass) {
+  void updateChildClassForHost(dynamic element, String newClass) {
     // Straight applies the class without any prefixing.
     // NOTE: We do not use .className=, because that would fail for SvgElement.
     updateAttribute(element, 'class', newClass);
@@ -225,11 +248,15 @@ class _UnscopedComponentStyles extends ComponentStyles {
 
   @override
   void updateChildClassForHostHtmlElement(
-    HtmlElement element,
+    dynamic element,
     String newClass,
   ) {
     // Straight applies the class without any prefixing.
-    element.className = newClass;
+    if (element is RenderNode) {
+      updateAttribute(element, 'class', newClass);
+    } else {
+      element.className = newClass;
+    }
   }
 }
 

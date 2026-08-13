@@ -4,7 +4,7 @@ issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://angulardartreborn.com
 documentation: https://angulardartreborn.com/guide
 description: Router for AngularDart.
-version: 4.2.0
+version: 5.4.0
 topics:
   - angular
   - router
@@ -22,14 +22,13 @@ platforms:
   web:
 
 dependencies:
-  angulardart: '>=8.0.0 <9.0.0'
+  angulardart: '>=9.4.0 <10.0.0'
   collection: ^1.18.0
-  web: ^1.1.1
   meta: ^1.15.0
 
 dev_dependencies:
   async: ^2.11.0
-  angulardart_test: '>=5.0.0 <6.0.0'
+  angulardart_test: '>=6.4.0 <7.0.0'
   build_runner: ^2.16.0
   build_test: ^3.0.0
   build_web_compilers: ^4.8.0

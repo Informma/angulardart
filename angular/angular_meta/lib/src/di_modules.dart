@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
-import 'package:angulardart/src/meta.dart';
+
+import 'di_providers.dart';
 
 /// Encapsulates a reusable set of dependency injection configurations.
 ///

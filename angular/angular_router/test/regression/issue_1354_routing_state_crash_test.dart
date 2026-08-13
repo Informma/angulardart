@@ -21,7 +21,10 @@ void main() {
     Future<void> onStable() => appComponent.instance.onStable;
 
     E query<E extends Element>(String selector) {
-      return appComponent.location.querySelector(selector) as E;
+      final element = appComponent.location as Element;
+      final result = element.querySelector(selector);
+      if (result == null) throw StateError('Element not found: $selector');
+      return result as E;
     }
 
     final locationStrategy = appComponent.instance._locationStrategy;

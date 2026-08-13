@@ -1,6 +1,5 @@
-import 'dart:html';
-
 import 'package:meta/dart2js.dart' as dart2js;
+import 'package:angulardart/src/runtime/dom_helpers.dart';
 import 'package:angulardart/src/utilities.dart';
 
 import 'view_container.dart';
@@ -28,7 +27,7 @@ class ViewFragment {
 
   /// Appends all DOM [Node]s from this fragment into [target].
   @dart2js.noInline
-  void appendDomNodesInto(Element target) {
+  void appendDomNodesInto(dynamic target) {
     appendDomNodes(target, _nodesOrViewContainers);
   }
 
@@ -40,7 +39,7 @@ class ViewFragment {
   /// would require using `target.children.add` or passing callbacks).
   @dart2js.noInline
   static void appendDomNodes(
-    Element target,
+    dynamic target,
     List<Object> nodesOrViewContainers,
   ) {
     final nodes = nodesOrViewContainers;
@@ -48,7 +47,7 @@ class ViewFragment {
     for (var i = 0; i < length; i++) {
       final node = nodes[i];
       if (node is ViewContainer) {
-        target.append(node.nativeElement);
+        appendRenderChild(target, node.nativeElement);
         final nestedViews = node.nestedViews;
         if (nestedViews != null) {
           final length = nestedViews.length;
@@ -57,14 +56,14 @@ class ViewFragment {
           }
         }
       } else {
-        target.append(unsafeCast(node));
+        appendRenderChild(target, node);
       }
     }
   }
 
   /// Returns the last (as defined by a DFS - depth first search) DOM [Node].
   @dart2js.noInline
-  Node? findLastDomNode() {
+  dynamic findLastDomNode() {
     // Finds the last Node or uses the anchor node of a ViewContainer.
     final nodesOrViewContainers = _nodesOrViewContainers;
     if (nodesOrViewContainers.isNotEmpty) {
@@ -77,7 +76,7 @@ class ViewFragment {
     }
   }
 
-  static Node? _findLastDomNode(ViewContainer container) {
+  static dynamic _findLastDomNode(ViewContainer container) {
     final nestedViews = container.nestedViews;
     return nestedViews != null && nestedViews.isNotEmpty
         ? nestedViews.last.viewFragment!.findLastDomNode()
@@ -88,14 +87,15 @@ class ViewFragment {
   ///
   /// In the case where [nodesOrViewContainers] is `null`, this returns `[]`.
   @dart2js.noInline
-  List<Node> flattenDomNodes() => _flattenDomNodes([], _nodesOrViewContainers);
+  List<dynamic> flattenDomNodes() => _flattenDomNodes([], _nodesOrViewContainers);
 
-  static List<Node> _flattenDomNodes(List<Node> target, List<Object> nodes) {
+  static List<dynamic> _flattenDomNodes(
+      List<dynamic> target, List<Object> nodes) {
     final length = nodes.length;
     for (var i = 0; i < length; i++) {
       final node = nodes[i];
       if (node is ViewContainer) {
-        target.add(node.nativeElement);
+        target.add(unwrapNode(node.nativeElement));
         final nestedViews = node.nestedViews;
         if (nestedViews != null) {
           final length = nestedViews.length;
@@ -107,7 +107,7 @@ class ViewFragment {
           }
         }
       } else {
-        target.add(unsafeCast(node));
+        target.add(unwrapNode(node));
       }
     }
     return target;

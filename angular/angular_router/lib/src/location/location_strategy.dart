@@ -1,4 +1,4 @@
-import 'dart:html';
+import '../router_types.dart';
 
 import 'package:angulardart/angulardart.dart' show OpaqueToken;
 
@@ -25,7 +25,7 @@ abstract class LocationStrategy {
       Object? state, String title, String url, String queryParams);
   void forward();
   void back();
-  void onPopState(EventListener fn);
+  void onPopState(void Function(RouterEvent) fn);
   String getBaseHref();
 }
 

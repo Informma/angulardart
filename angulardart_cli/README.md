@@ -1,9 +1,11 @@
+![AngularDart CLI banner](https://github.com/flutterdocteur/angulardart/raw/main/media/banner.png)
+
 <p align="center">
   <a href="https://angulardartreborn.com">
     <img src="https://img.shields.io/badge/website-angulardartreborn.com-blue" alt="Website" />
   </a>
   <a href="https://pub.dev/packages/angulardart_cli">
-    <img src="https://badgen.net/pub/v/angulardart_cli?v=1.0.11" alt="pub package" />
+    <img src="https://img.shields.io/pub/v/angulardart_cli" alt="pub package" />
   </a>
 </p>
 
@@ -186,6 +188,46 @@ class DataService {
 }
 ```
 
+### `ngdart new --seo` - Create a Project with SEO Support
+
+Creates an AngularDart project pre-configured for search engine optimization with dynamic meta tags, titles, and prerendering support.
+
+```bash
+ngdart new <project_name> --seo
+```
+
+**What's included:**
+- `angulardart_seo` dependency for dynamic meta tags and page titles
+- `angulardart_router` for client-side navigation
+- Pre-configured SEO components (Home, About, Contact) with unique metadata per route
+- `prerender.yaml` configuration for static prerendering
+- `@GenerateInjector`, `createInjector`, `[routes]`, and `navigate('/')` boilerplate
+
+**Example output:**
+```bash
+ngdart new my_seo_app --seo
+cd my_seo_app
+dart pub get
+dart run build_runner build --release
+dart run angulardart_prerender:prerender -c prerender.yaml -o build/web
+```
+
+### `angulardart seo init` - Initialize SEO in Existing Project
+
+Adds SEO support to an existing AngularDart project.
+
+```bash
+ngdart seo init <project_path>
+```
+
+This command:
+1. Adds `angulardart_seo` and `angulardart_prerender` dependencies
+2. Generates a `prerender.yaml` configuration file
+3. Updates the main entry point with SEO boilerplate (GenerateInjector, SeoService, TitleService)
+4. Creates sample SEO-optimized components
+
+## Naming Conventions
+
 ## Naming Conventions
 
 The CLI automatically converts names to appropriate formats:
@@ -227,6 +269,8 @@ This CLI generates projects using the following AngularDart packages:
 - [angulardart_router](https://pub.dev/packages/angulardart_router) - Routing
 - [angulardart_test](https://pub.dev/packages/angulardart_test) - Testing utilities
 - [angulardart_components](https://pub.dev/packages/angulardart_components) - Material Design components
+- [angulardart_seo](https://pub.dev/packages/angulardart_seo) - SEO meta tags and dynamic page metadata
+- [angulardart_prerender](https://pub.dev/packages/angulardart_prerender) - Static prerendering for search engines
 
 ## Troubleshooting
 
@@ -253,3 +297,15 @@ dart run build_runner build --delete-conflicting-outputs
 ## License
 
 BSD 3-Clause License
+
+---
+
+## Disclaimer
+
+**AngularDart Reborn** is a community-maintained fork of Google's original [AngularDart](https://pub.dev/packages/angulardart) framework (formerly known as AngularDart by Google). This project is **not affiliated with, endorsed by, or sponsored by Google LLC**.
+
+- **Angular**, **AngularDart**, and all associated packages (`angulardart`, `angulardart_router`, `angulardart_compiler`, `angulardart_forms`, `angulardart_meta`, `angulardart_ast`, `angulardart_cli`, `angulardart_seo`, `angulardart_prerender`, `angulardart_test`, `angulardart_components`) are trademarks and projects of the AngularDart Reborn community.
+- The original AngularDart framework was developed by Google LLC and hosted at [github.com/angulardart](https://github.com/angulardart).
+- This is an independent, 100% community-driven project that continues the work started by Google's AngularDart team after Google ceased active maintenance.
+
+For the official Angular Framework (TypeScript/JavaScript), visit [angular.io](https://angular.io). For the original Google-maintained AngularDart repository, see [github.com/angulardart](https://github.com/angulardart).

@@ -10,7 +10,7 @@ import 'package:analyzer/src/dart/element/element.dart';
 // ignore: implementation_imports
 import 'package:analyzer/src/generated/utilities_dart.dart';
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart';
 import 'package:angulardart_compiler/v1/angular_compiler.dart';
 import 'package:angulardart_compiler/v1/cli.dart';
 import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart';

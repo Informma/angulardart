@@ -1,6 +1,6 @@
 import 'package:source_span/source_span.dart';
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart';
 import 'package:angulardart_compiler/v2/context.dart';
 
 import 'compile_metadata.dart'

@@ -25,7 +25,6 @@ import '../core/zone/ng_zone.dart';
 import '../devtools.dart';
 import '../di/injector.dart';
 import '../runtime/dom_events.dart';
-import '../utilities.dart';
 import 'modules.dart';
 
 /// Used as a "tear-off" of [NgZone].

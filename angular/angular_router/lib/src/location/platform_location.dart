@@ -1,4 +1,4 @@
-import 'dart:html';
+import '../router_types.dart';
 
 /// This class should not be used directly by an application developer. Instead, use
 /// [Location].
@@ -24,9 +24,10 @@ import 'dart:html';
 /// they are all platform independent.
 abstract class PlatformLocation {
   String? getBaseHrefFromDOM();
-  void onPopState(EventListener fn);
-  void onHashChange(EventListener fn);
+  void onPopState(void Function(RouterEvent) fn);
+  void onHashChange(void Function(RouterEvent) fn);
   String get pathname;
+  set pathname(String value);
   String get search;
   String get hash;
   void replaceState(Object? state, String title, String? url);

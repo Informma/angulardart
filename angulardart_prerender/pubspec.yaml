@@ -1,0 +1,30 @@
+name: angulardart_prerender
+version: 1.3.0
+description: Prerendering tool for AngularDart applications to improve SEO.
+repository: https://github.com/flutterdocteur/angulardart/tree/main/angulardart_prerender
+issue_tracker: https://github.com/flutterdocteur/angulardart/issues
+homepage: https://angulardartreborn.com
+documentation: https://angulardartreborn.com/guide/prerender
+topics:
+  - angular
+  - seo
+  - prerender
+  - ssr
+  - web
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+platforms:
+  linux:
+  macos:
+  windows:
+executables:
+  prerender:
+dependencies:
+  path: '>=1.9.0 <2.0.0'
+  yaml: '>=3.1.2 <4.0.0'
+  puppeteer: '>=3.14.0 <4.0.0'
+  args: '>=2.5.0 <3.0.0'
+  logging: '>=1.3.0 <2.0.0'
+dev_dependencies:
+  lints: '>=6.0.0 <7.0.0'
+  test: '>=1.31.0 <2.0.0'

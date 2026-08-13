@@ -1,5 +1,5 @@
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart';
 
 import '../compile_metadata.dart'
     show
@@ -9,7 +9,7 @@ import '../compile_metadata.dart'
         CompileQueryMetadata,
         CompileProviderMetadata;
 import '../i18n/message.dart';
-import '../identifiers.dart' show Identifiers, identifierToken;
+import '../identifiers.dart' show Identifiers, RenderNodeHelpers, identifierToken;
 import '../output/output_ast.dart' as o;
 import '../template_ast.dart'
     show TemplateAst, ProviderAst, ProviderAstType, ReferenceAst;
@@ -109,13 +109,16 @@ class CompileElement extends CompileNode implements ProviderResolverHost {
     }
 
     // Create new ElementRef(_el_#) expression and provide as instance.
-    elementRef = o
-        .importExpr(Identifiers.elementRef)
-        .instantiate([renderNode.toReadExpr()]);
+    // Unwrap the RenderNode to its native DOM element so that injected
+    // `Element`/`HtmlElement`/`ElementRef` tokens resolve to real DOM nodes.
+    final nativeNode = o
+        .importExpr(RenderNodeHelpers.unwrapNode)
+        .callFn([renderNode.toReadExpr()]);
+    elementRef = o.importExpr(Identifiers.elementRef).instantiate([nativeNode]);
 
     _providers.add(Identifiers.elementRefToken, elementRef);
-    _providers.add(Identifiers.elementToken, renderNode.toReadExpr());
-    _providers.add(Identifiers.htmlElementToken, renderNode.toReadExpr());
+    _providers.add(Identifiers.elementToken, nativeNode);
+    _providers.add(Identifiers.htmlElementToken, nativeNode);
     var readInjectorExpr =
         o.InvokeMemberMethodExpr('injector', [o.literal(this.nodeIndex)]);
     _providers.add(Identifiers.injectorToken, readInjectorExpr);
@@ -267,7 +270,9 @@ class CompileElement extends CompileNode implements ProviderResolverHost {
           // ElementRef. HOWEVER, if specifically typed as Element or
           // HtmlElement, use that.
           value = queryWithRead.query.metadata.isElementType
-              ? renderNode.toReadExpr()
+              ? o
+                  .importExpr(RenderNodeHelpers.unwrapNode)
+                  .callFn([renderNode.toReadExpr()])
               : elementRef;
         }
       }

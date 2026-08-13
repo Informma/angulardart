@@ -114,6 +114,7 @@ export 'src/meta.dart'
         Output,
         Pipe,
         Provider,
+        RenderMode,
         Self,
         SkipSelf,
         Typed,
@@ -126,6 +127,9 @@ export 'src/meta.dart'
         provide,
         visibleForTemplate;
 export 'src/runtime/check_binding.dart' show debugCheckBindings;
+export 'src/runtime/render_factory.dart' show RenderFactory, renderFactory;
+export 'src/runtime/hydrate_render_factory.dart' show HydrateRenderFactory;
+export 'src/runtime/server_render_node.dart' show ServerRenderNode;
 export 'src/security/safe_html.dart'
     show SafeHtml, SafeStyle, SafeUrl, SafeResourceUrl;
 // TODO(b/116697059): Move to a testonly=1 library.

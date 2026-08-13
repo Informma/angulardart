@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart' hide unsafeCast;
 import 'package:angulardart_compiler/v1/cli.dart';
 import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart' as ir;
 import 'package:angulardart_compiler/v1/src/compiler/view_type.dart';
@@ -20,7 +20,14 @@ import '../compile_metadata.dart'
         CompileTypedMetadata;
 import '../compiler_utils.dart';
 import '../i18n/message.dart';
-import '../identifiers.dart';
+import '../identifiers.dart'
+    show
+        DevTools,
+        Identifiers,
+        Interpolation,
+        RenderNodeHelpers,
+        Runtime,
+        identifierToken;
 import '../output/output_ast.dart' as o;
 import '../template_ast.dart'
     show
@@ -55,10 +62,8 @@ import 'view_compiler_utils.dart'
         debugInjectorLeave,
         getViewFactory,
         getViewFactoryName,
-        identifierFromTagName,
         injectFromViewParentInjector,
-        maybeCachedCtxDeclarationStatement,
-        unsafeCast;
+        maybeCachedCtxDeclarationStatement;
 import 'view_name_resolver.dart';
 
 /// Visibility of NodeReference within AppView implementation.
@@ -101,7 +106,7 @@ class NodeReference {
     this._storage,
     int nodeIndex, {
     o.Expression? initialValue,
-  })  : _type = o.importType(Identifiers.htmlTextNode),
+  })  : _type = null, // dynamic type for SSR compatibility (RenderNode)
         _name = '_text_$nodeIndex',
         _initialValue = initialValue;
 
@@ -124,7 +129,7 @@ class NodeReference {
     this._storage,
     int nodeIndex, [
     this._visibility = NodeReferenceVisibility.build,
-  ])  : _type = o.importType(Identifiers.htmlCommentNode),
+  ])  : _type = null, // dynamic type for SSR compatibility (RenderNode)
         _name = '_anchor_$nodeIndex',
         _initialValue = null;
 
@@ -615,60 +620,33 @@ class CompileView {
     final isImmutable = text.isImmutable;
     if (parentNode != o.nullExpr) {
       if (isImmutable) {
-        // We do not create a class-level member, effectively "one-time".
-        //
-        // class V {
-        //   build() {
-        //     _el_0 = ...;
-        //     appendText(_el_0, '...');
-        //   }
-        // }
-        final appendText = o.importExpr(DomHelpers.appendText).callFn([
-          parentNode,
+        // Phase 3 (SSR): Use RenderNode factory for SSR compatibility.
+        final createText =
+            o.importExpr(RenderNodeHelpers.createRenderText).callFn([
           _textValue(text),
         ]);
-        _createMethod.addStmt(renderNode.toWriteStmt(appendText));
+        _createMethod.addStmt(renderNode.toWriteStmt(createText));
+        _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+            .callFn([parentNode, renderNode.toReadExpr()]).toStmt());
       } else {
         // A class-level member is created in a previous phase, and all we need
         // to do is append it to its parent (and detectChanges will handle
         // updating it).
-        //
-        // class V {
-        //   final _text_0 = Text('');
-        //
-        //   build() {
-        //     _el_0 = ...;
-        //     _el_0.append(_text_0);
-        //   }
-        // }
-        _createMethod.addStmt(
-          parentNode.callMethod('append', [renderNode.toReadExpr()]).toStmt(),
-        );
+        _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+            .callFn([parentNode, renderNode.toReadExpr()]).toStmt());
       }
     } else if (isImmutable) {
-      // Text is being appended or otherwise used somewhere else in the build
-      // (it does not start attached). This is similar to the "isImmutable"
-      // case above, but does not append the text.
-      //
-      // class V {
-      //   build() {
-      //     _text_0 = createText('...')
-      //   }
-      // }
-      final createText = o.importExpr(DomHelpers.createText).callFn([
+      // Phase 3 (SSR): Use RenderNode factory for SSR compatibility.
+      final createText =
+          o.importExpr(RenderNodeHelpers.createRenderText).callFn([
         _textValue(text),
       ]);
       _createMethod.addStmt(renderNode.toWriteStmt(createText));
     } else {
       // A mutable string without being appended to anything.
       //
-      // class V {
-      //   final _text_0 = Text('');
-      // }
-      //
       // For example, text nodes that are attached to the root node use the
-      // initN(...) function to append themselves, and not ".append". We may
-      // be able to refactor this case in the future.
+      // initN(...) function to append themselves, and not ".append".
     }
     return renderNode;
   }
@@ -780,49 +758,23 @@ class CompileView {
     String? templateUrl,
     int? offset,
   }) {
-    // No namespace just call [document.createElement].
-    if (docVarName == null) {
-      _createMethod.addStmt(_createLocalDocumentVar());
-    }
+    // Phase 3 (SSR): Use RenderNode-based helpers for SSR compatibility.
+    // renderFactory.createElement() returns BrowserRenderNode or
+    // ServerRenderNode depending on the current rendering context.
     if (parent != o.nullExpr) {
-      o.Expression createExpr;
-      final createParams = <o.Expression>[o.ReadVarExpr(docVarName), parent];
-
-      CompileIdentifierMetadata createAndAppendMethod;
-      o.OutputType? coerceToTypedElement;
-      switch (tagName) {
-        case 'div':
-          createAndAppendMethod = DomHelpers.appendDiv;
-          break;
-        case 'span':
-          createAndAppendMethod = DomHelpers.appendSpan;
-          break;
-        default:
-          createAndAppendMethod = DomHelpers.appendElement;
-          createParams.add(o.literal(tagName));
-          coerceToTypedElement = o.importType(identifierFromTagName(tagName));
-          break;
-      }
-      createExpr = o.importExpr(createAndAppendMethod).callFn(
-        createParams,
-        typeArguments: [
-          // Some of our dom_helper methods expect HtmlElement, so if we know
-          // that this tag is one we should add the generic type argument
-          // <HtmlElement> (which ends up just being an unsafeCast behind the
-          // scenes).
-          if (coerceToTypedElement != null) coerceToTypedElement
-        ],
-      );
-      _createMethod.addStmt(elementRef.toWriteStmt(createExpr));
+      final createElementExpr =
+          o.importExpr(RenderNodeHelpers.createRenderElement).callFn([
+        o.literal(tagName),
+      ]);
+      _createMethod.addStmt(elementRef.toWriteStmt(createElementExpr));
+      _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+          .callFn([parent, elementRef.toReadExpr()]).toStmt());
     } else {
-      // No parent node, just create element and assign.
-      final createRenderNodeExpr = o.ReadVarExpr(docVarName).callMethod(
-        'createElement',
-        [o.literal(tagName)],
-      );
-      _createMethod.addStmt(
-        elementRef.toWriteStmt(unsafeCast(createRenderNodeExpr)),
-      );
+      final createElementExpr =
+          o.importExpr(RenderNodeHelpers.createRenderElement).callFn([
+        o.literal(tagName),
+      ]);
+      _createMethod.addStmt(elementRef.toWriteStmt(createElementExpr));
     }
 
     _addDataDebugSource(elementRef, templateUrl, offset);
@@ -857,13 +809,18 @@ class CompileView {
   /// Creates an html node with a namespace and appends to parent element.
   void createElementNs(CompileElement parent, NodeReference elementRef,
       int nodeIndex, String? ns, String tagName, TemplateAst ast) {
-    if (docVarName == null) {
-      _createMethod.addStmt(_createLocalDocumentVar());
+    // Phase 3 (SSR): Use RenderNode factory for SSR compatibility.
+    // Namespaced elements (SVG, etc.) are created via renderFactory.
+    final parentNode = _getParentRenderNode(parent);
+    final createElementExpr =
+        o.importExpr(RenderNodeHelpers.createRenderElement).callFn([
+      o.literal(tagName),
+    ]);
+    _createMethod.addStmt(elementRef.toWriteStmt(createElementExpr));
+    if (parentNode != o.nullExpr) {
+      _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+          .callFn([parentNode, elementRef.toReadExpr()]).toStmt());
     }
-    var createRenderNodeExpr = o
-        .variable(docVarName)
-        .callMethod('createElementNS', [o.literal(ns), o.literal(tagName)]);
-    _initializeAndAppendNode(parent, elementRef, createRenderNodeExpr);
   }
 
   /// Initializes a component view for [childComponent].
@@ -930,12 +887,15 @@ class CompileView {
     final renderNode = NodeReference.anchor(storage, nodeIndex);
     final parentNode = _getParentRenderNode(parent);
     if (parentNode != o.nullExpr) {
-      final appendAnchor = o.importExpr(DomHelpers.appendAnchor).callFn([
-        parentNode,
-      ]);
-      _createMethod.addStmt(renderNode.toWriteStmt(appendAnchor));
+      // Phase 3 (SSR): Use RenderNode factory for SSR compatibility.
+      final createAnchor =
+          o.importExpr(RenderNodeHelpers.createRenderAnchor).callFn([]);
+      _createMethod.addStmt(renderNode.toWriteStmt(createAnchor));
+      _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+          .callFn([parentNode, renderNode.toReadExpr()]).toStmt());
     } else {
-      final createAnchor = o.importExpr(DomHelpers.createAnchor).callFn([]);
+      final createAnchor =
+          o.importExpr(RenderNodeHelpers.createRenderAnchor).callFn([]);
       _createMethod.addStmt(renderNode.toWriteStmt(createAnchor));
     }
     return renderNode;
@@ -1491,7 +1451,7 @@ class CompileView {
     // Add view child change detection calls.
     for (var viewChild in viewChildren) {
       statements.add(
-          viewChild.componentView!.callMethod('detectChanges', []).toStmt());
+          viewChild.componentView!.callMethod('detectChangesDeprecated', []).toStmt());
     }
 
     var afterViewStmts =
@@ -1565,10 +1525,8 @@ class CompileView {
     }
     final parentExpr = _getParentRenderNode(parentElement);
     if (parentExpr != o.nullExpr) {
-      _createMethod.addStmt(parentExpr.callMethod(
-        'append',
-        [nodeReference.toReadExpr()],
-      ).toStmt());
+      _createMethod.addStmt(o.importExpr(RenderNodeHelpers.appendRenderChild)
+          .callFn([parentExpr, nodeReference.toReadExpr()]).toStmt());
     }
   }
 

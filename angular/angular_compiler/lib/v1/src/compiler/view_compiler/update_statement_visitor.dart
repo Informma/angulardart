@@ -1,6 +1,11 @@
 import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart';
 import 'package:angulardart_compiler/v1/src/compiler/identifiers.dart'
-    show DomHelpers, Identifiers, SafeHtmlAdapters;
+    show
+        DomHelpers,
+        Identifiers,
+        RenderNodeHelpers,
+        RenderNodeUpdateHelpers,
+        SafeHtmlAdapters;
 import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart' as ir;
 import 'package:angulardart_compiler/v1/src/compiler/ir/model.dart';
 import 'package:angulardart_compiler/v1/src/compiler/output/output_ast.dart' as o;
@@ -93,17 +98,16 @@ class _UpdateStatementsVisitor
       ]).toStmt();
     }
 
-    return o
-        .importExpr(!useSetAttributeIfImmutable || bindingSource.isNullable
-            ? DomHelpers.updateAttribute
-            : DomHelpers.setAttribute)
-        .callFn(
-      [
-        renderNode!.toReadExpr(),
-        o.literal(attributeBinding.name),
-        renderValue!,
-      ],
-    ).toStmt();
+    // Phase 3 (SSR): Use RenderNode-based updateRenderAttribute.
+    final attributeValue = bindingSource.isNullable && !useSetAttributeIfImmutable
+        ? renderValue!.conditional(o.literal(''), o.nullExpr)
+        : renderValue!;
+
+    return o.importExpr(RenderNodeUpdateHelpers.updateRenderAttribute).callFn([
+      renderNode!.toReadExpr(),
+      o.literal(attributeBinding.name),
+      attributeValue,
+    ]).toStmt();
   }
 
   static o.Expression? _convertAttributeRenderValue(
@@ -140,15 +144,12 @@ class _UpdateStatementsVisitor
       return appViewInstance!.callMethod(
           renderMethod, [renderNode!.toReadExpr(), renderValue!]).toStmt();
     } else {
-      final renderMethod = isHtmlElement
-          ? DomHelpers.updateClassBinding
-          : DomHelpers.updateClassBindingNonHtml;
-      
+      // Phase 3 (SSR): Use RenderNode-based updateRenderClass.
       final value = bindingSource.isNullable
           ? renderValue!.ifNull(o.literal(false))
           : renderValue!;
-      
-      return o.importExpr(renderMethod).callFn([
+
+      return o.importExpr(RenderNodeUpdateHelpers.updateRenderClass).callFn([
         renderNode!.toReadExpr(),
         o.literal(classBinding.name),
         value,
@@ -159,11 +160,14 @@ class _UpdateStatementsVisitor
   @override
   o.Statement visitPropertyBinding(ir.PropertyBinding propertyBinding,
       [o.Expression? renderValue]) {
-    return o.importExpr(DomHelpers.setProperty).callFn([
-      renderNode!.toReadExpr(),
-      o.literal(propertyBinding.name),
-      renderValue!,
-    ]).toStmt();
+    // Phase 3 (SSR): Use RenderNode.setProperty() directly for SSR.
+    return renderNode!
+        .toReadExpr()
+        .callMethod('setProperty', [
+          o.literal(propertyBinding.name),
+          renderValue!,
+        ])
+        .toStmt();
   }
 
   // TODO(b/110433960): Should probably use renderValue instead of currValExpr.
@@ -190,42 +194,37 @@ class _UpdateStatementsVisitor
               checked: bindingSource.isNullable,
             );
     }
-    // Call Element.style.setProperty(propName, value);
-    o.Expression updateStyleExpr = renderNode!
-        .toReadExpr()
-        .prop('style')
-        .callMethod(
-            'setProperty', [o.literal(styleBinding.name), styleValueExpr]);
-    return updateStyleExpr.toStmt();
+    // Phase 3 (SSR): Use RenderNode-based updateRenderStyle.
+    return o.importExpr(RenderNodeUpdateHelpers.updateRenderStyle).callFn([
+      renderNode!.toReadExpr(),
+      o.literal(styleBinding.name),
+      styleValueExpr,
+    ]).toStmt();
   }
 
   @override
   o.Statement visitTabIndexBinding(ir.TabIndexBinding tabIndexBinding,
       [o.Expression? renderValue]) {
-    if (renderValue is o.LiteralExpr) {
-      final value = renderValue.value;
-      final tabIndex = value is String ? int.tryParse(value) : null;
-      if (tabIndex == null) {
-        // TODO(b/132985972): add source span for context.
-        throw BuildError.withoutContext(
-          'The "tabindex" attribute expects an integer value, but got: '
-          '"$value"',
-        );
-      }
-      return renderNode!
-          .toReadExpr()
-          .prop('tabIndex')
-          .set(o.literal(tabIndex))
-          .toStmt();
-    } else {
-      // Assume it's an int field
-      // TODO(b/128689252): Validate this during parse / convert to IR.
-      return renderNode!
-          .toReadExpr()
-          .prop('tabIndex')
-          .set(renderValue!)
-          .toStmt();
-    }
+    // Phase 3 (SSR): Use RenderNode-based updateRenderTabIndex.
+    final tabIndexExpr = renderValue is o.LiteralExpr
+        ? (() {
+            final value = renderValue.value;
+            final tabIndex = value is String ? int.tryParse(value) : null;
+            if (tabIndex == null) {
+              // TODO(b/132985972): add source span for context.
+              throw BuildError.withoutContext(
+                'The "tabindex" attribute expects an integer value, but got: '
+                '"$value"',
+              );
+            }
+            return o.literal(tabIndex);
+          })()
+        : renderValue!;
+
+    return o.importExpr(RenderNodeUpdateHelpers.updateRenderTabIndex).callFn([
+      renderNode!.toReadExpr(),
+      tabIndexExpr,
+    ]).toStmt();
   }
 
   @override
@@ -294,10 +293,11 @@ class _UpdateStatementsVisitor
   @override
   o.Statement visitNativeEvent(ir.NativeEvent nativeEvent,
           [o.Expression? renderValue]) =>
-      (renderNode?.toReadExpr() ?? appViewInstance!).callMethod(
-        'addEventListener',
-        [o.literal(nativeEvent.name), renderValue!],
-      ).toStmt();
+      o.importExpr(RenderNodeHelpers.addRenderEventListener).callFn([
+        renderNode?.toReadExpr() ?? appViewInstance!,
+        o.literal(nativeEvent.name),
+        renderValue!,
+      ]).toStmt();
 }
 
 o.Expression _sanitizedValue(

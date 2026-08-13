@@ -50,3 +50,6 @@ temp/
 
 # Documentation generated
 doc/api/
+
+# Local development overrides
+pubspec_overrides.yaml

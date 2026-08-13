@@ -1,0 +1,11 @@
+name: angulardart_prerender_example
+description: Example demonstrating angulardart_prerender usage.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  angulardart_prerender:
+    path: ../

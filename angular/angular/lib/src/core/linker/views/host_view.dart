@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:meta/meta.dart';
 import 'package:angulardart/src/core/change_detection/host.dart';
@@ -9,7 +7,6 @@ import 'package:angulardart/src/core/linker/view_fragment.dart';
 import 'package:angulardart/src/di/injector.dart';
 import 'package:angulardart/src/meta.dart';
 import 'package:angulardart/src/runtime/dom_helpers.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import 'component_view.dart';
 import 'dynamic_view.dart';
@@ -81,7 +78,7 @@ abstract class HostView<T extends Object> extends View implements DynamicView {
     _injector = injector;
     build(); // This initializes `component` and `componentView`.
     componentView.createAndProject(component, projectedNodes);
-    return ComponentRef(this, componentView.rootElement, component);
+    return ComponentRef(this, unwrapNode(componentView.rootElement), component);
   }
 
   /// Called by [build] once all root nodes are created.
@@ -215,7 +212,7 @@ abstract class HostView<T extends Object> extends View implements DynamicView {
   // View manipulation ---------------------------------------------------------
 
   @override
-  void addRootNodesAfter(Node node) {
+  void addRootNodesAfter(dynamic node) {
     final rootNodes = viewFragment!.flattenDomNodes();
     insertNodesAsSibling(rootNodes, node);
     domRootRendererIsDirty = true;

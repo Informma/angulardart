@@ -1,11 +1,8 @@
-import 'dart:html';
-
 import 'package:meta/meta.dart';
 import 'package:angulardart/src/core/change_detection/change_detector_ref.dart';
 import 'package:angulardart/src/core/zone/ng_zone.dart';
 import 'package:angulardart/src/di/injector.dart';
 import 'package:angulardart/src/meta.dart';
-import 'package:angulardart/src/utilities.dart';
 
 import 'view_ref.dart' show ViewRef;
 import 'views/host_view.dart';
@@ -44,7 +41,7 @@ bool debugUsesDefaultChangeDetection(ComponentRef<void> componentRef) {
 /// Component Instance via the [ComponentRef.destroy] method.
 class ComponentRef<C> {
   final HostView<void> _hostView;
-  final Element _nativeElement;
+  final Object? _nativeElement;
   final C _component;
 
   ComponentRef(
@@ -54,7 +51,9 @@ class ComponentRef<C> {
   );
 
   /// Location of the Host Element of this Component Instance.
-  Element get location => _nativeElement;
+  ///
+  /// In browser mode returns a DOM element; in SSR mode returns a [RenderNode].
+  Object? get location => _nativeElement;
 
   /// The injector on which the component instance exists.
   Injector get injector => _hostView.injector(0);
@@ -132,11 +131,17 @@ class ComponentFactory<T extends Object> {
   // AppView<{Comp}> as a child view.
   final HostView<T> Function() _viewFactory;
 
+  /// Controls how this component is rendered (SSR, CSR, or automatic).
+  ///
+  /// Defaults to [RenderMode.automatic] when not specified in @Component.
+  final RenderMode renderMode;
+
   /// Internal constructor for generated code only - **do not invoke**.
   const ComponentFactory(
     this.selector,
-    this._viewFactory,
-  );
+    this._viewFactory, [
+    this.renderMode = RenderMode.automatic,
+  ]);
 
   @Deprecated('Unsupported and in the process of removal.')
   Type get componentType => T;

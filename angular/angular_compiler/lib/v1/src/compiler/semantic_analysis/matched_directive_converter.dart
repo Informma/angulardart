@@ -1,5 +1,5 @@
 // ignore: implementation_imports
-import 'package:angulardart/src/meta.dart';
+import 'package:angulardart_meta/angulardart_meta.dart';
 import 'package:angulardart_compiler/v1/src/compiler/analyzed_class.dart';
 import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart' as core;
 import 'package:angulardart_compiler/v1/src/compiler/compile_metadata.dart';

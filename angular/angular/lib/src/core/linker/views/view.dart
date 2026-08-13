@@ -1,11 +1,10 @@
-import 'dart:html' show Element;
-
 import 'package:meta/dart2js.dart' as dart2js;
 import 'package:meta/meta.dart';
 import 'package:angulardart/src/core/change_detection/change_detector_ref.dart';
 import 'package:angulardart/src/core/change_detection/host.dart';
 import 'package:angulardart/src/di/errors.dart';
 import 'package:angulardart/src/di/injector.dart';
+import 'package:angulardart/src/runtime/render_node.dart';
 import 'package:angulardart/src/utilities.dart';
 
 /// The base implementation of all views.
@@ -123,7 +122,7 @@ abstract class View implements ChangeDetectorRef {
 
   @override
   void markChildForCheck(Object child) {
-    assert(child is! Element, 'Expected a component instance');
+    assert(child is! RenderNode, 'Expected a component instance');
     queryChangeDetectorRefs[child]?.markForCheck();
   }
 

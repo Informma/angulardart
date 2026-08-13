@@ -1,3 +1,7 @@
+## 1.8.0
+
+- Ajout commandes `add ssr`/`add hybrid`/`add seo`, `seo init`, `generate-stubs` + flags `--ssr`/`--hybrid`/`--seo` sur `ngdart new` (templates base `dart:html`).
+
 ## 1.0.11
 
 - fix: release.sh now looks for commits touching the package directory

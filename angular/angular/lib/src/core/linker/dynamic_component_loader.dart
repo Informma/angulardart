@@ -27,7 +27,7 @@ class SlowComponentLoader {
     return factoryFuture.then((component) {
       final reference = _loader.loadDetached(component, injector: injector);
       reference.onDestroy(() {
-        reference.location.remove();
+        (reference.location as dynamic).remove();
       });
       return unsafeCast(reference);
     });

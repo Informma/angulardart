@@ -1,3 +1,7 @@
+## 9.4.1
+
+- fix: collecter les styles scopés des composants côté serveur (`ServerRenderNode.collectStyle`/`collectedStyles`) pour permettre au SSR de les injecter dans `<head>`.
+
 ## 9.4.0
 
 - Portage SSR/RenderNode sur base `dart:html` (rebase sur v8.2.0) : infrastructure `RenderNode`, `RenderFactory`/`HydrateRenderFactory`, bootstrap SSR, `ApplicationRef.hydrate`, testability split browser/vm.

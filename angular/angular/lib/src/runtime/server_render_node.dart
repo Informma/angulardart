@@ -181,6 +181,11 @@ class ServerRenderNode implements RenderNode {
     } else {
       buffer.write('<$tagName');
 
+      // Fusionne la classe statique (setAttribute('class', ...)) et les
+      // classes dynamiques (setClass/toggleClass/applyShimClass) en un seul
+      // attribut `class` pour éviter les doublons dans le HTML généré.
+      final staticClass = _attrs.remove('class');
+
       for (final entry in _attrs.entries) {
         final escapedValue = _escapeAttr(entry.value);
         if (escapedValue.isEmpty) {
@@ -190,9 +195,16 @@ class ServerRenderNode implements RenderNode {
         }
       }
 
-      final enabledClasses = _classes.where((e) => e.value).map((e) => e.key).toList();
-      if (enabledClasses.isNotEmpty) {
-        buffer.write(' class="${enabledClasses.join(' ')}"');
+      final classParts = <String>[];
+      if (staticClass != null && staticClass.isNotEmpty) {
+        classParts.addAll(staticClass.split(RegExp(r'\s+')).where((c) => c.isNotEmpty));
+      }
+      classParts.addAll(_classes.where((e) => e.value).map((e) => e.key));
+
+      final seen = <String>{};
+      final mergedClasses = classParts.where((c) => seen.add(c)).toList();
+      if (mergedClasses.isNotEmpty) {
+        buffer.write(' class="${mergedClasses.map(_escapeAttr).join(' ')}"');
       }
 
       if (_styles.isNotEmpty) {

@@ -12,6 +12,7 @@ class ProjectGenerator extends Generator {
   final bool seo;
   final bool ssr;
   final bool hybrid;
+  final String server;
 
   ProjectGenerator._(
     this.name,
@@ -20,6 +21,7 @@ class ProjectGenerator extends Generator {
     this.seo,
     this.ssr,
     this.hybrid,
+    this.server,
     String destinationFolder,
   ) : super(destinationFolder);
 
@@ -30,6 +32,7 @@ class ProjectGenerator extends Generator {
     bool seo = false,
     bool ssr = false,
     bool hybrid = false,
+    String server = 'io',
   }) {
     final projectDir = path.join(destinationFolder, projectName.underscored);
     final component = ComponentGenerator(
@@ -43,6 +46,7 @@ class ProjectGenerator extends Generator {
       seo,
       ssr,
       hybrid,
+      server,
       projectDir,
     );
   }
@@ -55,6 +59,7 @@ class ProjectGenerator extends Generator {
       'seo': seo,
       'ssr': ssr,
       'hybrid': hybrid,
+      'alfred': server == 'alfred',
       'component': {
         'selector': component.selector,
         'className': component.className,
@@ -214,9 +219,20 @@ class ProjectGenerator extends Generator {
     bool routing = false,
   }) async {
     final binDir = path.join(destinationFolder, 'bin');
+    final isAlfred = server == 'alfred';
+    final String template;
+    if (routing) {
+      template = isAlfred
+          ? Templates.projectMainServerDartRoutingAlfred
+          : Templates.projectMainServerDartRouting;
+    } else {
+      template = isAlfred
+          ? Templates.projectMainServerDartFixedAlfred
+          : Templates.projectMainServerDartFixed;
+    }
     await writeFromTemplate(
       path.join(binDir, 'server.dart'),
-      routing ? Templates.projectMainServerDartRouting : Templates.projectMainServerDartFixed,
+      template,
       context,
     );
   }

@@ -548,4 +548,55 @@ void main() {
       expect(Templates.projectHomeComponentHtml, isNot(contains('{{')));
     });
   });
+
+  group('Templates.serverAlfred', () {
+    test('fixed Alfred template imports alfred and angulardart_server', () {
+      expect(Templates.projectMainServerDartFixedAlfred,
+          contains('package:alfred/alfred.dart'));
+      expect(Templates.projectMainServerDartFixedAlfred,
+          contains('package:angulardart_server/angulardart_server.dart'));
+      expect(Templates.projectMainServerDartFixedAlfred,
+          contains('server.renderApplication('));
+      expect(Templates.projectMainServerDartFixedAlfred, contains("app.all('*'"));
+    });
+
+    test('fixed Alfred template has no dart:io HttpServer bind', () {
+      expect(Templates.projectMainServerDartFixedAlfred,
+          isNot(contains('HttpServer.bind')));
+    });
+
+    test('routing Alfred template passes parent injector with appBaseHref', () {
+      expect(Templates.projectMainServerDartRoutingAlfred,
+          contains('parentInjector: ng.appInjector(baseHrefInjector)'));
+      expect(Templates.projectMainServerDartRoutingAlfred,
+          contains("Injector.map({appBaseHref: '/'})"));
+      expect(Templates.projectMainServerDartRoutingAlfred,
+          contains('package:alfred/alfred.dart'));
+    });
+
+    test('SSR pubspec templates contain alfred section placeholder', () {
+      expect(Templates.projectPubspecSsr, contains('{{#alfred}}'));
+      expect(Templates.projectPubspecHybrid, contains('{{#alfred}}'));
+      expect(Templates.projectPubspecSsrSeo, contains('{{#alfred}}'));
+      expect(Templates.projectPubspecSsr, contains("alfred: '>=1.1.3 <2.0.0'"));
+    });
+
+    test('renders alfred dependency only when alfred is true', () {
+      final template =
+          Template(Templates.projectPubspecSsr, htmlEscapeValues: false);
+      final withAlfred = template.renderString({
+        'name': 'my_app',
+        'description': 'My App',
+        'alfred': true,
+      });
+      expect(withAlfred, contains("alfred: '>=1.1.3 <2.0.0'"));
+
+      final withoutAlfred = template.renderString({
+        'name': 'my_app',
+        'description': 'My App',
+        'alfred': false,
+      });
+      expect(withoutAlfred, isNot(contains('alfred:')));
+    });
+  });
 }

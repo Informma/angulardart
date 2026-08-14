@@ -15,7 +15,7 @@ class NewProjectCommand extends NgDartCommand {
 
   @override
   String get invocation =>
-      'ngdart new <project_name> [--path <path>] [--root-component <Name>] [--ssr] [--seo] [--hybrid]';
+      'ngdart new <project_name> [--path <path>] [--root-component <Name>] [--ssr] [--seo] [--hybrid] [--server <io|alfred>]';
 
   NewProjectCommand() {
     argParser
@@ -36,7 +36,11 @@ class NewProjectCommand extends NgDartCommand {
           defaultsTo: false)
       ..addFlag('hybrid',
           help: 'Add hybrid SSR + routing + RenderMode support.',
-          defaultsTo: false);
+          defaultsTo: false)
+      ..addOption('server',
+          help: 'HTTP server implementation for SSR: io (default) or alfred.',
+          defaultsTo: 'io',
+          allowed: ['io', 'alfred']);
   }
 
   String get _projectPath => argResults!['path'] as String;
@@ -44,6 +48,7 @@ class NewProjectCommand extends NgDartCommand {
   bool get _seo => argResults!['seo'] as bool;
   bool get _ssr => argResults!['ssr'] as bool;
   bool get _hybrid => argResults!['hybrid'] as bool;
+  String get _server => argResults!['server'] as String;
 
   @override
   Future<void> runCommand() async {
@@ -66,6 +71,7 @@ class NewProjectCommand extends NgDartCommand {
       seo: _seo,
       ssr: _ssr,
       hybrid: _hybrid,
+      server: _server,
     ).generate();
   }
 }

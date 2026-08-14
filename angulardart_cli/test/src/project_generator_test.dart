@@ -767,4 +767,80 @@ void main() {
       expect(content, contains('final DataService _data'));
     });
   });
+
+  group('ProjectGenerator - Alfred server', () {
+    late Directory tempDir;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('ngdart_alfred_project_test_');
+    });
+
+    tearDownAll(() async {
+      if (tempDir.existsSync()) {
+        await tempDir.delete(recursive: true);
+      }
+    });
+
+    test('SSR project with server=alfred adds alfred to pubspec', () async {
+      final generator = ProjectGenerator(
+        EntityName('alfred_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        ssr: true,
+        server: 'alfred',
+      );
+      await generator.generate();
+
+      final content =
+          File('${tempDir.path}/alfred_app/pubspec.yaml').readAsStringSync();
+      expect(content, contains("alfred: '>=1.1.3 <2.0.0'"));
+    });
+
+    test('SSR project with default server=io omits alfred from pubspec', () async {
+      final generator = ProjectGenerator(
+        EntityName('io_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        ssr: true,
+      );
+      await generator.generate();
+
+      final content =
+          File('${tempDir.path}/io_app/pubspec.yaml').readAsStringSync();
+      expect(content, isNot(contains('alfred:')));
+    });
+
+    test('SSR project with server=alfred generates Alfred bin/server.dart', () async {
+      final generator = ProjectGenerator(
+        EntityName('alfred_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        ssr: true,
+        server: 'alfred',
+      );
+      await generator.generate();
+
+      final content =
+          File('${tempDir.path}/alfred_app/bin/server.dart').readAsStringSync();
+      expect(content, contains('package:alfred/alfred.dart'));
+      expect(content, contains("app.all('*'"));
+      expect(content, isNot(contains('HttpServer.bind')));
+    });
+
+    test('Hybrid project with server=alfred generates Alfred routing bin/server.dart', () async {
+      final generator = ProjectGenerator(
+        EntityName('alfred_hybrid_app'),
+        tempDir.path,
+        EntityName('AppComponent'),
+        hybrid: true,
+        server: 'alfred',
+      );
+      await generator.generate();
+
+      final content = File('${tempDir.path}/alfred_hybrid_app/bin/server.dart')
+          .readAsStringSync();
+      expect(content, contains('package:alfred/alfred.dart'));
+      expect(content, contains('parentInjector: ng.appInjector(baseHrefInjector)'));
+    });
+  });
 }

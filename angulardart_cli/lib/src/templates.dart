@@ -316,7 +316,8 @@ environment:
 dependencies:
   angulardart: '>=9.0.0 <10.0.0'
   angulardart_server: '>=1.2.0 <2.0.0'
-
+{{#alfred}}  alfred: '>=1.1.3 <2.0.0'
+{{/alfred}}
 dev_dependencies:
   build_runner: '>=2.16.0 <3.0.0'
   build_web_compilers: '>=4.8.0 <5.0.0'
@@ -490,6 +491,56 @@ Future<void> _serveStatic(HttpRequest request) async {
 }
 ''';
 
+  static const projectMainServerDartFixedAlfred = '''import 'dart:io';
+
+import 'package:alfred/alfred.dart';
+import 'package:angulardart_server/angulardart_server.dart';
+// ignore: uri_has_not_been_generated
+import '../web/main.server.dart' as ng;
+
+/// Point d'entre du serveur HTTP SSR (implémentation Alfred).
+///
+/// Compilez avec : dart run build_runner build web --release
+/// Puis lancez : dart bin/server.dart
+Future<void> main() async {
+  final server = platformServer();
+  final app = Alfred();
+
+  app.all('*', (req, res) async {
+    // Sert les assets statiques (styles.css, main.dart.js, ...).
+    final file = _findStaticFile(req.uri.path);
+    if (file != null) return file;
+
+    res.headers.contentType = ContentType.html;
+    return await server.renderApplication(
+      ng.appComponentFactory,
+      url: req.uri.toString(),
+    );
+  });
+
+  await app.listen(4000);
+  print('Serveur SSR angulardart (Alfred) sur http://localhost:4000');
+}
+
+File? _findStaticFile(String path) {
+  final sourceFile = File('web\$path');
+  if (sourceFile.existsSync()) return sourceFile;
+
+  // Les assets compilés (ex: main.dart.js) sont émis sous
+  // .dart_tool/build/generated/<package>/web/.
+  final generated = Directory('.dart_tool/build/generated');
+  if (generated.existsSync()) {
+    for (final entry in generated.listSync()) {
+      if (entry is Directory) {
+        final candidate = File('\${entry.path}/web\$path');
+        if (candidate.existsSync()) return candidate;
+      }
+    }
+  }
+  return null;
+}
+''';
+
   static const projectMainServerDartRouting = '''import 'dart:async';
 import 'dart:io';
 
@@ -599,6 +650,64 @@ Future<void> _serveStatic(HttpRequest request) async {
 }
 ''';
 
+  static const projectMainServerDartRoutingAlfred = '''import 'dart:io';
+
+import 'package:alfred/alfred.dart';
+import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_router/angulardart_router.dart';
+import 'package:angulardart_server/angulardart_server.dart';
+// ignore: uri_has_not_been_generated
+import '../web/main.server.dart' as ng;
+
+/// Point d'entre du serveur HTTP SSR avec routing (implémentation Alfred).
+///
+/// Compilez avec : dart run build_runner build web --release
+/// Puis lancez : dart bin/server.dart
+Future<void> main() async {
+  final server = platformServer();
+
+  // Le `<base href>` n'existe pas sur la VM (pas de document) ; on le fournit
+  // explicitement pour que `PathLocationStrategy` puisse résoudre les routes.
+  final baseHrefInjector = Injector.map({appBaseHref: '/'});
+
+  final app = Alfred();
+
+  app.all('*', (req, res) async {
+    // Sert les assets statiques (styles.css, main.dart.js, ...).
+    final file = _findStaticFile(req.uri.path);
+    if (file != null) return file;
+
+    res.headers.contentType = ContentType.html;
+    return await server.renderApplication(
+      ng.appComponentFactory,
+      url: req.uri.toString(),
+      parentInjector: ng.appInjector(baseHrefInjector),
+    );
+  });
+
+  await app.listen(4000);
+  print('Serveur SSR angulardart (Alfred) sur http://localhost:4000');
+}
+
+File? _findStaticFile(String path) {
+  final sourceFile = File('web\$path');
+  if (sourceFile.existsSync()) return sourceFile;
+
+  // Les assets compilés (ex: main.dart.js) sont émis sous
+  // .dart_tool/build/generated/<package>/web/.
+  final generated = Directory('.dart_tool/build/generated');
+  if (generated.existsSync()) {
+    for (final entry in generated.listSync()) {
+      if (entry is Directory) {
+        final candidate = File('\${entry.path}/web\$path');
+        if (candidate.existsSync()) return candidate;
+      }
+    }
+  }
+  return null;
+}
+''';
+
    static const projectReadmeSsr = '''# {{name}}
 
 Application AngularDart avec rendu côté serveur (SSR).
@@ -705,7 +814,8 @@ dependencies:
   angulardart: '>=9.0.0 <10.0.0'
   angulardart_router: '>=5.0.0 <6.0.0'
   angulardart_server: '>=1.2.0 <2.0.0'
-
+{{#alfred}}  alfred: '>=1.1.3 <2.0.0'
+{{/alfred}}
 dev_dependencies:
   build_runner: '>=2.16.0 <3.0.0'
   build_web_compilers: '>=4.8.0 <5.0.0'
@@ -948,7 +1058,8 @@ dependencies:
   angulardart_router: '>=5.0.0 <6.0.0'
   angulardart_server: '>=1.2.0 <2.0.0'
   angulardart_seo: '>=1.0.0 <2.0.0'
-
+{{#alfred}}  alfred: '>=1.1.3 <2.0.0'
+{{/alfred}}
 dev_dependencies:
   build_runner: '>=2.16.0 <3.0.0'
   build_web_compilers: '>=4.8.0 <5.0.0'

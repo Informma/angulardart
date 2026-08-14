@@ -17,6 +17,15 @@ class AddSsrCommand extends NgDartCommand {
   @override
   String get invocation => 'ngdart add ssr';
 
+  AddSsrCommand() {
+    argParser.addOption('server',
+        help: 'HTTP server implementation for SSR: io (default) or alfred.',
+        defaultsTo: 'io',
+        allowed: ['io', 'alfred']);
+  }
+
+  String get _server => argResults!['server'] as String;
+
   @override
   Future<void> runCommand() async {
     final pubspecFile = File('pubspec.yaml');
@@ -61,6 +70,14 @@ class AddSsrCommand extends NgDartCommand {
         "dependencies:\n  angulardart_server: '>=1.2.0 <2.0.0'",
       );
       print('  Added angulardart_server');
+    }
+
+    if (_server == 'alfred' && !pubspecContent.contains('alfred:')) {
+      pubspecContent = pubspecContent.replaceFirst(
+        'angulardart_server:',
+        "angulardart_server: '>=1.2.0 <2.0.0'\n  alfred: '>=1.1.3 <2.0.0'",
+      );
+      print('  Added alfred');
     }
 
     await pubspecFile.writeAsString(pubspecContent);
@@ -193,7 +210,9 @@ ComponentFactory<Object> get appComponentFactory =>
     await binDir.create(recursive: true);
     final serverBin = File('bin/server.dart');
     if (!serverBin.existsSync()) {
-      await serverBin.writeAsString(Templates.projectMainServerDartFixed);
+      await serverBin.writeAsString(_server == 'alfred'
+          ? Templates.projectMainServerDartFixedAlfred
+          : Templates.projectMainServerDartFixed);
       print('  Created bin/server.dart');
     }
 

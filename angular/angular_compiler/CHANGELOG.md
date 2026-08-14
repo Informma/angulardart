@@ -1,3 +1,7 @@
+## 5.6.0
+
+- feat: autoriser les attributs `data-*` (attribut global HTML5) dans les templates — `data-bs-toggle="dropdown"` (Bootstrap) ne déclenche plus l'erreur "Can't bind to ...".
+
 ## 5.5.0
 
 - feat: ré-ajouter le support des map literals dans les expressions de template (ex. `[ngClass]="{'special': isSpecial}"`, `[ngStyle]="{'font-weight': isBold ? 'bold' : 'normal'}"`).

@@ -23,5 +23,17 @@ void main() {
       expect(registry.hasProperty('div', 'innerHTML'), isTrue);
       expect(registry.hasProperty('span', 'innerHTML'), isTrue);
     });
+
+    test('should recognize data-* attributes on any element', () {
+      expect(registry.hasAttribute('button', 'data-bs-toggle'), isTrue);
+      expect(registry.hasAttribute('div', 'data-bs-toggle'), isTrue);
+      expect(registry.hasAttribute('a', 'data-bs-target'), isTrue);
+      expect(registry.hasAttribute('div', 'data-foo'), isTrue);
+      expect(registry.hasAttribute('custom-element', 'data-id'), isTrue);
+    });
+
+    test('should not recognize arbitrary unknown attributes', () {
+      expect(registry.hasAttribute('button', 'bogus-attribute'), isFalse);
+    });
   });
 }

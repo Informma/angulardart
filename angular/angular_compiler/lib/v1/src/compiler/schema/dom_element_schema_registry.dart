@@ -264,7 +264,8 @@ class DomElementSchemaRegistry extends ElementSchemaRegistry {
   bool hasAttribute(String tagName, String attributeName) {
     var elementAttributes =
         attributeSchema[tagName.toLowerCase()] ?? attributeSchema['unknown']!;
-    return elementAttributes.contains(attributeName.toLowerCase());
+    return elementAttributes.contains(attributeName.toLowerCase()) ||
+        attributeName.toLowerCase().startsWith('data-');
   }
 
   @override

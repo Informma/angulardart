@@ -1,3 +1,11 @@
+## 3.3.1
+
+- fix: corriger `build.yaml` — renommer la cible principale `angular_components` en `$default` (exigée par `build_config >=1.0`).
+- fix: renommer les imports SCSS internes `package:angular_components/...` en `package:angulardart_components/...` (104 fichiers).
+- fix: null-safety des requêtes `@ViewChild`/`@ContentChild`/`@ViewChildren`/`@ContentChildren` (suppression des `late`, types rendus nullables) et ajout des `@Optional()` manquants sur les paramètres DI nullables.
+- fix: rendre nullables les paramètres `@Attribute(...)` de type `String` (le compilateur passe `null` quand l'attribut est absent).
+- fix: ajouter les `@Input()` manquants `allowParentSingleSelection`/`allowParentMultiSelection` sur `MaterialTreeNode`.
+
 ## 3.3.0
 
 - Compatibilité `angulardart` 9.4.0 + `angulardart_forms` 6.4.0 (base `dart:html`).

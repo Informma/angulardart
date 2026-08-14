@@ -116,7 +116,7 @@ void main() async { ... }
 ```bash
 # Build
 dart run build_runner clean
-dart run build_runner build web
+dart run build_runner build web --release
 
 # Copier TOUS les templates générés (web/ ET lib/) vers leurs emplacements respectifs
 ngdart generate-stubs
@@ -144,7 +144,7 @@ dart bin/server.dart
 
 ```bash
 # Build (pas de -d)
-dart run build_runner build web
+dart run build_runner build web --release
 
 # Développement (serveur HMR)
 dart run build_runner serve

@@ -409,7 +409,7 @@ final _mimeTypes = {
 
 /// Point d'entre du serveur HTTP SSR.
 ///
-/// Compilez avec : dart run build_runner build web
+/// Compilez avec : dart run build_runner build web --release
 /// Puis lancez : dart bin/server.dart
 Future<void> main() async {
   final server = platformServer();
@@ -513,7 +513,7 @@ final _mimeTypes = {
 
 /// Point d'entre du serveur HTTP SSR (avec routing).
 ///
-/// Compilez avec : dart run build_runner build web
+/// Compilez avec : dart run build_runner build web --release
 /// Puis lancez : dart bin/server.dart
 Future<void> main() async {
   final server = platformServer();
@@ -624,7 +624,7 @@ dart run build_runner serve
 dart pub get
 ngdart generate-stubs
 dart run build_runner clean
-dart run build_runner build web
+dart run build_runner build web --release
 dart bin/server.dart
 ```
 
@@ -912,7 +912,7 @@ dart run build_runner serve
 ```bash
 dart pub get
 dart run build_runner clean
-dart run build_runner build web
+dart run build_runner build web --release
 # Copier les templates générés vers lib/ et web/
 ngdart generate-stubs
 dart bin/server.dart
@@ -1203,7 +1203,7 @@ dart run build_runner serve
 dart pub get
 ngdart generate-stubs
 dart run build_runner clean
-dart run build_runner build web
+dart run build_runner build web --release
 dart bin/server.dart
 ```
 
@@ -1212,7 +1212,7 @@ dart bin/server.dart
 ```bash
 dart pub get
 ngdart generate-stubs
-dart run build_runner build web
+dart run build_runner build web --release
 dart run angulardart_prerender
 ```
 

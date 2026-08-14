@@ -289,7 +289,7 @@ final InjectorFactory appInjector = ng.appInjector\$Injector;
     print('  3. dart run build_runner serve');
     print('  4. # Build SSR + Hybride :');
     print('  5. dart run build_runner clean');
-    print('  6. dart run build_runner build web');
+    print('  6. dart run build_runner build web --release');
     print('  7. ngdart generate-stubs');
     print('  8. dart bin/server.dart');
   }

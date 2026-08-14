@@ -7,10 +7,22 @@ import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
 import '../web/main.server.dart' as ng;
 
-/// Point d'entre du serveur HTTP SSR.
+final _mimeTypes = {
+  '.css': 'text/css',
+  '.js': 'application/javascript',
+  '.html': 'text/html',
+  '.json': 'application/json',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+};
+
+/// Point d'entre du serveur HTTP SSR (avec routing).
 ///
 /// Démo : serveur HTTP qui rend les pages AngularDart avec SSR.
-/// Compilez avec : dart run build_runner build web
+/// Compilez avec : dart run build_runner build web --release
 /// Puis lancez : dart bin/server.dart
 Future<void> main() async {
   final server = platformServer();
@@ -23,6 +35,14 @@ Future<void> main() async {
     print('Serveur SSR AngularDart (exemple complet) en cours d\'exécution sur http://localhost:4000');
 
     httpServer.listen((request) async {
+      final path = request.uri.path;
+
+      // Sert les assets statiques (styles.css, main.dart.js, ...).
+      if (_isStaticAsset(path)) {
+        await _serveStatic(request);
+        return;
+      }
+
       try {
         final html = await server.renderApplication(
           ng.appComponentFactory,
@@ -44,4 +64,45 @@ Future<void> main() async {
       }
     });
   });
+}
+
+bool _isStaticAsset(String path) {
+  final ext = path.contains('.') ? path.substring(path.lastIndexOf('.')) : '';
+  return _mimeTypes.containsKey(ext);
+}
+
+File? _findStaticFile(String path) {
+  final sourceFile = File('web$path');
+  if (sourceFile.existsSync()) return sourceFile;
+
+  // Les assets compilés (ex: main.dart.js) sont émis sous
+  // .dart_tool/build/generated/<package>/web/.
+  final generated = Directory('.dart_tool/build/generated');
+  if (generated.existsSync()) {
+    for (final entry in generated.listSync()) {
+      if (entry is Directory) {
+        final candidate = File('${entry.path}/web$path');
+        if (candidate.existsSync()) return candidate;
+      }
+    }
+  }
+  return null;
+}
+
+Future<void> _serveStatic(HttpRequest request) async {
+  final path = request.uri.path;
+  final file = _findStaticFile(path);
+
+  if (file == null) {
+    request.response.statusCode = HttpStatus.notFound;
+    request.response.write('Non trouvé');
+    await request.response.close();
+    return;
+  }
+
+  final ext = path.substring(path.lastIndexOf('.'));
+  request.response.headers.contentType =
+      ContentType.parse(_mimeTypes[ext] ?? 'application/octet-stream');
+  request.response.add(await file.readAsBytes());
+  await request.response.close();
 }

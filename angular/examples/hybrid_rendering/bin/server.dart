@@ -26,9 +26,11 @@ final _mimeTypes = {
 };
 
 /// Serveur HTTP SSR pour l'exemple hybrid_rendering.
+///
+/// Compilation : dart run build_runner build web --release
+/// Exécution :   dart bin/server.dart
 Future<void> main() async {
   final server = platformServer();
-  final webDir = Directory('web');
 
   await HttpServer.bind('localhost', 4000).then((httpServer) {
     print('Serveur SSR hybrid_rendering en cours d\'exécution sur http://localhost:4000');
@@ -36,8 +38,9 @@ Future<void> main() async {
     httpServer.listen((request) async {
       final path = request.uri.path;
 
-      if (_shouldServeStatic(path)) {
-        await _serveStaticFile(request, webDir);
+      // Servir les fichiers statiques (styles.css, main.dart.js, ...).
+      if (_isStaticAsset(path)) {
+        await _serveStatic(request);
         return;
       }
 
@@ -64,29 +67,42 @@ Future<void> main() async {
   });
 }
 
-bool _shouldServeStatic(String path) {
-  if (path == '/' || path.startsWith('/main.dart.js')) return false;
-  final ext = path.substring(path.lastIndexOf('.'));
+bool _isStaticAsset(String path) {
+  final ext = path.contains('.') ? path.substring(path.lastIndexOf('.')) : '';
   return _mimeTypes.containsKey(ext);
 }
 
-Future<void> _serveStaticFile(HttpRequest request, Directory webDir) async {
+File? _findStaticFile(String path) {
+  final sourceFile = File('web$path');
+  if (sourceFile.existsSync()) return sourceFile;
+
+  final generated = Directory('.dart_tool/build/generated');
+  if (generated.existsSync()) {
+    for (final entry in generated.listSync()) {
+      if (entry is Directory) {
+        final candidate = File('${entry.path}/web$path');
+        if (candidate.existsSync()) return candidate;
+      }
+    }
+  }
+  return null;
+}
+
+Future<void> _serveStatic(HttpRequest request) async {
   final path = request.uri.path;
-  final filePath = path == '/' ? '/index.html' : path;
-  final file = File('${webDir.path}$filePath');
+  final file = _findStaticFile(path);
 
-  if (await file.exists()) {
-    final ext = filePath.substring(filePath.lastIndexOf('.'));
-    final mimeType = _mimeTypes[ext] ?? 'application/octet-stream';
-
-    request.response.headers.contentType = ContentType.parse(mimeType);
-    final bytes = await file.readAsBytes();
-    request.response.add(bytes);
-    await request.response.close();
-  } else {
+  if (file == null) {
     request.response
       ..statusCode = HttpStatus.notFound
       ..write('Non trouvé')
       ..close();
+    return;
   }
+
+  final ext = path.substring(path.lastIndexOf('.'));
+  request.response.headers.contentType =
+      ContentType.parse(_mimeTypes[ext] ?? 'application/octet-stream');
+  request.response.add(await file.readAsBytes());
+  await request.response.close();
 }

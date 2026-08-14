@@ -230,7 +230,7 @@ dynamic get window => _StubWindow.instance;
       print('  2. # Build SSR + SEO :');
       print('  3. ngdart generate-stubs');
       print('  4. dart run build_runner clean');
-      print('  5. dart run build_runner build web');
+      print('  5. dart run build_runner build web --release');
       print('  6. for f in .dart_tool/build/generated/*/lib/*.template.dart; do cp "\$f" lib/ 2>/dev/null || true; done');
       print('  7. for f in .dart_tool/build/generated/*/web/*.template.dart; do cp "\$f" web/ 2>/dev/null || true; done');
       print('  8. dart bin/server.dart');

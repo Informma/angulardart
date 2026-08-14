@@ -6,7 +6,7 @@ Exemple minimal démontrant le rendu serveur avec AngularDart et `package:angula
 
 ```bash
 dart pub get
-dart run build_runner build web/main.server.dart
+dart run build_runner build web --release
 ```
 
 ## Exécution
@@ -36,7 +36,7 @@ dart test test/ssr/
 
 | Méthode | Résultat |
 |---------|----------|
-| `dart run build_runner build web/main.server.dart` puis `dart bin/server.dart` | ✅ Fonctionne (code compilé par dart2js) |
+| `dart run build_runner build web --release` puis `dart bin/server.dart` | ✅ Fonctionne (code compilé par dart2js) |
 | `dart run bin/server.dart` directement | ❌ Échoue (types browser indisponibles sur VM) |
 
 **Solution recommandée** : toujours utiliser `build_runner` pour compiler l'application avant de l'exécuter. Le binaire généré contient tout le code nécessaire au rendu SSR.

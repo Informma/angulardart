@@ -53,7 +53,7 @@ dart run build_runner serve
 ```bash
 dart pub get
 dart run build_runner clean
-dart run build_runner build web
+dart run build_runner build web --release
 # Copier les templates générés vers lib/ et web/
 for f in .dart_tool/build/generated/*/lib/*.template.dart; do cp "$f" lib/ 2>/dev/null || true; done
 for f in .dart_tool/build/generated/*/web/*.template.dart; do cp "$f" web/ 2>/dev/null || true; done

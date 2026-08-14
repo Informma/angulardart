@@ -1,4 +1,4 @@
-name: examples.hello_world
+name: examples_hello_world
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

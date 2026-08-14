@@ -1,3 +1,7 @@
+## 5.6.1
+
+- fix: corriger un crash du compilateur (`type 'Null' is not a subtype of type 'ReferenceAst'`) sur les `<ng-content>` sans attribut `select` — `RecursiveTemplateVisitor.visit` castait `null` en `ReferenceAst` au lieu de retourner `null`.
+
 ## 5.6.0
 
 - feat: autoriser les attributs `data-*` (attribut global HTML5) dans les templates — `data-bs-toggle="dropdown"` (Bootstrap) ne déclenche plus l'erreur "Can't bind to ...".

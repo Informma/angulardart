@@ -228,12 +228,10 @@ dynamic get window => _StubWindow.instance;
     print('  1. dart pub get');
     if (mainContent.contains('hydrateApplication')) {
       print('  2. # Build SSR + SEO :');
-      print('  3. ngdart generate-stubs');
-      print('  4. dart run build_runner clean');
-      print('  5. dart run build_runner build web --release');
-      print('  6. for f in .dart_tool/build/generated/*/lib/*.template.dart; do cp "\$f" lib/ 2>/dev/null || true; done');
-      print('  7. for f in .dart_tool/build/generated/*/web/*.template.dart; do cp "\$f" web/ 2>/dev/null || true; done');
-      print('  8. dart bin/server.dart');
+      print('  3. dart run build_runner clean');
+      print('  4. dart run build_runner build web --release');
+      print('  5. ngdart generate-stubs');
+      print('  6. dart bin/server.dart');
     } else {
       print('  2. # Build SEO :');
       print('  3. dart run build_runner build --release');

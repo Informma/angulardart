@@ -622,9 +622,9 @@ dart run build_runner serve
 
 ```bash
 dart pub get
-ngdart generate-stubs
 dart run build_runner clean
 dart run build_runner build web --release
+ngdart generate-stubs
 dart bin/server.dart
 ```
 
@@ -1201,9 +1201,9 @@ dart run build_runner serve
 
 ```bash
 dart pub get
-ngdart generate-stubs
 dart run build_runner clean
 dart run build_runner build web --release
+ngdart generate-stubs
 dart bin/server.dart
 ```
 
@@ -1211,8 +1211,8 @@ dart bin/server.dart
 
 ```bash
 dart pub get
-ngdart generate-stubs
 dart run build_runner build web --release
+ngdart generate-stubs
 dart run angulardart_prerender
 ```
 

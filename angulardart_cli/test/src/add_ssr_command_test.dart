@@ -225,8 +225,10 @@ ComponentFactory<Object> get appComponentFactory =>
     messages.add('  2. # Développement (client uniquement) :');
     messages.add('  3. dart run build_runner serve');
     messages.add('  4. # Build SSR :');
-    messages.add('  5. dart run build_runner build web --release');
-    messages.add('  6. dart bin/server.dart');
+    messages.add('  5. dart run build_runner clean');
+    messages.add('  6. dart run build_runner build web --release');
+    messages.add('  7. ngdart generate-stubs');
+    messages.add('  8. dart bin/server.dart');
   }
 }
 

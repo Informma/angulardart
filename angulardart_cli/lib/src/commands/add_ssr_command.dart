@@ -223,7 +223,9 @@ ComponentFactory<Object> get appComponentFactory =>
     print('  2. # Développement (client uniquement) :');
     print('  3. dart run build_runner serve');
     print('  4. # Build SSR :');
-    print('  5. dart run build_runner build web --release');
-    print('  6. dart bin/server.dart');
+    print('  5. dart run build_runner clean');
+    print('  6. dart run build_runner build web --release');
+    print('  7. ngdart generate-stubs');
+    print('  8. dart bin/server.dart');
   }
 }

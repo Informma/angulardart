@@ -1,6 +1,7 @@
 ## 1.9.1
 
 - fix: les commandes SSR/hybride/SSR+SEO génèrent désormais `dart run build_runner build web --release` (le build dev/DDC produisait un `main.dart.js` dépendant de `require.js`, non servi par le serveur standalone).
+- fix: `ngdart generate-stubs` est désormais exécuté APRÈS `build_runner build` dans les README `--ssr`/`--ssr --seo` et les sorties `add ssr`/`add seo` (il doit copier les `.template.dart` générés, pas les créer avant le build).
 
 ## 1.9.0
 

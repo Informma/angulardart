@@ -1,3 +1,7 @@
+## 1.10.0
+
+- feat: ajout du flag `--server=io|alfred` sur `ngdart new`, `ngdart add ssr` et `ngdart add hybrid` pour choisir l'implémentation HTTP du serveur SSR (`io` = `dart:io` par défaut, `alfred` = package Alfred). La dépendance `alfred` n'est ajoutée au pubspec que si `--server=alfred` est sélectionné.
+
 ## 1.9.2
 
 - fix: `ngdart generate-stubs` est désormais exécuté APRÈS `build_runner build` dans les README `--ssr`/`--ssr --seo` et les sorties `add ssr`/`add seo` (il doit copier les `.template.dart` générés, pas les créer avant le build).

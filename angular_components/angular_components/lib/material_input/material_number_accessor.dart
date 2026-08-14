@@ -125,21 +125,21 @@ class MaterialInt64ValueAccessor
   MaterialInt64ValueAccessor(
       BaseMaterialInput input,
       @Self() NgControl control,
-      @Attribute('changeUpdate') String changeUpdateAttr,
-      @Attribute('keypressUpdate') String keypressUpdateAttr,
-      @Attribute('checkInteger') String checkInteger,
-      @Attribute('blurFormat') String blurFormat,
+      @Attribute('changeUpdate') String? changeUpdateAttr,
+      @Attribute('keypressUpdate') String? keypressUpdateAttr,
+      @Attribute('checkInteger') String? checkInteger,
+      @Attribute('blurFormat') String? blurFormat,
       @Optional() NumberFormat? numberFormat)
       : super(
             input,
             control,
-            attributeToBool(changeUpdateAttr, defaultValue: false),
-            attributeToBool(keypressUpdateAttr, defaultValue: false),
-            attributeToBool(blurFormat, defaultValue: false),
+            attributeToBool(changeUpdateAttr ?? '', defaultValue: false),
+            attributeToBool(keypressUpdateAttr ?? '', defaultValue: false),
+            attributeToBool(blurFormat ?? '', defaultValue: false),
             numberFormat) {
     assert(
         _checkValues(
-            numberFormat, attributeToBool(blurFormat, defaultValue: false)),
+            numberFormat, attributeToBool(blurFormat ?? '', defaultValue: false)),
         'You must supply a NumberFormat if using blurFormat');
   }
 
@@ -192,18 +192,18 @@ class MaterialNumberValueAccessor extends BaseMaterialNumberValueAccessor<num> {
   MaterialNumberValueAccessor(
       BaseMaterialInput input,
       @Self() NgControl control,
-      @Attribute('changeUpdate') String changeUpdateAttr,
-      @Attribute('keypressUpdate') String keypressUpdateAttr,
-      @Attribute('checkInteger') String checkInteger,
-      @Attribute('blurFormat') String blurFormat,
+      @Attribute('changeUpdate') String? changeUpdateAttr,
+      @Attribute('keypressUpdate') String? keypressUpdateAttr,
+      @Attribute('checkInteger') String? checkInteger,
+      @Attribute('blurFormat') String? blurFormat,
       @Optional() NumberFormat? numberFormat)
-      : _checkInteger = attributeToBool(checkInteger, defaultValue: false),
+      : _checkInteger = attributeToBool(checkInteger ?? '', defaultValue: false),
         super(
             input,
             control,
-            attributeToBool(changeUpdateAttr, defaultValue: false),
-            attributeToBool(keypressUpdateAttr, defaultValue: false),
-            attributeToBool(blurFormat, defaultValue: false),
+            attributeToBool(changeUpdateAttr ?? '', defaultValue: false),
+            attributeToBool(keypressUpdateAttr ?? '', defaultValue: false),
+            attributeToBool(blurFormat ?? '', defaultValue: false),
             numberFormat ?? NumberFormat.decimalPattern());
 
   @override

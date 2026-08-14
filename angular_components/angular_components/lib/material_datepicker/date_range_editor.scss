@@ -2,13 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@import 'package:angular_components/css/material/material';
-@import 'package:angular_components/material_button/mixins';
-@import 'package:angular_components/material_datepicker/constants';
-@import 'package:angular_components/material_datepicker/mixins';
-@import 'package:angular_components/material_input/mixins';
-@import 'package:angular_components/material_list/mixins';
-@import 'package:angular_components/material_select/size';
+@import 'package:angulardart_components/css/material/material';
+@import 'package:angulardart_components/material_button/mixins';
+@import 'package:angulardart_components/material_datepicker/constants';
+@import 'package:angulardart_components/material_datepicker/mixins';
+@import 'package:angulardart_components/material_input/mixins';
+@import 'package:angulardart_components/material_list/mixins';
+@import 'package:angulardart_components/material_select/size';
 
 @include material-scrollbars('date-range-editor', $mat-blue);
 

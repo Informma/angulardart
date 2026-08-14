@@ -111,7 +111,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   ///
   /// If not provided, will use the default role for [DropdownButtonComponent]:
   /// 'button'.
-  final String buttonAriaRole;
+  final String? buttonAriaRole;
 
   /// The id of an element that describes the selection in the dropdown button.
   ///
@@ -196,12 +196,12 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
       @Optional() IdGenerator? idGenerator,
       @Optional() @SkipSelf() this._popupSizeDelegate,
       @Optional() @Inject(rtlToken) bool? rtl,
-      @Attribute('popupClass') String popupClass,
+      @Attribute('popupClass') String? popupClass,
       @Attribute('buttonAriaRole') this.buttonAriaRole,
       this._changeDetector,
       HtmlElement element)
       : activeModel = ActiveItemModel(idGenerator),
-        popupClassName = constructEncapsulatedCss(popupClass, element.classes),
+        popupClassName = constructEncapsulatedCss(popupClass ?? '', element.classes),
         listId = (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId() {
     isRtl = rtl ?? false;
     preferredPositions = RelativePosition.overlapAlignments;

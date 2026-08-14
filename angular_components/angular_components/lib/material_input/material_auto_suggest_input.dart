@@ -352,7 +352,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
           @Optional() @Self() NgControl? cd,
           @Optional() IdGenerator? idGenerator,
           ChangeDetectorRef changeDetector,
-          @Optional() @SkipSelf() PopupSizeProvider popupSizeDelegate) =>
+          @Optional() @SkipSelf() PopupSizeProvider? popupSizeDelegate) =>
       MaterialAutoSuggestInputComponent.protected(
           cd,
           idGenerator ?? SequentialIdGenerator.fromUUID(),
@@ -837,8 +837,8 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @ViewChild(MaterialInputComponent)
-  set input(MaterialInputComponent input) {
-    _input = input;
+  set input(MaterialInputComponent? input) {
+    _input = input!;
     if (_focusPending) {
       _focusPending = false;
       _input.focus();

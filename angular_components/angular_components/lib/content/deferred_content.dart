@@ -90,8 +90,8 @@ class DeferredContentDirective implements OnDestroy {
   }
 
   DeferredContentDirective(
-    this._viewContainer,
-    this._template,
+    @Optional() this._viewContainer,
+    @Optional() this._template,
     DeferredContentAware parent,
     ChangeDetectorRef changeDetector,
   ) {
@@ -137,8 +137,8 @@ class CachingDeferredContentDirective implements OnDestroy {
   }
 
   CachingDeferredContentDirective(
-    this._viewContainer,
-    this._template,
+    @Optional() this._viewContainer,
+    @Optional() this._template,
     DeferredContentAware parent,
     ChangeDetectorRef changeDetector,
   ) {

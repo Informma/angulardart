@@ -279,7 +279,7 @@ Migration from an existing `bypassSecurityTrustHtml()` solution is generally
 straightforward. Basic steps:
 
 1.  Import the Dart library
-    `package:angular_components/simple_html/simple_html.dart` in your component
+    `package:angulardart_components/simple_html/simple_html.dart` in your component
     file.
 1.  Add the `SimpleHtmlComponent` to your
     [@Component](https://pub.dev/documentation/angular_compiler/latest/v1_src_metadata_directives/Component-class.html)'s

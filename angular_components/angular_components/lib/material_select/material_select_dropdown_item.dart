@@ -57,7 +57,7 @@ class MaterialSelectDropdownItemComponent<T>
 
   MaterialSelectDropdownItemComponent(
       HtmlElement element,
-      @Attribute('role') String role,
+      @Attribute('role') String? role,
       @Optional() DropdownHandle? dropdown,
       @Optional() ActivationHandler? activationHandler,
       @Optional() IdGenerator? idGenerator,

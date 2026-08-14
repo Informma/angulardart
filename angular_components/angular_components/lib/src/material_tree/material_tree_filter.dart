@@ -27,7 +27,7 @@ class MaterialTreeFilterComponent {
   final MaterialTreeRoot? _treeRoot;
 
   @ViewChild('materialInput')
-  late MaterialInputComponent materialInput;
+  MaterialInputComponent? materialInput;
 
   Filterable? _filterable;
   String _inputText = '';
@@ -74,7 +74,7 @@ class MaterialTreeFilterComponent {
   }
 
   void focus() {
-    materialInput.focus();
+    materialInput!.focus();
   }
 
   void clear() {

@@ -11,7 +11,7 @@ documentation][docs]. Examples can be found [here][demo].
 ## Setup
 
 The styles are provided by
-`package:angular_components/css/mdc_web/card/mdc-card.scss.css`. To use
+`package:angulardart_components/css/mdc_web/card/mdc-card.scss.css`. To use
 these styles in an Angular component simply add it as a `styleUrls` value in
 your `Component` annotation. We suggest that the style be added before any
 component specific styling so you can easily override style values as needed.
@@ -21,7 +21,7 @@ component specific styling so you can easily override style values as needed.
     selector: 'my-component',
     templateUrl: 'my_component.html',
     styleUrls: [
-      'package:angular_components/css/mdc_web/card/mdc-card.scss.css',
+      'package:angulardart_components/css/mdc_web/card/mdc-card.scss.css',
       'my_component.scss.css'])
 class MyComponent {}
 ```

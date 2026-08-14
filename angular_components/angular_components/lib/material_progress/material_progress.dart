@@ -113,23 +113,23 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
   double _calcRatio(int value) => (value.clamp(min, max) - min) / (max - min);
 
   @ViewChild('primary', read: HtmlElement)
-  set primary(HtmlElement value) {
-    _primaryIndicator = value as DivElement;
+  set primary(HtmlElement? value) {
+    _primaryIndicator = value as DivElement?;
   }
 
   DivElement? _primaryIndicator;
   Animation? _primaryAnimation;
 
   @ViewChild('secondary', read: HtmlElement)
-  set secondary(HtmlElement value) {
-    _secondaryIndicator = value as DivElement;
+  set secondary(HtmlElement? value) {
+    _secondaryIndicator = value as DivElement?;
   }
 
   DivElement? _secondaryIndicator;
   Animation? _secondaryAnimation;
 
   MaterialProgressComponent(
-      @Attribute('disable-fancy-animation') String disableFancyAnimation,
+      @Attribute('disable-fancy-animation') String? disableFancyAnimation,
       this._changeDetector,
       this._element)
       : _useFancyAnimation = true;

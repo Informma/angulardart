@@ -250,7 +250,7 @@ class MaterialMonthPickerComponent
   late StreamSubscription _calendarStream;
 
   MaterialMonthPickerComponent(@Optional() @Inject(datepickerClock) Clock? clock,
-      @Attribute('mode') String mode) {
+      @Attribute('mode') String? mode) {
     clock ??= Clock();
 
     // Init minDate and maxDate to sensible defaults
@@ -260,13 +260,13 @@ class MaterialMonthPickerComponent
 
     _today = Date.today(clock);
 
-    if (mode.isNotEmpty) {
-      _mode = fuzzyParseEnum(CalendarSelectionMode.values, mode);
+    if ((mode ?? '').isNotEmpty) {
+      _mode = fuzzyParseEnum(CalendarSelectionMode.values, mode!);
     }
   }
 
   @ViewChild('container')
-  set container(Element container) {
+  set container(Element? container) {
     _container = container as HtmlElement;
     _scroller = container.parent as HtmlElement;
   }

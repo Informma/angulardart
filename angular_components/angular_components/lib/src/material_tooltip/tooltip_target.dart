@@ -32,9 +32,9 @@ class MaterialTooltipTargetDirective extends TooltipBehavior
   MaterialTooltipTargetDirective(
       DomPopupSourceFactory domPopupSourceFactory,
       ViewContainerRef viewContainerRef,
-      this.element,
+      @Optional() this.element,
       ChangeDetectorRef changeDetector,
-      @Attribute('initPopupAriaAttributes') String initAriaAttributes)
+      @Attribute('initPopupAriaAttributes') String? initAriaAttributes)
       : super(domPopupSourceFactory, viewContainerRef, element!, changeDetector,
             initAriaAttributes);
 
@@ -70,7 +70,7 @@ abstract class TooltipBehavior extends TooltipTarget {
       ViewContainerRef viewContainerRef,
       HtmlElement element,
       this._changeDetector,
-      String initAriaAttributes)
+      String? initAriaAttributes)
       : super(domPopupSourceFactory, viewContainerRef, element,
             initAriaAttributes) {
     _show = DelayedAction(tooltipShowDelay, showTooltip);
@@ -160,9 +160,9 @@ class ClickableTooltipTargetDirective extends TooltipBehavior
   ClickableTooltipTargetDirective(
       DomPopupSourceFactory domPopupSourceFactory,
       ViewContainerRef viewContainerRef,
-      this.element,
+      @Optional() this.element,
       ChangeDetectorRef changeDetector,
-      @Attribute('initPopupAriaAttributes') String initAriaAttributes)
+      @Attribute('initPopupAriaAttributes') String? initAriaAttributes)
       : super(domPopupSourceFactory, viewContainerRef, element!, changeDetector,
             initAriaAttributes) {
     _tooltipSubscription = tooltipActivate.listen((visible) {
@@ -210,7 +210,7 @@ abstract class TooltipTarget extends PopupSourceDirective {
   String? _previousDescribedbyId;
 
   TooltipTarget(DomPopupSourceFactory domPopupSourceFactory,
-      this.viewContainerRef, this._element, String initAriaAttributes)
+      this.viewContainerRef, this._element, String? initAriaAttributes)
       : super(domPopupSourceFactory, _element, /* referenceDirective */ null,
             /* focusable */ null, initAriaAttributes);
 

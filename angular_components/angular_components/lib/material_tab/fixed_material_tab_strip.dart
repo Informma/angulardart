@@ -110,7 +110,7 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
     activeTabIndex = index;
     _tabChange.add(event);
     _activeTabIndexChange.add(activeTabIndex);
-    focusController.setTabbable(activeTabIndex);
+    focusController!.setTabbable(activeTabIndex);
   }
 
   String activeStr(int index) {
@@ -127,16 +127,16 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
 
   @visibleForTemplate
   @ViewChild(FocusListDirective)
-  late FocusListDirective focusController;
+  FocusListDirective? focusController;
 
   @visibleForTemplate
   @ViewChild('navibar')
-  late HtmlElement naviBar;
+  HtmlElement? naviBar;
 
   @HostListener('focusout')
   void focusOutHandler(FocusEvent e) {
-    if (!naviBar.contains(e.relatedTarget as Node?)) {
-      focusController.setTabbable(_activeTabIndex);
+    if (!naviBar!.contains(e.relatedTarget as Node?)) {
+      focusController!.setTabbable(_activeTabIndex);
     }
   }
 
@@ -144,7 +144,7 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
   void ngAfterViewInit() {
     // Sets the tabbable item if the activeIndex is set on initialization.
     _ngZone.runAfterChangesObserved(() {
-      focusController.setTabbable(_activeTabIndex);
+      focusController!.setTabbable(_activeTabIndex);
     });
   }
 }

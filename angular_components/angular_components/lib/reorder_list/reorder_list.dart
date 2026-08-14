@@ -111,7 +111,7 @@ class ReorderListComponent implements OnDestroy {
   int? _pivotItemIndex;
 
   @ViewChild('placeholder')
-  late HtmlElement placeholder;
+  HtmlElement? placeholder;
 
   ReorderListComponent(this._ngZone);
 
@@ -212,7 +212,7 @@ class ReorderListComponent implements OnDestroy {
 
     final draggedElement = _items[_dragSourceElement]!;
     if (verticalItems) {
-      placeholder.style
+      placeholder!.style
         ..height = "${draggedElement.borderEdge.height}px"
         ..width = "${draggedElement.borderEdge.width}px"
         ..top = "${upperStackSize}px";
@@ -222,7 +222,7 @@ class ReorderListComponent implements OnDestroy {
           ? e.offset.left
           : e.offset.right - draggedElement.borderEdge.width;
 
-      placeholder.style
+      placeholder!.style
         ..height = "${draggedElement.borderEdge.height}px"
         ..width = "${draggedElement.borderEdge.width}px"
         ..top = "${e.offset.top}px"

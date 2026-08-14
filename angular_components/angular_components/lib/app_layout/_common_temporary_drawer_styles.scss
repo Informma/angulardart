@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @import 'material_drawer';
-@import 'package:angular_components/app_layout/mixins';
-@import 'package:angular_components/css/material/material';
-@import 'package:angular_components/css/material/shadow';
+@import 'package:angulardart_components/app_layout/mixins';
+@import 'package:angulardart_components/css/material/material';
+@import 'package:angulardart_components/css/material/shadow';
 
 :host {
   @include fit;

@@ -3,8 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @import 'constants';
-@import 'package:angular_components/css/material/material';
-@import 'package:angular_components/css/material/mixins';
+@import 'package:angulardart_components/css/material/material';
+@import 'package:angulardart_components/css/material/mixins';
 
 /// This mixin for size related properties of variants of date grids, including compact and normal
 /// calendars.
@@ -274,7 +274,7 @@
 .grabbable .boundary {
   cursor:
       inline-image(
-              'package:angular_components/material_datepicker/src/openhand.cur')
+              'package:angulardart_components/material_datepicker/src/openhand.cur')
       7 5, default;
   cursor: -moz-grab;
   cursor: -webkit-grab;
@@ -284,7 +284,7 @@
 .grabbable:active .boundary {
   cursor:
       inline-image(
-              'package:angular_components/material_datepicker/src/closedhand.cur')
+              'package:angulardart_components/material_datepicker/src/closedhand.cur')
       7 5, move;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;

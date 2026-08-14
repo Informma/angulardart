@@ -107,7 +107,7 @@ class MaterialDateRangePickerComponent
   final PopupSizeProvider? _popupSizeProvider;
 
   @ViewChild(ButtonDirective)
-  set focusableElement(ButtonDirective button) {
+  set focusableElement(ButtonDirective? button) {
     focusable = button;
   }
 
@@ -405,13 +405,14 @@ class MaterialDateRangePickerComponent
       @Optional() @Inject(datepickerClock) Clock? clock,
       Clock legacyClock,
       @Optional() DatepickerConfig? config,
-      @Attribute('popupClass') String popupClass,
+      @Attribute('popupClass') String? popupClass,
       @Optional() @SkipSelf() this._popupSizeProvider,
       HtmlElement element,
       this._domService,
       this._ngZone)
       : _config = config ?? DatepickerConfig(),
-        popupClassName = constructEncapsulatedCss(popupClass, element.classes) {
+        popupClassName =
+            constructEncapsulatedCss(popupClass ?? '', element.classes) {
     // TODO(google): Migrate to use only datepickerClock
     clock ??= legacyClock;
 

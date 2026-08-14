@@ -125,13 +125,13 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
   final ChangeDetectorRef _changeDetector;
 
   MaterialPaperTooltipComponent(this._tooltipController, this._changeDetector,
-      HtmlElement hostElement, @Attribute('tooltipClass') String tooltipClass)
+      HtmlElement hostElement, @Attribute('tooltipClass') String? tooltipClass)
       : popupClassName =
-            constructEncapsulatedCss(tooltipClass, hostElement.classes);
+            constructEncapsulatedCss(tooltipClass ?? '', hostElement.classes);
 
   @ViewChild(MaterialPopupComponent)
-  set popupChild(MaterialPopupComponent popup) {
-    _visibleCtrl.addStream(popup.contentVisible);
+  set popupChild(MaterialPopupComponent? popup) {
+    _visibleCtrl.addStream(popup!.contentVisible);
   }
 
   @override

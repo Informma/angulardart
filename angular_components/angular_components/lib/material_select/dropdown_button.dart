@@ -54,7 +54,7 @@ class DropdownButtonComponent extends Object
   ButtonDirective? _button;
 
   @ViewChild(ButtonDirective)
-  set button(ButtonDirective b) {
+  set button(ButtonDirective? b) {
     _button = b;
     focusable = b;
   }

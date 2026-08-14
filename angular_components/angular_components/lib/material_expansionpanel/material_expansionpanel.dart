@@ -98,8 +98,8 @@ class MaterialExpansionPanel
       this._ngZone,
       this._changeDetector,
       this._domService,
-      @Attribute('shouldExpandOnLeft') String expandOnLeft,
-      @Attribute('forceContentWhenClosed') String forceContent)
+      @Attribute('shouldExpandOnLeft') String? expandOnLeft,
+      @Attribute('forceContentWhenClosed') String? forceContent)
       : shouldExpandOnLeft = true,
         forceContentWhenClosed = true;
 
@@ -133,7 +133,7 @@ class MaterialExpansionPanel
 
   HtmlElement? _mainPanel;
   @ViewChild('mainPanel')
-  set mainPanel(HtmlElement mainPanel) {
+  set mainPanel(HtmlElement? mainPanel) {
     _mainPanel = mainPanel;
     _ngZone.runOutsideAngular(() {
       _disposer.addStreamSubscription(_mainPanel!.onTransitionEnd
@@ -166,7 +166,7 @@ class MaterialExpansionPanel
 
   HtmlElement? _headerPanel;
   @ViewChild('headerPanel')
-  set headerPanel(HtmlElement headerPanel) {
+  set headerPanel(HtmlElement? headerPanel) {
     _headerPanel = headerPanel;
     _ngZone.runOutsideAngular(() {
       _disposer.addStreamSubscription(_headerPanel!.onTransitionEnd
@@ -180,7 +180,7 @@ class MaterialExpansionPanel
 
   HtmlElement? _mainContent;
   @ViewChild('mainContent')
-  set mainContent(HtmlElement mainContent) {
+  set mainContent(HtmlElement? mainContent) {
     _mainContent = mainContent;
     if (_mainContent == null) return;
     _completeExpandedPanelHeightReadsIfPossible();
@@ -199,17 +199,17 @@ class MaterialExpansionPanel
 
   HtmlElement? _headerContent;
   @ViewChild('headerContent')
-  set headerContent(HtmlElement headerContent) =>
+  set headerContent(HtmlElement? headerContent) =>
       _headerContent = headerContent;
 
   HtmlElement? _actionContent;
   @ViewChild('action')
-  set actionContent(HtmlElement headerContent) =>
+  set actionContent(HtmlElement? headerContent) =>
       _actionContent = headerContent;
 
   HtmlElement? _contentWrapper;
   @ViewChild('contentWrapper')
-  set contentWrapper(HtmlElement contentWrapper) {
+  set contentWrapper(HtmlElement? contentWrapper) {
     _contentWrapper = contentWrapper;
     _completeExpandedPanelHeightReadsIfPossible();
   }
@@ -467,7 +467,7 @@ class MaterialExpansionPanel
   /// [hideExpandedHeader] is set to `true`.
   ButtonDirective? _expandCollapseButton;
   @ViewChild('expandCollapseButton', read: ButtonDirective)
-  set expandCollapse(ButtonDirective button) {
+  set expandCollapse(ButtonDirective? button) {
     _expandCollapseButton = button;
   }
 

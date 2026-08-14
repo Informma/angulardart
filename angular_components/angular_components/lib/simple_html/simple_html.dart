@@ -81,12 +81,12 @@ class SimpleHtmlComponent extends _SimpleHtmlBase {
       DomService domService,
       this._element,
       @Optional() @Inject(simpleHtmlUriWhitelist) List<Uri>? domainWhitelist,
-      @Attribute('doNotVerifyUrlDestinations') String externalUrisAllowed)
+      @Attribute('doNotVerifyUrlDestinations') String? externalUrisAllowed)
       : super(
             domService,
             _inlineElementValidatorBuilder(
                 domainWhitelist ?? _defaultUriWhitelist,
-                attributeToBool(externalUrisAllowed)));
+                attributeToBool(externalUrisAllowed ?? '')));
 
   @override
   Element? get targetElement =>
@@ -106,11 +106,11 @@ class SimpleHtmlBlockComponent extends _SimpleHtmlBase {
       DomService domService,
       this._element,
       @Optional() @Inject(simpleHtmlUriWhitelist) List<Uri>? domainWhitelist,
-      @Attribute('doNotVerifyUrlDestinations') String externalUrisAllowed)
+      @Attribute('doNotVerifyUrlDestinations') String? externalUrisAllowed)
       : super(
             domService,
             _elementValidator(domainWhitelist ?? _defaultUriWhitelist,
-                attributeToBool(externalUrisAllowed)));
+                attributeToBool(externalUrisAllowed ?? '')));
 
   @override
   Element? get targetElement =>

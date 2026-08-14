@@ -254,7 +254,7 @@ class MaterialPopupComponent extends Object
 
   MaterialPopupComponent(
       @Optional() @SkipSelf() this._hierarchy,
-      @Optional() @SkipSelf() MaterialPopupComponent parentPopup,
+      @Optional() @SkipSelf() MaterialPopupComponent? parentPopup,
       @Attribute('role') this.role,
       this._ngZone,
       this._overlayService,
@@ -268,8 +268,10 @@ class MaterialPopupComponent extends Object
       this._viewContainer,
       this.elementRef) {
     // Close popup if parent closes.
-    _disposer
-        .addStreamSubscription(parentPopup.onClose.listen((_) => close()));
+    if (parentPopup != null) {
+      _disposer
+          .addStreamSubscription(parentPopup.onClose.listen((_) => close()));
+    }
 
     // Create the PopupRef for the ACX focus library.
     _resolvedPopupRef = MaterialPopupRef(this);

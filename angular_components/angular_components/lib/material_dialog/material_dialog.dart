@@ -73,9 +73,9 @@ class MaterialDialogComponent
   }
 
   @ViewChild('main', read: HtmlElement)
-  set main(HtmlElement element) {
+  set main(HtmlElement? element) {
     _mainElement = element;
-    _disposer.addStreamSubscription(element.onScroll.listen((_) {
+    _disposer.addStreamSubscription(element!.onScroll.listen((_) {
       _setHeaderFooterScrollBorder();
     }));
     if (_modal == null) return;

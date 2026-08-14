@@ -24,13 +24,13 @@ class FocusTrapComponent implements OnDestroy {
 
   AutoFocusDirective? _autoFocusDirective;
   @ContentChild(AutoFocusDirective)
-  set autoFocus(AutoFocusDirective value) {
+  set autoFocus(AutoFocusDirective? value) {
     _autoFocusDirective = value;
   }
 
   FocusContentWrapper? _content;
   @ViewChild(FocusContentWrapper)
-  set content(FocusContentWrapper value) {
+  set content(FocusContentWrapper? value) {
     _content = value;
     if (_content != null && _autoFocusDirective == null) {
       _content!._element.focus();

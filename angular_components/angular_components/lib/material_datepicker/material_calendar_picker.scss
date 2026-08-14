@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @import 'constants';
-@import 'package:angular_components/material_datepicker/mixins';
-@import 'package:angular_components/css/material/material';
-@import 'package:angular_components/css/material/mixins';
+@import 'package:angulardart_components/material_datepicker/mixins';
+@import 'package:angulardart_components/css/material/material';
+@import 'package:angulardart_components/css/material/mixins';
 
 @mixin calendar-slot-size($slot-size) {
   line-height: $slot-size;

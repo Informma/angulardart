@@ -64,7 +64,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
       @Optional() this._dropdown,
       @Optional() this._activationHandler,
       this._cdRef,
-      @Attribute('role') String role,
+      @Attribute('role') String? role,
       {bool addTabIndexWhenNonTabbable = false})
       : super(element, role,
             addTabIndexWhenNonTabbable: addTabIndexWhenNonTabbable) {

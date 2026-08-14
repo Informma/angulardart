@@ -59,17 +59,17 @@ class MaterialCheckboxComponent
   final String _defaultTabIndex;
 
   @HostBinding('attr.role')
-  final String role;
+  final String? role;
   Function? _onTouched;
 
   MaterialCheckboxComponent(
       this._root,
       this._changeDetector,
       @Self() @Optional() NgControl? cd,
-      @Attribute('tabindex') String hostTabIndex,
+      @Attribute('tabindex') String? hostTabIndex,
       @Attribute('role') this.role)
       : _defaultTabIndex =
-            hostTabIndex.isNotEmpty ? hostTabIndex : '0' {
+            (hostTabIndex ?? '').isNotEmpty ? hostTabIndex! : '0' {
     // When NgControl is present on the host element, the component
     // participates in the Forms API.
     if (cd != null) {

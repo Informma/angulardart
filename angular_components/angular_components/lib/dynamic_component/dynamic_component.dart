@@ -31,7 +31,7 @@ class DynamicComponent implements OnDestroy, AfterChanges {
   bool _loadDeferred = false;
 
   @ViewChild('marker', read: ViewContainerRef)
-  set viewContainerRef(ViewContainerRef value) {
+  set viewContainerRef(ViewContainerRef? value) {
     _viewContainerRef = value;
     if (_loadDeferred) {
       _initialize();

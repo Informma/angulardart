@@ -68,9 +68,11 @@ class MaterialTreeNode<T> {
   }
 
   /// Whether the parent node can be selected in single select mode
+  @Input()
   bool allowParentSingleSelection = false;
 
   /// Whether the parent node can be selected in multi select mode
+  @Input()
   bool allowParentMultiSelection = true;
 
   /// The current node.

@@ -82,7 +82,7 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
   int _inputLineHeight = 16;
 
   MaterialMultilineInputComponent(
-      @Self() @Optional() NgControl super.cd,
+      @Self() @Optional() super.cd,
       super.changeDetector,
       super.validator,
       this._domService)
@@ -104,14 +104,14 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
   String get mirrorText => '$inputText\n';
 
   @ViewChild('lineHeightMeasure')
-  set lineHeightMeasure(ElementRef value) {
+  set lineHeightMeasure(ElementRef? value) {
     // There's currently no strong use case of line height changing after it's
     // been measured. So we only measure it once when the view is rendered.
     _domService.scheduleRead(() {
       var isDestroyed = textareaEl == null;
       if (isDestroyed) return;
 
-      var height = (value.nativeElement as Element).clientHeight;
+      var height = (value!.nativeElement as Element).clientHeight;
       if (height != 0) {
         _inputLineHeight = height;
         _subscription?.cancel();

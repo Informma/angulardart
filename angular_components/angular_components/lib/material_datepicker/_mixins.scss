@@ -4,9 +4,9 @@
 
 // SASS mixins that deal with the calendar.
 @import 'constants';
-@import 'package:angular_components/css/material/material';
-@import 'package:angular_components/css/material/mixins';
-@import 'package:angular_components/material_select/mixins';
+@import 'package:angulardart_components/css/material/material';
+@import 'package:angulardart_components/css/material/mixins';
+@import 'package:angulardart_components/material_select/mixins';
 
 // Defines calendar highlight colors for the calendar selected with the given
 // selector. It's meant to be included at the top-level so that the

@@ -723,7 +723,7 @@ class MaterialCalendarPickerComponent
 
   MaterialCalendarPickerComponent(
       @Optional() @Inject(datepickerClock) Clock? clock,
-      Clock? legacyClock,
+      @Optional() Clock? legacyClock,
       @Attribute('mode') String? mode) {
     // TODO(google): Migrate to use only datepickerClock
     clock ??= legacyClock;
@@ -741,8 +741,8 @@ class MaterialCalendarPickerComponent
   }
 
   @ViewChild('container')
-  set container(HtmlElement container) {
-    _container = container;
+  set container(HtmlElement? container) {
+    _container = container as HtmlElement;
     _scroller = container.parent as HtmlElement;
   }
 

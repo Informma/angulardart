@@ -27,17 +27,17 @@ class PopupSizeProviderDirective implements PopupSizeProvider {
   PopupSizeProvider? _parentPopupSizeProvider;
 
   PopupSizeProviderDirective(
-      @Attribute('popupMinHeight') String minHeight,
-      @Attribute('popupMinWidth') String minWidth,
-      @Attribute('popupMaxHeight') String maxHeight,
-      @Attribute('popupMaxWidth') String maxWidth,
+      @Attribute('popupMinHeight') String? minHeight,
+      @Attribute('popupMinWidth') String? minWidth,
+      @Attribute('popupMaxHeight') String? maxHeight,
+      @Attribute('popupMaxWidth') String? maxWidth,
       @Optional() @SkipSelf() this._parentPopupSizeProvider) {
     _minHeight =
-        _SizeDefinition.fromString(minHeight);
-    _minWidth = _SizeDefinition.fromString(minWidth);
+        minHeight == null ? null : _SizeDefinition.fromString(minHeight);
+    _minWidth = minWidth == null ? null : _SizeDefinition.fromString(minWidth);
     _maxHeight =
-        _SizeDefinition.fromString(maxHeight);
-    _maxWidth = _SizeDefinition.fromString(maxWidth);
+        maxHeight == null ? null : _SizeDefinition.fromString(maxHeight);
+    _maxWidth = maxWidth == null ? null : _SizeDefinition.fromString(maxWidth);
 
     // Define a reasonable default if for some reason a parent
     // PopupSizeProvider is not injected.

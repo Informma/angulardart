@@ -8,7 +8,7 @@ the material spec.
 ## Setup
 
 The styles are provided by
-`package:angular_components/app_layout/layout.scss.css`. To use these styles in
+`package:angulardart_components/app_layout/layout.scss.css`. To use these styles in
 an angular component simply add it as a `styleUrls` value in your `Component`
 annotation. It is suggested that the style is added before any component
 specific styling so you can easily override style values as needed.
@@ -18,7 +18,7 @@ specific styling so you can easily override style values as needed.
     selector: 'my-component',
     templateUrl: 'my_component.html',
     styleUrls: const [
-      'package:angular_components/app_layout/layout.scss.css',
+      'package:angulardart_components/app_layout/layout.scss.css',
       'my_component.scss.css'])
 class MyComponent {}
 ```
@@ -271,7 +271,7 @@ using a mixin.
 Example scss drawer content component:
 
 ```scss
-@import 'package:angular_components/lib/app_layout/mixins';
+@import 'package:angulardart_components/lib/app_layout/mixins';
 
 :host {
   @include mat-drawer-list-items;

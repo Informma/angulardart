@@ -39,12 +39,12 @@ class PopupSourceDirective
   /// set to false for cases where the popup source isn't the focus target.
   PopupSourceDirective(
       this._domPopupSourceFactory,
-      this._element,
+      @Optional() this._element,
       @Optional() this._referenceDirective,
       @Optional() this._focusable,
-      @Attribute('initPopupAriaAttributes') String initAriaAttributes)
+      @Attribute('initPopupAriaAttributes') String? initAriaAttributes)
       : _initAriaAttributes =
-            attributeToBool(initAriaAttributes, defaultValue: true);
+            attributeToBool(initAriaAttributes ?? '', defaultValue: true);
 
   @override
   ngOnDestroy() {

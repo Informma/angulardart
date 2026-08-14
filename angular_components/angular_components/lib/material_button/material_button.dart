@@ -94,7 +94,7 @@ class MaterialButtonComponent extends MaterialButtonBase {
   }
 
   MaterialButtonComponent(HtmlElement element, AcxDarkTheme darktheme,
-      this._changeDetector, @Attribute('role') String role)
+      this._changeDetector, @Attribute('role') String? role)
       : super(element, role) {
     darktheme.themeElement(element);
   }

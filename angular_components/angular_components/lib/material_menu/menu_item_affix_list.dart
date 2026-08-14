@@ -41,7 +41,7 @@ class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
 
   @ViewChild('loadPoint', read: ViewContainerRef)
   @visibleForTemplate
-  late ViewContainerRef viewRef;
+  ViewContainerRef? viewRef;
 
   bool _disabled = false;
 
@@ -80,7 +80,7 @@ class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
   }
 
   void _clearChildren() {
-    viewRef.clear();
+    viewRef!.clear();
     for (final ref in _affixComponentRefs.expand((ref) => ref.componentRef)) {
       ref.destroy();
     }
@@ -134,7 +134,7 @@ class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
       {int index = -1}) {
     if (!affix.isVisible) return _AffixRef.hidden(affix);
 
-    final componentRef = viewRef.createComponent(affix.componentFactory, index);
+    final componentRef = viewRef!.createComponent(affix.componentFactory, index);
     (componentRef.location as dynamic).classes.add('affix');
     return _AffixRef(
         affix,

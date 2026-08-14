@@ -692,7 +692,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   @Input()
   String? inputAriaControls;
 
-  BaseSingleLineInputComponent(String type, String multiple, NgControl cd,
+  BaseSingleLineInputComponent(String type, String multiple, NgControl? cd,
       ChangeDetectorRef changeDetector, DeferredValidator validator)
       : super(cd, changeDetector, validator) {
     if (const ['number', 'tel'].contains(type)) {

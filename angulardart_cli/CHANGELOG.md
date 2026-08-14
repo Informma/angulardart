@@ -1,3 +1,7 @@
+## 1.9.1
+
+- fix: les commandes SSR/hybride/SSR+SEO génèrent désormais `dart run build_runner build web --release` (le build dev/DDC produisait un `main.dart.js` dépendant de `require.js`, non servi par le serveur standalone).
+
 ## 1.9.0
 
 - feat: les templates `bin/server.dart` (SSR) servent les assets statiques (`styles.css`, `main.dart.js`, ...) depuis `web/` et `.dart_tool/build/generated/<pkg>/web/`.

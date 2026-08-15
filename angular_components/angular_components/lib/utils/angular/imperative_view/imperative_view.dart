@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
 import 'package:angulardart_components/utils/disposer/disposer.dart';
 

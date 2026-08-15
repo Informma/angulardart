@@ -3,12 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
 import 'package:angulardart_components/interfaces/has_disabled.dart';
 import 'package:angulardart_components/mixins/has_tab_index.dart';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 import 'package:angulardart_components/utils/browser/events/events.dart';
 
 /// ButtonDirective adds all basic required a11y functional for any element,

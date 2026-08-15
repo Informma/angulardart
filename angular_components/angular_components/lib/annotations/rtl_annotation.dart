@@ -2,9 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
-
 import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 
 /// Annotation bound to a boolean which is used to indicate that a complete
 /// web page is RTL.

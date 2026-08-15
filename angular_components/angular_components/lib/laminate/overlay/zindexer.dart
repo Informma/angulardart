@@ -2,17 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@JS()
-library;
-
 import 'package:angulardart/angulardart.dart';
-import 'package:js/js.dart';
-
-@JS('acxZIndex')
-external int get _currentZIndex;
-
-@JS('acxZIndex')
-external set _currentZIndex(int value);
+import 'package:angulardart_components/src/dom/js_apis.dart';
 
 /// The layout tools will monotonically increment the zIndex for hoverable
 /// elements.
@@ -26,7 +17,7 @@ class ZIndexer {
   static ZIndexer? _currentInstance;
 
   static void _initZIndex() {
-    _currentZIndex = hoverableAutoIncrement;
+    jsGlobalSet('acxZIndex', hoverableAutoIncrement);
   }
 
   factory ZIndexer() {
@@ -38,8 +29,12 @@ class ZIndexer {
   }
 
   /// Increment and get the current z-index.
-  int pop() => ++_currentZIndex;
+  int pop() {
+    final next = (jsGlobalGet('acxZIndex') as int) + 1;
+    jsGlobalSet('acxZIndex', next);
+    return next;
+  }
 
   /// Peek at the current z-index without changing it.
-  int peek() => _currentZIndex;
+  int peek() => jsGlobalGet('acxZIndex') as int;
 }

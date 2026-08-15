@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 
 import 'package:angulardart/angulardart.dart' hide Visibility;
 import 'package:angulardart_components/laminate/enums/visibility.dart';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 import 'package:angulardart_components/src/laminate/overlay/overlay_state.dart';
 import 'package:angulardart_components/src/laminate/overlay/render/overlay_style_config.dart';
 import 'package:angulardart_components/laminate/overlay/zindexer.dart';

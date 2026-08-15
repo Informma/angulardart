@@ -2,9 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
-
 import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 import 'package:angulardart_components/theme/module.dart';
 
 /// The class applied to elements which have been themed, iff the dark theme is

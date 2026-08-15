@@ -188,6 +188,16 @@ class ServerRenderNode implements RenderNode {
   @override
   Object get nativeNode => this;
 
+  /// Tolerate browser-only DOM API calls (e.g. `addEventListener`,
+  /// `getBoundingClientRect`) made by component code on the server.
+  ///
+  /// Server-side rendering has no live DOM; such calls are safely ignored so
+  /// that components built against `dart:html` still render their static
+  /// markup. This is the "best-effort" rendering contract: any DOM interaction
+  /// is a no-op.
+  @override
+  dynamic noSuchMethod(Invocation invocation) => null;
+
   /// Gnre le HTML string pour ce nud et ses enfants.
   String toHtml() {
     final buffer = StringBuffer();

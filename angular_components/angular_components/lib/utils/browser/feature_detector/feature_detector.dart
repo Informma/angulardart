@@ -2,10 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
-import 'dart:js' as js;
-
-import 'package:js/js_util.dart' as js_util;
+import 'package:angulardart_components/src/dom/dom_apis.dart';
+import 'package:angulardart_components/src/dom/js_apis.dart';
 
 /// Provides information of current browser features.
 
@@ -28,7 +26,7 @@ bool supportsHover(Window window) =>
 /// [TouchEvent.supported] instead.
 final bool isTouchInterface =
     window.matchMedia('(pointer: coarse)').matches ||
-        js.context.hasProperty('__acxForceTouchEnabled');
+        jsContextHasProperty('__acxForceTouchEnabled');
 
 /// Returns true if Hammer.js is loaded in the current browser.
 ///
@@ -36,19 +34,19 @@ final bool isTouchInterface =
 /// Apps that want to use Hammer's recognizers need to load
 /// https://www.gstatic.com/external_hosted/hammerjs/v2_0_2/hammer.min.js
 /// into the browser before bootstrapping.
-bool isHammerLoaded() => js.context.hasProperty('Hammer');
+bool isHammerLoaded() => jsContextHasProperty('Hammer');
 
 /// Whether the browser supports the Web Animations API.
 final bool supportsAnimationApi =
-    js_util.hasProperty(DivElement(), 'animate') &&
-        !js.context.hasProperty('__acxDisableWebAnimationsApi');
+    jsHasProperty(DivElement(), 'animate') &&
+        !jsContextHasProperty('__acxDisableWebAnimationsApi');
 
 /// Whether the browser supports IntersectionObserver.
 final bool supportsIntersectionObserver =
-    js.context.hasProperty('IntersectionObserver');
+    jsContextHasProperty('IntersectionObserver');
 
 /// Whether the browser supports ResizeObserver.
-final bool supportsResizeObserver = js.context.hasProperty('ResizeObserver');
+final bool supportsResizeObserver = jsContextHasProperty('ResizeObserver');
 
 /// Whether the browser supports position: sticky.
 final bool supportsPositionSticky = () {

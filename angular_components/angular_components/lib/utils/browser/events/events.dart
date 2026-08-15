@@ -2,15 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@JS()
 library;
 
 import 'dart:async';
-import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
-import 'package:js/js.dart';
-import 'package:js/js_util.dart' as js_util;
+import 'package:angulardart_components/src/dom/dom_apis.dart';
+import 'package:angulardart_components/src/dom/js_apis.dart';
 import 'package:angulardart_components/utils/browser/feature_detector/feature_detector.dart';
 
 /// Determines if the space key was pressed in a [KeyboardEvent].
@@ -216,7 +214,7 @@ bool isParentOf(Element element, Node? node) {
 ///     elements.sort(compareDocumentPosition);
 ///     // Now they're sorted according to their position in the document.
 int compareDocumentPosition(Node a, Node b) {
-  int bitmask = js_util.callMethod(a, 'compareDocumentPosition', [b]);
+  int bitmask = jsCallMethod(a, 'compareDocumentPosition', [b]) as int;
   if ((bitmask & 4) != 0 || (bitmask & 16) != 0) {
     // DOCUMENT_POSITION_FOLLOWING or DOCUMENT_POSITION_CONTAINED_BY
     return -1;

@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 
 /// A base class from which to build buttons.
 class MaterialButtonBase extends ButtonDirective {

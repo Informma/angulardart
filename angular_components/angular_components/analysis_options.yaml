@@ -1,6 +1,8 @@
 include: package:lints/recommended.yaml
 
 analyzer:
+  exclude:
+    - "**/*.template.dart"
   errors:
     dead_code: warning
     todo: ignore

@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/content/deferred_content_aware.dart';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 import 'package:angulardart_components/src/laminate/components/modal/modal_controller_directive.dart';
 import 'package:angulardart_components/laminate/overlay/overlay.dart';
 import 'package:angulardart_components/model/action/async_action.dart';

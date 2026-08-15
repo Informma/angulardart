@@ -3,12 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html' show KeyCode, KeyboardEvent, Element, HtmlElement;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:meta/meta.dart';
 import 'package:angulardart_components/laminate/components/modal/modal.dart';
 import 'package:angulardart_components/laminate/popup/popup.dart';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
 import 'package:angulardart_components/utils/disposer/disposer.dart';
 

@@ -1,3 +1,7 @@
+## 9.4.3
+
+- fix: rendre `ServerRenderNode`'s class-set (`_ServerClassSet`) itérable (miroir du `CssClassSet` navigateur) pour que les composants qui parcourent les classes (`constructEncapsulatedCss`, etc.) fonctionnent en rendu SSR sur la VM.
+
 ## 9.4.2
 
 - fix: durcir `ServerRenderNode` contre les appels DOM chaînés — expose des `attributes`/`style`/`classes`/`children` réels et un `getBoundingClientRect` sûr, pour que le rendu SSR ne plante plus sur `element.attributes['x'] = y` ou `element.style.width = '...'`.

@@ -3,6 +3,7 @@
 /// Utilise un [StringBuffer] pour accumuler le HTML au lieu de manipuler le DOM.
 /// Ce fichier est autonome et ne dpends pas de angulardart_server pour viter
 /// des dpendances circulaires.
+import 'dart:collection' show IterableBase;
 import 'dart:math' show Rectangle;
 
 import 'render_node.dart';
@@ -386,10 +387,16 @@ class _ServerStyleDeclaration {
 ///
 /// Records class mutations so they are emitted in the rendered `class`
 /// attribute.
-class _ServerClassSet {
+class _ServerClassSet extends IterableBase<String> {
   final List<MapEntry<String, bool>> _classes;
 
   _ServerClassSet(this._classes);
+
+  @override
+  Iterator<String> get iterator => _classes
+      .where((e) => e.value)
+      .map((e) => e.key)
+      .iterator;
 
   bool add(String className) {
     _classes.add(MapEntry(className, true));
@@ -407,12 +414,14 @@ class _ServerClassSet {
     return enabled;
   }
 
-  bool contains(String className) =>
-      _classes.any((e) => e.key == className && e.value);
+  @override
+  bool contains(Object? element) => element is String &&
+      _classes.any((e) => e.key == element && e.value);
 
   void addAll(Iterable<String> classes) => classes.forEach(add);
 
   void removeAll(Iterable<String> classes) => classes.forEach(remove);
 
-  int get length => _classes.length;
+  @override
+  int get length => _classes.where((e) => e.value).length;
 }

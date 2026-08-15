@@ -7,6 +7,13 @@ targets:
         enabled: False
       angulardart_components|scss_builder:
         enabled: True
+      angulardart:
+        generate_for:
+          exclude:
+            - "lib/*.dart"
+            - "lib/**/*.dart"
+            - "lib/*.css"
+            - "lib/**/*.css"
   scss_builder:
     sources: ["lib/builder.dart"]
     dependencies:

@@ -85,7 +85,7 @@ class SelectionOptions<T> extends GroupedOptions<T>
       StreamController<List<OptionGroup<T>>>.broadcast(sync: true);
 
   late List<T> _flattenedList;
-  late List<OptionGroup<T>> _optionGroups;
+  List<OptionGroup<T>> _optionGroups = <OptionGroup<T>>[];
 
   /// Creates an instance with the given option groups.
   SelectionOptions(List<OptionGroup<T>> optionGroups) {

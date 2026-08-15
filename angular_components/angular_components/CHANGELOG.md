@@ -1,3 +1,8 @@
+## 3.4.1
+
+- fix: `build.yaml` — exclure le builder `angulardart` des fichiers `lib/` (`.dart` et `.css`) pour lever le conflit `existing files in dependencies which conflict with files that a Builder may produce` lors du build d'un projet consommateur (les `.template.dart`/`.scss.css*` sont déjà pré-compilés).
+- fix: `SelectionOptions` — initialiser `_optionGroups` (lecture `late` avant écriture dans le setter) qui provoquait un `LateInitializationError` à la construction de `StringSelectionOptions`/`SelectionOptions.fromFuture`/`fromStream`.
+
 ## 3.4.0
 
 - feat: compatibilité SSR/AOT complète — migration de toutes les sources `dart:html`/`dart:js` restantes vers `dom_apis`/`js_apis` et livraison de ~296 `.template.dart` + 140 `.scss.css*` pré-compilés.

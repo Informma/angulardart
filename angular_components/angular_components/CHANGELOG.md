@@ -1,3 +1,9 @@
+## 3.4.0
+
+- feat: compatibilité SSR/AOT complète — migration de toutes les sources `dart:html`/`dart:js` restantes vers `dom_apis`/`js_apis` et livraison de ~296 `.template.dart` + 140 `.scss.css*` pré-compilés.
+- fix: null-safety restante — paramètres `@Attribute` nullables, assertions `!` sur les bindings nullables, inputs typés (`ValidityCheck`/`CharacterCounter`), générique `OptionGroup<T>`, `activeStep!.hideButtons`, etc.
+- fix: corriger `material_toggle` (`shadow_z` → `shadowZ`) et les proto `.pb.dart` pour la compilation AOT Dart 3.
+
 ## 3.3.1
 
 - fix: corriger `build.yaml` — renommer la cible principale `angular_components` en `$default` (exigée par `build_config >=1.0`).

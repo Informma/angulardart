@@ -1,0 +1,1 @@
+final List<Object> styles = ['[buttonDecorator] {\n  cursor: pointer;\n}\n[buttonDecorator].is-disabled {\n  cursor: not-allowed;\n}\n'];

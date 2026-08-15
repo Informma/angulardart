@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -16,7 +16,7 @@ import 'package:angulardart_forms/angulardart_forms.dart';
 import 'base_material_input.dart';
 import 'deferred_validator.dart';
 
-export 'base_material_input.dart' show ValidityCheck, CharacterCounter;
+export 'input_wrapper.dart' show ValidityCheck, CharacterCounter;
 
 /// `material-input` is a multi-line text field where user can enter
 /// input, and can optionally have a label.

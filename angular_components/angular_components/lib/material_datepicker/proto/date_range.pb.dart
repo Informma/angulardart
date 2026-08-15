@@ -71,7 +71,8 @@ class DatepickerDateRange extends $pb.GeneratedMessage {
   DatepickerDateRange clone() => DatepickerDateRange()..mergeFromMessage(this);
   @$core.override
   DatepickerDateRange copyWith(void Function(DatepickerDateRange) updates) =>
-      super.copyWith((message) => updates(message as DatepickerDateRange));
+      super.copyWith((message) => updates(message as DatepickerDateRange))
+          as DatepickerDateRange;
   @$core.override
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
@@ -86,7 +87,7 @@ class DatepickerDateRange extends $pb.GeneratedMessage {
   static DatepickerDateRange? _defaultInstance;
 
   DatepickerDateRange_RelativePreset whichRelativePreset() =>
-      _DatepickerDateRange_RelativePresetByTag[$_whichOneof(0)];
+      _DatepickerDateRange_RelativePresetByTag[$_whichOneof(0)]!;
   void clearRelativePreset() => clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -257,7 +258,7 @@ class DateRange extends $pb.GeneratedMessage {
   DateRange clone() => DateRange()..mergeFromMessage(this);
   @$core.override
   DateRange copyWith(void Function(DateRange) updates) =>
-      super.copyWith((message) => updates(message as DateRange));
+      super.copyWith((message) => updates(message as DateRange)) as DateRange;
   @$core.override
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')

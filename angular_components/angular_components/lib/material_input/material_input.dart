@@ -16,7 +16,7 @@ import 'material_input_multiline.dart';
 
 export 'package:angulardart_forms/angulardart_forms.dart' show NgModel;
 
-export 'base_material_input.dart' show ValidityCheck, CharacterCounter;
+export 'input_wrapper.dart' show ValidityCheck, CharacterCounter;
 export 'material_input_default_value_accessor.dart';
 export 'material_input_multiline.dart';
 

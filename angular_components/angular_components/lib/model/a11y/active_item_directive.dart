@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html' as dom;
 
 import 'package:angulardart/angulardart.dart';
-import 'package:js/js_util.dart' as js_util;
+import 'package:angulardart_components/src/dom/dom_apis.dart' as dom;
+import 'package:angulardart_components/src/dom/js_apis.dart';
 import 'package:angulardart_components/laminate/components/modal/modal.dart';
 import 'package:angulardart_components/laminate/popup/popup.dart';
 import 'package:angulardart_components/utils/browser/dom_service/dom_service.dart';
@@ -95,10 +95,10 @@ class ActiveItemDirective implements AfterViewInit, OnDestroy {
   void _scrollIntoView() {
     _domService.scheduleWrite(() {
       try {
-        var options = js_util.newObject();
-        js_util.setProperty(options, 'block', 'nearest');
-        js_util.setProperty(options, 'inline', 'nearest');
-        js_util.callMethod(_element, 'scrollIntoView', [options]);
+        var options = jsNewObject();
+        jsSetProperty(options, 'block', 'nearest');
+        jsSetProperty(options, 'inline', 'nearest');
+        jsCallMethod(_element, 'scrollIntoView', [options]);
       } catch (_) {
         _element.scrollIntoView();
       }

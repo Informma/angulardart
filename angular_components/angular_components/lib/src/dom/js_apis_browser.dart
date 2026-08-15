@@ -15,6 +15,14 @@ bool jsHasProperty(Object object, String name) =>
 dynamic jsCallMethod(Object object, String method, List<Object?> args) =>
     js_util.callMethod(object, method, args);
 
+/// Creates a new JavaScript object.
+dynamic jsNewObject() => js_util.newObject();
+
+/// Sets [property] to [value] on [object].
+void jsSetProperty(Object object, String property, dynamic value) {
+  js_util.setProperty(object, property, value);
+}
+
 /// Wraps [fn] so it can be called from JavaScript.
 dynamic allowInterop(dynamic fn) => js_util.allowInterop(fn as Function);
 

@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html' show Event;
+import 'package:angulardart_components/src/dom/dom_apis.dart' show Event;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';

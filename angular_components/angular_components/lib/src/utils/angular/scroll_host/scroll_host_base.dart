@@ -3,11 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
 import 'dart:math' show max;
 
 import 'package:angulardart/angulardart.dart';
-import 'package:js/js.dart' as js;
+import 'package:angulardart_components/src/dom/dom_apis.dart';
+import 'package:angulardart_components/src/dom/js_apis.dart';
 import 'package:logging/logging.dart' show Logger;
 import 'package:angulardart_components/src/utils/angular/scroll_host/gestures.dart';
 import 'package:angulardart_components/src/utils/angular/scroll_host/pan_controller_impl.dart';
@@ -85,7 +85,7 @@ abstract class ScrollHostBase implements ScrollHost {
       var root = scrollbarHost is Element ? scrollbarHost : null;
       _intersectionObserver = IntersectionObserver(
           // allowInterop still required; otherwise this breaks under dart2js.
-          js.allowInterop(_onIntersection),
+          allowInterop(_onIntersection),
           {'root': root});
     }
   }

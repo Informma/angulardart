@@ -31,7 +31,7 @@ class Date extends $pb.GeneratedMessage {
   Date clone() => Date()..mergeFromMessage(this);
   @$core.override
   Date copyWith(void Function(Date) updates) =>
-      super.copyWith((message) => updates(message as Date));
+      super.copyWith((message) => updates(message as Date)) as Date;
   @$core.override
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')

@@ -1,0 +1,1 @@
+final List<Object> styles = [':host {\n  display: block;\n}\n\n[focusContentWrapper] {\n  height: inherit;\n  max-height: inherit;\n  min-height: inherit;\n}\n'];

@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/model/menu/menu.dart';
@@ -110,7 +110,7 @@ mixin class MenuPopupWrapper implements AcceptsWidth {
   ///
   /// For the meaning of this parameter, see the PopupInterface documentation.
   @Input()
-  Iterable? preferredPositions;
+  Iterable<Object>? preferredPositions;
 }
 
 /// Provides basic accessibility-friendly methods for showing and hiding the

@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 
 import 'package:angulardart/angulardart.dart';
 import 'package:intl/intl.dart';
@@ -226,14 +226,14 @@ abstract class BoundaryAwareKeyDirective implements OnDestroy {
   BoundaryAwareKeyDirective.keypress(
       Element element, @Optional() KeyUpBoundaryDirective? boundary) {
     final stream =
-        boundary?.keyPressStream ?? Element.keyPressEvent.forElement(element);
+        boundary?.keyPressStream ?? element.onKeyPress;
     _subscription = stream.where(_isKeyMatching).listen(_onMatchingKey);
   }
 
   BoundaryAwareKeyDirective.keyup(
       Element element, @Optional() KeyUpBoundaryDirective? boundary) {
     final stream =
-        boundary?.keyUpStream ?? Element.keyUpEvent.forElement(element);
+        boundary?.keyUpStream ?? element.onKeyUp;
     _subscription = stream.where(_isKeyMatching).listen(_onMatchingKey);
   }
 
@@ -271,11 +271,11 @@ class KeyUpBoundaryDirective {
   /// Use this stream when the KeyDirective you are creating cannot use a
   /// keyPress event such as for modifier keys and Esc.
   Stream<KeyboardEvent> get keyUpStream =>
-      _keyUpStream ??= Element.keyUpEvent.forElement(_element);
+      _keyUpStream ??= _element.onKeyUp;
 
   /// Stream of keyPress events.
   Stream<KeyboardEvent> get keyPressStream =>
-      _keyPressStream ??= Element.keyPressEvent.forElement(_element);
+      _keyPressStream ??= _element.onKeyPress;
 }
 
 /// If attached to the yes-no buttons it will listen for escape `keyup` event

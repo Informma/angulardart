@@ -1,0 +1,1 @@
+final List<Object> styles = [':host {\n  display: block;\n}\n:host[centerStrip] > material-tab-strip {\n  margin: 0 auto;\n}\n'];

@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 
 import 'package:angulardart_components/material_datepicker/calendar.dart';
 import 'package:angulardart_components/model/date/date.dart';

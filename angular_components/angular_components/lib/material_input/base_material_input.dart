@@ -3,12 +3,14 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
 import 'package:angulardart_components/forms/error_renderer.dart' show ErrorFn;
 import 'package:angulardart_components/interfaces/has_disabled.dart';
+import 'package:angulardart_components/material_input/input_wrapper.dart'
+    show ValidityCheck, CharacterCounter;
 import 'package:angulardart_components/mixins/focusable_mixin.dart';
 import 'package:angulardart_components/utils/angular/properties/properties.dart';
 import 'package:angulardart_components/utils/angular/reference/reference.dart';
@@ -24,9 +26,6 @@ export 'package:angulardart_components/forms/error_renderer.dart' show ErrorFn;
 
 /// Key used in the Control's error map, when there is an error.
 const String materialInputErrorKey = 'material-input-error';
-
-typedef ValidityCheck = String? Function(String inputText);
-typedef CharacterCounter = int Function(String inputText);
 
 /// Represents which label should be shown in the BottomPanel
 enum BottomPanelState {
@@ -499,16 +498,21 @@ class BaseMaterialInput extends FocusableMixin
   ///
   /// The character count in the form "[currentCount] / [maxCount]", such as
   /// `12 / 25`, when [maxCount] is non-null; otherwise simply "[currentCount]".
-  String msgCharacterCounter(int currentCount, int maxCount) => _msgCharacterCounter(currentCount, maxCount);
+  String msgCharacterCounter(int currentCount, int? maxCount) =>
+      maxCount == null
+          ? '$currentCount'
+          : _msgCharacterCounter(currentCount, maxCount);
 
   /// The aria label to use for the character limit label.
   ///
   /// The character count in the form "text is [currentCount] characters out of
   /// [maxCount]", such as `12 characters out of  25`, when [maxCount] is
   /// non-null; otherwise simply "Text is [currentCount] characters".
-  String msgCharacterCounterAriaLabel(int currentCount, int maxCount) =>
+  String msgCharacterCounterAriaLabel(int currentCount, int? maxCount) =>
       _msgCharacterCounterAriaLabelNoLimitation(currentCount) +
-              _msgCharacterCounterAriaLabelWithLimitation(maxCount);
+      (maxCount == null
+          ? ''
+          : _msgCharacterCounterAriaLabelWithLimitation(maxCount));
 
   static String _msgCharacterCounterAriaLabelNoLimitation(int currentCount) =>
       Intl.plural(currentCount,
@@ -692,7 +696,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   @Input()
   String? inputAriaControls;
 
-  BaseSingleLineInputComponent(String type, String multiple, NgControl? cd,
+  BaseSingleLineInputComponent(String? type, String? multiple, NgControl? cd,
       ChangeDetectorRef changeDetector, DeferredValidator validator)
       : super(cd, changeDetector, validator) {
     if (const ['number', 'tel'].contains(type)) {
@@ -704,7 +708,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   } else {
     this.type = type;
   }
-    this.multiple = attributeToBool(multiple);
+    this.multiple = attributeToBool(multiple ?? '');
   }
 
   bool get numeric => type == 'number';

@@ -1,0 +1,1 @@
+final List<Object> styles = ['material-input {\n  width: inherit;\n}\n'];

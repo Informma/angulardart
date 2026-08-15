@@ -12,6 +12,16 @@ bool jsHasProperty(Object object, String name) => false;
 /// Calls a method named [method] on [object] with [args].
 dynamic jsCallMethod(Object object, String method, List<Object?> args) => null;
 
+/// Creates a new JavaScript object (native/AOT stub).
+dynamic jsNewObject() => <String, dynamic>{};
+
+/// Sets [property] to [value] on [object] (native/AOT stub).
+void jsSetProperty(Object object, String property, dynamic value) {
+  if (object is Map) {
+    object[property] = value;
+  }
+}
+
 /// Wraps [fn] so it can be called from JavaScript (no-op passthrough on
 /// native/AOT builds).
 dynamic allowInterop(dynamic fn) => fn;

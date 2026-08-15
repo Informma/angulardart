@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:html';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/content/deferred_content.dart';
@@ -43,7 +43,7 @@ import 'tooltip_target.dart';
                         class="aacmtit-ink-tooltip-shadow {{popupClassName}}"
                         trackLayoutChanges
                         [preferredPositions]="positions"
-                        [source]="popupSource"
+                        [source]="popupSource!"
                         [visible]="showPopup">
           <div *deferredContent class="ink-container"
                (mouseover)="onMouseOver()"

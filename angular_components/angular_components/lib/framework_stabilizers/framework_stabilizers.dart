@@ -2,10 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@JS()
-library;
-
-import 'package:js/js.dart';
+import 'package:angulardart_components/src/dom/js_apis.dart';
 
 /// Function provided by a framework to register an [IsStableCallback] that is
 /// invoked by the framework when it reaches a stable state.
@@ -17,13 +14,8 @@ typedef FrameworkStabilizer = void Function(IsStableCallback callback);
 typedef IsStableCallback = void Function(bool didWork, String name);
 
 // frameworkStabilizers is a property of the window object.
-@JS('frameworkStabilizers')
-// ignore: unused_element
-external List get _frameworkStabilizersJs;
-
-@JS('frameworkStabilizers')
-// ignore: unused_element
-external set _frameworkStabilizersJs(List values);
+List get _frameworkStabilizersJs =>
+    jsGlobalGet('frameworkStabilizers') as List;
 
 /// Provides a set of helper functions for frameworks to register and deregister
 /// stabilizing functions. These functions will be called by tests, whenever

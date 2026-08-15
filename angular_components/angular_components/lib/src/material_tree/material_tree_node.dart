@@ -166,7 +166,7 @@ class MaterialTreeNode<T> {
   bool isSelected(T option) => _root.selection.isSelected(option);
 
   /// Returns any child groups of [option] that are loaded.
-  Iterable<OptionGroup>? getChildGroups(T option) => _expandedNodes[option];
+  Iterable<OptionGroup<T>>? getChildGroups(T option) => _expandedNodes[option];
 
   /// Expands the given [option].
   ///

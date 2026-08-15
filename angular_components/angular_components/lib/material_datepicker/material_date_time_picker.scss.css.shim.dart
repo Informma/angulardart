@@ -1,0 +1,1 @@
+final List<Object> styles = ['._nghost-%ID%{display:flex}._nghost-%ID% material-datepicker._ngcontent-%ID%{margin-right:16px}'];

@@ -5,6 +5,13 @@
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/interfaces/has_disabled.dart';
 
+/// A function that validates the input text, returning an error message or
+/// `null` when valid.
+typedef ValidityCheck = String? Function(String inputText);
+
+/// A function that counts the characters of the input text.
+typedef CharacterCounter = int Function(String inputText);
+
 // TODO(google): This copies a lot of values from material-input, and yet
 // material-input doesn't use it. Consider refactoring so that these
 // values aren't copied.
@@ -16,11 +23,11 @@ mixin class MaterialInputWrapper implements HasDisabled {
   /// Takes in the input text; returns how many characters the text should be
   /// considered as.
   @Input()
-  Function? characterCounter;
+  CharacterCounter? characterCounter;
 
   @Deprecated('Use forms API instead')
   @Input()
-  Function? checkValid;
+  ValidityCheck? checkValid;
 
   /// Whether this input is disabled.
   @override

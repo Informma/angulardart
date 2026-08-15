@@ -33,7 +33,7 @@
             popupSource
             #subMenuSource="popupSource"
 
-            [autoFocus]="hasAutoFocus(activeModel?.id(item))"
+            [autoFocus]="hasAutoFocus(activeModel.id(item)!)"
             [focusActivableItem]="activeModel?.id(item)"
 
             role="{{group.itemsRole}}"
@@ -101,7 +101,7 @@
         </material-select-item>
         <material-popup
             *ngIf="item.hasSubMenu"
-            [class]="popupClass"
+            [class]="popupClass!"
             [source]="subMenuSource"
             enforceSpaceConstraints
             [preferredPositions]="preferredSubMenuPositions"

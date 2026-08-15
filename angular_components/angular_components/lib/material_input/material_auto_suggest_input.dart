@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html' as html;
+import 'package:angulardart_components/src/dom/dom_apis.dart' as html;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/button_decorator/button_decorator.dart';
@@ -337,7 +337,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   /// Function for use by NgFor for optionGroup to avoid recreating the
   /// DOM for the optionGroup.
-  final Function trackByIndexFn = indexIdentityFn;
+  final Object? Function(int, dynamic) trackByIndexFn = indexIdentityFn;
 
   /// If a parent provides a [PopupSizeProvider], the provider will be used
   /// instead of the implementation of this class.

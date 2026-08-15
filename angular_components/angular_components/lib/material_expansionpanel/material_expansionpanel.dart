@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
 import 'dart:math';
 
 import 'package:angulardart/angulardart.dart';
@@ -665,8 +665,8 @@ class MaterialExpansionPanel
     final completeExpandedHeight = Completer<String>();
 
     _domService.scheduleRead(() {
-      final contentHeight =
-          max(_headerContent!.scrollHeight, _actionContent?.scrollHeight ?? 0);
+      final contentHeight = max<int>(_headerContent!.scrollHeight,
+          _actionContent?.scrollHeight ?? 0);
       var expandedHeaderHeight = '';
 
       final headerPanelStyle = _headerPanel!.getComputedStyle();

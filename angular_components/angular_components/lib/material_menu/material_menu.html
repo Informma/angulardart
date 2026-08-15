@@ -17,7 +17,7 @@
     #toggle="popupSource">
   <material-icon
       *ngIf="hasIcon"
-      [icon]="menu.uiIcon">
+      [icon]="menu!.uiIcon">
   </material-icon>
   <span *ngIf="buttonText != null">{{buttonText}}</span>
   <ng-content select="[menu-button]"></ng-content>

@@ -29,6 +29,15 @@ typedef Node = dynamic;
 /// An HTML `<head>` element (typed `dynamic` on SSR).
 typedef HeadElement = dynamic;
 
+/// A DOM event target (typed `dynamic` on SSR).
+typedef EventTarget = dynamic;
+
+/// A DOM global event handler (typed `dynamic` on SSR).
+typedef GlobalEventHandlers = dynamic;
+
+/// A set of CSS classes (typed `dynamic` on SSR).
+typedef CssClassSet = dynamic;
+
 /// Shared base for concrete element stubs (`DivElement`, `StyleElement`).
 class _ElementBase {
   /// Parent element, or `null` for the root.
@@ -52,6 +61,9 @@ class _ElementBase {
   /// The element's `id` attribute value.
   String id = '';
 
+  /// The element's text content.
+  String text = '';
+
   /// The element's tab index, or `null`.
   int? tabIndex;
 
@@ -69,6 +81,9 @@ class _ElementBase {
 
   /// Appends [child] to this element.
   void append(dynamic child) {}
+
+  /// Appends a text node with [text] to this element.
+  void appendText(String text) {}
 
   /// Registers an event listener.
   void addEventListener(String type, dynamic listener, [bool? useCapture]) {}
@@ -106,9 +121,90 @@ class DivElement extends _ElementBase {
 /// An HTML `<style>` element.
 class StyleElement extends _ElementBase {
   StyleElement();
+}
 
-  /// The style element's text content.
-  String text = '';
+/// An HTML heading (`<h1>`..`<h6>`) element.
+class HeadingElement extends _ElementBase {
+  HeadingElement();
+
+  /// Creates an `<h2>` element.
+  static HeadingElement h2() => HeadingElement();
+}
+
+/// An HTML `<a>` anchor element.
+class AnchorElement extends _ElementBase {
+  AnchorElement({String? href});
+
+  /// The anchor's `rel` attribute value.
+  String rel = '';
+
+  /// The anchor's `target` attribute value.
+  String target = '';
+
+  /// Simulates a click on the anchor.
+  void click() {}
+}
+
+/// An HTML `<input>` element.
+class InputElement extends _ElementBase {
+  InputElement();
+
+  /// The input's value.
+  String value = '';
+
+  /// The input's validity state.
+  dynamic get validity => null;
+
+  /// The input's validation message.
+  String get validationMessage => '';
+}
+
+/// An HTML `<textarea>` element.
+class TextAreaElement extends _ElementBase {
+  TextAreaElement();
+
+  /// The textarea's value.
+  String value = '';
+
+  /// The textarea's validity state.
+  dynamic get validity => null;
+
+  /// The textarea's validation message.
+  String get validationMessage => '';
+}
+
+/// A DOM document fragment.
+class DocumentFragment {
+  DocumentFragment();
+
+  /// Appends [child] to this fragment.
+  void append(dynamic child) {}
+
+  /// Clones this fragment.
+  dynamic clone([bool? deep]) => null;
+}
+
+/// A DOM range.
+class Range {
+  Range();
+
+  /// The start container of the range.
+  dynamic get startContainer => null;
+
+  /// The end container of the range.
+  dynamic get endContainer => null;
+
+  /// Sets the start of the range to just before [element].
+  void setStartBefore(dynamic element) {}
+
+  /// Sets the end of the range to just after [element].
+  void setEndAfter(dynamic element) {}
+}
+
+/// A DOM location (URL of the window).
+class Location {
+  /// The full URL.
+  String href = '';
 }
 
 /// A DOM event.
@@ -121,6 +217,9 @@ class Event {
   /// The event target.
   dynamic get target => null;
 
+  /// The target the event listener was registered on.
+  dynamic get currentTarget => null;
+
   /// The current event phase.
   int get eventPhase => 0;
 
@@ -129,6 +228,12 @@ class Event {
 
   /// Stops the event from propagating to parent nodes.
   void stopPropagation() {}
+
+  /// Stops the event from propagating, including to listeners on this node.
+  void stopImmediatePropagation() {}
+
+  /// Prevents the default action for this event.
+  void preventDefault() {}
 }
 
 /// A UI event.
@@ -139,6 +244,9 @@ class UIEvent extends Event {
 /// A focus event.
 class FocusEvent extends UIEvent {
   FocusEvent(super.type);
+
+  /// The element the focus moved from/to.
+  dynamic get relatedTarget => null;
 }
 
 /// A keyboard event.
@@ -151,8 +259,23 @@ class KeyboardEvent extends UIEvent {
   /// The key value of the pressed key.
   String get key => '';
 
-  /// Prevents the default action for this event.
-  void preventDefault() {}
+  /// The character code of the pressed key.
+  int get charCode => 0;
+
+  /// Whether the Alt key was pressed.
+  bool get altKey => false;
+
+  /// Whether the Control key was pressed.
+  bool get ctrlKey => false;
+
+  /// Whether the Meta key was pressed.
+  bool get metaKey => false;
+
+  /// Whether the Shift key was pressed.
+  bool get shiftKey => false;
+
+  /// Whether the key is being held down (auto-repeat).
+  bool get repeat => false;
 }
 
 /// A mouse event.
@@ -176,6 +299,42 @@ class MouseEvent extends UIEvent {
 
   /// The mouse position relative to the viewport.
   dynamic get client => null;
+
+  /// The mouse position relative to the page.
+  dynamic get page => null;
+}
+
+/// A mouse wheel event.
+class WheelEvent extends MouseEvent {
+  WheelEvent(super.type);
+
+  /// The horizontal scroll amount.
+  num get deltaX => 0;
+
+  /// The vertical scroll amount.
+  num get deltaY => 0;
+
+  /// The unit of measure of the deltas.
+  int get deltaMode => 0;
+}
+
+/// A touch event.
+class TouchEvent extends UIEvent {
+  TouchEvent(super.type);
+
+  /// The list of touches that changed.
+  dynamic get changedTouches => null;
+
+  /// The list of touches on the target.
+  dynamic get targetTouches => null;
+
+  /// The list of active touches.
+  dynamic get touches => null;
+}
+
+/// A CSS transition event.
+class TransitionEvent extends Event {
+  TransitionEvent(super.type);
 }
 
 /// The browser window.
@@ -190,6 +349,30 @@ class Window {
   /// The window's navigator object.
   dynamic get navigator => null;
 
+  /// The window's console object.
+  dynamic get console => null;
+
+  /// The window's document.
+  Document get document => Document.instance;
+
+  /// The window's location.
+  Location get location => Location();
+
+  /// The horizontal scroll offset.
+  int get scrollX => 0;
+
+  /// The vertical scroll offset.
+  int get scrollY => 0;
+
+  /// The viewport width.
+  int get innerWidth => 0;
+
+  /// The viewport height.
+  int get innerHeight => 0;
+
+  /// Scrolls the window to [x], [y].
+  void scrollTo(num x, num y) {}
+
   /// Matches a media query.
   dynamic matchMedia(String query) => null;
 
@@ -202,6 +385,9 @@ class Window {
   /// Stream of animation end events.
   dynamic get onAnimationEnd => null;
 
+  /// Stream of key-up events.
+  dynamic get onKeyUp => null;
+
   /// Stream of resize events.
   dynamic get onResize => null;
 
@@ -210,6 +396,9 @@ class Window {
 
   /// Registers an event listener.
   void addEventListener(String type, dynamic listener, [bool? useCapture]) {}
+
+  /// Removes an event listener.
+  void removeEventListener(String type, dynamic listener, [bool? useCapture]) {}
 
   /// Dispatches an event.
   dynamic dispatchEvent(dynamic event) => null;
@@ -233,11 +422,20 @@ class Document {
   /// The document `<body>` element.
   dynamic get body => null;
 
+  /// The document `<head>` element.
+  dynamic get head => null;
+
   /// Finds the first element matching [selectors].
   dynamic querySelector(String selectors) => null;
 
   /// Finds all elements matching [selectors].
   dynamic querySelectorAll(String selectors) => const [];
+
+  /// Finds the element with the given [id].
+  dynamic getElementById(String id) => null;
+
+  /// Creates an element with the given [tag].
+  dynamic createElement(String tag, [String? typeExtension]) => null;
 
   /// Whether this document contains [other].
   bool contains(dynamic other) => false;
@@ -247,6 +445,9 @@ class Document {
 
   /// Stream of mouse-up events.
   dynamic get onMouseUp => null;
+
+  /// Stream of mouse-move events.
+  dynamic get onMouseMove => null;
 
   /// Stream of click events.
   dynamic get onClick => null;
@@ -260,6 +461,12 @@ class Document {
   /// Stream of key-up events.
   dynamic get onKeyUp => null;
 
+  /// Stream of touch-move events.
+  dynamic get onTouchMove => null;
+
+  /// Stream of touch-end events.
+  dynamic get onTouchEnd => null;
+
   /// Registers an event listener.
   void addEventListener(String type, dynamic listener, [bool? useCapture]) {}
 
@@ -270,6 +477,11 @@ class Document {
 /// An HTML document.
 class HtmlDocument extends Document {
   HtmlDocument();
+
+  static final HtmlDocument _instance = HtmlDocument();
+
+  /// The singleton HTML document instance.
+  static HtmlDocument get instance => _instance;
 }
 
 /// An observer for element resize events.
@@ -283,24 +495,96 @@ class ResizeObserver {
   void disconnect() {}
 }
 
+/// An observer for element intersection events.
+class IntersectionObserver {
+  IntersectionObserver(dynamic callback, [dynamic options]);
+
+  /// Starts observing [element].
+  void observe(dynamic element) {}
+
+  /// Stops observing [element].
+  void unobserve(dynamic element) {}
+
+  /// Stops observing.
+  void disconnect() {}
+}
+
+/// An entry in an [IntersectionObserver] notification.
+class IntersectionObserverEntry {
+  IntersectionObserverEntry();
+
+  /// The observed element.
+  dynamic get target => null;
+
+  /// The intersection rectangle.
+  dynamic get intersectionRect => null;
+}
+
+/// A validator for sanitizing HTML.
+class NodeValidator {
+  /// Whether [element] is allowed.
+  bool allowsElement(dynamic element) => true;
+
+  /// Whether the given attribute is allowed on [element].
+  bool allowsAttribute(dynamic element, String attributeName, String value) =>
+      true;
+}
+
+/// A builder for [NodeValidator] instances.
+class NodeValidatorBuilder extends NodeValidator {
+  NodeValidatorBuilder();
+
+  /// Allows the given element [tagName].
+  NodeValidatorBuilder allowElement(String tagName,
+          {List<String>? attributes, UriPolicy? uriPolicy}) =>
+      this;
+}
+
+/// A policy for validating URIs.
+class UriPolicy {
+  /// Whether [rawUri] is allowed.
+  bool allowsUri(String rawUri) => true;
+}
+
+/// A Web Animations API animation (no-op on native/AOT builds).
+class Animation {
+  /// Cancels the animation.
+  void cancel() {}
+
+  /// Plays the animation.
+  void play() {}
+
+  /// Pauses the animation.
+  void pause() {}
+
+  /// Finishes the animation.
+  void finish() {}
+}
+
 /// An event listener callback.
 typedef EventListener = void Function(Event event);
 
 /// The key codes used by keyboard event handling.
 class KeyCode {
+  static const int BACKSPACE = 8;
+  static const int TAB = 9;
   static const int ENTER = 13;
-  static const int SPACE = 32;
+  static const int ESC = 27;
+  static const int PAGE_UP = 33;
+  static const int PAGE_DOWN = 34;
+  static const int END = 35;
+  static const int HOME = 36;
   static const int LEFT = 37;
   static const int UP = 38;
   static const int RIGHT = 39;
   static const int DOWN = 40;
-  static const int HOME = 36;
-  static const int END = 35;
-  static const int ESC = 27;
+  static const int SPACE = 32;
+  static const int DELETE = 46;
+  static const int NUM_DELETE = 110;
 }
 
 /// The global [Document] instance (stub on native/AOT builds).
-final Document document = Document.instance;
+final HtmlDocument document = HtmlDocument.instance;
 
 /// The global [Window] instance (stub on native/AOT builds).
 final Window window = Window.instance;

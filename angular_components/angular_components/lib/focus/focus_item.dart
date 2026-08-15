@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html' show KeyboardEvent, HtmlElement;
+import 'package:angulardart_components/src/dom/dom_apis.dart'
+    show KeyboardEvent, HtmlElement;
 
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_components/focus/focus.dart';
@@ -19,7 +20,7 @@ class FocusItemDirective extends RootFocusable implements FocusableItem {
   final ChangeDetectorRef _changeDetectorRef;
 
   @HostBinding('attr.role')
-  final String role;
+  final String? role;
 
   FocusItemDirective(HtmlElement super.element, this._changeDetectorRef,
       @Attribute('role') this.role);

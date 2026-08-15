@@ -39,7 +39,7 @@
         <material-list-item (trigger)="hideMenu" class="close-menu" [closeOnActivate]="false">
           <material-icon class="close-icon material-list-item-primary" icon="close"></material-icon>
         </material-list-item>
-        <menu-item-groups [menu]="menuItem.subMenu"
+        <menu-item-groups [menu]="menuItem!.subMenu"
                           [activateFirstItemOnInit]="activateFirstItemOnInit"
                           [activateLastItemOnInit]="activateLastItemOnInit"
                           class="menu-groups"

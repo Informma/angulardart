@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html';
-import 'dart:js_util';
 
 import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_components/src/dom/dom_apis.dart';
+import 'package:angulardart_components/src/dom/js_apis.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/time.dart';
 import 'package:angulardart_components/material_datepicker/calendar.dart';
@@ -368,7 +368,7 @@ class MaterialCalendarPickerComponent
     if (isEdge) {
       slot.text = text;
     } else {
-      setProperty(slot.firstChild!, 'nodeValue', text);
+      jsSetProperty(slot.firstChild!, 'nodeValue', text);
     }
   }
 

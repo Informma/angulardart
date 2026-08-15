@@ -81,7 +81,7 @@ class ViewModalComponent0 extends import0.ComponentView<import1.ModalComponent> 
       if (import11.isDevToolsEnabled) {
         import11.Inspector.instance.recordInput(this._ModalControllerDirective_1_9, 'modalController', currVal_0);
       }
-      this._ModalControllerDirective_1_9.overlay = currVal_0 /* REF:asset:angulardart_components/lib/laminate/components/modal/modal.dart:5155:5193 */;
+      this._ModalControllerDirective_1_9.overlay = (currVal_0!) /* REF:asset:angulardart_components/lib/laminate/components/modal/modal.dart:5155:5193 */;
       this._expr_0 = currVal_0;
     }
     this._appEl_1.detectChangesInNestedViews();

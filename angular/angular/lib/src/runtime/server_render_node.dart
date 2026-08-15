@@ -3,6 +3,8 @@
 /// Utilise un [StringBuffer] pour accumuler le HTML au lieu de manipuler le DOM.
 /// Ce fichier est autonome et ne dpends pas de angulardart_server pour viter
 /// des dpendances circulaires.
+import 'dart:math' show Rectangle;
+
 import 'render_node.dart';
 
 /// Contexte de rendu ct serveur, isol par request (single-threaded event loop).
@@ -57,7 +59,13 @@ class ServerRenderNode implements RenderNode {
   ServerRenderNode? _parent;
   int? _ngId;
 
-  ServerRenderNode(this.tagName);
+  late final _ServerStyleDeclaration _style;
+  late final _ServerClassSet _classSet;
+
+  ServerRenderNode(this.tagName) {
+    _style = _ServerStyleDeclaration(_styles);
+    _classSet = _ServerClassSet(_classes);
+  }
 
   /// Retourne l'ID unique de ce nud pour l'hydration.
   int? get ngId => _ngId;
@@ -188,6 +196,55 @@ class ServerRenderNode implements RenderNode {
   @override
   Object get nativeNode => this;
 
+  /// Browser-compatible `attributes` map. Component code that mutates it (e.g.
+  /// `element.attributes['aria-checked'] = 'true'`) is reflected in the
+  /// rendered HTML instead of crashing.
+  Map<String, String> get attributes => _attrs;
+
+  /// Browser-compatible `style` declaration. Style mutations are recorded in
+  /// the rendered `style` attribute.
+  dynamic get style => _style;
+
+  /// Browser-compatible `classes` set. Class mutations are recorded in the
+  /// rendered `class` attribute.
+  dynamic get classes => _classSet;
+
+  /// Browser-compatible `children` list.
+  List<ServerRenderNode> get children => _children;
+
+  /// The element's `className` attribute value.
+  String get className => _attrs['class'] ?? '';
+  set className(String value) {
+    _attrs['class'] = value;
+  }
+
+  /// The element's `id` attribute value.
+  String get id => _attrs['id'] ?? '';
+  set id(String value) {
+    _attrs['id'] = value;
+  }
+
+  /// The element's text content.
+  String get text => _content.toString();
+  set text(String value) {
+    _content.clear();
+    _content.write(value);
+  }
+
+  /// The element's bounding client rectangle (always empty on the server).
+  Rectangle<num> getBoundingClientRect() => const Rectangle<num>(0, 0, 0, 0);
+
+  /// The element's `scrollTop`/`scrollHeight`/`clientHeight` etc. (all zero on
+  /// the server, since there is no layout).
+  int get scrollTop => 0;
+  int get scrollLeft => 0;
+  int get scrollHeight => 0;
+  int get scrollWidth => 0;
+  int get clientHeight => 0;
+  int get clientWidth => 0;
+  int get offsetHeight => 0;
+  int get offsetWidth => 0;
+
   /// Tolerate browser-only DOM API calls (e.g. `addEventListener`,
   /// `getBoundingClientRect`) made by component code on the server.
   ///
@@ -273,4 +330,89 @@ class ServerRenderNode implements RenderNode {
         .replaceAll('<', '&lt;')
         .replaceAll('>', '&gt;');
   }
+}
+
+/// Best-effort `CssStyleDeclaration` for server rendering.
+///
+/// Records style mutations so they are emitted in the rendered `style`
+/// attribute. Unknown members resolve to no-ops instead of crashing.
+class _ServerStyleDeclaration {
+  final Map<String, String> _styles;
+
+  _ServerStyleDeclaration(this._styles);
+
+  void setProperty(String name, String value) {
+    _styles[name] = value;
+  }
+
+  String getPropertyValue(String name) => _styles[name] ?? '';
+
+  dynamic noSuchMethod(Invocation invocation) {
+    if (invocation.isSetter) {
+      final name = _camelToKebab(_symbolName(invocation.memberName));
+      final args = invocation.positionalArguments;
+      if (args.isEmpty) return null;
+      final value = args.single;
+      if (value == null) {
+        _styles.remove(name);
+      } else {
+        _styles[name] = value.toString();
+      }
+    }
+    return null;
+  }
+
+  static String _symbolName(Symbol symbol) {
+    final str = symbol.toString();
+    final match = RegExp(r'^Symbol\("(.+)"\)$').firstMatch(str);
+    return match?.group(1) ?? '';
+  }
+
+  static String _camelToKebab(String name) {
+    final buffer = StringBuffer();
+    for (var i = 0; i < name.length; i++) {
+      final c = name[i];
+      if (c == c.toUpperCase()) {
+        buffer.write('-${c.toLowerCase()}');
+      } else {
+        buffer.write(c);
+      }
+    }
+    return buffer.toString();
+  }
+}
+
+/// Best-effort `CssClassSet` for server rendering.
+///
+/// Records class mutations so they are emitted in the rendered `class`
+/// attribute.
+class _ServerClassSet {
+  final List<MapEntry<String, bool>> _classes;
+
+  _ServerClassSet(this._classes);
+
+  bool add(String className) {
+    _classes.add(MapEntry(className, true));
+    return true;
+  }
+
+  bool remove(String className) {
+    _classes.add(MapEntry(className, false));
+    return true;
+  }
+
+  bool toggle(String className, [bool? value]) {
+    final enabled = value ?? !contains(className);
+    _classes.add(MapEntry(className, enabled));
+    return enabled;
+  }
+
+  bool contains(String className) =>
+      _classes.any((e) => e.key == className && e.value);
+
+  void addAll(Iterable<String> classes) => classes.forEach(add);
+
+  void removeAll(Iterable<String> classes) => classes.forEach(remove);
+
+  int get length => _classes.length;
 }

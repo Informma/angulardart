@@ -1,3 +1,7 @@
+## 9.4.2
+
+- fix: durcir `ServerRenderNode` contre les appels DOM chaînés — expose des `attributes`/`style`/`classes`/`children` réels et un `getBoundingClientRect` sûr, pour que le rendu SSR ne plante plus sur `element.attributes['x'] = y` ou `element.style.width = '...'`.
+
 ## 9.4.1
 
 - fix: collecter les styles scopés des composants côté serveur (`ServerRenderNode.collectStyle`/`collectedStyles`) pour permettre au SSR de les injecter dans `<head>`.

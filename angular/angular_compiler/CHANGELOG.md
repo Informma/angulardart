@@ -1,3 +1,8 @@
+## 5.6.2
+
+- fix: codegen null-safe des bindings — assertion non-null (`!`) sur les `@Input` nullables assignés à des inputs non-nullables, et correction du double-ternaire sur les attributs conditionnels `[attr.x.if]`.
+- fix: ne plus émettre `unsafeCast<E>` pour les variables locales dont le type est un paramètre générique (résout `'E' isn't a type` dans les composants génériques).
+
 ## 5.6.1
 
 - fix: corriger un crash du compilateur (`type 'Null' is not a subtype of type 'ReferenceAst'`) sur les `<ng-content>` sans attribut `select` — `RecursiveTemplateVisitor.visit` castait `null` en `ReferenceAst` au lieu de retourner `null`.

@@ -52,7 +52,7 @@ class ViewNameResolver implements NameResolver {
       if (result == null) return null; // No local for `name`.
       var expression = getPropertyInView(result, _state.view!, currView);
       final type = currView.nameResolver._state.localTypes[name];
-      if (type != null && type != o.dynamicType) {
+      if (type != null && type != o.dynamicType && !_isTypeVariable(type)) {
         expression = unsafeCast(expression, type);
       }
       final modifiers = [o.StmtModifier.Final];
@@ -94,4 +94,12 @@ class ViewNameResolver implements NameResolver {
 
   @override
   ViewNameResolver scope() => ViewNameResolver._scope(_state);
+}
+
+/// Returns true if [type] is a generic type parameter (e.g. `T` in
+/// `Foo<T>`) that has no importable source, and therefore cannot be emitted
+/// as a type argument.
+bool _isTypeVariable(o.OutputType type) {
+  if (type is! o.ExternalType) return false;
+  return type.value.moduleUrl == null && type.value.prefix == null;
 }

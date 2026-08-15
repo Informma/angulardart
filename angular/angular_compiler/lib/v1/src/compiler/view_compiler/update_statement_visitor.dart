@@ -99,7 +99,9 @@ class _UpdateStatementsVisitor
     }
 
     // Phase 3 (SSR): Use RenderNode-based updateRenderAttribute.
-    final attributeValue = bindingSource.isNullable && !useSetAttributeIfImmutable
+    final attributeValue = (bindingSource.isNullable &&
+            !useSetAttributeIfImmutable &&
+            !attributeBinding.isConditional)
         ? renderValue!.conditional(o.literal(''), o.nullExpr)
         : renderValue!;
 
@@ -245,13 +247,22 @@ class _UpdateStatementsVisitor
   o.Statement visitInputBinding(ir.InputBinding inputBinding,
       [o.Expression? renderValue]) {
     var value = renderValue!;
-    if (bindingSource.isNullable && _isNonNullableBool(inputBinding.type)) {
-      value = value.ifNull(o.literal(false));
+    if (bindingSource.isNullable) {
+      if (_isNonNullableBool(inputBinding.type)) {
+        value = value.ifNull(o.literal(false));
+      } else if (_isNonNullable(inputBinding.type)) {
+        value = value.notNull();
+      }
     }
     return appViewInstance!
         .prop(inputBinding.propertyName)
         .set(value)
         .toStmt();
+  }
+
+  bool _isNonNullable(o.OutputType? type) {
+    if (type == null || type == o.dynamicType) return false;
+    return !type.hasModifier(o.TypeModifier.Nullable);
   }
 
   bool _isNonNullableBool(o.OutputType? type) {

@@ -404,13 +404,17 @@ void updateRenderAttribute(dynamic node, String name, String? value) {
 
 /// Updates a style on a RenderNode or DOM element.
 @dart2js.noInline
-void updateRenderStyle(dynamic node, String name, String value) {
+void updateRenderStyle(dynamic node, String name, String? value) {
   final native = unwrapNode(node);
   if (native is RenderNode) {
     // Server mode: styles are not yet supported for SSR output.
     return;
   }
-  native.style.setProperty(name, value);
+  if (value == null) {
+    native.style.removeProperty(name);
+  } else {
+    native.style.setProperty(name, value);
+  }
 }
 
 /// Updates tabIndex on a RenderNode or DOM element.

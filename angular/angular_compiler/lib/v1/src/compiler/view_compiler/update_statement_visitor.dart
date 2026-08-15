@@ -114,21 +114,15 @@ class _UpdateStatementsVisitor
     o.Expression? renderValue,
     ir.BindingSource bindingSource,
   ) {
-    if (CompileContext.current.emitNullSafeCode) {
-      // New behavior: Do nothing. We accept a "String?" (only) as a type and
-      // Dart's compilers will emit a compile-time error (i.e. something like
-      // "cannot assign int to String?") on another value type.
-      return renderValue;
-    } else {
-      // Legacy behavior: Allow a non-String `[attr.foo]="baz"` binding. We
-      // coerce it into a String (or null) by transforming "baz" into
-      // "baz?.toString()".
-      return renderValue!.callMethod(
-        'toString',
-        const [],
-        checked: bindingSource.isNullable,
-      );
-    }
+    // Coerce non-String values into a String (or null) by transforming "baz"
+    // into "baz?.toString()". This matches the historical AngularDart
+    // behavior and keeps `[attr.foo]="boolExpr"` / `[attr.foo]="numExpr"`
+    // bindings valid under null-safety.
+    return renderValue!.callMethod(
+      'toString',
+      const [],
+      checked: bindingSource.isNullable,
+    );
   }
 
   @override

@@ -25,6 +25,13 @@ Future<ReflectableOutput> resolveReflectables({
     }
   }
 
+  // `canRead`/`resolver.isLibrary` on a *generated* output can trigger a
+  // reentrant build in build_runner ("Cannot recurse at later or equal
+  // phase"). Detect it so we can degrade gracefully instead of crashing the
+  // whole compiler.
+  bool isReentrancyError(Object e) =>
+      e is StateError && '$e'.contains('recurse');
+
   final reader = ReflectableReader(
     recordInjectableFactories: flags.emitInjectableFactories,
     recordComponentFactories: flags.emitComponentFactories,
@@ -41,17 +48,32 @@ Future<ReflectableOutput> resolveReflectables({
       if (placeholder == null) {
         return false;
       }
-      return buildStep.canRead(placeholder);
+      try {
+        return await buildStep.canRead(placeholder);
+      } catch (e) {
+        if (!isReentrancyError(e)) rethrow;
+        // The `.ng_placeholder` only exists as a *generated* output, which
+        // means the corresponding source will generate a `.template.dart`.
+        // Treat the input as present so it is linked via `initReflector()`.
+        return true;
+      }
     },
     // For a given import or export directive, return whether a generated
     // .template.dart file already exists. If it does we will need to link
     // to it and call initReflector().
-    isLibrary: (uri) {
+    isLibrary: (uri) async {
       final assetId = tryResolvedAsset(uri);
       if (assetId == null) {
-        return Future.value(false);
+        return false;
       }
-      return buildStep.resolver.isLibrary(assetId);
+      try {
+        return await buildStep.resolver.isLibrary(assetId);
+      } catch (e) {
+        if (!isReentrancyError(e)) rethrow;
+        // A generated output is not a committed source, so it is not a
+        // library; linking is handled by `hasInput` instead.
+        return false;
+      }
     },
   );
 

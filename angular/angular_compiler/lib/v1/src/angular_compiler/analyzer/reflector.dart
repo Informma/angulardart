@@ -265,7 +265,10 @@ class ReflectableReader {
     }
     final outputUri = _withOutputExtension(uri);
     try {
-      return await isLibrary(outputUri) || await hasInput(uri);
+      // Check `hasInput` first: for generated `.template.dart` files (the
+      // build_runner path), the `.ng_placeholder` input short-circuits before
+      // `isLibrary` can trigger a reentrant build on the generated output.
+      return await hasInput(uri) || await isLibrary(outputUri);
     } catch (e) {
       throw BuildError.withoutContext(
           'Could not parse URI. Additional information:\n$e\n');

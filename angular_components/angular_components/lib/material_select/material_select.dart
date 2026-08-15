@@ -55,7 +55,7 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
 
   /// Function for use by NgFor for optionGroup to avoid recreating the
   /// DOM for the optionGroup.
-  final Function trackByIndexFn = indexIdentityFn;
+  final Object? Function(int, dynamic) trackByIndexFn = indexIdentityFn;
 
   bool _listAutoFocus = false;
   int? _autoFocusIndex;

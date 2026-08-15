@@ -118,7 +118,7 @@ class MaterialPopupComponent extends Object
   @override
   final ElementRef elementRef;
 
-  final String role;
+  final String? role;
   static final _idGenerator = SequentialIdGenerator.fromUUID();
   final _uniqueId = _idGenerator.nextId();
 

@@ -125,7 +125,7 @@ class DropdownButtonComponent extends Object
 
   /// Whether to show the bottom border of the dropdown button.
   @Input()
-  set showButtonBorder(bool value) {
+  set showButtonBorder(bool? value) {
     _showButtonBorder = value;
   }
 

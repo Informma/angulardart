@@ -49,7 +49,7 @@ class MaterialSelectDropdownItemComponent<T>
   String get id => _customAriaHandling ? '' : (_id ?? _generatedId);
 
   @Input()
-  set id(String id) {
+  set id(String? id) {
     _id = id;
   }
 

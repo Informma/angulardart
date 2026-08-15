@@ -67,7 +67,7 @@
           [class.empty]="options.optionGroups.length == 1"
           [tabbable]="false"
           [selected]="isDeselectItemSelected"
-          [value]="deselectLabel"
+          [value]="deselectLabel!"
           (trigger)="deselectCurrentSelection()"
           [itemActive]="popup.showPopup && activeModel.isActive(deselectLabel)"
           [id]="activeModel.id(deselectLabel)"
@@ -82,7 +82,7 @@
           </span>
           <dynamic-component
               *ngIf="hasCustomLabelRenderer"
-              [componentFactory]="labelFactory(group)"
+              [componentFactory]="labelFactory!(group)"
               [value]="group">
           </dynamic-component>
           <template [ngIf]="group.isNotEmpty">

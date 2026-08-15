@@ -82,7 +82,7 @@ mixin class MaterialDropdownBase
 
   /// Preferred positions for alignment when enforceSpaceConstraints is true
   @Input()
-  List<dynamic> preferredPositions = RelativePosition.inlinePositions;
+  Iterable<Object> preferredPositions = RelativePosition.inlinePositions;
 
   void onVisible(bool vis) {
     _visibleStream.add(vis);

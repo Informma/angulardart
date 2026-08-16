@@ -1,3 +1,7 @@
+## 1.10.1
+
+- fix: `@GenerateInjector` (et les composants racine) sont désormais générés dans `lib/` (`app_injector.dart`, `app_component.dart`) au lieu de `web/main.dart`, pour que le module DDC `web/main` reste mono-bibliothèque. Corrige le hot restart `webdev serve --auto=restart` (`main is not a function` puis `LateInitializationError: appViewUtils`) sur les projets `--hybrid`, `--ssr`, `--ssr --seo`, `--seo` et `add hybrid`.
+
 ## 1.10.0
 
 - feat: ajout du flag `--server=io|alfred` sur `ngdart new`, `ngdart add ssr` et `ngdart add hybrid` pour choisir l'implémentation HTTP du serveur SSR (`io` = `dart:io` par défaut, `alfred` = package Alfred). La dépendance `alfred` n'est ajoutée au pubspec que si `--server=alfred` est sélectionné.

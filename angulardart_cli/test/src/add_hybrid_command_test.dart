@@ -203,6 +203,14 @@ final InjectorFactory appInjector = ng.appInjector\$Injector;
       }
     }
 
+    // 7b. Create lib/app_injector.dart (routing injector kept out of
+    // web/main.dart so that hot restart works).
+    final appInjectorFile = File(path.join(libDir.path, 'app_injector.dart'));
+    if (!appInjectorFile.existsSync()) {
+      await appInjectorFile.writeAsString(Templates.projectAppInjectorDart);
+      messages.add('  Created lib/app_injector.dart');
+    }
+
     // 8. Create hybrid component files in lib/
     final appComponentFile = File(path.join(libDir.path, 'app_component.dart'));
     if (!appComponentFile.existsSync()) {
@@ -445,11 +453,16 @@ dependencies:
       await AddHybridTestHarness().run(projectDir: project);
 
       final mainDart = File('${project.path}/web/main.dart').readAsStringSync();
-      expect(mainDart, contains('package:angulardart_router/angulardart_router.dart'));
+      expect(mainDart, contains("import 'package:test_app/app_injector.dart';"));
       expect(mainDart, contains('package:angulardart_server/angulardart_server.dart'));
       expect(mainDart, contains('hydrateApplication'));
       expect(mainDart, contains('runApp'));
-      expect(mainDart, contains('routerProviders'));
+      expect(mainDart, contains('createInjector: appInjector'));
+
+      // L'injecteur (routing) est dans lib/app_injector.dart.
+      final injector = File('${project.path}/lib/app_injector.dart').readAsStringSync();
+      expect(injector, contains('@GenerateInjector([routerProviders])'));
+      expect(injector, contains('package:angulardart_router/angulardart_router.dart'));
     });
 
     test('main.dart imports app_component template from lib/', () async {

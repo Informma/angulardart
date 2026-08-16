@@ -248,13 +248,12 @@ void main() {
       );
       await generator.generate();
 
-      final content =
-          File('${tempDir.path}/seo_app/web/main.dart').readAsStringSync();
-      expect(content, contains('package:angulardart_seo/angulardart_seo.dart'));
-      // SEO project uses per-component providers for SeoService and TitleService
-      expect(content, contains('final SeoService _seo'));
-      expect(content, contains('final TitleService _title'));
-      expect(content, contains('_seo.setPageSeo('));
+      // SeoService/TitleService are provided per-component in lib/.
+      final home =
+          File('${tempDir.path}/seo_app/lib/home_component.dart').readAsStringSync();
+      expect(home, contains('final SeoService _seo'));
+      expect(home, contains('final TitleService _title'));
+      expect(home, contains('_seo.setPageSeo('));
     });
 
     test('creates SEO main.dart with template import', () async {
@@ -268,8 +267,9 @@ void main() {
 
       final content =
           File('${tempDir.path}/seo_app/web/main.dart').readAsStringSync();
-      expect(content, contains("import 'main.template.dart' as ng"));
-      expect(content, contains('ng.AppComponentNgFactory'));
+      expect(content, contains("import 'package:seo_app/app_component.template.dart' as app;"));
+      expect(content, contains("import 'package:seo_app/app_injector.dart';"));
+      expect(content, contains('app.AppComponentNgFactory'));
     });
 
     test('creates prerender.yaml for SEO project', () async {
@@ -310,10 +310,10 @@ void main() {
       );
       await generator.generate();
 
-      final content =
-          File('${tempDir.path}/seo_app/web/main.dart').readAsStringSync();
-      expect(content, contains("template: '<h1>"));
-      expect(content, isNot(contains('templateUrl')));
+      final appComponent =
+          File('${tempDir.path}/seo_app/lib/app_component.dart').readAsStringSync();
+      expect(appComponent, contains("template: '<div"));
+      expect(appComponent, isNot(contains('templateUrl')));
     });
 
     test('SEO pubspec uses wide version constraints', () async {
@@ -398,7 +398,10 @@ void main() {
       expect(projectDir.existsSync(), isTrue);
       // Expected files: pubspec.yaml, analysis_options.yaml, build.yaml, .gitignore, prerender.yaml,
       // web/index.html, web/main.dart, web/styles.css = 8
-      expect(countFiles(projectDir), equals(8));
+      // lib/app_component.dart, lib/home_component.dart, lib/about_component.dart,
+      // lib/contact_component.dart, lib/app_injector.dart = 5
+      // Total = 13
+      expect(countFiles(projectDir), equals(13));
     });
 
     test('all generated Dart files have valid structure', () async {
@@ -470,10 +473,17 @@ void main() {
 
       final content = File('${tempDir.path}/hybrid_app/web/main.dart').readAsStringSync();
       expect(content, contains('package:angulardart_server/angulardart_server.dart'));
-      expect(content, contains('package:angulardart_router/angulardart_router.dart'));
+      expect(content, contains("import 'package:hybrid_app/app_injector.dart';"));
       expect(content, contains('hydrateApplication'));
       expect(content, contains('runApp'));
-      expect(content, contains('routerProviders'));
+      expect(content, contains('createInjector: appInjector'));
+
+      // L'injecteur (routing) est désormais dans lib/app_injector.dart, pour
+      // que web/main soit mono-bibliothèque (hot restart).
+      final injector =
+          File('${tempDir.path}/hybrid_app/lib/app_injector.dart').readAsStringSync();
+      expect(injector, contains('@GenerateInjector([routerProviders])'));
+      expect(injector, contains('package:angulardart_router/angulardart_router.dart'));
     });
 
     test('creates Hybrid main.server.dart', () async {
@@ -667,10 +677,11 @@ void main() {
       // lib/app_component.dart, lib/app_component.html, lib/home_component.dart,
       // lib/home_component.html, lib/about_component.dart, lib/about_component.html,
       // lib/dashboard_component.dart, lib/dashboard_component.html, lib/data_service.dart,
-      // lib/platform_dom.dart, lib/platform_dom_browser.dart, lib/platform_dom_vm.dart = 12
+      // lib/platform_dom.dart, lib/platform_dom_browser.dart, lib/platform_dom_vm.dart,
+      // lib/app_injector.dart = 13
       // bin/server.dart = 1
-      // Total = 22
-      expect(countFiles(projectDir), equals(22));
+      // Total = 23
+      expect(countFiles(projectDir), equals(23));
     });
 
     test('Hybrid main.dart imports app_component from lib/', () async {
@@ -737,7 +748,7 @@ void main() {
       );
       await generator.generate();
 
-      final content = File('${tempDir.path}/hybrid_app/web/main.dart').readAsStringSync();
+      final content = File('${tempDir.path}/hybrid_app/lib/app_injector.dart').readAsStringSync();
       expect(content, contains('@GenerateInjector([routerProviders])'));
     });
 

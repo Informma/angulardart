@@ -11,15 +11,33 @@ Le builder angulardart génère des fichiers `.template.dart` pour tous les comp
 
 ---
 
+## ⚠️ Règle critique : `web/main.dart` doit rester **mono-bibliothèque**
+
+Pour que `webdev serve --auto=restart` (hot restart) fonctionne, le module DDC `web/main`
+ne doit contenir **qu'une seule** bibliothèque. Concrètement :
+
+- ❌ Ne **pas** déclarer `@Component`, `@GenerateInjector` ou `@Directive` dans `web/main.dart`
+  **et** importer le `.template.dart` relatif correspondant (`import 'main.template.dart'`).
+  Le cycle `main.dart ↔ main.template.dart` fusionne les deux libs dans le module `web/main`,
+  et DWDS appelle `main()` sur `main.template.dart` (sans `main`) au lieu de `main.dart`.
+  Symptôme : `main is not a function` puis `LateInitializationError: Field 'appViewUtils'`.
+- ✅ Déclarer les injecteurs/composants dans `lib/` et les importer via `package:`.
+
+> Correctif (Phase 6.7) : `@GenerateInjector` est désormais généré dans `lib/app_injector.dart`
+> par la CLI, et `web/main.dart` importe `package:<app>/app_injector.dart`.
+
+---
+
 ## Structure correcte pour un projet SSR avec composants dans `lib/`
 
 ```
 my_app/
 ├── web/
-│   ├── main.dart          ← entrypoint client + root component (optionnel)
+│   ├── main.dart          ← entrypoint client (mono-bibliothèque, pas d'annotations Angular)
 │   ├── main.server.dart   ← entrypoint server-side
 │   └── ...
 ├── lib/
+│   ├── app_injector.dart      ← @GenerateInjector (routing) — PAS dans web/main.dart
 │   ├── home_component.dart    ← sous-composants dans lib/ → OK maintenant !
 │   ├── about_component.dart
 │   ├── dashboard_component.dart
@@ -38,29 +56,25 @@ my_app/
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
-import 'package:my_app/platform_dom.dart' as platform_dom;
+import 'package:my_app/app_component.template.dart' as app;
 // ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
+import 'package:my_app/platform_dom.dart' as platform_dom;
 
 void main() async {
   final isServerRendered =
       (platform_dom.window as dynamic).document.documentElement?.getAttribute('ng-server-context') == 'ssr';
 
   if (isServerRendered) {
-    await hydrateApplication(ng.AppComponentNgFactory);
+    await hydrateApplication(app.AppComponentNgFactory);
   } else {
-    runApp(ng.AppComponentNgFactory);
+    runApp(app.AppComponentNgFactory);
   }
 }
-
-@Component(
-  selector: 'app-component',
-  template: '<h1>Hello {{name}}</h1>',
-)
-class AppComponent {
-  var name = 'AngularDart';
-}
 ```
+
+> `app_component.dart` (avec le `@Component`) vit dans `lib/`, pas dans `web/main.dart`.
+> Sans cette séparation, `import 'main.template.dart'` fusionne deux bibliothèques dans
+> le module `web/main` et casse le hot restart (voir règle plus haut).
 
 ---
 
@@ -78,10 +92,7 @@ import 'package:my_app/about_component.dart';     // lib/ → OK !
 // ignore: uri_has_not_been_generated
 import 'home_component.template.dart' as home;    // templates de lib/ → OK !
 // ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
-
-@GenerateInjector([routerProviders])
-final InjectorFactory appInjector = ng.appInjector\$Injector;
+import 'package:my_app/app_injector.dart';        // @GenerateInjector dans lib/ → OK !
 
 @Component(
   selector: 'app-component',
@@ -108,6 +119,10 @@ class AppComponent implements OnInit {
 
 void main() async { ... }
 ```
+
+> ⚠️ Le `@Component` racine ci-dessus est encore inline dans `web/main.dart` : dans un vrai
+> projet, déplacez-le dans `lib/app_component.dart` (ou laissez la CLI le faire) pour
+> préserver le hot restart.
 
 ---
 

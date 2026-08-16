@@ -108,6 +108,11 @@ class ProjectGenerator extends Generator {
         context,
       );
       await _generateServerBin(context, routing: true);
+      await writeFromTemplate(
+        path.join(destinationFolder, 'lib', 'app_injector.dart'),
+        Templates.projectAppInjectorDartSeo,
+        context,
+      );
     } else if (seo) {
       // SEO projects: main() is in app_component.dart
     } else if (hybrid) {
@@ -122,6 +127,11 @@ class ProjectGenerator extends Generator {
         context,
       );
       await _generateServerBin(context, routing: true);
+      await writeFromTemplate(
+        path.join(destinationFolder, 'lib', 'app_injector.dart'),
+        Templates.projectAppInjectorDart,
+        context,
+      );
     } else if (ssr) {
       await writeFromTemplate(
         path.join(destinationFolder, 'web', 'main.dart'),
@@ -134,6 +144,11 @@ class ProjectGenerator extends Generator {
         context,
       );
       await _generateServerBin(context);
+      await writeFromTemplate(
+        path.join(destinationFolder, 'lib', 'app_component.dart'),
+        Templates.projectAppComponentDartSsr,
+        context,
+      );
     } else {
       await writeFromTemplate(
         path.join(destinationFolder, 'web', 'main.dart'),
@@ -165,6 +180,7 @@ class ProjectGenerator extends Generator {
         path.join(destinationFolder, 'prerender.yaml'),
         Templates.projectPrerenderYaml,
       );
+      await _generateSeoComponents(context);
       await writeFromTemplate(
         path.join(destinationFolder, 'web', 'main.dart'),
         Templates.projectMainDartSeo,
@@ -181,7 +197,7 @@ class ProjectGenerator extends Generator {
     } else if (ssr) {
       await _generatePlatformDom();
       await writeStatic(
-        path.join(destinationFolder, 'web', 'app_component.html'),
+        path.join(destinationFolder, 'lib', 'app_component.html'),
         Templates.projectAppComponentHtmlSsr,
       );
       await writeFromTemplate(
@@ -328,6 +344,40 @@ class ProjectGenerator extends Generator {
     await writeFromTemplate(
       path.join(libDir, 'contact_component.dart'),
       Templates.projectSsrSeoContactComponentDart,
+      context,
+    );
+  }
+
+  Future<void> _generateSeoComponents(Map<String, dynamic> context) async {
+    final libDir = path.join(destinationFolder, 'lib');
+
+    await writeFromTemplate(
+      path.join(libDir, 'app_component.dart'),
+      Templates.projectAppComponentDartSeo,
+      context,
+    );
+
+    await writeFromTemplate(
+      path.join(libDir, 'home_component.dart'),
+      Templates.projectSeoHomeComponentDart,
+      context,
+    );
+
+    await writeFromTemplate(
+      path.join(libDir, 'about_component.dart'),
+      Templates.projectSeoAboutComponentDart,
+      context,
+    );
+
+    await writeFromTemplate(
+      path.join(libDir, 'contact_component.dart'),
+      Templates.projectSeoContactComponentDart,
+      context,
+    );
+
+    await writeFromTemplate(
+      path.join(libDir, 'app_injector.dart'),
+      Templates.projectAppInjectorDartSeo,
       context,
     );
   }

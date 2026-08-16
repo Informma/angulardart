@@ -248,6 +248,15 @@ final InjectorFactory appInjector = ng.appInjector\$Injector;
       }
     }
 
+    // 7b. Create lib/app_injector.dart (routing injector kept out of
+    // web/main.dart so that hot restart works: the web/main module stays
+    // single-library).
+    final appInjectorFile = File(path.join(libDir.path, 'app_injector.dart'));
+    if (!appInjectorFile.existsSync()) {
+      await appInjectorFile.writeAsString(Templates.projectAppInjectorDart);
+      print('  Created lib/app_injector.dart');
+    }
+
     // 8. Create hybrid component files in lib/
     final appComponentFile = File(path.join(libDir.path, 'app_component.dart'));
     if (!appComponentFile.existsSync()) {

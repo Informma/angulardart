@@ -153,32 +153,33 @@ void main() {
           contains('package:angulardart/angulardart.dart'));
     });
 
-    test('imports seo package', () {
+    test('imports seo package via app_injector', () {
       expect(
-        Templates.projectMainDartSeo,
+        Templates.projectAppInjectorDartSeo,
         contains('package:angulardart_seo/angulardart_seo.dart'),
       );
     });
 
     test('provides SeoService and TitleService via component providers', () {
       // SEO project uses per-component providers instead of top-level injector
-      expect(Templates.projectMainDartSeo, contains('final SeoService _seo'));
-      expect(Templates.projectMainDartSeo, contains('final TitleService _title'));
+      expect(Templates.projectSeoHomeComponentDart, contains('final SeoService _seo'));
+      expect(Templates.projectSeoHomeComponentDart, contains('final TitleService _title'));
     });
 
-    test('imports main.template.dart for NgFactory', () {
+    test('imports app_component.template.dart via package', () {
       expect(Templates.projectMainDartSeo,
-          contains("import 'main.template.dart' as ng"));
-      expect(Templates.projectMainDartSeo, contains('ng.AppComponentNgFactory'));
+          contains("import 'package:{{name}}/app_component.template.dart' as app;"));
+      expect(Templates.projectMainDartSeo, contains('app.{{component.className}}NgFactory'));
     });
 
     test('uses inline template instead of templateUrl', () {
-      expect(Templates.projectMainDartSeo, contains("template: '<h1>"));
+      expect(Templates.projectSeoHomeComponentDart, contains("template: '<h1>"));
+      expect(Templates.projectAppComponentDartSeo, contains("template: '<div"));
       expect(Templates.projectMainDartSeo, isNot(contains('templateUrl')));
     });
 
     test('calls runApp with NgFactory and injector', () {
-      expect(Templates.projectMainDartSeo, contains('runApp(ng.AppComponentNgFactory, createInjector: appInjector)'));
+      expect(Templates.projectMainDartSeo, contains('runApp(app.{{component.className}}NgFactory, createInjector: appInjector)'));
     });
   });
 
@@ -283,18 +284,18 @@ void main() {
     test('projectMainDartSeo imports angulardart and seo', () {
       expect(Templates.projectMainDartSeo,
           contains('package:angulardart/angulardart.dart'));
-      expect(Templates.projectMainDartSeo,
+      expect(Templates.projectAppInjectorDartSeo,
           contains('package:angulardart_seo/angulardart_seo.dart'));
     });
 
-    test('projectMainDartSeo uses SeoService', () {
-      expect(Templates.projectMainDartSeo, contains('final SeoService _seo'));
-      expect(Templates.projectMainDartSeo, contains('_seo.setPageSeo('));
+    test('SEO components use SeoService', () {
+      expect(Templates.projectSeoHomeComponentDart, contains('final SeoService _seo'));
+      expect(Templates.projectSeoHomeComponentDart, contains('_seo.setPageSeo('));
     });
 
     test('projectMainDartSeo defines main()', () {
       expect(Templates.projectMainDartSeo, contains('void main()'));
-      expect(Templates.projectMainDartSeo, contains('runApp(ng.AppComponentNgFactory, createInjector: appInjector)'));
+      expect(Templates.projectMainDartSeo, contains('runApp(app.{{component.className}}NgFactory, createInjector: appInjector)'));
     });
 
     test('seoAppComponentHtml has navigation links', () {
@@ -415,8 +416,12 @@ void main() {
       expect(Templates.projectPubspecHybrid, contains(sdkConstraint));
     });
 
-    test('projectMainDartHybrid imports router package', () {
+    test('projectMainDartHybrid imports router package via app_injector', () {
+      // The router providers live in lib/app_injector.dart so that web/main
+      // stays single-library (hot restart). main.dart imports the injector.
       expect(Templates.projectMainDartHybrid,
+          contains("import 'package:{{name}}/app_injector.dart';"));
+      expect(Templates.projectAppInjectorDart,
           contains('package:angulardart_router/angulardart_router.dart'));
     });
 
@@ -510,8 +515,9 @@ void main() {
       }
     });
 
-    test('projectMainDartHybrid uses @GenerateInjector with routerProviders', () {
-      expect(Templates.projectMainDartHybrid, contains('@GenerateInjector([routerProviders])'));
+    test('projectAppInjectorDart uses @GenerateInjector with routerProviders', () {
+      expect(Templates.projectAppInjectorDart, contains('@GenerateInjector([routerProviders])'));
+      expect(Templates.projectAppInjectorDartSeo, contains('@GenerateInjector([routerProviders, SeoService, TitleService])'));
     });
 
     test('projectMainDartHybrid has no hardcoded navigate', () {

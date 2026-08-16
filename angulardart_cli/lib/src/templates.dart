@@ -167,37 +167,45 @@ dev_dependencies:
 </html>
 ''';
 
-  static const projectMainDartSeo = '''import 'package:angulardart/angulardart.dart';
+  /// Composant racine des projets SEO (client-only, routing).
+  ///
+  /// NOTE: le composant est dans `lib/` pour que `web/main` reste
+  /// mono-bibliothèque (voir [projectAppInjectorDart]).
+  static const projectAppComponentDartSeo = '''import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_router/angulardart_router.dart';
-import 'package:angulardart_seo/angulardart_seo.dart';
 
 // ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
-
-@GenerateInjector([routerProviders, SeoService, TitleService])
-final InjectorFactory appInjector = ng.appInjector\$Injector;
+import 'home_component.template.dart' as home;
+// ignore: uri_has_not_been_generated
+import 'about_component.template.dart' as about;
+// ignore: uri_has_not_been_generated
+import 'contact_component.template.dart' as contact;
 
 @Component(
   selector: '{{component.selector}}',
   template: '<div class="nav"><a [routerLink]="[\\'/\\']">Home</a> | <a [routerLink]="[\\'/about\\']">About</a> | <a [routerLink]="[\\'/contact\\']">Contact</a></div><main><router-outlet [routes]="routes"></router-outlet></main>',
   directives: [routerDirectives],
 )
-class AppComponent implements OnInit {
+class {{component.className}} implements OnInit {
   final Router _router;
   List<RouteDefinition> routes = [];
 
-  AppComponent(this._router);
+  {{component.className}}(this._router);
 
   @override
   void ngOnInit() {
     _router.onRouteActivated.listen((_) {});
     routes = [
-      RouteDefinition(path: '/', component: ng.HomeComponentNgFactory, useAsDefault: true),
-      RouteDefinition(path: '/about', component: ng.AboutComponentNgFactory),
-      RouteDefinition(path: '/contact', component: ng.ContactComponentNgFactory),
+      RouteDefinition(path: '/', component: home.HomeComponentNgFactory, useAsDefault: true),
+      RouteDefinition(path: '/about', component: about.AboutComponentNgFactory),
+      RouteDefinition(path: '/contact', component: contact.ContactComponentNgFactory),
     ];
   }
 }
+''';
+
+  static const projectSeoHomeComponentDart = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_seo/angulardart_seo.dart';
 
 @Component(
   selector: 'home-page',
@@ -222,6 +230,10 @@ class HomeComponent implements OnInit {
     );
   }
 }
+''';
+
+  static const projectSeoAboutComponentDart = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_seo/angulardart_seo.dart';
 
 @Component(
   selector: 'about-page',
@@ -246,6 +258,10 @@ class AboutComponent implements OnInit {
     );
   }
 }
+''';
+
+  static const projectSeoContactComponentDart = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_seo/angulardart_seo.dart';
 
 @Component(
   selector: 'contact-page',
@@ -270,9 +286,16 @@ class ContactComponent implements OnInit {
     );
   }
 }
+''';
+
+  static const projectMainDartSeo = '''import 'package:angulardart/angulardart.dart';
+// ignore: uri_has_not_been_generated
+import 'package:{{name}}/app_component.template.dart' as app;
+// ignore: uri_has_not_been_generated
+import 'package:{{name}}/app_injector.dart';
 
 void main() {
-  runApp(ng.AppComponentNgFactory, createInjector: appInjector);
+  runApp(app.{{component.className}}NgFactory, createInjector: appInjector);
 }
 ''';
 
@@ -353,22 +376,12 @@ dev_dependencies:
 </html>
 ''';
 
-  static const projectMainDartSsr = '''import 'package:angulardart/angulardart.dart';
-import 'package:angulardart_server/angulardart_server.dart';
-import 'package:{{name}}/platform_dom.dart' as platform_dom;
-// ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
-
-void main() async {
-  final isServerRendered =
-      (platform_dom.window as dynamic).document.documentElement?.getAttribute('ng-server-context') == 'ssr';
-
-  if (isServerRendered) {
-    await hydrateApplication(ng.AppComponentNgFactory);
-  } else {
-    runApp(ng.AppComponentNgFactory);
-  }
-}
+  /// Composant racine des projets SSR (sans routing).
+  ///
+  /// NOTE: le composant est volontairement dans `lib/` (et non dans
+  /// `web/main.dart`) afin que le module d'entrée `web/main` reste
+  /// mono-bibliothèque (voir [projectAppInjectorDart]).
+  static const projectAppComponentDartSsr = '''import 'package:angulardart/angulardart.dart';
 
 @Component(
   selector: '{{component.selector}}',
@@ -379,14 +392,32 @@ class {{component.className}} {
 }
 ''';
 
+  static const projectMainDartSsr = '''import 'package:angulardart/angulardart.dart';
+import 'package:angulardart_server/angulardart_server.dart';
+import 'package:{{name}}/platform_dom.dart' as platform_dom;
+// ignore: uri_has_not_been_generated
+import 'package:{{name}}/app_component.template.dart' as app;
+
+void main() async {
+  final isServerRendered =
+      (platform_dom.window as dynamic).document.documentElement?.getAttribute('ng-server-context') == 'ssr';
+
+  if (isServerRendered) {
+    await hydrateApplication(app.{{component.className}}NgFactory);
+  } else {
+    runApp(app.{{component.className}}NgFactory);
+  }
+}
+''';
+
   static const projectMainServerDartEntry = '''import 'package:angulardart/angulardart.dart';
 
 // ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
+import 'package:{{name}}/app_component.template.dart' as app;
 
 /// Retourne le factory du composant racine pour le rendu server-side.
 ComponentFactory<Object> get appComponentFactory =>
-    ng.AppComponentNgFactory;
+    app.{{component.className}}NgFactory;
 ''';
 
   static const projectMainServerDartFixed = '''import 'dart:async';
@@ -839,18 +870,31 @@ dev_dependencies:
 </html>
 ''';
 
-  static const projectMainDartHybrid = '''import 'package:angulardart/angulardart.dart';
+  /// Injecteur applicatif (routing) pour les projets hybrides.
+  ///
+  /// NOTE: l'injecteur est volontairement déclaré dans `lib/` (et non dans
+  /// `web/main.dart`) afin que le module d'entrée `web/main` ne contienne
+  /// qu'une seule bibliothèque. Sinon, DWDS (hot restart) appelle `main()` sur
+  /// la bibliothèque `main.template.dart` au lieu de `main.dart`, ce qui casse
+  /// `webdev serve --auto=restart`.
+  static const projectAppInjectorDart = '''import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_router/angulardart_router.dart';
+
+// ignore: uri_has_not_been_generated
+import 'app_injector.template.dart' as ng;
+
+@GenerateInjector([routerProviders])
+final InjectorFactory appInjector = ng.appInjector\$Injector;
+''';
+
+  static const projectMainDartHybrid = '''import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
 {{platformDomImportStatement}}
 // ignore: uri_has_not_been_generated
 import 'package:{{name}}/app_component.template.dart' as app;
 // ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
-
-@GenerateInjector([routerProviders])
-final InjectorFactory appInjector = ng.appInjector\$Injector;
+import 'package:{{name}}/app_injector.dart';
 
 void main() async {
   final isServerRendered =
@@ -1096,19 +1140,29 @@ dev_dependencies:
 </html>
 ''';
 
-  static const projectMainDartSsrSeo = '''import 'package:angulardart/angulardart.dart';
+  /// Injecteur applicatif (routing + SEO) pour les projets SSR+SEO.
+  ///
+  /// NOTE: voir [projectAppInjectorDart] — l'injecteur est dans `lib/` pour
+  /// que le module d'entrée `web/main` reste mono-bibliothèque (hot restart).
+  static const projectAppInjectorDartSeo = '''import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_router/angulardart_router.dart';
 import 'package:angulardart_seo/angulardart_seo.dart';
+
+// ignore: uri_has_not_been_generated
+import 'app_injector.template.dart' as ng;
+
+@GenerateInjector([routerProviders, SeoService, TitleService])
+final InjectorFactory appInjector = ng.appInjector\$Injector;
+''';
+
+  static const projectMainDartSsrSeo = '''import 'package:angulardart/angulardart.dart';
 import 'package:angulardart_server/angulardart_server.dart';
 // ignore: uri_has_not_been_generated
 {{platformDomImportStatement}}
 // ignore: uri_has_not_been_generated
 import 'package:{{name}}/app_component.template.dart' as app;
 // ignore: uri_has_not_been_generated
-import 'main.template.dart' as ng;
-
-@GenerateInjector([routerProviders, SeoService, TitleService])
-final InjectorFactory appInjector = ng.appInjector\$Injector;
+import 'package:{{name}}/app_injector.dart';
 
 void main() async {
   final isServerRendered =

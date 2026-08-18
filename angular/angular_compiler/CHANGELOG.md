@@ -1,3 +1,7 @@
+## 5.6.3
+
+- fix: enregistrer `debugOnClear(_debugClearComponentStyles)` inconditionnellement (plus seulement en mode dev) pour permettre au serveur SSR de réinitialiser le cache des `ComponentStyles` entre requêtes, même quand il tourne avec `isDevMode == false` (release VM).
+
 ## 5.6.2
 
 - fix: codegen null-safe des bindings — assertion non-null (`!`) sur les `@Input` nullables assignés à des inputs non-nullables, et correction du double-ternaire sur les attributs conditionnels `[attr.x.if]`.

@@ -1,3 +1,9 @@
+## 1.4.2
+
+- fix: transmettre l'`APP_ID` du serveur au client via TransferState (`ng-ssr-app-id`) pour que les préfixes d'encapsulation CSS `_ngcontent-…` correspondent après l'hydration.
+- fix: injecter le script `ng-transfer-state` dans le shell `index.html` (absent de `_injectIntoShell` → TransferState inopérant avec un shell HTML).
+- fix: réinitialiser le cache des `ComponentStyles` à chaque requête SSR pour que `<style id="ng-ssr-styles">` soit présent sur toutes les pages (et pas seulement la première).
+
 ## 1.4.1
 
 - fix: `renderApplication` lit `web/index.html` comme shell HTML complet (injection du composant rendu, bascule `ng-server-context="ssr"`, injection des styles scopés dans `<head>`) au lieu d'un shell minimal.

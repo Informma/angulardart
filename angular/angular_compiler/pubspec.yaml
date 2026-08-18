@@ -4,7 +4,7 @@ issue_tracker: https://github.com/flutterdocteur/angulardart/issues
 homepage: https://angulardartreborn.com
 documentation: https://angulardartreborn.com/guide
 description: Compiler for AngularDart.
-version: 5.6.2
+version: 5.6.3
 topics:
   - angular
   - compiler

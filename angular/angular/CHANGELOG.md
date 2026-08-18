@@ -1,3 +1,9 @@
+## 9.4.4
+
+- fix: stabiliser l'`APP_ID` entre le serveur et le client (transmis via TransferState) pour que les classes d'encapsulation CSS `_ngcontent-…` correspondent après l'hydration — sinon les styles SSR devenaient inactifs et les balises `<style>` se dupliquaient à chaque navigation.
+- fix: ne plus ré-appender un `<style>` dont le contenu est déjà présent dans le `<head>` (`_styleAlreadyInjected`) — évite l'accumulation de balises `<style>` pendant l'hydration et la navigation SPA ; les composants sans styles ne produisent plus de `<style>` vide.
+- feat: `resetComponentStylesForServer()` pour vider le cache statique des `ComponentStyles` (et remettre le compteur `_nextUniqueId` à zéro) entre chaque requête SSR.
+
 ## 9.4.3
 
 - fix: rendre `ServerRenderNode`'s class-set (`_ServerClassSet`) itérable (miroir du `CssClassSet` navigateur) pour que les composants qui parcourent les classes (`constructEncapsulatedCss`, etc.) fonctionnent en rendu SSR sur la VM.

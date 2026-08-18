@@ -10,6 +10,7 @@ import 'dart:math' as math;
 import 'package:angulardart/angulardart.dart';
 import 'package:angulardart/src/core/application_ref.dart' show ApplicationRef, internalCreateApplicationRef;
 import 'package:angulardart/src/core/linker/app_view_utils.dart' show AppViewUtils, appViewUtils;
+import 'package:angulardart/src/core/linker/style_encapsulation.dart' show resetComponentStylesForServer;
 import 'package:angulardart/src/di/injector.dart';
 import 'package:angulardart/src/runtime/dom_events.dart' show EventManager;
 import 'package:angulardart_router/angulardart_router.dart' show PlatformLocation;
@@ -186,6 +187,16 @@ ${componentHtml}
       );
     }
 
+    // Inject the TransferState script into <head> so the client can read the
+    // state (e.g. the SSR appId) during hydration.
+    final transferScript = TransferState.toScript();
+    if (transferScript.isNotEmpty) {
+      html = html.replaceFirstMapped(
+        RegExp('</head>', caseSensitive: false),
+        (m) => '$transferScript${m[0]}',
+      );
+    }
+
     // Replace the root element placeholder with the rendered component.
     final escaped = RegExp.escape(selector);
     final selfClosing =
@@ -241,10 +252,15 @@ ${componentHtml}
     final zone = ServerNgZone();
     late ApplicationRef applicationRef;
 
+    // L'APP_ID est transmis au client (via TransferState) pour que les classes
+    // d'encapsulation CSS (`_ngcontent-…`) correspondent après l'hydration.
+    final serverAppId = appId ?? _createRandomAppId();
+    TransferState.set(ssrAppIdKey, serverAppId);
+
     final baseParent = parentInjector ?? Injector.empty();
     final baseInjector = _createServerBaseInjector(
       url: url ?? '',
-      appId: appId,
+      appId: serverAppId,
       parentInjector: baseParent,
     );
 
@@ -256,12 +272,15 @@ ${componentHtml}
     applicationRef = internalCreateApplicationRef(zone, appGlobalInjector);
 
     // Initialize appViewUtils for scoped styles support (mirrors browser bootstrap)
-    final serverAppId = appId ?? 'a${math.Random().nextInt(0x100000).toRadixString(36)}';
     appViewUtils = AppViewUtils(serverAppId, EventManager(zone));
 
     // Enable server mode so the component tree is built with ServerRenderNode
     renderFactory.useServerMode();
     ServerRenderNode.reset();
+    // Re-collect the component styles for this request: the `static` caches in
+    // the generated views would otherwise prevent `collectStyle` from running
+    // on every request after the first one.
+    resetComponentStylesForServer();
 
     ComponentRef<T>? componentRef;
     try {

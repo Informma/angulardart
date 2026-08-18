@@ -22,6 +22,22 @@ void debugClearComponentStyles() {
   ComponentStyles._debugClear();
 }
 
+/// Resets all cached [ComponentStyles] instances between SSR requests.
+///
+/// The generated views cache their `ComponentStyles` in a `static` field so
+/// that each component type only appends its `<style>` once. On the server this
+/// cache persists across requests, which would prevent `collectStyle` from being
+/// called again on the next render. The SSR server calls this at the start of
+/// every render so styles are re-collected for the current request.
+///
+/// The [ComponentStyles._nextUniqueId] counter is reset too so that the
+/// `_ngcontent-…` ids assigned to components are stable across requests and
+/// match the ones the client generates during hydration.
+void resetComponentStylesForServer() {
+  ComponentStyles._debugClear();
+  ComponentStyles._nextUniqueId = 0;
+}
+
 /// Stores `styles: [ ... ]`,  `styleUrls: [ ... ]` for a given `@Component`.
 class ComponentStyles {
   /// Callbacks to invoke when [_debugClear] is called.
@@ -190,6 +206,17 @@ class ComponentStyles {
       }
       return;
     }
+    if (styles.isEmpty) {
+      // Components without styles must not produce empty `<style>` tags.
+      return;
+    }
+    if (_styleAlreadyInjected(styles)) {
+      // Hydration and SPA navigation both reuse the styles that were already
+      // injected (either by the server in `<style id="ng-ssr-styles">` or by a
+      // previous instance of this component). Skipping here avoids the `<head>`
+      // accumulating duplicate `<style>` tags on every navigation.
+      return;
+    }
     final styleElement = createStyleElement(styles);
     if (isDevMode) {
       // Remove style element from the DOM on hot restart.
@@ -291,3 +318,28 @@ List<String> _flattenStyles(
 }
 
 final _idPlaceholder = RegExp('%ID%');
+
+/// Retourne `true` si [styles] sont déjà présentes dans le `<head>`.
+///
+/// Pendant l'hydration les styles SSR sont regroupés dans
+/// `<style id="ng-ssr-styles">` ; pendant la navigation SPA ils sont répartis
+/// dans des `<style>` dédiés. Dans les deux cas on évite de ré-appender une
+/// balise dont le contenu est déjà présent, pour ne pas accumuler de doublons.
+///
+/// Les sélecteurs étant scopés par composant (`_ngcontent-…`), le contenu d'un
+/// composant ne peut pas être confondu avec celui d'un autre.
+bool _styleAlreadyInjected(String styles) {
+  if (styles.isEmpty) return false;
+  final head = document.head;
+  if (head == null) return false;
+  final children = head.children;
+  for (var i = 0; i < children.length; i++) {
+    final child = children[i];
+    if (child.localName == 'style') {
+      if (child.text?.contains(styles) ?? false) {
+        return true;
+      }
+    }
+  }
+  return false;
+}

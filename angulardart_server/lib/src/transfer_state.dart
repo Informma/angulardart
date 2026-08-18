@@ -21,6 +21,13 @@ import 'dart:convert';
 
 import 'dom_apis.dart';
 
+/// Clé TransferState utilisée pour transmettre l'`APP_ID` du serveur au client.
+///
+/// L'`APP_ID` sert de préfixe aux classes d'encapsulation CSS (`_ngcontent-…`).
+/// Il doit être identique côté serveur et côté client pour que les styles SSR
+/// continuent de s'appliquer après l'hydration.
+const ssrAppIdKey = 'ng-ssr-app-id';
+
 class TransferState {
   static const _keyPrefix = 'ng-transfer-state:';
   static final Map<String, Object?> _state = {};

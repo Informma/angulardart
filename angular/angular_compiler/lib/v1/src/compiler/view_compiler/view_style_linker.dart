@@ -114,10 +114,12 @@ class _ViewStyleLinker {
 
     // if (styles == null) {
     //   Static._componentStyles = styles = ComponentStyles(...);
-    //   if (isDevMode) {
-    //      ComponentStyles.debugOnClear(_debugClearComponentStyles);
-    //   }
+    //   ComponentStyles.debugOnClear(_debugClearComponentStyles);
     // }
+    //
+    // `debugOnClear` is registered unconditionally (not just in dev mode) so
+    // that the SSR server can reset the cached ComponentStyles between
+    // requests even when it runs with `isDevMode == false` (e.g. release VM).
     final ifStylesNullInit = o.IfStmt(
       readStyles.equals(o.nullExpr),
       [
@@ -131,15 +133,10 @@ class _ViewStyleLinker {
             ]),
           ),
         ).toStmt(),
-        o.IfStmt(
-          o.importExpr(Runtime.isDevMode),
-          [
-            o.importExpr(StyleEncapsulation.componentStyles).callMethod(
-              'debugOnClear',
-              [o.ReadStaticMemberExpr(_debugClearComponentStyles)],
-            ).toStmt(),
-          ],
-        ),
+        o.importExpr(StyleEncapsulation.componentStyles).callMethod(
+          'debugOnClear',
+          [o.ReadStaticMemberExpr(_debugClearComponentStyles)],
+        ).toStmt(),
       ],
     );
 

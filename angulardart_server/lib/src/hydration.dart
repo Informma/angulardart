@@ -29,7 +29,7 @@ import 'dart:async';
 import 'dom_apis.dart';
 
 import 'package:angulardart/angulardart.dart'
-    show RenderFactory, HydrateRenderFactory, ApplicationRef, ComponentRef, ComponentFactory, Injector, InjectorFactory;
+    show RenderFactory, HydrateRenderFactory, ApplicationRef, ComponentRef, ComponentFactory, Injector, InjectorFactory, APP_ID;
 import 'package:angulardart/src/bootstrap/run.dart' show appInjector;
 import 'package:angulardart_server/src/transfer_state.dart';
 
@@ -47,6 +47,12 @@ Future<ComponentRef<Object>> hydrateApplication<T extends Object>(
   // Lire l'tat transfre depuis le script HTML du serveur
   TransferState.fromHtml();
 
+  // Récupérer l'APP_ID utilisé par le serveur pour l'encapsulation CSS.
+  // Les préfixes `_ngcontent-…` appliqués au HTML SSR et ceux générés côté
+  // client doivent correspondre, sinon les styles SSR sont inactifs après
+  // l'hydration et chaque navigation duplique les balises <style>.
+  final ssrAppId = TransferState.get<String>(ssrAppIdKey);
+
   // Crer et activer le HydrateRenderFactory pour rutilisation du DOM
   final hydrateFactory = HydrateRenderFactory();
 
@@ -59,7 +65,11 @@ Future<ComponentRef<Object>> hydrateApplication<T extends Object>(
     _injectEncapsulatedStyles(hydrateFactory);
 
     final injectorFactory = createInjector ?? _identityInjector;
-    final injector = appInjector(injectorFactory);
+    final InjectorFactory effectiveFactory = ssrAppId == null
+        ? injectorFactory
+        : (Injector parent) =>
+            Injector.map({APP_ID: ssrAppId}, injectorFactory(parent));
+    final injector = appInjector(effectiveFactory);
     final appRef = injector.provideType<ApplicationRef>(ApplicationRef);
 
     // Utiliser hydrate() au lieu de bootstrap() pour rutiliser le DOM existant

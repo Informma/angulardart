@@ -604,10 +604,10 @@ class _ComponentVisitor
   }
 
   /// Collects inheritable metadata declared on [element].
-  void _collectInheritableMetadataOn(ClassElement element) {
+  void _collectInheritableMetadataOn(InterfaceElement element) {
     // Skip 'Object' since it can't have metadata and we only want to record
     // whether a user type implements 'noSuchMethod'.
-    if (element.isDartCoreObject) return;
+    if (element is ClassElement && element.isDartCoreObject) return;
 
     // Skip checking for noSuchMethod for opted-in libraries.
     if (!CompileContext.current.emitNullSafeCode &&
@@ -616,7 +616,13 @@ class _ComponentVisitor
     }
 
     // Collect metadata from field and property accessor annotations.
-    super.visitClassElement(element);
+    // Informma fix: supertypes may be mixins (analyzer >= 5 makes MixinElement
+    // a sibling of ClassElement, not a subtype), so dispatch on the kind.
+    if (element is ClassElement) {
+      super.visitClassElement(element);
+    } else if (element is MixinElement) {
+      super.visitMixinElement(element);
+    }
 
     // Merge field and setter inputs, so that a derived field input binding is
     // not overridden by an inherited setter input.
@@ -632,7 +638,7 @@ class _ComponentVisitor
     // Reverse supertypes to traverse inheritance hierarchy from top to bottom
     // so that derived bindings overwrite their inherited definition.
     for (var type in element.allSupertypes.reversed) {
-      _collectInheritableMetadataOn(type.element as ClassElement);
+      _collectInheritableMetadataOn(type.element as InterfaceElement);
     }
     _collectInheritableMetadataOn(element);
   }

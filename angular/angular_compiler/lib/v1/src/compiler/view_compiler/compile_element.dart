@@ -231,9 +231,15 @@ class CompileElement extends CompileNode implements ProviderResolverHost {
     // For each reference token create CompileTokenMetadata to read query.
     if (referenceTokens.isNotEmpty) {
       referenceTokens.forEach((String varName, token) {
+        // A reference to an element (`#handle`) must be the native DOM node,
+        // as it is for injection and queries above; the RenderNode wrapper
+        // would fail every `HtmlElement` cast in the template's expressions.
+        // (Informma fix.)
         var varValue = token != null
             ? _providers.get(token)!.build()
-            : renderNode.toReadExpr();
+            : o
+                .importExpr(RenderNodeHelpers.unwrapNode)
+                .callFn([renderNode.toReadExpr()]);
         view!.nameResolver.addLocal(varName, varValue);
         var varToken = CompileTokenMetadata(value: varName);
         queriesWithReads.addAll(_getQueriesFor(varToken)

@@ -305,6 +305,14 @@ class CompileTypeMetadata
   /// arguments* of an instantiated type.
   final List<o.TypeParameter> typeParameters;
 
+  /// Whether the declared type is nullable (`String?`, `T?`, or a type
+  /// parameter whose bound is nullable).
+  ///
+  /// Informma fix: input types were recorded without their nullability, so
+  /// every bound input was treated as non-nullable and the generated binding
+  /// null-checked its source; resetting any input to null threw at runtime.
+  final bool isNullable;
+
   CompileTypeMetadata({
     required this.name,
     this.moduleUrl,
@@ -314,6 +322,7 @@ class CompileTypeMetadata
     this.typeArguments = const [],
     this.typeParameters = const [],
     this.diDeps = const [],
+    this.isNullable = false,
   });
 
   @override

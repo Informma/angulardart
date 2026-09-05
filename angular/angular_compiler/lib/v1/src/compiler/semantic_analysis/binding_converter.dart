@@ -168,7 +168,8 @@ class _ToBindingVisitor
     }
     var inputTypeMeta = directive.inputTypes[input.memberName];
     return inputTypeMeta != null
-        ? o.importType(inputTypeMeta, inputTypeMeta.typeArguments)
+        ? o.importType(inputTypeMeta, inputTypeMeta.typeArguments,
+            inputTypeMeta.isNullable ? [o.TypeModifier.Nullable] : null)
         : null;
   }
 

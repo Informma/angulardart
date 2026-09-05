@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart' hide Directive;
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/visitor2.dart';
 // ignore: implementation_imports
@@ -328,13 +329,18 @@ class _ComponentVisitor
           final propertyType = setter.formalParameters.first.type;
           final resolvedType = setter.library.typeSystem.resolveToBound(propertyType);
           final typeName = getTypeName(resolvedType);
+          // The declared type's nullability survives the bound resolution
+          // (`T?` stays nullable; an unbounded `T` resolves to `Object?`).
+          final isNullable = propertyType.nullabilitySuffix ==
+                  NullabilitySuffix.question ||
+              resolvedType.nullabilitySuffix == NullabilitySuffix.question;
           _addPropertyBindingTo(
               isField ? _fieldInputs : _setterInputs, annotation, element,
               immutableBindings: _inputs);
           if (typeName != null) {
             if (isPrimitiveTypeName(typeName)) {
               _inputTypes[element.displayName] =
-                  CompileTypeMetadata(name: typeName);
+                  CompileTypeMetadata(name: typeName, isNullable: isNullable);
             } else {
               // Convert any generic type parameters from the input's type to
               // our internal output AST.
@@ -350,6 +356,7 @@ class _ComponentVisitor
                 moduleUrl: moduleUrl(element),
                 name: typeName,
                 typeArguments: List.from(typeArguments.map(fromDartType)),
+                isNullable: isNullable,
               );
             }
           }
